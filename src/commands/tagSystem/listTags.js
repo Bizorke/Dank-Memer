@@ -9,8 +9,6 @@ module.exports = new GenericCommand(
   }, {
     triggers: ['list'],
     usage: '{command} <id> <shit>',
-    description: 'melmsie stinks',
-
-    ownerOnly: true
+    description: 'melmsie stinks'
   }
 )
