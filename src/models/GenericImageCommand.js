@@ -7,7 +7,7 @@ class GenericImageCommand {
     this.URLParseFN = URLParseFN || this.defaultURLParseFN
   }
 
-  async run ({ Memer, msg, args, addCD }) {
+  async run ({ Memer, msg, cleanArgs: args, addCD }) {
     const datasrc = this.URLParseFN(msg, args)
     if (!datasrc) {
       return
