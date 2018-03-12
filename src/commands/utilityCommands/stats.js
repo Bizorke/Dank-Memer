@@ -34,7 +34,6 @@ const getCPUUsage = async () => {
 
 module.exports = new GenericCommand(
   async ({ Memer, msg, addCD }) => {
-    const stats = await Memer.db.getStats()
     const CPUUsage = await getCPUUsage()
     const guilds = Memer.bot.guilds.size
     const users = Memer.bot.users.size
