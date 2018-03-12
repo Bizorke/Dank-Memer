@@ -59,7 +59,7 @@ module.exports = new GenericCommand(
           name: 'System Statistics',
           value: [
             `${CPUUsage.toFixed(1)}% CPU usage`,
-            `${(process.memoryUsage().rss / 1024).toFixed(1)}gb/${(os.totalmem() / 1073741824).toFixed(1)}gb memory`,
+            `${(process.memoryUsage().rss / 1024 / 1024).toFixed(1)}gb/${(os.totalmem() / 1073741824).toFixed(1)}gb memory`,
           ].join('\n'),
           inline: true
         }
