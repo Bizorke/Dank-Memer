@@ -43,7 +43,7 @@ module.exports = new GenericCommand(
           name: 'Server Statistics',
           value: [
             `${guilds.toLocaleString()} servers`,
-            `${(users / guilds).toFixed()} average server size`,
+            `${(users / guilds).toFixed()} average server size`
           ].join('\n'),
           inline: true
         },
@@ -51,7 +51,7 @@ module.exports = new GenericCommand(
           name: 'Various Statistics',
           value: [
             `${Memer.parseTime(process.uptime())} uptime`,
-            `${msg.channel.guild.shard.latency.toFixed(2)}ms shard latency`
+            `${msg.channel.guild.shard.latency.toFixed(0)}ms shard latency`
           ].join('\n'),
           inline: true
         },
