@@ -1,7 +1,7 @@
 const { GenericCommand } = require('../../models/')
 
 module.exports = new GenericCommand(
-  ({ args }) => `http://lmgtfy.com/?q=${args.join('+')}`,
+  ({ cleanArgs }) => `http://lmgtfy.com/?q=${cleanArgs.join('+')}`,
   {
     missingArgs: 'Hey, what do you want me to google?',
 
