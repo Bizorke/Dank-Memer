@@ -7,7 +7,7 @@ class GenericImageCommand {
     this.URLParseFN = URLParseFN || this.defaultURLParseFN
   }
 
-  async run ({ Memer, msg, args, addCD }) {
+  async run ({ Memer, msg, cleanArgs: args, addCD }) {
     const datasrc = this.URLParseFN(msg, args)
     if (!datasrc) {
       return
@@ -49,7 +49,7 @@ class GenericImageCommand {
 
     let avatarurl = (msg.mentions[0] || msg.author).dynamicAvatarURL('png', 1024)
     if (['jpg', 'jpeg', 'gif', 'png', 'webp'].some(ext => args.join(' ').includes(ext))) {
-      avatarurl = args.join(' ').replace(/gif|webp/g, 'png')
+      avatarurl = args.join(' ').replace(/gif|webp/g, 'png').replace(/<|>/g, '')
     }
 
     if (this.cmdProps.requiredArgs) {

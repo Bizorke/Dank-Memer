@@ -64,5 +64,37 @@ module.exports = {
       timeStr.push(Math.floor(time % methods[i].count / methods[i + 1].count).toString() + methods[i + 1].name)
     }
     return timeStr.join(', ')
+  },
+
+  paginate: (text, limit = 2000) => {
+    const lines = text.trim().split('\n')
+    const pages = []
+
+    let chunk = ''
+
+    for (const line of lines) {
+      if (chunk.length + line.length > limit && chunk.length > 0) {
+        pages.push(chunk)
+        chunk = ''
+      }
+
+      if (line.length > limit) {
+        const lineChunks = line.length / limit
+
+        for (let i = 0; i < lineChunks; i++) {
+          const start = i * limit
+          const end = start + limit
+          pages.push(line.slice(start, end))
+        }
+      } else {
+        chunk += `${line}\n`
+      }
+    }
+
+    if (chunk.length > 0) {
+      pages.push(chunk)
+    }
+
+    return pages
   }
 }
