@@ -6,5 +6,6 @@ module.exports = new GenericVoiceCommand({
 
   reaction: '😃',
   dir: 'mlg',
-  files: 25
+  files: 25,
+  skipIfPlaying: true
 })

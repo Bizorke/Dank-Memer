@@ -56,7 +56,7 @@ exports.handleMeDaddy = async function (msg) {
     if (waitTime > 60) {
       cooldownWarning = cooldownWarning.replace('{cooldown}', this.parseTime(waitTime))
     } else {
-      cooldownWarning = cooldownWarning.replace('{cooldown}', `${waitTime.toFixed()} secundz`)
+      cooldownWarning = cooldownWarning.replace('{cooldown}', `${waitTime.toFixed()} seconds`)
     }
 
     return msg.channel.createMessage(cooldownWarning)
