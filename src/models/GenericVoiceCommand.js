@@ -46,7 +46,7 @@ module.exports = class GenericVoiceCommand {
     return new GenericCommand(
       null,
       Object.assign({
-        cooldown: 1000,
+        cooldown: 10000,
         perms: ['addReactions']
       }, this.cmdProps)
     ).props

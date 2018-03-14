@@ -34,16 +34,18 @@ const getCPUUsage = async () => {
 
 module.exports = new GenericCommand(
   async ({ Memer, msg, addCD }) => {
+    const stats = await Memer.db.getStats()
     const CPUUsage = await getCPUUsage()
-    const guilds = Memer.bot.guilds.size
-    const users = Memer.bot.users.size
     return {
       fields: [
         {
           name: 'Server Statistics',
           value: [
-            `${guilds.toLocaleString()} servers`,
-            `${(users / guilds).toFixed()} average server size`
+            `${stats.guilds.toLocaleString()} servers`,
+            `${(stats.users / stats.guilds).toFixed()} average server size`,
+            `${stats.largeGuilds.toLocaleString()} large servers`,
+            `${stats.exclusiveGuilds.toLocaleString()} exclusive servers`,
+            `${(150000 - stats.guilds).toLocaleString()} until 150k`
           ].join('\n'),
           inline: true
         },
@@ -51,7 +53,10 @@ module.exports = new GenericCommand(
           name: 'Various Statistics',
           value: [
             `${Memer.parseTime(process.uptime())} uptime`,
-            `${msg.channel.guild.shard.latency.toFixed(0)}ms shard latency`
+            `${stats.users.toLocaleString()} users`,
+            `${msg.channel.guild.shard.latency.toFixed(2)}ms shard latency`,
+            `Bot v${Memer.package.version}`,
+            `${Memer.cmds.length} commands currently`
           ].join('\n'),
           inline: true
         },
@@ -59,7 +64,10 @@ module.exports = new GenericCommand(
           name: 'System Statistics',
           value: [
             `${CPUUsage.toFixed(1)}% CPU usage`,
-            `${(process.memoryUsage().rss / 1024 / 1024).toFixed(0)}mb/${(os.totalmem() / 1073741824).toFixed(1)}gb memory`
+            `${(stats.totalRam / 1000).toFixed(1)}gb/${(os.totalmem() / 1073741824).toFixed(1)}gb memory`,
+            `${Memer.parseTime(os.uptime())} uptime`,
+            `${os.platform} based server`,
+            `Node ${process.version}`
           ].join('\n'),
           inline: true
         }
