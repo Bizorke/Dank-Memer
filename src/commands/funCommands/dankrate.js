@@ -24,7 +24,7 @@ module.exports = new GenericCommand(
     const rating = Math.floor(Math.random() * 100) + 1
     return {
       title: 'dank r8 machine',
-      description: `${target} ${rating}% dank ${reaction[Number((rating / 10).toFixed()) - 1]}`
+      description: `${target} ${rating}% dank ${reaction[Math.ceil(rating / 10) - 1]}`
     }
   },
   {
