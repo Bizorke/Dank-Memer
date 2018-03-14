@@ -100,6 +100,45 @@ module.exports = Bot => ({
     return Boolean(res)
   },
 
+  addPls: async function addPls (guildID) {
+    let pls = await this.getPls(guildID)
+    if (!pls) {
+      return this.initPls(guildID)
+    }
+    pls.pls++
+    return Bot.r.table('pls')
+      .insert(pls, { conflict: 'update' })
+      .run()
+  },
+
+  initPls: async function addPls (guildID) {
+    return Bot.r.table('pls')
+      .insert({
+        id: guildID,
+        pls: 1
+      })
+      .run()
+  },
+
+  getPls: async function getPls (guildID) {
+    let pls = await Bot.r.table('pls')
+      .get(guildID)
+      .run()
+    if (!pls) {
+      this.initPls(guildID)
+      return 0
+    }
+    return pls
+  },
+
+  topPls: async function topPls () {
+    const res = await Bot.r.table('pls')
+      .orderBy({index: Bot.r.desc('pls')})
+      .limit(3)
+      .run()
+    return res
+  },
+
   addCoins: async function addCoins (id, amount) {
     let coins = await this.getCoins(id)
     // if (coins.changes) coins = coins.changes[0].new_val
@@ -172,5 +211,12 @@ module.exports = Bot => ({
       .get(1)
       .run()
     return res.stats
+  },
+  test: async function test () {
+    const res = await Bot.r.table('coins')
+      .orderBy('id')
+      .run()
+    console.log(res)
+    return res
   }
 })

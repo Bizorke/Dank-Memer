@@ -3,17 +3,20 @@ const { GenericCommand } = require('../../models/')
 const developers = [
   'Melmsie#0001',
   'Aetheryx#2222',
-  'CyberRonin#5517'
-]
-const contributors = [
+  'CyberRonin#5517',
   'Kromatic#0420'
 ]
+const contributors = [
+  'DaJuukes#0001'
+]
 const staff = [
-  'Kromatic',
-  'Lizard',
-  'Squidaddy',
-  'xXBuilderBXx',
-  'Akko'
+  'Ken#0027',
+  'DevinThePancake#5559',
+  'xXBuilderBXx#8265',
+  'SquiDaddy#0001',
+  'Lizard#0001',
+  'Sporks#7339',
+  'trAsh#6859'
 ]
 
 module.exports = new GenericCommand(

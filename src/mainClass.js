@@ -21,7 +21,7 @@ class Memer extends Base {
       'meme': {},
       'joke': {},
       'shitpost': {},
-      'greentext': {},
+      '4chan': {},
       'tifu': {},
       'wholesome': {},
       'prequel': {},

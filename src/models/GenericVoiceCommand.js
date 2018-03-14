@@ -37,9 +37,7 @@ module.exports = class GenericVoiceCommand {
     conn.once('end', async () => {
       await Memer.bot.leaveVoiceChannel(msg.channel.guild.members.get(Memer.bot.user.id).voiceState.channelID) // TODO: Don't run this if it's being skipped
       if (Memer.bot.voiceConnections.has(msg.channel.guild.id)) {
-        await Memer.bot.voiceConnections.get(msg.channel.guild.id).disconnect()
-        await Memer.bot.voiceConnections.get(msg.channel.guild.id)._destroy()
-        await Memer.bot.voiceConnections.remove(Memer.bot.voiceConnections.get(msg.guild.id))
+        Memer.bot.voiceConnections.remove(Memer.bot.voiceConnections.get(msg.guild.id))
       }
     })
   }
