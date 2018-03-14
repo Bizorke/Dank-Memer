@@ -27,7 +27,7 @@ module.exports = new GenericCommand(
     return {description: `u gave ${msg.mentions[0].username} ${given} coins, now u got ${giverCoins.coin - given} and they got ${takerCoins.coin + given}`}
   },
   {
-    triggers: ['share'],
+    triggers: ['share', 'give'],
     cooldown: 5000,
     description: 'u got dis many coins ok',
     missingArgs: 'u need to choose who to share with and how many coins dummy'
