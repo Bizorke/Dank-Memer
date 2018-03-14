@@ -10,7 +10,7 @@ module.exports = new GenericCommand(
     // console.log(numOne.name)
     // let top = pls.map(oof => `${Memer.ipc.fetchGuild(oof.id).name}: ${oof.pls} commands ran.`)
     return {
-      title: 'Top servers by commands ran',
+      title: 'Top 3 servers (Commands Ran)',
       description: `${a.pls} - ${numOne.name}\n${b.pls} - ${numTwo.name}\n${c.pls} - ${numThree.name}`
     }
   },
