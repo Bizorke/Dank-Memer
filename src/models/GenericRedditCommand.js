@@ -38,7 +38,7 @@ module.exports = class GenericRedditCommand {
     return new GenericCommand(
       null,
       Object.assign({
-        cooldown: 500,
+        cooldown: 3000,
         perms: ['embedLinks']
       }, this.cmdProps)
     ).props
