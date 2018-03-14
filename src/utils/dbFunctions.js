@@ -138,6 +138,7 @@ module.exports = Bot => ({
       .limit(3)
       .run()
     return res
+  },
 
   addTag: async function addTag (id, name, text) {
     return Bot.r.table('tags')
