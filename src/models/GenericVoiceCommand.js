@@ -32,8 +32,9 @@ module.exports = class GenericVoiceCommand {
 
     msg.addReaction(this.cmdProps.reaction)
     const conn = await Memer.bot.joinVoiceChannel(msg.member.voiceState.channelID)
+    const isOpus = !this.cmdProps.ext || this.cmdProps.ext === 'opus'
 
-    conn.play(`./assets/audio/${this.cmdProps.dir}/${file}.${this.cmdProps.ext || 'opus'}`)
+    conn.play(`./assets/audio/${this.cmdProps.dir}/${file}.${this.cmdProps.ext || 'opus'}`, isOpus ? { format: 'ogg' } : {})
     conn.once('end', async () => {
       await Memer.bot.leaveVoiceChannel(msg.channel.guild.members.get(Memer.bot.user.id).voiceState.channelID) // TODO: Don't run this if it's being skipped
       if (Memer.bot.voiceConnections.has(msg.channel.guild.id)) {
