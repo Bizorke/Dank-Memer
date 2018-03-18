@@ -3,9 +3,6 @@ const { GenericCommand } = require('../../models/')
 module.exports = new GenericCommand(
   async ({ Memer, msg, args, addCD }) => {
     let coins = await Memer.db.getCoins(msg.author.id)
-    if (!Number.isInteger(coins.coin)) {
-      coins = Memer.db.fixCoins(msg.author.id)
-    }
 
     let bet = args[0]
     if (!bet) {
@@ -13,9 +10,6 @@ module.exports = new GenericCommand(
     }
     if (bet < 1) {
       return { title: 'You can\'t bet less than 1 coin you dumbass.' }
-    }
-    if (!Number.isInteger(Number(bet))) {
-      return { title: 'AHA! You cannot break me anymore! Must be a whole number, dumb butt.' }
     }
     if (isNaN(bet)) {
       if (bet === 'all') {
@@ -25,6 +19,9 @@ module.exports = new GenericCommand(
       } else {
         return { title: 'You have to bet actual coins, dont try to break me.' }
       }
+    }
+    if (!Number.isInteger(Number(bet))) {
+      return { title: 'AHA! You cannot break me anymore! Must be a whole number, dumb butt.' }
     }
     if (coins.coin === 0) {
       return { title: 'You have no coins. Do `pls earn` to learn how to earn coins.' }
