@@ -34,29 +34,24 @@ const getCPUUsage = async () => {
 
 module.exports = new GenericCommand(
   async ({ Memer, msg, addCD }) => {
-    const stats = await Memer.db.getStats()
     const CPUUsage = await getCPUUsage()
+    const guilds = Memer.bot.guilds.size
+    const users = Memer.bot.users.size
     return {
       fields: [
         {
           name: 'Server Statistics',
           value: [
-            `${stats.guilds.toLocaleString()} servers`,
-            `${(stats.users / stats.guilds).toFixed()} average server size`,
-            `${stats.largeGuilds.toLocaleString()} large servers`,
-            `${stats.exclusiveGuilds.toLocaleString()} exclusive servers`,
-            `${(150000 - stats.guilds).toLocaleString()} until 150k`
+            `${guilds.toLocaleString()} guilds`,
+            `${(users / guilds).toFixed()} average guild size`
           ].join('\n'),
           inline: true
         },
         {
           name: 'Various Statistics',
           value: [
-            `${Memer.parseTime(process.uptime())} uptime`,
-            `${stats.users.toLocaleString()} users`,
-            `${msg.channel.guild.shard.latency.toFixed(2)}ms shard latency`,
-            `Bot v${Memer.package.version}`,
-            `${Memer.cmds.length} commands currently`
+            `${Memer.parseTime(process.uptime())} UT`,
+            `${msg.channel.guild.shard.latency.toFixed(0)}ms latency`
           ].join('\n'),
           inline: true
         },
@@ -64,10 +59,7 @@ module.exports = new GenericCommand(
           name: 'System Statistics',
           value: [
             `${CPUUsage.toFixed(1)}% CPU usage`,
-            `${(stats.totalRam / 1000).toFixed(1)}gb/${(os.totalmem() / 1073741824).toFixed(1)}gb memory`,
-            `${Memer.parseTime(os.uptime())} uptime`,
-            `${os.platform} based server`,
-            `Node ${process.version}`
+            `${(process.memoryUsage().rss / 1024 / 1024).toFixed(0)}mb/${(os.totalmem() / 1073741824).toFixed(1)}gb memory`
           ].join('\n'),
           inline: true
         }
