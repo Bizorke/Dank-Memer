@@ -31,7 +31,7 @@ exports.handleMeDaddy = async function (msg) {
   const args = msg.content.slice(prefix.length + 1).split(/\s+/g).slice(1)
   command = command && (this.cmds.find(c => c.props.triggers.includes(command.toLowerCase())) || this.tags[command.toLowerCase()])
 
-  // here would be a good place to start the command stats db | 3/14 Mel
+  // this.db.updateCommand(command.catagory, command.passedProps.triggers[0])
 
   if (
     !command &&
@@ -48,7 +48,7 @@ exports.handleMeDaddy = async function (msg) {
     return
   }
 
-  this.db.addPls(msg.channel.guild.id)
+  this.db.addPls(msg.channel.guild.id, msg.author.id)
 
   const cooldown = await this.db.getCooldown(command.props.triggers[0], msg.author.id)
   if (cooldown > Date.now()) {

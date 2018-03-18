@@ -100,18 +100,31 @@ module.exports = Bot => ({
     return Boolean(res)
   },
 
-  addPls: async function addPls (guildID) {
+  addPls: async function addPls (guildID, userID) {
     let pls = await this.getPls(guildID)
+    let userPls = await this.getUser(userID)
     if (!pls) {
       return this.initPls(guildID)
     }
+    if (!userPls) {
+      return this.initUser(userID)
+    }
+    if (!userPls.pls) {
+      return this.updateLegacyUser(userID)
+    }
     pls.pls++
+    userPls.pls++
+
+    Bot.r.table('users')
+      .insert(userPls, {conflict: 'update'})
+      .run()
+
     return Bot.r.table('pls')
       .insert(pls, { conflict: 'update' })
       .run()
   },
 
-  initPls: async function addPls (guildID) {
+  initPls: async function initPls (guildID) {
     return Bot.r.table('pls')
       .insert({
         id: guildID,
@@ -134,39 +147,122 @@ module.exports = Bot => ({
   topPls: async function topPls () {
     const res = await Bot.r.table('pls')
       .orderBy({index: Bot.r.desc('pls')})
-      .limit(3)
+      .limit(5)
+      .run()
+    return res
+  },
+  /* come back another time, not sure how to model this data
+  initCommand: async function initCommand (commandName) {
+    return Bot.r.table('commands')
+      .insert({
+        command: commandName,
+        uses: 1
+      }, { conflict: 'update', returnChanges: true })
+      .run()
+  },
+
+  updateCommand: async function updateCommand (commandName) {
+    let commands = await Bot.r.table('commands')
+
+    if (!commands.command) {
+      return this.initCommand(commandName)
+    }
+    commands.command.uses++
+    command.catagoryName.commandName.uses++
+
+    return Bot.r.table('commands')
+      .insert(command, { conflict: 'update' })
+      .run()
+  },
+  */
+  initUser: async function initUser (id) {
+    return Bot.r.table('users')
+      .insert({
+        id: id,
+        coin: 0,
+        pls: 1,
+        upvoted: false
+      }, { returnChanges: true })
+      .run()
+  },
+
+  topUsers: async function topUsers () {
+    const res = await Bot.r.table('users')
+      .orderBy({index: Bot.r.desc('pls')})
+      .limit(5)
       .run()
     return res
   },
 
+  updateLegacyUser: async function updateLegacyUser (id) {
+    return Bot.r.table('users')
+      .insert({
+        id: id,
+        pls: 1,
+        upvoted: false
+      }, { conflict: 'update', returnChanges: true })
+      .run()
+  },
+
+  /* This vs just using the other pls functions?
+
+  plsUser: async function plsUser (id) {
+    let user = this.getUser(id)
+    user.pls++
+    return Bot.r.table('users')
+      .insert(user, { conflict: 'update' })
+      .run()
+  },
+
+  */
+
+  getUser: async function getUser (userID) {
+    let pls = await Bot.r.table('users')
+      .get(userID)
+      .run()
+    if (!pls) {
+      await this.initUser(userID)
+      if (pls.changes) { pls = pls.changes[0].new_val }
+      return pls
+    }
+    return pls
+  },
+
   addCoins: async function addCoins (id, amount) {
     let coins = await this.getCoins(id)
-    // if (coins.changes) coins = coins.changes[0].new_val
     coins.coin += amount
 
-    return Bot.r.table('coins')
+    return Bot.r.table('users')
       .insert(coins, { conflict: 'update' })
+  },
+
+  fixCoins: async function fixCoins (id, amount) {
+    let coins = await this.getCoins(id)
+    coins.coin = Math.round(coins.coin)
+
+    Bot.r.table('users')
+      .insert(coins, { conflict: 'update' })
+    return coins
   },
 
   removeCoins: async function removeCoins (id, amount) {
     let coins = await this.getCoins(id)
-    // if (coins.changes) coins = coins.changes[0].new_val
     if (coins.coin - amount <= 0) {
       coins.coin = 0
     } else {
       coins.coin -= amount
     }
 
-    return Bot.r.table('coins')
+    return Bot.r.table('users')
       .insert(coins, { conflict: 'update' })
   },
 
   grabCoin: async function grabCoin (id) {
-    let coins = await Bot.r.table('coins')
+    let coins = await Bot.r.table('users')
       .get(id)
       .run()
     if (!coins) {
-      return Bot.r.table('coins')
+      return Bot.r.table('users')
         .insert({ id, coin: 0 }, { returnChanges: true })
         .run()
     }
@@ -179,12 +275,12 @@ module.exports = Bot => ({
     return coins
   },
 
-  noCoins: async function noCoins (id) {
-    return Bot.r.table('coins')
-      .get(id)
+  /* noCoins: async function noCoins (id) {
+    return Bot.r.table('users')
+      .get(id) //no longer works with user table, needs reworked
       .delete()
       .run()
-  },
+  }, */
 
   addDonator: async function addDonator (id, donatorLevel) {
     return Bot.r.table('donators')
@@ -211,12 +307,5 @@ module.exports = Bot => ({
       .get(1)
       .run()
     return res.stats
-  },
-  test: async function test () {
-    const res = await Bot.r.table('coins')
-      .orderBy('id')
-      .run()
-    console.log(res)
-    return res
   }
 })

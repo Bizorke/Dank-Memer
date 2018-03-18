@@ -12,8 +12,17 @@ module.exports = new GenericCommand(
     if (!given) {
       return 'you have to to actually share a number, dummy. Not ur dumb feelings'
     }
+    if (!Number.isInteger(given)) {
+      return { title: 'AHA! You cannot break me anymore! Must be a whole number, dumb butt.' }
+    }
     let giverCoins = await Memer.db.getCoins(msg.author.id)
     let takerCoins = await Memer.db.getCoins(msg.mentions[0].id)
+    if (!Number.isInteger(giverCoins.coin)) {
+      giverCoins = Memer.db.fixCoins(msg.author.id)
+    }
+    if (!Number.isInteger(takerCoins.coin)) {
+      takerCoins = Memer.db.fixCoins(msg.mentions[0].id)
+    }
     if (given > giverCoins.coin) {
       return {description: `u only have ${giverCoins.coin} coins, u can't share that many`}
     }
