@@ -236,6 +236,14 @@ module.exports = Bot => ({
       .insert(coins, { conflict: 'update' })
   },
 
+  topCoins: async function topCoins () {
+    const res = await Bot.r.table('users')
+      .orderBy({index: Bot.r.desc('coin')})
+      .limit(5)
+      .run()
+    return res
+  },
+
   fixCoins: async function fixCoins (id, amount) {
     let coins = await this.getCoins(id)
     coins.coin = Math.round(coins.coin)
