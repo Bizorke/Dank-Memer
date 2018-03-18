@@ -29,6 +29,9 @@ exports.handleMeDaddy = async function (msg) {
 
   let [command, ...cleanArgs] = msg.cleanContent.slice(prefix.length + 1).split(/\s+/g)
   const args = msg.content.slice(prefix.length + 1).split(/\s+/g).slice(1)
+  if (args[0] === command) {
+    args.shift()
+  }
   command = command && (this.cmds.find(c => c.props.triggers.includes(command.toLowerCase())) || this.tags[command.toLowerCase()])
 
   // this.db.updateCommand(command.catagory, command.passedProps.triggers[0])
@@ -74,18 +77,14 @@ exports.handleMeDaddy = async function (msg) {
       if (permissions.has('sendMessages')) {
         if (permissions.has('embedLinks')) {
           if (neededPerms.length > 1) {
-            msg.channel.createMessage(
-              {
-                'embed': {
-                  'title': 'oh no!',
-                  'description': `You need to add **${neededPerms.join(', ')}** to use this command!\nGo to **Server settings => Roles => Dank Memer** to change this!`,
-                  'color': this.randomColor(),
-                  'footer': {
-                    'text': 'If it still doesn\'t work, check channel permissions too!'
-                  }
-                }
+            msg.channel.createMessage({ embed: {
+              'title': 'oh no!',
+              'description': `You need to add **${neededPerms.join(', ')}** to use this command!\nGo to **Server settings => Roles => Dank Memer** to change this!`,
+              'color': this.randomColor(),
+              'footer': {
+                'text': 'If it still doesn\'t work, check channel permissions too!'
               }
-            )
+            }})
           } else {
             msg.channel.createMessage(
               {
@@ -122,6 +121,7 @@ exports.handleMeDaddy = async function (msg) {
       )
     } else {
       msg.reply = (str) => { msg.channel.createMessage(`${msg.author.mention}, ${str}`) }
+
       let res = await command.run({
         msg,
         args,
