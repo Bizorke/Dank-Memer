@@ -221,9 +221,10 @@ module.exports = Bot => ({
       .get(userID)
       .run()
     if (!pls) {
-      await this.initUser(userID)
-      if (pls.changes) { pls = pls.changes[0].new_val }
-      return pls
+      pls = await this.initUser(userID)
+      if (pls.changes) {
+        pls = pls.changes[0].new_val
+      }
     }
     return pls
   },
