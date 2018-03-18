@@ -4,7 +4,7 @@ module.exports = new GenericCommand(
   async ({ Memer, msg, args, addCD }) => {
     let { streak } = await Memer.db.getStreak(msg.author.id)
 
-    if (streak && Date.now() - streak.time > 86400000) { // 24 hours
+    if (streak && Date.now() - streak.time > 172800000) { // 24 hours, 2 days because one-day cooldown
       await Memer.db.resetStreak(msg.author.id)
       streak = 1
     } else {
