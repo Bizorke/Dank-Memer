@@ -4,11 +4,11 @@ module.exports = new GenericCommand(
   async ({Memer, msg}) => {
     let pls = await Memer.db.topUsers()
     let [a, b, c, d, e] = pls
-    let numOne = await Memer.ipc.fetchUser(a.id)
-    let numTwo = await Memer.ipc.fetchUser(b.id)
-    let numThree = await Memer.ipc.fetchUser(c.id)
-    let numFour = await Memer.ipc.fetchUser(d.id)
-    let numFive = await Memer.ipc.fetchUser(e.id)
+    let numOne = await Memer.bot.users.get(a.id)
+    let numTwo = await Memer.bot.users.get(b.id)
+    let numThree = await Memer.bot.users.get(c.id)
+    let numFour = await Memer.bot.users.get(d.id)
+    let numFive = await Memer.bot.users.get(e.id)
     // console.log(numOne.name)
     // let top = pls.map(oof => `${Memer.ipc.fetchGuild(oof.id).name}: ${oof.pls} commands ran.`)
     return {
