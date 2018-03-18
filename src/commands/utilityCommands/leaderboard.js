@@ -3,15 +3,17 @@ const { GenericCommand } = require('../../models/')
 module.exports = new GenericCommand(
   async ({Memer, msg}) => {
     let pls = await Memer.db.topPls()
-    let [a, b, c] = pls
+    let [a, b, c, d, e] = pls
     let numOne = await Memer.ipc.fetchGuild(a.id)
     let numTwo = await Memer.ipc.fetchGuild(b.id)
     let numThree = await Memer.ipc.fetchGuild(c.id)
+    let numFour = await Memer.ipc.fetchGuild(d.id)
+    let numFive = await Memer.ipc.fetchGuild(e.id)
     // console.log(numOne.name)
     // let top = pls.map(oof => `${Memer.ipc.fetchGuild(oof.id).name}: ${oof.pls} commands ran.`)
     return {
-      title: 'Top 3 servers (Commands Ran)',
-      description: `${a.pls} - ${numOne.name}\n${b.pls} - ${numTwo.name}\n${c.pls} - ${numThree.name}`
+      title: 'Top 5 servers (Commands Ran)',
+      description: `🥇 ${a.pls} - ${numOne.name}\n🥈 ${b.pls} - ${numTwo.name}\n🥉 ${c.pls} - ${numThree.name}\n👏 ${d.pls} - ${numFour.name}\n👏 ${e.pls} - ${numFive.name}`
     }
   },
   {
