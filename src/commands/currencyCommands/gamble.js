@@ -24,7 +24,7 @@ module.exports = new GenericCommand(
       return { title: 'AHA! You cannot break me anymore! Must be a whole number, dumb butt.' }
     }
     if (coins.coin === 0) {
-      return { title: 'You have no coins. Do `pls earn` to learn how to earn coins.' }
+      return { title: 'You have no coins.' }
     }
     if (bet > coins.coin) {
       return { title: `You only have ${coins.coin} coins, dont bluff me.` }
