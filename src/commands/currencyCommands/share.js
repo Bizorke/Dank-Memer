@@ -12,7 +12,7 @@ module.exports = new GenericCommand(
     if (!given) {
       return 'you have to to actually share a number, dummy. Not ur dumb feelings'
     }
-    if (!Number.isInteger(given)) {
+    if (!Number.isInteger((Number(given)))) {
       return { title: 'AHA! You cannot break me anymore! Must be a whole number, dumb butt.' }
     }
     let giverCoins = await Memer.db.getCoins(msg.author.id)
