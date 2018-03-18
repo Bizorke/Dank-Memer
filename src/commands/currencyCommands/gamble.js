@@ -14,7 +14,7 @@ module.exports = new GenericCommand(
     if (bet < 1) {
       return { title: 'You can\'t bet less than 1 coin you dumbass.' }
     }
-    if (!Number.isInteger(bet)) {
+    if (!Number.isInteger(Number(bet))) {
       return { title: 'AHA! You cannot break me anymore! Must be a whole number, dumb butt.' }
     }
     if (isNaN(bet)) {
