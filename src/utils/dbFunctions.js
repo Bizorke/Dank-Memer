@@ -284,11 +284,11 @@ module.exports = Bot => ({
     return coins
   },
 
-  addStreak: async function addStreak(id) {
+  addStreak: async function addStreak (id) {
     let { streak } = await this.getStreak(id)
 
     if (!streak) {
-        streak = {}
+      streak = {}
     }
 
     streak.time = Date.now()
@@ -297,17 +297,17 @@ module.exports = Bot => ({
     await Bot.r.table('users').insert({ id, streak }, { conflict: 'update' }).run()
   },
 
-  getStreak: async function getStreak(id) {
-    return await Bot.r.table('users').get(id).run()
+  getStreak: async function getStreak (id) {
+    return Bot.r.table('users').get(id).run()
   },
 
-  resetStreak: async function removeStreak(id) {
+  resetStreak: async function removeStreak (id) {
     const streak = {
       time: Date.now(),
       streak: 1
     }
     await Bot.r.table('users').insert({ id, streak }, { conflict: 'update' }).run()
-  }, 
+  },
 
   /* noCoins: async function noCoins (id) {
     return Bot.r.table('users')
