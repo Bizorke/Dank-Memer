@@ -68,7 +68,7 @@ class GenericImageCommand {
         return false
       }
 
-      return JSON.stringify([`${avatarurl}`, args.join(' ')])
+      return JSON.stringify([`${avatarurl}`, args.join(' ').replace(/’+/g, "'")])
     } else if (this.cmdProps.doubleAvatar) {
       const authorurl = (msg.mentions[0]
         ? msg.author
