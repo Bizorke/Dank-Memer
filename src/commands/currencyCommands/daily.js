@@ -26,7 +26,7 @@ module.exports = new GenericCommand(
   },
   {
     triggers: ['daily'],
-    cooldown: 86400000,
+    cooldown: 864e5,
     cooldownMessage: 'I\'m not made of money dude, wait {cooldown}',
     description: 'Get your daily injection of meme coins'
   }

@@ -1,7 +1,8 @@
 const { GenericCommand } = require('../../models/')
 
 module.exports = new GenericCommand(
-  async ({Memer, msg}) => {
+  async ({Memer, msg, addCD}) => {
+    await addCD()
     let pls = await Memer.db.topCoins()
     let [a, b, c, d, e] = pls
     let numOne = await Memer.ipc.fetchUser(a.id)

@@ -52,6 +52,7 @@ module.exports = new GenericCommand(
   }, {
     triggers: ['grantapply', 'coingrant'],
     description: 'Make some hot new memes on your own!',
-    perms: ['attachFiles']
+    perms: ['embedLinks'],
+    cooldown: 6048e5
   }
 )
