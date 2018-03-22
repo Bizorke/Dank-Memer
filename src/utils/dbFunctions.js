@@ -68,6 +68,13 @@ module.exports = Bot => ({
       .run()
   },
 
+  clearCooldowns: async function clearCooldowns (ownerID) {
+    return Bot.r.table('cooldowns')
+      .get(ownerID)
+      .delete()
+      .run()
+  },
+
   getCooldown: async function getCooldown (command, ownerID) {
     const profile = await Bot.r.table('cooldowns').get(ownerID).run()
     if (!profile) {
@@ -130,6 +137,13 @@ module.exports = Bot => ({
         id: guildID,
         pls: 1
       })
+      .run()
+  },
+
+  deletePls: async function deletePls (guildID) {
+    return Bot.r.table('pls')
+      .get(guildID)
+      .delete()
       .run()
   },
 

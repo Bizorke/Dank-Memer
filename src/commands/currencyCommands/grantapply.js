@@ -1,12 +1,12 @@
 const { GenericCommand } = require('../../models/')
-const VENT_CID = '424848288823640066'
+const VENT_CID = '397478484550746122'
 
 module.exports = new GenericCommand(
   async ({ Memer, msg, args, addCD }) => {
     msg.channel.createMessage({ embed: {
       title: 'Welcome to the meme coins grant department',
       color: Memer.randomColor(),
-      description: 'The purpose of this command is to request a Meme Government grant. (A loan that does not need paid back.\n\n**Would you like to start the application process?**\nPlease respond with "yes" or "no"'
+      description: 'The purpose of this command is to request a Meme Government grant. (A loan that does not need paid back.)\n\n**Would you like to start the application process?**\nPlease respond with "yes" or "no"'
     }})
 
     const agree = await Memer.MessageCollector.awaitMessage(msg.channel.id, msg.author.id, 30e3)
@@ -53,6 +53,6 @@ module.exports = new GenericCommand(
     triggers: ['grantapply', 'coingrant'],
     description: 'Make some hot new memes on your own!',
     perms: ['embedLinks'],
-    cooldown: 6048e5
+    cooldown: 1000 // 6048e5
   }
 )
