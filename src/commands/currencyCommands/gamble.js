@@ -32,10 +32,10 @@ module.exports = new GenericCommand(
 
     await addCD()
 
-    if (Math.random() >= 0.6) {
-      const multiplier = (Math.random() * 0.9) + 1
+    if (Math.random() >= 0.65) {
+      const winChance = (Math.random() * 0.95) + 1
 
-      const winnings = Math.round(bet * multiplier)
+      const winnings = Math.round(bet * winChance)
       if (winnings === bet) {
         return 'You broke even. This means you\'re lucky I think?'
       }

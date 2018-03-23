@@ -24,21 +24,21 @@ module.exports = new GenericCommand(
       takerCoins = Memer.db.fixCoins(msg.mentions[0].id)
     }
     if (given > giverCoins.coin) {
-      return {description: `u only have ${giverCoins.coin} coins, u can't share that many`}
+      return {description: `You only have ${giverCoins.coin} coins, you can't share that many`}
     }
     if (given < 0) {
-      return {description: 'u can\'t share 0 coins you dumb'}
+      return {description: 'You can\'t share 0 coins you dumb'}
     }
 
     await addCD()
     await Memer.db.addCoins(msg.mentions[0].id, given)
     await Memer.db.removeCoins(msg.author.id, given)
-    return {description: `u gave ${msg.mentions[0].username} ${given} coins, now u got ${giverCoins.coin - given} and they got ${takerCoins.coin + given}`}
+    return {description: `You gave ${msg.mentions[0].username} ${given} coins, now you have ${giverCoins.coin - given} and they've got ${takerCoins.coin + given}`}
   },
   {
     triggers: ['share', 'give'],
     cooldown: 5000,
-    description: 'u got dis many coins ok',
-    missingArgs: 'u need to choose who to share with and how many coins dummy'
+    description: 'share some coins with someone',
+    missingArgs: 'You need to choose who to share with and how many coins dummy'
   }
 )

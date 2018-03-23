@@ -1,7 +1,7 @@
 const { GenericImageCommand } = require('../../models/')
 
 module.exports = new GenericImageCommand({
-  triggers: ['search'],
+  triggers: ['thesearch'],
   description: 'The Search'
 }, (msg, args) => {
   args = args.join(' ')

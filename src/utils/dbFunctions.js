@@ -68,6 +68,13 @@ module.exports = Bot => ({
       .run()
   },
 
+  clearCooldowns: async function clearCooldowns (ownerID) {
+    return Bot.r.table('cooldowns')
+      .get(ownerID)
+      .delete()
+      .run()
+  },
+
   getCooldown: async function getCooldown (command, ownerID) {
     const profile = await Bot.r.table('cooldowns').get(ownerID).run()
     if (!profile) {
@@ -133,6 +140,13 @@ module.exports = Bot => ({
       .run()
   },
 
+  deletePls: async function deletePls (guildID) {
+    return Bot.r.table('pls')
+      .get(guildID)
+      .delete()
+      .run()
+  },
+
   getPls: async function getPls (guildID) {
     let pls = await Bot.r.table('pls')
       .get(guildID)
@@ -181,8 +195,9 @@ module.exports = Bot => ({
         id: id,
         coin: 0,
         pls: 1,
+        streak: { time: 0, streak: 0 },
         upvoted: false
-      }, { returnChanges: true })
+      }, { conflict: 'update', returnChanges: true })
       .run()
   },
 
@@ -199,6 +214,7 @@ module.exports = Bot => ({
       .insert({
         id: id,
         pls: 1,
+        streak: { time: 0, streak: 0 },
         upvoted: false
       }, { conflict: 'update', returnChanges: true })
       .run()
@@ -221,11 +237,20 @@ module.exports = Bot => ({
       .get(userID)
       .run()
     if (!pls) {
-      await this.initUser(userID)
-      if (pls.changes) { pls = pls.changes[0].new_val }
+      pls = await this.initUser(userID)
+      if (pls.changes[0]) {
+        pls = pls.changes[0].new_val
+      }
       return pls
     }
     return pls
+  },
+
+  removeUser: async function removeUser (userID) {
+    return Bot.r.table('users')
+      .get(userID)
+      .delete()
+      .run()
   },
 
   addCoins: async function addCoins (id, amount) {
@@ -239,7 +264,7 @@ module.exports = Bot => ({
   topCoins: async function topCoins () {
     const res = await Bot.r.table('users')
       .orderBy({index: Bot.r.desc('coin')})
-      .limit(5)
+      .limit(10)
       .run()
     return res
   },
@@ -281,6 +306,31 @@ module.exports = Bot => ({
     let coins = await this.grabCoin(id)
     if (coins.changes) (coins = coins.changes[0].new_val)
     return coins
+  },
+
+  addStreak: async function addStreak (id) {
+    let { streak } = await this.getStreak(id)
+    if (!streak) {
+      streak = {}
+    }
+
+    streak.time = Date.now()
+    streak.streak = ~~streak.streak + 1
+
+    await Bot.r.table('users').insert({ id, streak }, { conflict: 'update' }).run()
+  },
+
+  getStreak: async function getStreak (id) {
+    let users = await this.getUser(id)
+    return users
+  },
+
+  resetStreak: async function removeStreak (id) {
+    const streak = {
+      time: Date.now(),
+      streak: 1
+    }
+    await Bot.r.table('users').insert({ id, streak }, { conflict: 'update' }).run()
   },
 
   /* noCoins: async function noCoins (id) {
