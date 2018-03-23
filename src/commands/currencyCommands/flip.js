@@ -17,14 +17,14 @@ module.exports = new GenericCommand(
 
     if (!choice) {
       return 'I flipped the coin, but you didn\'t call it in time!'
-    } else if (choice.content.includes('heads')) {
+    } else if (choice.content.toLowerCase().includes('heads')) {
       if (coinFlip === heads) {
         await Memer.db.addCoins(msg.author.id, 1)
         return 'It was heads! You have been awarded one coin!'
       } else {
         return 'aw it was tails and you suck, sad day for you'
       }
-    } else if (choice.content.includes('tails')) {
+    } else if (choice.content.toLowerCase().includes('tails')) {
       if (coinFlip === tails) {
         await Memer.db.addCoins(msg.author.id, 1)
         return 'It was tails! You have been awarded one coin!'
@@ -38,7 +38,6 @@ module.exports = new GenericCommand(
   {
     triggers: ['flip', 'coinflip'],
     cooldown: 5000,
-    description: 'Take your chances at gambling. Warning, I am very good at stealing your money.',
-    cooldownMessage: 'If I let you bet whenever you wanted, you\'d be a lot more poor. Wait {cooldown}'
+    description: 'Flip a coin, and if you call it you win it!'
   }
 )

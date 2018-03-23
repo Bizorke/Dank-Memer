@@ -12,9 +12,9 @@ module.exports = new GenericCommand(
     const agree = await Memer.MessageCollector.awaitMessage(msg.channel.id, msg.author.id, 30e3)
     if (!agree) {
       return 'Prompt timed out, I\'ll take that as a no..'
-    } else if (agree.content.includes('no')) {
+    } else if (agree.content.toLowerCase().includes('no')) {
       return 'Application Canceled.'
-    } else if (agree.content.includes('yes')) {
+    } else if (agree.content.toLowerCase().includes('yes')) {
       msg.channel.createMessage('How any meme coins would you like to request?')
       const amount = await Memer.MessageCollector.awaitMessage(msg.channel.id, msg.author.id, 30e3)
       if (!amount) {
@@ -53,6 +53,7 @@ module.exports = new GenericCommand(
     triggers: ['grantapply', 'coingrant'],
     description: 'Make some hot new memes on your own!',
     perms: ['embedLinks'],
-    cooldown: 1000 // 6048e5
+    cooldown: 6048e5,
+    cooldownMessage: 'You have already applied within the last week. Wait {cooldown}'
   }
 )

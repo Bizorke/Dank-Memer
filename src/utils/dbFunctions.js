@@ -264,7 +264,7 @@ module.exports = Bot => ({
   topCoins: async function topCoins () {
     const res = await Bot.r.table('users')
       .orderBy({index: Bot.r.desc('coin')})
-      .limit(5)
+      .limit(10)
       .run()
     return res
   },

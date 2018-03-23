@@ -33,7 +33,7 @@ module.exports = new GenericCommand(
     await addCD()
 
     if (Math.random() >= 0.65) {
-      const winChance = (Math.random() * 0.9) + 1
+      const winChance = (Math.random() * 0.95) + 1
 
       const winnings = Math.round(bet * winChance)
       if (winnings === bet) {
