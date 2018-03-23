@@ -18,7 +18,7 @@ module.exports = new GenericCommand(
 
       return {
         title: 'Available Commands',
-        description: 'Auto posting memes, shorter cooldowns, custom commands and more coming on the premium bot later this week. Use pls patreon to see how to get it!',
+        description: 'We have just added a ton of new currency commands, fun commands, meme commands, **and** pls hoppyboi for easter!',
         fields: Object.keys(categories).map(category => ({ name: category, value: categories[category].join(', ') })),
         footer: { text: 'Hello darkness my old friend...' }
       }
