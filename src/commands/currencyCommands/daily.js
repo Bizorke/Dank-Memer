@@ -9,19 +9,27 @@ module.exports = new GenericCommand(
       streak = 1
     } else {
       await Memer.db.addStreak(msg.author.id)
-      streak = ~~streak.streak + 1
+      if (streak) {
+        streak = streak.streak + 1
+      } else {
+        streak = 1
+      }
+      // streak = streak.streak ? streak.streak + 1 : 1
     }
 
-    let coinsEarned = 250 + Math.round(2.5 * streak)
+    let coinsEarned = 250
+    if (streak > 1) {
+      coinsEarned = 250 + Math.round(2.5 * streak)
+    }
     await Memer.db.addCoins(msg.author.id, coinsEarned)
     let coins = await Memer.db.getCoins(msg.author.id)
     await addCD()
 
     return {
       title: `Here are your ${coinsEarned} daily coins`,
-      description: `(Streak: \`${streak}x\`)\nNow you have ${coins.coin} to spend on gambling :)\nOr if you want more coins, you can always 'pls beg'...`,
+      description: `If you would like to learn more about different ways to spend and earn coins, run \`pls guide\` and read up on all we have to offer!`,
       thumbnail: {url: 'https://dankmemer.lol/coin.png'},
-      footer: {text: 'spend it all in one place ok'}
+      footer: {text: `Total Coins: ${coins.coin} | Streak: ${streak}`}
     }
   },
   {

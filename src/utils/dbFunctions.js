@@ -195,8 +195,9 @@ module.exports = Bot => ({
         id: id,
         coin: 0,
         pls: 1,
+        streak: { time: 0, streak: 0 },
         upvoted: false
-      }, { returnChanges: true })
+      }, { conflict: 'update', returnChanges: true })
       .run()
   },
 
@@ -213,6 +214,7 @@ module.exports = Bot => ({
       .insert({
         id: id,
         pls: 1,
+        streak: { time: 0, streak: 0 },
         upvoted: false
       }, { conflict: 'update', returnChanges: true })
       .run()
@@ -236,11 +238,19 @@ module.exports = Bot => ({
       .run()
     if (!pls) {
       pls = await this.initUser(userID)
-      if (pls.changes) {
+      if (pls.changes[0]) {
         pls = pls.changes[0].new_val
       }
+      return pls
     }
     return pls
+  },
+
+  removeUser: async function removeUser (userID) {
+    return Bot.r.table('users')
+      .get(userID)
+      .delete()
+      .run()
   },
 
   addCoins: async function addCoins (id, amount) {
@@ -300,7 +310,6 @@ module.exports = Bot => ({
 
   addStreak: async function addStreak (id) {
     let { streak } = await this.getStreak(id)
-
     if (!streak) {
       streak = {}
     }
@@ -312,7 +321,8 @@ module.exports = Bot => ({
   },
 
   getStreak: async function getStreak (id) {
-    return Bot.r.table('users').get(id).run()
+    let users = await this.getUser(id)
+    return users
   },
 
   resetStreak: async function removeStreak (id) {
