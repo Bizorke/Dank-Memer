@@ -5,13 +5,11 @@ module.exports = new GenericCommand(
     let pls = await Memer.db.topPls()
     let you = await Memer.db.getPls(msg.channel.guild.id)
     let [a, b, c, d, e] = pls
-
-    let numOne = await Memer.bot.guilds.get(a.id)
-    let numTwo = await Memer.bot.guilds.get(b.id)
-    let numThree = await Memer.bot.guilds.get(c.id)
-    let numFour = await Memer.bot.guilds.get(d.id)
-    let numFive = await Memer.bot.guilds.get(e.id)
-
+    let numOne = await Memer.ipc.fetchGuild(a.id)
+    let numTwo = await Memer.ipc.fetchGuild(b.id)
+    let numThree = await Memer.ipc.fetchGuild(c.id)
+    let numFour = await Memer.ipc.fetchGuild(d.id)
+    let numFive = await Memer.ipc.fetchGuild(e.id)
     return {
       title: 'Top 5 servers (Commands Ran)',
       description: `🥇 ${a.pls} - ${numOne.name}\n🥈 ${b.pls} - ${numTwo.name}\n🥉 ${c.pls} - ${numThree.name}\n👏 ${d.pls} - ${numFour.name}\n👏 ${e.pls} - ${numFive.name}`,
