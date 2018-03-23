@@ -365,24 +365,5 @@ module.exports = Bot => ({
       .get(1)
       .run()
     return res.stats
-  },
-  addTag: async function addTag (id, name, text) {
-    return Bot.r.table('tags')
-      .insert({guild_id: id, name: name, text: text})
-  },
-
-  getAllTags: async function getAllTags (id) {
-    let tags = await Bot.r.table('tags')
-      .getAll(id, {index: 'guild_id'})
-      .run()
-    return tags
-  },
-
-  getTag: async function getTag (name) {
-    let tags = await Bot.r.table('tags')
-      .filter({name: name})
-      .run()
-    return tags
   }
-
 })

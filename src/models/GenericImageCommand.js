@@ -17,7 +17,7 @@ class GenericImageCommand {
 
     const data = await get(!isLocalhost
       ? this.cmdProps.reqURL.replace('$URL', datasrc)
-      : `http://localhost/api/${this.cmdProps.triggers[0]}`)
+      : `https://dankmemer.lol/api/${this.cmdProps.triggers[0]}`)
       .set('Api-Key', Memer.config.imgenKey)
       .set('data-src', datasrc)
 
@@ -83,7 +83,7 @@ class GenericImageCommand {
     return new GenericCommand(
       null,
       Object.assign({
-        cooldown: 500,
+        cooldown: 5000,
         perms: ['embedLinks', 'attachFiles']
       }, this.cmdProps)
     ).props

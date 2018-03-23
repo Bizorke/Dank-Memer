@@ -58,8 +58,9 @@ class Memer extends Base {
 
   async ready () {
     this.bot.editStatus(null, {
-      name: 'thanks for supporting!',
-      type: 0
+      name: 'with my dad',
+      type: 1,
+      url: 'https://www.twitch.tv/m3lmsie'
     })
 
     this.mentionRX = new RegExp(`^<@!*${this.bot.user.id}>`)
