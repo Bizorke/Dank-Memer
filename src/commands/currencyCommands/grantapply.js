@@ -15,7 +15,7 @@ module.exports = new GenericCommand(
     } else if (agree.content.toLowerCase().includes('no')) {
       return 'Application Canceled.'
     } else if (agree.content.toLowerCase().includes('yes')) {
-      msg.channel.createMessage('How any meme coins would you like to request?')
+      msg.channel.createMessage('How many meme coins would you like to request?')
       const amount = await Memer.MessageCollector.awaitMessage(msg.channel.id, msg.author.id, 30e3)
       if (!amount) {
         return 'Prompt timed out, canceling your application.'

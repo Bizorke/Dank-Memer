@@ -253,6 +253,11 @@ module.exports = Bot => ({
       .run()
   },
 
+  isVoter: async function isVoter (id) {
+    let user = await this.getUser(id)
+    return user.upvoted
+  },
+
   addCoins: async function addCoins (id, amount) {
     let coins = await this.getCoins(id)
     coins.coin += amount
@@ -332,13 +337,6 @@ module.exports = Bot => ({
     }
     await Bot.r.table('users').insert({ id, streak }, { conflict: 'update' }).run()
   },
-
-  /* noCoins: async function noCoins (id) {
-    return Bot.r.table('users')
-      .get(id) //no longer works with user table, needs reworked
-      .delete()
-      .run()
-  }, */
 
   addDonator: async function addDonator (id, donatorLevel) {
     return Bot.r.table('donators')

@@ -19,16 +19,16 @@ module.exports = new GenericCommand(
     await addCD()
     let stealingOdds = Math.floor(Math.random() * 100) + 1
 
-    if (stealingOdds <= 80) { // fail section
+    if (stealingOdds <= 85) { // fail section
       Memer.db.removeCoins(msg.author.id, 100)
       return 'You got caught and lost 100 coins!'
-    } else if (stealingOdds < 80 && stealingOdds <= 97) { // 5% payout
+    } else if (stealingOdds < 85 && stealingOdds <= 97) { // 5% payout
       let worth = Math.round(victimCoins.coin * 0.05)
       Memer.db.addCoins(msg.author.id, worth)
       Memer.db.removeCoins(msg.mentions[0].id, worth)
       return `You managed to steal a small amount before leaving!\nYour payout was **${worth} coins.**`
-    } else if (stealingOdds < 97 && stealingOdds <= 99) { // 45% payout
-      let worth = Math.round(victimCoins.coin * 0.45)
+    } else if (stealingOdds < 97 && stealingOdds <= 99) { // 40% payout
+      let worth = Math.round(victimCoins.coin * 0.4)
       Memer.db.addCoins(msg.author.id, worth)
       Memer.db.removeCoins(msg.mentions[0].id, worth)
       return `You managed to steal a sizeable amount before leaving!\nYour payout was **${worth} coins.**`

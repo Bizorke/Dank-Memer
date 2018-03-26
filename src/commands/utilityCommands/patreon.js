@@ -3,7 +3,7 @@ const { GenericCommand } = require('../../models/')
 module.exports = new GenericCommand(
   async () => ({
     title: 'Donate to Dank Memer on Patreon!',
-    description: 'Help Melmsie keep the bot alive by donating to help pay server costs!',
+    description: 'Help Melmsie keep the bot alive by donating to help pay server costs!\nIn return, you get some sweet perks!',
     url: 'https://www.patreon.com/dankmemerbot',
     footer: { text: 'pls donut for my bot, im running low on money' }
   }), {
