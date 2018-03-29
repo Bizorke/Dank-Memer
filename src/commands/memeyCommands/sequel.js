@@ -4,6 +4,6 @@ module.exports = new GenericRedditCommand({
   triggers: ['sequel', 'smeme'],
   description: 'The force is NOT with these',
 
-  endpoint: '/r/SequelMemes/top/.json?sort=top&t=day&limit=100',
+  endpoint: '/r/SequelMemes/top/.json?sort=top&t=week&limit=100',
   type: 'image'
 })
