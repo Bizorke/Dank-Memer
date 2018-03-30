@@ -7,6 +7,5 @@ module.exports = new GenericVoiceCommand({
   reaction: '💀',
   existingConn: 'I only have voice, dude. Please wait until the current sound is done, you assbutt',
   dir: 'oof',
-  files: 'oof',
-  ext: 'mp3'
+  files: 'oof'
 })
