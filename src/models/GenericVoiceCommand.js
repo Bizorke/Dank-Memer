@@ -21,7 +21,9 @@ module.exports = class GenericVoiceCommand {
     }
 
     if (Memer.bot.voiceConnections.has(msg.channel.guild.id)) {
-      if (this.cmdProps.skipIfPlaying) {
+      if (!Memer.bot.voiceConnections.get(msg.channel.guild.id).speaking) {
+        Memer.bot.voiceConnections.remove(Memer.bot.voiceConnections.get(msg.channel.guild.id))
+      } if (this.cmdProps.skipIfPlaying) {
         Memer.bot.voiceConnections.get(msg.channel.guild.id).stopPlaying()
       } else {
         return this.cmdProps.existingConn
