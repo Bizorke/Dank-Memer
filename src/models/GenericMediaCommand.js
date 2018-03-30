@@ -24,7 +24,7 @@ module.exports = class GenericMediaCommand {
     return {
       title: this.props.title,
       image: { url: `${this.props.prependURL || ''}${data}` },
-      footer: { text: `Requested by ${msg.author.username}#${msg.author.discriminator}${this.props.message ? ` | ${this.props.message}` : ''}` }
+      footer: { text: `${msg.author.username}#${msg.author.discriminator}${this.props.message ? ` | ${this.props.message}` : ''}` }
     }
   }
 
