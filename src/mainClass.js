@@ -20,7 +20,7 @@ class Memer extends Base {
     this.indexes = {
       'meme': {},
       'joke': {},
-      'shitpost': {},
+      'copypasta': {},
       '4chan': {},
       'tifu': {},
       'wholesome': {},

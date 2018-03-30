@@ -28,7 +28,7 @@ module.exports = new GenericCommand(
     }
   },
   {
-    triggers: ['dankrate', 'rate'],
+    triggers: ['dankrate', 'memerate'],
     description: 'See how dank you are'
   }
 )

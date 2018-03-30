@@ -1,7 +1,7 @@
 const { GenericImageCommand } = require('../../models/')
 
 module.exports = new GenericImageCommand({
-  triggers: ['brains', 'brain'],
+  triggers: ['brain', 'brains'],
   usage: '{command} <item 1, item 2, item 3, item 4>',
   description: 'idk what to put here tbh',
 

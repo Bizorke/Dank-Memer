@@ -1,7 +1,7 @@
 const { GenericImageCommand } = require('../../models/')
 
 module.exports = new GenericImageCommand({
-  triggers: ['tweet', 'trump'],
+  triggers: ['tweet', 'tweetastrump'],
   description: 'dear lord, what is trump saying now...',
   usage: '{command} <something to make trump say>',
 

@@ -8,7 +8,7 @@ module.exports = new GenericCommand(
       return args.join(' 👏 ')
     }
   }, {
-    triggers: ['clap'],
+    triggers: ['clap', 'clapify'],
     description: 'Make the bot say whatever you want with sass!',
     usage: '{command} <what you want the bot to say>',
 

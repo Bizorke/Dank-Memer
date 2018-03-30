@@ -30,7 +30,7 @@ module.exports = new GenericCommand(
       description: story
     }
   }, {
-    triggers: ['fml'],
+    triggers: ['fml', 'fuckmylife'],
     description: 'Think you\'re having a bad day?',
     cooldown: 3000
   }

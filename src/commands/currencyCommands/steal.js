@@ -40,7 +40,7 @@ module.exports = new GenericCommand(
     }
   },
   {
-    triggers: ['steal', 'rob'],
+    triggers: ['steal', 'rob', 'ripoff'],
     cooldown: 6e5,
     description: 'Take your chances at stealing from users. Warning, you will lose money if you get caught! The victim can lose no more than 25k coins.',
     cooldownMessage: 'Woahhh there, you need some time to plan your next hit. Wait {cooldown}',

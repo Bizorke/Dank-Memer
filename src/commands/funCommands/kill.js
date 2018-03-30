@@ -11,7 +11,7 @@ module.exports = new GenericCommand(
       .replace(/\$mention/g, msg.mentions[0].username)
       .replace(/\$author/g, msg.author.username)
   }, {
-    triggers: ['kill', 'murder'],
+    triggers: ['kill', 'murder', 'takecareof'],
     usage: '{command} @user',
     description: 'Sick of someone? Easy! Just kill them!'
   }

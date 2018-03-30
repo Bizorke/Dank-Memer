@@ -1,7 +1,7 @@
 const { GenericMediaCommand } = require('../../models/')
 
 module.exports = new GenericMediaCommand({
-  triggers: ['discordmeme', 'dscmeme', 'discord'],
+  triggers: ['discordmeme', 'dmeme', 'discord'],
   description: 'A random Discord-themed meme!',
 
   title: 'Random Discord Meme',

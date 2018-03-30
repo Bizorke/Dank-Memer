@@ -16,7 +16,7 @@ module.exports = new GenericCommand(
     }
   },
   {
-    triggers: ['gay', 'gayrate'],
+    triggers: ['howgay', 'gayrate'],
     description: 'See how gay you are'
   }
 )

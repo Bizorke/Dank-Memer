@@ -50,7 +50,7 @@ module.exports = new GenericCommand(
     }
     return 'Application Canceled, respond with **yes** or **no** next time.'
   }, {
-    triggers: ['grantapply', 'coingrant'],
+    triggers: ['grantapply', 'coingrant', 'apply'],
     description: 'Make some hot new memes on your own!',
     perms: ['embedLinks'],
     cooldown: 6048e5,

@@ -15,7 +15,7 @@ module.exports = new GenericCommand(
     }
   },
   {
-    triggers: ['asktrump', 'donald'],
+    triggers: ['asktrump', 'askdonald', 'whatdoestrumpthinkabout'],
     usage: '{command} <question>',
     description: 'Ask the president whatever you\'d like!',
     perms: ['embedLinks'],

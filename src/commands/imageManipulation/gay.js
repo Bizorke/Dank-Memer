@@ -1,6 +1,6 @@
 const { GenericImageCommand } = require('../../models/')
 
 module.exports = new GenericImageCommand({
-  triggers: ['pride', 'gaypride'],
+  triggers: ['gay', 'gaypride', 'pride'],
   description: 'Show your gay pride!'
 })

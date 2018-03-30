@@ -21,7 +21,7 @@ module.exports = new GenericCommand(
     }
   },
   {
-    triggers: ['rich', 'richest'],
+    triggers: ['rich', 'richest', 'toponepercent'],
     description: 'see who the top 10 richest users are!'
   }
 )

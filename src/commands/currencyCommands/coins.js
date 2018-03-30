@@ -29,7 +29,7 @@ module.exports = new GenericCommand(
     }
   },
   {
-    triggers: ['coins'],
+    triggers: ['coins', 'bal', 'balance'],
     description: 'u got dis many coins ok'
   }
 )

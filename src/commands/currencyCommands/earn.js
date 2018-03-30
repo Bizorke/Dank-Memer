@@ -10,7 +10,7 @@ module.exports = new GenericCommand(
     }
   },
   {
-    triggers: ['earn'],
+    triggers: ['earn', 'howtogetmorecoins'],
     description: 'learn how to earn coins'
   }
 )

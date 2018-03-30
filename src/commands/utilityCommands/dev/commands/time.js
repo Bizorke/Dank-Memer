@@ -1,5 +1,5 @@
 module.exports = {
-  help: 'donor <add | remove> <1 | 5 | 10> <id | @tag>',
+  help: 'Show message time vs system time.',
   fn: async ({ Memer, msg, args }) => {
     let message = new Date(msg.timestamp).toTimeString()
     let now = new Date(Date.now())

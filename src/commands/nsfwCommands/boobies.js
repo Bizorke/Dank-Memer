@@ -1,7 +1,7 @@
 const { GenericMediaCommand } = require('../../models/')
 
 module.exports = new GenericMediaCommand({
-  triggers: ['boobies', 'boobs'],
+  triggers: ['boobies', 'boobs', 'tits'],
   description: 'See some cute ~~birbs~~ boobs!',
   isNSFW: true,
 

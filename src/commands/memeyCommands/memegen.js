@@ -46,7 +46,7 @@ module.exports = new GenericCommand(
     await addCD()
     return { content: '', file: { file: maymay.body, name: 'mymeme.png' } }
   }, {
-    triggers: ['memegen', 'make'],
+    triggers: ['memegen', 'makememe'],
     description: 'Make some hot new memes on your own!',
     perms: ['attachFiles']
   }

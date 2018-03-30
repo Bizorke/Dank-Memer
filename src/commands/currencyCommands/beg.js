@@ -13,7 +13,7 @@ module.exports = new GenericCommand(
     }
   },
   {
-    triggers: ['beg'],
+    triggers: ['beg', 'gib'],
     cooldown: 12e5,
     cooldownMessage: 'Stop begging so much, you can have more coins in {cooldown}.',
     description: 'haha ur poor so you have to beg for coins lmaoooo'

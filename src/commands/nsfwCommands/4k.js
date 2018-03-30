@@ -1,7 +1,7 @@
 const { GenericMediaCommand } = require('../../models/')
 
 module.exports = new GenericMediaCommand({
-  triggers: ['4k', 'HD'],
+  triggers: ['4k', 'HD', '4kporn'],
   description: 'See some 4k nudes!',
   isNSFW: true,
 

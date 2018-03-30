@@ -1,7 +1,7 @@
 const { GenericMediaCommand } = require('../../models/')
 
 module.exports = new GenericMediaCommand({
-  triggers: ['lizzyboi', 'lizard'],
+  triggers: ['lizzyboi', 'lizard', 'scales'],
   description: 'See some cute lizzybois!',
 
   title: '🦎',

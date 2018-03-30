@@ -3,7 +3,7 @@ const { GenericCommand } = require('../../models/')
 module.exports = new GenericCommand(
   async ({ args }) => args.join(' '),
   {
-    triggers: ['repeat', 'say'],
+    triggers: ['say', 'repeat'],
     description: 'Make the bot say whatever you want!',
     usage: '{command} <what you want the bot to say>',
 

@@ -10,7 +10,7 @@ module.exports = new GenericCommand(
     }
   },
   {
-    triggers: ['guide'],
+    triggers: ['guide', 'coinhelp', 'thesecoinsmakenosense'],
     description: 'read about our currency!'
   }
 )
