@@ -11,7 +11,7 @@ module.exports = class GenericVoiceCommand {
 
   async run ({ Memer, msg, addCD }) {
     files = await readdir(`./assets/audio/${this.cmdProps.dir}`)
-    files = Memer.randomInArray(files).replace('.ogg', '')
+    files = Memer.randomInArray(files).replace(/(\.opus)|(\.ogg)/, '')
 
     const file = typeof this.cmdProps.files === 'string'
       ? this.cmdProps.files
@@ -40,14 +40,16 @@ module.exports = class GenericVoiceCommand {
 
     await addCD()
 
-    msg.addReaction(this.cmdProps.reaction)
-    const conn = await Memer.bot.joinVoiceChannel(msg.member.voiceState.channelID)
     if (this.cmdProps.np) {
-      msg.channel.createMessage({embed: {title: 'Now Playing...', description: files}})
-    }
-    if (this.cmdProps.message) {
+      let np = files.replace(/_+/g, ' ')
+      np = files.replace(/_+/g, ' ')
+      msg.channel.createMessage({embed: {title: 'Now Playing...', description: np}})
+    } else if (this.cmdProps.message) {
       msg.channel.createMessage(this.cmdProps.message)
+    } else {
+      msg.addReaction(this.cmdProps.reaction)
     }
+    const conn = await Memer.bot.joinVoiceChannel(msg.member.voiceState.channelID)
     conn.play(`./assets/audio/${this.cmdProps.dir}/${file}.${this.cmdProps.ext}`, this.cmdProps.ext === 'ogg' ? { format: '' } : { format: 'ogg' })
     conn.once('end', async () => {
       await Memer.bot.leaveVoiceChannel(msg.channel.guild.members.get(Memer.bot.user.id).voiceState.channelID) // TODO: Don't run this if it's being skipped
@@ -62,6 +64,7 @@ module.exports = class GenericVoiceCommand {
       null,
       Object.assign({
         cooldown: 10000,
+        donorCD: 3000,
         perms: ['addReactions']
       }, this.cmdProps)
     ).props
