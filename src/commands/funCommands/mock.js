@@ -1,7 +1,10 @@
 const { GenericCommand } = require('../../models/')
 
 module.exports = new GenericCommand(
-  async ({ Memer, args }) => {
+  async ({ Memer, args, msg }) => {
+    if (msg.mentions[0]) {
+      return 'Give me text to mock, not specifically a person'
+    }
     return {
       content: args
         .join(' ')
