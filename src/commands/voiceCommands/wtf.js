@@ -5,7 +5,8 @@ module.exports = new GenericVoiceCommand({
   description: 'the fuck?',
 
   existingConn: 'I can only talk so much my dude, wait until I\'m done with whatever sound is playing before trying',
-  reaction: '👍',
+  reaction: '❓',
   dir: 'wtf',
+  ext: 'opus',
   files: 'wtf'
 })

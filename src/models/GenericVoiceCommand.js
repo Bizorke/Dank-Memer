@@ -1,4 +1,8 @@
 const { GenericCommand } = require('.')
+const { promisify } = require('util')
+const fs = require('fs')
+const readdir = promisify(fs.readdir)
+let files
 
 module.exports = class GenericVoiceCommand {
   constructor (cmdProps) {
@@ -6,9 +10,12 @@ module.exports = class GenericVoiceCommand {
   }
 
   async run ({ Memer, msg, addCD }) {
+    files = await readdir(`./assets/audio/${this.cmdProps.dir}`)
+    files = Memer.randomInArray(files).replace('.ogg', '')
+
     const file = typeof this.cmdProps.files === 'string'
       ? this.cmdProps.files
-      : Math.floor(Math.random() * this.cmdProps.files + 1)
+      : files
 
     if (!msg.member.voiceState.channelID) {
       return msg.reply('join a voice channel fam')
@@ -23,7 +30,8 @@ module.exports = class GenericVoiceCommand {
     if (Memer.bot.voiceConnections.has(msg.channel.guild.id)) {
       if (!Memer.bot.voiceConnections.get(msg.channel.guild.id).speaking) {
         Memer.bot.voiceConnections.remove(Memer.bot.voiceConnections.get(msg.channel.guild.id))
-      } if (this.cmdProps.skipIfPlaying) {
+      }
+      if (this.cmdProps.skipIfPlaying) {
         Memer.bot.voiceConnections.get(msg.channel.guild.id).stopPlaying()
       } else {
         return this.cmdProps.existingConn
@@ -34,9 +42,13 @@ module.exports = class GenericVoiceCommand {
 
     msg.addReaction(this.cmdProps.reaction)
     const conn = await Memer.bot.joinVoiceChannel(msg.member.voiceState.channelID)
-    const isOpus = !this.cmdProps.ext || this.cmdProps.ext === 'opus'
-
-    conn.play(`./assets/audio/${this.cmdProps.dir}/${file}.${this.cmdProps.ext || 'opus'}`, isOpus ? { format: 'ogg' } : {})
+    if (this.cmdProps.np) {
+      msg.channel.createMessage({embed: {title: 'Now Playing...', description: files}})
+    }
+    if (this.cmdProps.message) {
+      msg.channel.createMessage(this.cmdProps.message)
+    }
+    conn.play(`./assets/audio/${this.cmdProps.dir}/${file}.${this.cmdProps.ext}`, this.cmdProps.ext === 'ogg' ? { format: '' } : { format: 'ogg' })
     conn.once('end', async () => {
       await Memer.bot.leaveVoiceChannel(msg.channel.guild.members.get(Memer.bot.user.id).voiceState.channelID) // TODO: Don't run this if it's being skipped
       if (Memer.bot.voiceConnections.has(msg.channel.guild.id)) {

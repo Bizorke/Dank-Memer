@@ -6,6 +6,7 @@ module.exports = new GenericVoiceCommand({
 
   reaction: '😃',
   dir: 'shitsound',
-  files: 76,
+  ext: 'ogg',
+  np: true,
   skipIfPlaying: true
 })
