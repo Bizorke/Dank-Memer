@@ -46,12 +46,13 @@ module.exports = {
       { name: 'm', count: 60 },
       { name: 's', count: 1 }
     ]
-
+  
     const timeStr = [ Math.floor(time / methods[0].count).toString() + methods[0].name ]
     for (let i = 0; i < 3; i++) {
       timeStr.push(Math.floor(time % methods[i].count / methods[i + 1].count).toString() + methods[i + 1].name)
     }
-    return timeStr.join(', ')
+  
+    return timeStr.filter(g => !g.startsWith('0')).join(', ')
   },
 
   paginate: (text, limit = 2000) => {
