@@ -54,6 +54,7 @@ module.exports = new GenericCommand(
     description: 'Make some hot new memes on your own!',
     perms: ['embedLinks'],
     cooldown: 6048e5,
-    cooldownMessage: 'You have already applied within the last week. Wait {cooldown}'
+    donorBlocked: true,
+    cooldownMessage: 'You have already applied within the last week. Wait '
   }
 )

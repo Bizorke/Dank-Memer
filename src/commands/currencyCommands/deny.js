@@ -3,6 +3,10 @@ const dMessage = 'Your application for a grant has been denied.'
 
 module.exports = new GenericCommand(
   async ({ Memer, msg, args }) => {
+    let perms = msg.member.roles.some(id => msg.channel.guild.roles.get(id).id === '430836345913737238')
+    if (!perms) {
+      return
+    }
     if (!args[0]) {
       return 'you need a user id to send the deny to'
     }
@@ -18,7 +22,7 @@ module.exports = new GenericCommand(
         description: `${message.join(' ')}`,
         footer: { text: 'Better luck next application!' }
       }})
-      msg.addReaction('📧')
+      return `<:denySign:428024864608354316> Grant denied`
     } catch (e) {
       msg.addReaction('❌')
       return `**Fuck!** *${e.message}*`
@@ -26,7 +30,6 @@ module.exports = new GenericCommand(
   }, {
     triggers: ['deny'],
     usage: '{command} <id> <amount> [message]',
-    description: 'melmsie stinks',
-    ownerOnly: true
+    description: 'melmsie stinks'
   }
 )

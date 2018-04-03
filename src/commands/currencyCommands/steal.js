@@ -13,16 +13,16 @@ module.exports = new GenericCommand(
     if (victimCoins.coin < 100) {
       return { title: 'The victim doesn\'t have at least 100 coins, not worth it man' }
     }
-    if (victimCoins.coin > 25e3) {
-      victimCoins.coin = 25e3
+    if (victimCoins.coin > 10e3) {
+      victimCoins.coin = 10e3
     }
     await addCD()
     let stealingOdds = Math.floor(Math.random() * 100) + 1
 
-    if (stealingOdds <= 85) { // fail section
+    if (stealingOdds <= 90) { // fail section
       Memer.db.removeCoins(msg.author.id, 100)
       return 'You got caught and lost 100 coins!'
-    } else if (stealingOdds < 85 && stealingOdds <= 97) { // 5% payout
+    } else if (stealingOdds < 90 && stealingOdds <= 97) { // 5% payout
       let worth = Math.round(victimCoins.coin * 0.05)
       Memer.db.addCoins(msg.author.id, worth)
       Memer.db.removeCoins(msg.mentions[0].id, worth)
@@ -41,9 +41,10 @@ module.exports = new GenericCommand(
   },
   {
     triggers: ['steal', 'rob', 'ripoff'],
-    cooldown: 6e5,
+    cooldown: 18e5,
+    donorCD: 9e5,
     description: 'Take your chances at stealing from users. Warning, you will lose money if you get caught! The victim can lose no more than 25k coins.',
-    cooldownMessage: 'Woahhh there, you need some time to plan your next hit. Wait {cooldown}',
+    cooldownMessage: 'Woahhh there, you need some time to plan your next hit. Wait ',
     missingArgs: 'You need to tag someone to steal from'
   }
 )
