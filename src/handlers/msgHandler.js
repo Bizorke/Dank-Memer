@@ -161,7 +161,12 @@ exports.handleMeDaddy = async function (msg) {
       await msg.channel.createMessage(res, res.file)
     }
   } catch (e) {
-    msg.channel.createMessage(`Something went wrong while executing this hecking command: \`${e.message}\` \nPlease join here (<https://discord.gg/ebUqc7F>) if the issue doesn't stop being an ass.`) // meme-ier format?
-    this.log(`Command error:\n\tCommand: ${command.props.triggers[0]}\n\tSupplied arguments: ${args.join(' ')}\n\tError: ${e.stack}`, 'error')
+    if (e.message.includes('Disconnected')) {
+      msg.channel.createMessage(`Something went wrong while executing this hecking command: \`${e.message}\` \nPlease join here (<https://discord.gg/ebUqc7F>) if the issue doesn't stop being an ass. But in the mean time, this error could be solved by changing your server's region in your server settings.`)
+      this.log(`Voice error:\n\tCommand: ${command.props.triggers[0]}\n\tServer Region: ${msg.channel.guild.region}\n\tServer ID: ${msg.channel.guild.id}\n\tError: ${e.stack}`, 'error')
+    } else {
+      msg.channel.createMessage(`Something went wrong while executing this hecking command: \`${e.message}\` \nPlease join here (<https://discord.gg/ebUqc7F>) if the issue doesn't stop being an ass.`)
+      this.log(`Command error:\n\tCommand: ${command.props.triggers[0]}\n\tSupplied arguments: ${args.join(' ')}\n\tServer ID: ${msg.channel.guild.id}\n\tError: ${e.stack}`, 'error')
+    }
   }
 }
