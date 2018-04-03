@@ -12,7 +12,7 @@ module.exports = new GenericCommand(
       return `What do you want your new prefix to be?\n\nExample: \`${gConfig.prefix} prefix pepe\`` // please think of a better example..
     }
     if (args.join(' ').length > 32) {
-      return `Your prefix can't be over 10 characters long. You're ${args.join(' ').length - 32} characters over the limit.`
+      return `Your prefix can't be over 30 characters long. You're ${args.join(' ').length - 32} characters over the limit.`
     }
     if (gConfig.prefix === args.join(' ').toLowerCase()) {
       return `\`${gConfig.prefix}\` is already your current prefix.`

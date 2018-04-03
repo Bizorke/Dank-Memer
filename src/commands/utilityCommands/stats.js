@@ -45,7 +45,7 @@ module.exports = new GenericCommand(
             `${(stats.users / stats.guilds).toFixed()} average server size`,
             `${stats.largeGuilds.toLocaleString()} large servers`,
             `${stats.exclusiveGuilds.toLocaleString()} exclusive servers`,
-            `${(150000 - stats.guilds).toLocaleString()} until 150k`
+            `${(200000 - stats.guilds).toLocaleString()} until 200k`
           ].join('\n'),
           inline: true
         },
@@ -56,7 +56,7 @@ module.exports = new GenericCommand(
             `${stats.users.toLocaleString()} users`,
             `${msg.channel.guild.shard.latency.toFixed(2)}ms shard latency`,
             `Bot v${Memer.package.version}`,
-            `${Memer.cmds.length} commands currently`
+            `${Memer.cmds.length} commands`
           ].join('\n'),
           inline: true
         },

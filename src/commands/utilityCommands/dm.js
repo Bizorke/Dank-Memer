@@ -19,7 +19,6 @@ module.exports = new GenericCommand(
     triggers: ['dm', 'slideintothedms'],
     usage: '{command} <id> <shit>',
     description: 'melmsie stinks',
-
     ownerOnly: true
   }
 )
