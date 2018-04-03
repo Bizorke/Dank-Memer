@@ -8,6 +8,7 @@ module.exports = new GenericCommand(
   },
   {
     triggers: ['achievement', 'minecraft', 'mc'],
-    description: 'Am I the only one that didnt know minecraft had achievements'
+    description: 'Am I the only one that didnt know minecraft had achievements',
+    missingArgs: 'What did you achieve? Try again'
   }
 )
