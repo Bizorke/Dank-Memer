@@ -1,7 +1,7 @@
 module.exports = class GenericCommand {
   constructor (fn, props) {
     this.fn = fn
-    this.passedProps = props
+    this.cmdProps = props
   }
 
   async run ({ Memer, msg, args, addCD, cleanArgs }) {
@@ -15,10 +15,11 @@ module.exports = class GenericCommand {
     return Object.assign({
       usage: '{command}',
       cooldown: 3000,
+      donorCD: 1000,
       isNSFW: false,
       ownerOnly: false
-    }, this.passedProps, {
-      perms: ['sendMessages'].concat(this.passedProps.perms || [])
+    }, this.cmdProps, {
+      perms: ['sendMessages'].concat(this.cmdProps.perms || [])
     })
   }
 }

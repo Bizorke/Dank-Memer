@@ -1,4 +1,6 @@
 let gifs = require('../assets/permGifs.json')
+// let categoryStats = {}
+// let commandStats = {}
 exports.handleMeDaddy = async function (msg) {
   if (
     !msg.channel.guild ||
@@ -34,8 +36,6 @@ exports.handleMeDaddy = async function (msg) {
   }
   command = command && (this.cmds.find(c => c.props.triggers.includes(command.toLowerCase())) || this.tags[command.toLowerCase()])
 
-  // this.db.updateCommand(command.catagory, command.passedProps.triggers[0])
-
   if (
     !command &&
     msg.mentions.find(u => u.id === this.bot.user.id) &&
@@ -50,27 +50,34 @@ exports.handleMeDaddy = async function (msg) {
   ) {
     return
   }
-
+  /* Starting this later
+  if (categoryStats[command.category]) {
+    categoryStats[command.category]++
+  } else {
+    categoryStats[command.category] = 1
+  }
+  if (commandStats[command.cmdProps.triggers[0]]) {
+    commandStats[command.cmdProps.triggers[0]]++
+  } else {
+    commandStats[command.cmdProps.triggers[0]] = 1
+  }
+  */
   this.db.addPls(msg.channel.guild.id, msg.author.id)
+  console.log(`${msg.channel.guild.name}: ${msg.author.username}`)
+  if (msg.member.roles.some(id => msg.channel.guild.roles.get(id).name === 'no memes for you')) return
 
   const cooldown = await this.db.getCooldown(command.props.triggers[0], msg.author.id)
   if (cooldown > Date.now()) {
     const waitTime = (cooldown - Date.now()) / 1000
-    const defaultCooldownMessage = 'stop spamming my commands dude, you have to wait {cooldown}'
+    let cooldownWarning = command.props.cooldownMessage || `**Time left until you can run the command again:** `
 
-    let cooldownWarning = command.props.cooldownMessage || defaultCooldownMessage
-
-    if (waitTime > 60) {
-      cooldownWarning = cooldownWarning.replace('{cooldown}', this.parseTime(waitTime))
-    } else {
-      cooldownWarning = cooldownWarning.replace('{cooldown}', `${waitTime.toFixed()} seconds`)
+    const cooldownMessage = {
+      embed: {
+        title: 'You are being ratelimited <:errorSign:428021845078573058>',
+        description: cooldownWarning + (waitTime > 60 ? `${this.parseTime(waitTime)}` : `${waitTime.toFixed()} seconds`) + `\n\n<:ratelimited:430818160434741250> Default Cooldown: ${this.parseTime(command.props.cooldown / 1000)}\n<:donateSign:428024864700497921> [Donor](https://www.patreon.com/dankmemerbot) Cooldown: ${command.props.donorBlocked ? this.parseTime(command.props.cooldown / 1000) : this.parseTime(command.props.donorCD / 1000)}`
+      }
     }
-
-    if (command.props.cooldownMessage) {
-      return msg.channel.createMessage(cooldownWarning)
-    } else {
-      return
-    }
+    return msg.channel.createMessage(cooldownMessage)
   }
   const addCooldown = () => this.db.addCooldown(command.props.triggers[0], msg.author.id)
 

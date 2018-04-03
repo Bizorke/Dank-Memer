@@ -34,7 +34,13 @@ module.exports = Bot => ({
     if (!pCommand) {
       return
     }
-    const cooldown = pCommand.props.cooldown
+    const isDonor = await this.isDonator(ownerID)
+    let cooldown
+    if (isDonor && !pCommand.props.donorBlocked) {
+      cooldown = pCommand.props.donorCD
+    } else {
+      cooldown = pCommand.props.cooldown
+    }
     const profile = await this.getCooldowns(ownerID)
     if (!profile) {
       return this.createCooldowns(command, ownerID)
@@ -56,6 +62,12 @@ module.exports = Bot => ({
     const pCommand = Bot.cmds.find(c => c.props.triggers.includes(command.toLowerCase()))
     if (!pCommand) {
       return
+    }
+    const isDonor = await this.isDonator(ownerID)
+    if (isDonor && !pCommand.props.donorBlocked) {
+      const cooldown = pCommand.props.donorCD
+      return Bot.r.table('cooldowns')
+        .insert({ id: ownerID, cooldowns: [ { [command]: Date.now() + cooldown } ] })
     }
     const cooldown = pCommand.props.cooldown
     return Bot.r.table('cooldowns')
