@@ -3,9 +3,9 @@ const { GenericCommand } = require('../../models/')
 module.exports = new GenericCommand(
   async ({ args }) => {
     if (args.length === 1) {
-      return args[0].split('').join(' <a:party:422909953737490432> ')
+      return args[0].split('').join(' <a:partyparrot:429416315695005696> ')
     } else {
-      return args.join(' <a:party:422909953737490432> ')
+      return args.join(' <a:partyparrot:429416315695005696> ')
     }
   }, {
     triggers: ['partyparrot', 'party'],
