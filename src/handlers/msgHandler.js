@@ -162,7 +162,8 @@ exports.handleMeDaddy = async function (msg) {
     }
   } catch (e) {
     if (e.message.includes('Disconnected')) {
-      msg.channel.createMessage(`Something went wrong while executing this hecking command: \`${e.message}\` \nPlease join here (<https://discord.gg/ebUqc7F>) if the issue doesn't stop being an ass. But in the mean time, this error could be solved by changing your server's region in your server settings.`)
+      msg.channel.createMessage(`Discord done hecked up: \`${e.message}\` \n\nTo fix this, go to your server settings, change the region to any other region, hit save, and try the command again.\nPlease join here (<https://discord.gg/ebUqc7F>) if the issue doesn't stop being an ass. `)
+      await this.bot.createMessage('431132690339856384', `**Disconnected error**\nServer ID: ${msg.channel.guild.id}\nVoice Endpoint: ${this.bot.voiceConnections.get(msg.channel.guild.id).endpoint}`)
       this.log(`Voice error:\n\tCommand: ${command.props.triggers[0]}\n\tServer Region: ${msg.channel.guild.region}\n\tServer ID: ${msg.channel.guild.id}\n\tError: ${e.stack}`, 'error')
     } else {
       msg.channel.createMessage(`Something went wrong while executing this hecking command: \`${e.message}\` \nPlease join here (<https://discord.gg/ebUqc7F>) if the issue doesn't stop being an ass.`)
