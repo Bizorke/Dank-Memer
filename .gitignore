@@ -39,3 +39,5 @@ config.json
 ids.json
 package-lock.json
 package.json
+src/sort.js
+src/test.js

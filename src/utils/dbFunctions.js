@@ -321,7 +321,9 @@ module.exports = Bot => ({
 
   getCoins: async function getCoins (id) {
     let coins = await this.grabCoin(id)
-    if (coins.changes) (coins = coins.changes[0].new_val)
+    if (coins.changes) {
+      coins = coins.changes[0].new_val
+    }
     return coins
   },
 
