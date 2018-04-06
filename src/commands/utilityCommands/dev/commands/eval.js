@@ -25,10 +25,11 @@ module.exports = {
     }
 
     if (input.length + result.length > 994) {
-      const res = await post('https://hastebin.com/documents')
-        .send(`${input}\n\n${result}`)
+      const res = await post('https://hastepaste.com/api/create')
+        .set('Content-Type', 'application/x-www-form-urlencoded')
+        .send(`raw=false&text=${input}\n\n${result}`)
         .catch(err => msg.channel.createMessage(err.message))
-      return `Eval exceeds 1000 characters. View here: https://hastebin.com/${res.body.key}`
+      return `Eval exceeds 1000 characters. View here: ${res.body}`
     } else {
       return {
         fields: [
