@@ -171,8 +171,8 @@ exports.handleMeDaddy = async function (msg) {
       this.log(`Error:\n\tCommand: ${command.props.triggers[0]}\n\tServer ID: ${msg.channel.guild.id}\n\tError: ${e.stack}`, 'error')
     } else {
       msg.channel.createMessage(`Something went wrong while executing this hecking command: \`${e.message}\` \nPlease join here (<https://discord.gg/ebUqc7F>) if the issue doesn't stop being an ass.`)
-      await this.bot.createMessage('431692509895458833', `**Error: ${e.message}**\n**Command Ran: ${command.props.triggers[0]}\nSupplied arguments: ${args.join(' ')}\nServer ID: ${msg.channel.guild.id}\n\`\`\` ${e.stack} \`\`\``)
-      this.log(`Command error:\n\tCommand: ${command.props.triggers[0]}\n\tSupplied arguments: ${cleanArgs.join(' ')}\n\tServer ID: ${msg.channel.guild.id}\nCluster ${this.clusterID}| Shard ${msg.channel.guild.shard.id}\n\tError: ${e.stack}`, 'error')
+      await this.bot.createMessage('431692509895458833', `**Error: ${e.message}**\nCommand Ran: ${command.props.triggers[0]}\nSupplied arguments: ${cleanArgs.join(' ')}\nServer ID: ${msg.channel.guild.id}\nCluster ${this.clusterID}| Shard ${msg.channel.guild.shard.id}\n\`\`\` ${e.stack} \`\`\``)
+      this.log(`Command error:\n\tCommand: ${command.props.triggers[0]}\n\tSupplied arguments: ${cleanArgs.join(' ')}\n\tServer ID: ${msg.channel.guild.id}\n\tError: ${e.stack}`, 'error')
     }
   }
 }
