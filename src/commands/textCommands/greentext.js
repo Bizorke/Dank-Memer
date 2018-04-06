@@ -1,7 +1,8 @@
 const { GenericCommand } = require('../../models/')
 
 module.exports = new GenericCommand(
-  async ({ args }) => {
+  async ({ cleanArgs }) => {
+    let args = cleanArgs
     return '```css\n>' + args.join(' ') + '\n```'
   }, {
     triggers: ['greentext', '>', 'gt'],

@@ -1,7 +1,8 @@
 const { GenericCommand } = require('../../models/')
 
 module.exports = new GenericCommand(
-  async ({ args }) => {
+  async ({ cleanArgs }) => {
+    let args = cleanArgs
     if (args.length === 1) {
       return args[0].split('').join(' 👏 ')
     } else {

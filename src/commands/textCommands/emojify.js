@@ -18,7 +18,8 @@ const specialCodes = {
 }
 
 module.exports = new GenericCommand(
-  async ({ args }) => {
+  async ({ cleanArgs }) => {
+    let args = cleanArgs
     return args
       .join(' ')
       .toLowerCase()

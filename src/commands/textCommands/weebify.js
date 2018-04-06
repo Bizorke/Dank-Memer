@@ -1,7 +1,8 @@
 const { GenericCommand } = require('../../models/')
 
 module.exports = new GenericCommand(
-  async ({ args }) => {
+  async ({ cleanArgs }) => {
+    let args = cleanArgs
     let faces = ['(・`ω´・)', ';w;', 'owo', 'UwU', '>w<', '^w^']
     let v = args.join(' ')
     v = v.replace(/(?:r|l)/g, 'w')
