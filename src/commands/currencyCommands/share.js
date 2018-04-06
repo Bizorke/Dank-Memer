@@ -29,6 +29,9 @@ module.exports = new GenericCommand(
     if (given < 0) {
       return {description: 'You can\'t share 0 coins you dumb'}
     }
+    if (given > 10000) {
+      return {description: 'You can\'t share more than 10k coins since people abused this'}
+    }
 
     await addCD()
     await Memer.db.addCoins(msg.mentions[0].id, given)
@@ -37,7 +40,8 @@ module.exports = new GenericCommand(
   },
   {
     triggers: ['share', 'give'],
-    cooldown: 5000,
+    cooldown: 9e5,
+    donorCD: 6e5,
     description: 'share some coins with someone',
     missingArgs: 'You need to choose who to share with and how many coins dummy'
   }
