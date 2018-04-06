@@ -160,14 +160,19 @@ exports.handleMeDaddy = async function (msg) {
       await msg.channel.createMessage(res, res.file)
     }
   } catch (e) {
-    if (e.message.includes('Disconnected')) {
+    if (e.message.includes('Disconnected') || e.message.includes('Voice connection timeout')) {
       msg.channel.createMessage(`Discord done hecked up: \`${e.message}\` \n\nTo fix this, go to your server settings, change the region to any other region, hit save, and try the command again.\nPlease join here (<https://discord.gg/ebUqc7F>) if the issue doesn't stop being an ass. `)
       await this.bot.createMessage('431132690339856384', `**Error: ${e.message} **\nServer ID: ${msg.channel.guild.id}\nVoice Endpoint: ${this.bot.voiceConnections.get(msg.channel.guild.id).endpoint}\n\`\`\` ${e.stack} \`\`\``)
       this.log(`Voice error:\n\tCommand: ${command.props.triggers[0]}\n\tServer Region: ${msg.channel.guild.region}\n\tServer ID: ${msg.channel.guild.id}\n\tError: ${e.stack}`, 'error')
+    } else if (e.message.includes('new_val')) {
+      msg.channel.createMessage(`We done hecked up: \`${e.message}\` \n\nWe do not currently know what is causing this issue, but we are working on it.\nPlease join here (<https://discord.gg/ebUqc7F>) if the issue doesn't stop being an ass. `)
+      let user = await this.db.getUser(msg.author.id)
+      await this.bot.createMessage('431840220032270337', `**Error: ${e.message} **\nServer ID: ${msg.channel.guild.id}\nUser ID: ${user.id}\nCommands ran: ${user.pls} \nCurrent Coins: ${user.coin}\n\`\`\` ${e.stack} \`\`\``)
+      this.log(`Error:\n\tCommand: ${command.props.triggers[0]}\n\tServer ID: ${msg.channel.guild.id}\n\tError: ${e.stack}`, 'error')
     } else {
       msg.channel.createMessage(`Something went wrong while executing this hecking command: \`${e.message}\` \nPlease join here (<https://discord.gg/ebUqc7F>) if the issue doesn't stop being an ass.`)
       await this.bot.createMessage('431692509895458833', `**Error: ${e.message}**\n**Command Ran: ${command.props.triggers[0]}\nSupplied arguments: ${args.join(' ')}\nServer ID: ${msg.channel.guild.id}\n\`\`\` ${e.stack} \`\`\``)
-      this.log(`Command error:\n\tCommand: ${command.props.triggers[0]}\n\tSupplied arguments: ${args.join(' ')}\n\tServer ID: ${msg.channel.guild.id}\n\tError: ${e.stack}`, 'error')
+      this.log(`Command error:\n\tCommand: ${command.props.triggers[0]}\n\tSupplied arguments: ${cleanArgs.join(' ')}\n\tServer ID: ${msg.channel.guild.id}\n\tError: ${e.stack}`, 'error')
     }
   }
 }
