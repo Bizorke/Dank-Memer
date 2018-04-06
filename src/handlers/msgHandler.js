@@ -63,7 +63,6 @@ exports.handleMeDaddy = async function (msg) {
   }
   */
   this.db.addPls(msg.channel.guild.id, msg.author.id)
-  console.log(`${msg.channel.guild.name}: ${msg.author.username}`)
   if (msg.member.roles.some(id => msg.channel.guild.roles.get(id).name === 'no memes for you')) return
 
   const cooldown = await this.db.getCooldown(command.props.triggers[0], msg.author.id)
