@@ -162,7 +162,7 @@ exports.handleMeDaddy = async function (msg) {
   } catch (e) {
     if (e.message.includes('Disconnected') || e.message.includes('Voice connection timeout')) {
       msg.channel.createMessage(`Discord done hecked up: \`${e.message}\` \n\nTo fix this, go to your server settings, change the region to any other region, hit save, and try the command again.\nPlease join here (<https://discord.gg/ebUqc7F>) if the issue doesn't stop being an ass. `)
-      await this.bot.createMessage('431132690339856384', `**Error: ${e.message} **\nServer ID: ${msg.channel.guild.id}\nVoice Endpoint: ${this.bot.voiceConnections.get(msg.channel.guild.id).endpoint}\nCluster ${this.clusterID}| Shard ${msg.channel.guild.shard.id}\n\`\`\` ${e.stack} \`\`\``)
+      await this.bot.createMessage('431132690339856384', `**Error: ${e.message} **\nServer ID: ${msg.channel.guild.id}\nVoice Endpoint: ${this.bot.voiceConnections.get(msg.channel.guild.id).endpoint ? this.bot.voiceConnections.get(msg.channel.guild.id).endpoint : 'Not available'}\nCluster ${this.clusterID}| Shard ${msg.channel.guild.shard.id}\n\`\`\` ${e.stack} \`\`\``)
       this.log(`Voice error:\n\tCommand: ${command.props.triggers[0]}\n\tServer Region: ${msg.channel.guild.region}\n\tServer ID: ${msg.channel.guild.id}\n\tError: ${e.stack}`, 'error')
     } else if (e.message.includes('new_val')) {
       msg.channel.createMessage(`We done hecked up: \`${e.message}\` \n\nWe do not currently know what is causing this issue, but we are working on it.\nPlease join here (<https://discord.gg/ebUqc7F>) if the issue doesn't stop being an ass. `)
