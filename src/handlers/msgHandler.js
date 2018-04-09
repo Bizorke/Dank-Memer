@@ -19,6 +19,8 @@ exports.handleMeDaddy = async function (msg) {
     disabledCommands: []
   }
 
+  let isDonor = await this.db.isDonor(msg.author.id)
+
   const prefix = (() => {
     const { nick, username } = msg.channel.guild.members.get(this.bot.user.id)
     return this.mentionRX.test(msg.content)
@@ -42,6 +44,8 @@ exports.handleMeDaddy = async function (msg) {
     msg.content.toLowerCase().includes('hello')
   ) {
     return msg.channel.createMessage(`Hello, ${msg.author.username}. My prefix is \`${gConfig.prefix}\`. Example: \`${gConfig.prefix} meme\``)
+  } else if (command.props.donorOnly && !isDonor) {
+    return msg.channel.createMessage('This command is for donors only. You can find more information by using `pls donate` if you are interested.')
   } else if (
     !command ||
     (command.props.ownerOnly && !this.config.devs.includes(msg.author.id)) ||
@@ -76,7 +80,15 @@ exports.handleMeDaddy = async function (msg) {
         description: cooldownWarning + (waitTime > 60 ? `${this.parseTime(waitTime)}` : `${waitTime.toFixed()} seconds`) + `\n\n<:ratelimited:430818160434741250> Default Cooldown: ${this.parseTime(command.props.cooldown / 1000)}\n<:donateSign:428024864700497921> [Donor](https://www.patreon.com/dankmemerbot) Cooldown: ${command.props.donorBlocked ? this.parseTime(command.props.cooldown / 1000) : this.parseTime(command.props.donorCD / 1000)}`
       }
     }
-    return msg.channel.createMessage(cooldownMessage)
+    const donorMessage = {
+      embed: {
+        title: 'You are being ratelimited <:errorSign:428021845078573058>',
+        description: cooldownWarning + (waitTime > 60 ? `${this.parseTime(waitTime)}` : `${waitTime.toFixed()} seconds`) + `\n<:donateSign:428024864700497921> [Donor](https://www.patreon.com/dankmemerbot) Cooldown: ${command.props.donorBlocked ? this.parseTime(command.props.cooldown / 1000) : this.parseTime(command.props.donorCD / 1000)}`,
+        footer: { text: 'Thanks for your support!' }
+      }
+    }
+
+    return msg.channel.createMessage(isDonor ? donorMessage : cooldownMessage)
   }
   const addCooldown = () => this.db.addCooldown(command.props.triggers[0], msg.author.id)
 

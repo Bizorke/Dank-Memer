@@ -10,6 +10,10 @@ module.exports = new GenericCommand(
     if (perpCoins.coin < 100) {
       return { title: 'You need at least 100 to try and rob someone.' }
     }
+    if (Memer.config.devs.includes(msg.mentions[0].id) && !Memer.config.devs.includes(msg.author.id)) {
+      Memer.db.removeCoins(msg.author.id, 100)
+      return { title: 'Tried stealing from the devs? There goes 100 of your coins. Nice job.' }
+    }
     if (victimCoins.coin < 100) {
       return { title: 'The victim doesn\'t have at least 100 coins, not worth it man' }
     }
@@ -27,12 +31,12 @@ module.exports = new GenericCommand(
       Memer.db.addCoins(msg.author.id, worth)
       Memer.db.removeCoins(msg.mentions[0].id, worth)
       return `You managed to steal a small amount before leaving!\nYour payout was **${worth} coins.**`
-    } else if (stealingOdds < 97 && stealingOdds <= 99) { // 40% payout
-      let worth = Math.round(victimCoins.coin * 0.4)
+    } else if (stealingOdds < 97 && stealingOdds <= 99) { // 30% payout
+      let worth = Math.round(victimCoins.coin * 0.3)
       Memer.db.addCoins(msg.author.id, worth)
       Memer.db.removeCoins(msg.mentions[0].id, worth)
       return `You managed to steal a sizeable amount before leaving!\nYour payout was **${worth} coins.**`
-    } else { // full theft
+    } else { // full theft up to 10k
       let worth = Math.round(victimCoins.coin)
       Memer.db.addCoins(msg.author.id, worth)
       Memer.db.removeCoins(msg.mentions[0].id, worth)
@@ -41,8 +45,9 @@ module.exports = new GenericCommand(
   },
   {
     triggers: ['steal', 'rob', 'ripoff'],
-    cooldown: 18e5,
-    donorCD: 9e5,
+    cooldown: 14e5,
+    donorCD: 7e5,
+    perms: ['embedLinks'],
     description: 'Take your chances at stealing from users. Warning, you will lose money if you get caught! The victim can lose no more than 25k coins.',
     cooldownMessage: 'Woahhh there, you need some time to plan your next hit. Wait ',
     missingArgs: 'You need to tag someone to steal from'

@@ -6,11 +6,16 @@ module.exports = new GenericCommand(
     chances = chances + 10
 
     let coins = await Memer.db.getCoins(msg.author.id)
+    const donor = await Memer.db.isDonor(msg.author.id)
+    if (donor) {
+      chances = Math.round(chances + (chances * 0.5))
+    }
     await addCD()
     await Memer.db.addCoins(msg.author.id, chances)
     return {
       title: `Guys, watch this. ${msg.author.username} is about to beg.`,
-      description: `**${msg.author.username}**: pls give me coins, you're the best meme bot ever...\n**Best Meme Bot ever**: Ok fine you little bitch. I grant you ${chances} coins, now you have ${coins.coin + chances}`
+      description: `**${msg.author.username}**: pls give me coins, you're the best meme bot ever...\n**Best Meme Bot ever**: Ok fine you little bitch. I grant you ${chances} coins, now you have ${coins.coin + chances}`,
+      footer: { text: `Multiplier: ${donor ? '50%' : '0%'}` }
     }
   },
   {

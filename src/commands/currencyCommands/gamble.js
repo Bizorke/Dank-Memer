@@ -35,7 +35,11 @@ module.exports = new GenericCommand(
     if (Math.random() >= 0.65) {
       const winChance = (Math.random() * 0.95) + 1
 
-      const winnings = Math.round(bet * winChance)
+      let winnings = Math.round(bet * winChance)
+      const donor = await Memer.db.isDonor(msg.author.id)
+      if (donor) {
+        winnings = Math.round(winnings + (winnings * 0.5))
+      }
       if (winnings === bet) {
         return 'You broke even. This means you\'re lucky I think?'
       }
@@ -44,7 +48,7 @@ module.exports = new GenericCommand(
       return {
         title: `Damn it, you won ${winnings} coins.`,
         description: `Now you've got ${coins.coin + parseInt(winnings)}.`,
-        footer: {text: 'Stop winning, I\'m going broke.'}
+        footer: {text: `Multiplier ${donor ? '50%' : '0%'}`}
       }
     } else {
       await Memer.db.removeCoins(msg.author.id, bet)
