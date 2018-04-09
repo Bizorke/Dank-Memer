@@ -354,7 +354,7 @@ module.exports = Bot => ({
 
   addDonor: async function addDonor (id, donorAmount) {
     return Bot.r.table('donors')
-      .insert({ id, donorAmount })
+      .insert({ id, donorAmount }, { conflict: 'update' })
       .run()
   },
 
