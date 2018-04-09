@@ -34,7 +34,7 @@ module.exports = Bot => ({
     if (!pCommand) {
       return
     }
-    const isDonor = await this.isDonator(ownerID)
+    const isDonor = await this.isDonor(ownerID)
     let cooldown
     if (isDonor && !pCommand.props.donorBlocked) {
       cooldown = pCommand.props.donorCD
@@ -63,7 +63,7 @@ module.exports = Bot => ({
     if (!pCommand) {
       return
     }
-    const isDonor = await this.isDonator(ownerID)
+    const isDonor = await this.isDonor(ownerID)
     if (isDonor && !pCommand.props.donorBlocked) {
       const cooldown = pCommand.props.donorCD
       return Bot.r.table('cooldowns')
@@ -352,24 +352,24 @@ module.exports = Bot => ({
     await Bot.r.table('users').insert({ id, streak }, { conflict: 'update' }).run()
   },
 
-  addDonator: async function addDonator (id, donatorLevel) {
-    return Bot.r.table('donators')
-      .insert({ id, donatorLevel })
+  addDonor: async function addDonor (id, donorAmount) {
+    return Bot.r.table('donors')
+      .insert({ id, donorAmount })
       .run()
   },
 
-  removeDonator: async function removeDonator (id) {
-    return Bot.r.table('donators')
+  removeDonor: async function removeDonor (id) {
+    return Bot.r.table('donors')
       .get(id)
       .delete()
       .run()
   },
 
-  isDonator: async function isDonator (id, donatorLevel = 1) {
-    const res = await Bot.r.table('donators')
+  isDonor: async function isDonor (id) {
+    const res = await Bot.r.table('donors')
       .get(id)
       .run()
-    return res ? res.donatorLevel >= donatorLevel : false
+    return res ? res.donorAmount : false
   },
 
   getStats: async function getStats () {
