@@ -18,7 +18,7 @@ module.exports = new GenericCommand(
 
       return {
         title: 'Available Commands',
-        description: 'We want to be able to upgrade our server for better performance. If you\'re able and willing to donate, you can do so on [patreon](https://www.patreon.com/dankmemerbot) or [paypal](https://www.paypal.me/melmsie). It will help out a ton, and all money goes towards the bot! (Not to mention you get `1k coins per dollar` donated to help fuel your gambling addictions)',
+        description: 'Want 750 meme coins? Spend 1 minute [voting here](https://discordbots.org/bot/270904126974590976/vote) and it will get automatically added to your account!\nThis can be ran every 24 hours!',
         fields: Object.keys(categories).map(category => ({ name: category, value: categories[category].join(', ') })),
         footer: { text: 'twitter.com/dankmemerbot' }
       }
