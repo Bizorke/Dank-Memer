@@ -22,7 +22,7 @@ module.exports = new GenericCommand(
       await addCD()
       return {
         title: `You have ${coins.coin} coins.`,
-        description: `To learn more about Dank Memer's currency, run \`pls guide\`\nTo see possible ways of earning more coins, do \`pls earn\``,
+        description: `To learn more about Dank Memer's currency, run \`pls guide\`\nTo see possible ways of earning more coins, do \`pls earn\`\n[Voting here](https://discordbots.org/bot/270904126974590976/vote) each 24hr will get you 750 coins each time!`,
         thumbnail: {url: 'https://dankmemer.lol/coin.png'},
         footer: {text: 'Hey stupid, do not spend it all in one place.'}
       }
