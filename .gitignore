@@ -30,14 +30,12 @@ build/Release
 node_modules
 jspm_packages
 
+
 # Optional npm cache directory
 .npm
 
 # Optional REPL history
 .node_repl_history
 config.json
-ids.json
 package-lock.json
 package.json
-src/sort.js
-src/test.js
