@@ -21,13 +21,14 @@ exports.handleMeDaddy = async function (msg) {
   const mention = `<@${selfMember.nick ? '!' : ''}${selfMember.id}>`
   const wasMentioned = msg.content.startsWith(mention)
   const triggerLength = (wasMentioned ? mention.length : gConfig.prefix.length) + 1
+  const cleanTriggerLength = (wasMentioned ? `@${selfMember.nick || selfMember.username}` : gConfig.prefix.length) + 1
 
   if (!msg.content.toLowerCase().startsWith(gConfig.prefix) && !wasMentioned) {
     return
   }
 
   let [command, ...args] = msg.content.slice(triggerLength).split(/\s+/g)
-  const cleanArgs = msg.cleanContent.slice(triggerLength).split(/\s+/g).slice(1)
+  const cleanArgs = msg.cleanContent.slice(cleanTriggerLength).split(/\s+/g).slice(1)
 
   command = command && (this.cmds.find(c => c.props.triggers.includes(command.toLowerCase())) || this.tags[command.toLowerCase()])
 
