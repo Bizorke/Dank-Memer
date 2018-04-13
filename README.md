@@ -1,5 +1,5 @@
 <p align="center">
-<a title="memes" href=""><img src="https://cdn.discordapp.com/attachments/397477712836689940/427366241502625792/dankmemer.png"></a>
+<a title="memes" href=""><img src="https://cdn.discordapp.com/attachments/397477727214632971/434218636442337300/dmlogooo.png"></a>
 </p>
 <p align="center">
 <a href="https://discordbots.org/bot/270904126974590976">
@@ -16,7 +16,7 @@
 </a>
 </p>
 
-A discord bot bringing joy to hundreds of thousands of servers near you. 
+->*A discord bot bringing joy to hundreds of thousands of servers near you.*<-
 
 ## Self hosting the bot
 
