@@ -18,8 +18,13 @@ const specialCodes = {
 }
 
 module.exports = new GenericCommand(
-  async ({ cleanArgs }) => {
+  async ({ Memer, cleanArgs }) => {
     let args = cleanArgs
+
+    if (args.join(' ').length > 90) {
+      return 'Keep it under 90 characters fam'
+    }
+
     return args
       .join(' ')
       .toLowerCase()

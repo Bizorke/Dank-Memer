@@ -31,7 +31,7 @@ exports.handleMeDaddy = async function (msg) {
   }
 
   let [command, ...args] = msg.content.slice(triggerLength).split(/\s+/g)
-  const cleanArgs = msg.cleanContent.slice(`@${selfMember.nick || selfMember.username} `.length).split(/\s+/g)
+  const cleanArgs = msg.cleanContent.slice(triggerLength).split(/\s+/g).slice(1)
 
   command = command && (this.cmds.find(c => c.props.triggers.includes(command.toLowerCase())) || this.tags[command.toLowerCase()])
 
