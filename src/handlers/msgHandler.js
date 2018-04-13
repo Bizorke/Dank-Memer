@@ -21,21 +21,18 @@ exports.handleMeDaddy = async function (msg) {
 
   let isDonor = await this.db.isDonor(msg.author.id)
 
-  const prefix = (() => {
-    const { nick, username } = msg.channel.guild.members.get(this.bot.user.id)
-    return this.mentionRX.test(msg.content)
-      ? `@${nick || username}`.toLowerCase()
-      : gConfig.prefix
-  })()
-  if (!msg.cleanContent.toLowerCase().startsWith(prefix)) {
+  const selfMember = msg.channel.guild.members.get(this.bot.user.id)
+  const mention = `<@${selfMember.nick ? '!' : ''}${selfMember.id}>`
+  const wasMentioned = msg.content.startsWith(mention)
+  const triggerLength = wasMentioned ? mention.length + 1 : gConfig.prefix.length
+
+  if (!msg.content.toLowerCase().startsWith(gConfig.prefix) && !wasMentioned) {
     return
   }
 
-  let [command, ...cleanArgs] = msg.cleanContent.slice(prefix.length + 1).split(/\s+/g)
-  const args = msg.content.slice(prefix.length + 1).split(/\s+/g).slice(1)
-  if (args[0] === command) {
-    args.shift()
-  }
+  let [command, ...args] = msg.content.slice(triggerLength).split(/\s+/g)
+  const cleanArgs = msg.cleanContent.slice(`@${selfMember.nick || selfMember.username} `.length)
+
   command = command && (this.cmds.find(c => c.props.triggers.includes(command.toLowerCase())) || this.tags[command.toLowerCase()])
 
   if (
@@ -44,8 +41,6 @@ exports.handleMeDaddy = async function (msg) {
     msg.content.toLowerCase().includes('hello')
   ) {
     return msg.channel.createMessage(`Hello, ${msg.author.username}. My prefix is \`${gConfig.prefix}\`. Example: \`${gConfig.prefix} meme\``)
-  } else if (command.props.donorOnly && !isDonor) {
-    return msg.channel.createMessage('This command is for donors only. You can find more information by using `pls donate` if you are interested.')
   } else if (
     !command ||
     (command.props.ownerOnly && !this.config.devs.includes(msg.author.id)) ||
@@ -53,6 +48,8 @@ exports.handleMeDaddy = async function (msg) {
     (gConfig.disabledCommands.includes('nsfw') && command.props.isNSFW)
   ) {
     return
+  } else if (command.props.donorOnly && !isDonor) {
+    return msg.channel.createMessage('This command is for donors only. You can find more information by using `pls donate` if you are interested.')
   }
   /* Starting this later
   if (categoryStats[command.category]) {

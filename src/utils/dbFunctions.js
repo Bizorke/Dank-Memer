@@ -276,6 +276,7 @@ module.exports = Bot => ({
     let coins = await Bot.r.table('users')
       .get(id)
       .run()
+
     if (!coins) {
       return Bot.r.table('users')
         .insert({ id, coin: 0 }, { returnChanges: true })
