@@ -18,7 +18,7 @@ const specialCodes = {
 }
 
 module.exports = new GenericCommand(
-  async ({ Memer, cleanArgs }) => {
+  async ({ cleanArgs }) => {
     let args = cleanArgs
 
     if (args.join(' ').length > 90) {
