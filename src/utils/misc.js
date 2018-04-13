@@ -2,7 +2,6 @@ const config = require('../config.json')
 
 module.exports = {
   errorMessages: async (e) => {
-    console.log(e)
     // Voice related errors
     if (e.message.includes('Disconnected')) {
       return `Discord fucked something up. 😠\n\nTo fix this, you have to got to server settings and change the voice region.\nIf it still doesn't work after that, join (<https://discord.gg/ebUqc7F>) and tell support it is error \`vc1\`.`
@@ -66,24 +65,6 @@ module.exports = {
     }
 
     return false
-  },
-
-  colors: {
-    lightblue: '12054271',
-    purple: '7869695',
-    red: '16711680',
-    green: '65280',
-    blue: '255',
-    black: '0',
-    slate: '2500908',
-    white: '16777215',
-    yellow: '16250241'
-  },
-
-  roleIDs: {
-    'base': '334171428649959447',
-    '5': '344571417074991105',
-    '10': '344571468715261952'
   },
 
   intro: `Sup nerds. My name is **Dank Memer**.\n\nTo get started, send \`${config.defaultPrefix} help\`. All commands are run this way, for example, pls meme.\n\nThere ARE NSFW commands on this bot, but you can disable them with \`pls disable nsfw\`\n\nI am maintained by Melmsie#0001, who can be found at [this server](https://discord.gg/ebUqc7F) if you need to talk to him.`,

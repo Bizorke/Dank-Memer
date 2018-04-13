@@ -177,30 +177,7 @@ module.exports = Bot => ({
       .run()
     return res
   },
-  /* come back another time, not sure how to model this data
-  initCommand: async function initCommand (commandName) {
-    return Bot.r.table('commands')
-      .insert({
-        command: commandName,
-        uses: 1
-      }, { conflict: 'update', returnChanges: true })
-      .run()
-  },
 
-  updateCommand: async function updateCommand (commandName) {
-    let commands = await Bot.r.table('commands')
-
-    if (!commands.command) {
-      return this.initCommand(commandName)
-    }
-    commands.command.uses++
-    command.catagoryName.commandName.uses++
-
-    return Bot.r.table('commands')
-      .insert(command, { conflict: 'update' })
-      .run()
-  },
-  */
   initUser: async function initUser (id) {
     return Bot.r.table('users')
       .insert({
@@ -231,18 +208,6 @@ module.exports = Bot => ({
       }, { conflict: 'update', returnChanges: true })
       .run()
   },
-
-  /* This vs just using the other pls functions?
-
-  plsUser: async function plsUser (id) {
-    let user = this.getUser(id)
-    user.pls++
-    return Bot.r.table('users')
-      .insert(user, { conflict: 'update' })
-      .run()
-  },
-
-  */
 
   getUser: async function getUser (userID) {
     let pls = await Bot.r.table('users')

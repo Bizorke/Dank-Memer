@@ -82,7 +82,7 @@ class Memer extends Base {
 
   guildCreate (guild) {
     const embed = {
-      color: this.colors.lightblue,
+      color: 12054271,
       description: this.intro,
       fields: [
         {name: 'Important Links', value: this.links}
