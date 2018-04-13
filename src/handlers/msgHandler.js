@@ -20,8 +20,8 @@ exports.handleMeDaddy = async function (msg) {
   const selfMember = msg.channel.guild.members.get(this.bot.user.id)
   const mention = `<@${selfMember.nick ? '!' : ''}${selfMember.id}>`
   const wasMentioned = msg.content.startsWith(mention)
-  const triggerLength = (wasMentioned ? mention.length : gConfig.prefix.length) + 1
-  const cleanTriggerLength = (wasMentioned ? `@${selfMember.nick || selfMember.username}`.length : gConfig.prefix.length) + 1
+  const triggerLength = (wasMentioned ? mention : gConfig.prefix).length + 1
+  const cleanTriggerLength = (wasMentioned ? `@${selfMember.nick || selfMember.username}` : gConfig.prefix).length + 1
 
   if (!msg.content.toLowerCase().startsWith(gConfig.prefix) && !wasMentioned) {
     return
