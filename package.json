@@ -24,11 +24,10 @@
   "homepage": "https://github.com/dank-memer/Dank-Memer#readme",
   "dependencies": {
     "cheerio": "^1.0.0-rc.2",
-    "eris-lavalink": "^1.0.0",
-    "eris-sharder": "^1.7.6",
+    "eris-sharder": "^1.7.8",
     "eslint-config-standard": "^11.0.0",
     "rethinkdbdash": "^2.3.31",
     "snekfetch": "^3.6.4",
-    "standard": "^11.0.0"
+    "standard": "^11.0.1"
   }
 }
