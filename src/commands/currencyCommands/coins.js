@@ -30,6 +30,7 @@ module.exports = new GenericCommand(
   },
   {
     triggers: ['coins', 'bal', 'balance'],
-    description: 'u got dis many coins ok'
+    description: 'u got dis many coins ok',
+    perms: ['embedLinks']
   }
 )
