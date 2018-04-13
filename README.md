@@ -19,6 +19,8 @@
 <p align="center">
 A discord bot bringing joy to hundreds of thousands of servers near you.
 </p>
+
+
 ## Self hosting the bot
 
 We do not support or encourage self hosting of this bot. The code is here for learning and transparency purposes.
