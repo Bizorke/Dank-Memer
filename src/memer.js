@@ -5,7 +5,7 @@ const r = require('rethinkdbdash')()
 
 const master = new Sharder(config.token, '/mainClass.js', {
   stats: true,
-  name: 'memes',
+  name: 'ass',
   webhooks: config.webhooks,
   clientOptions: {
     disableEvents: {
@@ -16,7 +16,11 @@ const master = new Sharder(config.token, '/mainClass.js', {
       RELATIONSHIP_REMOVE: true,
       GUILD_BAN_ADD: true,
       GUILD_BAN_REMOVE: true,
-      TYPING_START: true
+      TYPING_START: true,
+      // if new problems start, blame these experimental disabled events
+      MESSAGE_DELETE: true,
+      MESSAGE_DELETE_BULK: true,
+      MESSAGE_UPDATE: true
     },
     disableEveryone: true,
     messageLimit: 0
@@ -40,7 +44,7 @@ if (require('cluster').isMaster && !config.dev) {
       post(botlist.url)
         .set('Authorization', botlist.token)
         .send({
-          [`server${botlist.url.includes('carbonitex') ? '' : '_'}count`]: guilds, // matt plz
+          [`server${botlist.url.includes('carbonitex') ? '' : '_'}count`]: guilds,
           key: botlist.token
         })
         .end()
