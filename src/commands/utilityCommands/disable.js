@@ -21,8 +21,9 @@ module.exports = new GenericCommand(
     if (!args[0]) {
       return { content: `Specify a command to disable, or multiple.\n\nExample: \`${gConfig.prefix} disable meme trigger shitsound\` or \`${gConfig.prefix} disable meme\``, reply: true }
     }
+
     if (args.some(cmd => !Memer.cmds.find(c => c.props.triggers.includes(cmd)) && cmd !== 'nsfw')) {
-      return { content: `The following commands are invalid: \n\n${args.filter(cmd => !Memer.cmds.find(c => c.props.triggers.includes(cmd))).map(cmd => `\`${cmd.props.triggers[0]}\``).join(', ')}\n\nPlease make sure all of your commands are valid and try again.`, reply: true }
+      return { content: `The following commands are invalid: \n\n${args.filter(cmd => !Memer.cmds.find(c => c.props.triggers.includes(cmd))).map(cmd => `\`${cmd.toLowerCase()}\``).join(', ')}\n\nPlease make sure all of your commands are valid (case-sensitive!) and try again.`, reply: true }
     }
 
     gConfig.disabledCommands = gConfig.disabledCommands.concat(args)
