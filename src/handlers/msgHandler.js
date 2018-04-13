@@ -10,10 +10,6 @@ exports.handleMeDaddy = async function (msg) {
     return
   }
 
-  if (!msg.channel.permissionsOf(this.bot.user.id).has('sendMessages')) {
-    return
-  }
-
   const gConfig = await this.db.getGuild(msg.channel.guild.id) || {
     prefix: this.config.defaultPrefix,
     disabledCommands: []
