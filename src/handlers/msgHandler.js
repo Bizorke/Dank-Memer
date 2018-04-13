@@ -21,7 +21,7 @@ exports.handleMeDaddy = async function (msg) {
   const mention = `<@${selfMember.nick ? '!' : ''}${selfMember.id}>`
   const wasMentioned = msg.content.startsWith(mention)
   const triggerLength = (wasMentioned ? mention.length : gConfig.prefix.length) + 1
-  const cleanTriggerLength = (wasMentioned ? `@${selfMember.nick || selfMember.username}` : gConfig.prefix.length) + 1
+  const cleanTriggerLength = (wasMentioned ? `@${selfMember.nick || selfMember.username}`.length : gConfig.prefix.length) + 1
 
   if (!msg.content.toLowerCase().startsWith(gConfig.prefix) && !wasMentioned) {
     return
