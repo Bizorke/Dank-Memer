@@ -173,7 +173,7 @@ module.exports = Bot => ({
   topPls: async function topPls () {
     const res = await Bot.r.table('pls')
       .orderBy({index: Bot.r.desc('pls')})
-      .limit(5)
+      .limit(10)
       .run()
     return res
   },
@@ -193,7 +193,7 @@ module.exports = Bot => ({
   topUsers: async function topUsers () {
     const res = await Bot.r.table('users')
       .orderBy({index: Bot.r.desc('pls')})
-      .limit(5)
+      .limit(10)
       .run()
     return res
   },
