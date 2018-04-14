@@ -1,4 +1,4 @@
-const { kill } = require('../../assets/arrays.json')
+const { kill } = require('../../assets/arrays/kill.json')
 const { GenericCommand } = require('../../models/')
 
 module.exports = new GenericCommand(

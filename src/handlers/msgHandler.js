@@ -1,4 +1,4 @@
-let gifs = require('../assets/permGifs.json')
+let gifs = require('../assets/arrays/permGifs.json')
 // let categoryStats = {}
 // let commandStats = {}
 exports.handleMeDaddy = async function (msg) {

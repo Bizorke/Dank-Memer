@@ -1,5 +1,5 @@
 const { GenericCommand } = require('../../models/')
-const { redpandas } = require('../../assets/animals.json')
+const { redpandas } = require('../../assets/arrays/animals.json')
 
 module.exports = new GenericCommand(
   async ({ Memer, msg }) => ({

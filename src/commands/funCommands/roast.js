@@ -1,4 +1,4 @@
-const { roast } = require('../../assets/arrays.json')
+const { roast } = require('../../assets/arrays/roasts.json')
 const { GenericCommand } = require('../../models/')
 
 module.exports = new GenericCommand(
