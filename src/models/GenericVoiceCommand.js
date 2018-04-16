@@ -42,7 +42,6 @@ module.exports = class GenericVoiceCommand {
 
     if (this.cmdProps.np) {
       let np = files.replace(/_+/g, ' ')
-      np = files.replace(/_+/g, ' ')
       msg.channel.createMessage({embed: {title: 'Now Playing...', description: np}})
     } else if (this.cmdProps.message) {
       msg.channel.createMessage(this.cmdProps.message)

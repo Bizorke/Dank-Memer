@@ -32,8 +32,8 @@ As long as you follow the license, we don't care if you host your own version of
 * **Melmsie** - *Initial work and owner* - [GitHub Profile](https://github.com/melmsie)
 * **Aetheryx** - *I like trains* - [GitHub Profile](https://github.com/Aetheryx)
 * **CyberRonin** - *Melmsie is my lover* [Github Profile](https://github.com/TheCyberRonin)
-* **Ken** - *Haha yes* - [GitHub Profile](https://github.com/DaJuukes)
-* **Kromatic** - *Mayonnaise is an instrument* [Github Profile](https://github.com/NotWeeb)
+* **Ken** - *Haha yes* - [GitHub Profile](https://github.com/NotWeeb)
+* **Kromatic** - *Mayonnaise is an instrument* [Github Profile](https://github.com/Kromatic)
 
 See also the list of [contributors](https://github.com/melmsie/Dank-Memer/contributors) who participated in this project.
 
