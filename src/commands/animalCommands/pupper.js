@@ -4,7 +4,9 @@ module.exports = new GenericMediaCommand({
   triggers: ['pupper', 'doggo', 'dog', 'yipper', 'puppy', 'borkyboi'],
   description: 'See some cute doggos!',
 
-  title: '🐶',
-  reqURL: 'https://random.dog/woof.json',
-  JSONKey: 'url'
+  title: 'Bork Bork! 🐶',
+  message: 'powered by weeb shit (weeb.sh)',
+  JSONKey: 'url',
+  reqURL: 'https://api.weeb.sh/images/random?type=animal_dog',
+  tokenKey: 'weeb'
 })
