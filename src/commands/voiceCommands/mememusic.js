@@ -6,7 +6,7 @@ module.exports = new GenericVoiceCommand({
 
   reaction: '😃',
   dir: 'shitsound',
-  ext: 'ogg',
+  ext: 'opus',
   np: true,
   skipIfPlaying: true
 })
