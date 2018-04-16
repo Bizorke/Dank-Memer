@@ -24,10 +24,12 @@ module.exports = class GenericRedditCommand {
     const post = posts[index]
     indexes[msg.channel.guild.id]++
 
+    const postTitle = post.data.title.length > 256 ? `${post.data.title.slice(0, 253)}...` : post.data.title
+
     await addCD()
     if (this.cmdProps.type === 'text') {
       return {
-        title: post.data.title,
+        title: postTitle,
         url: `https://www.reddit.com${post.data.permalink}`,
         description: post.data.selftext,
         image: { url: this.cmdProps.type === 'image' ? post.data.url : '' },
@@ -35,7 +37,7 @@ module.exports = class GenericRedditCommand {
       }
     }
     return {
-      title: post.data.title,
+      title: postTitle,
       url: `https://www.reddit.com${post.data.permalink}`,
       image: { url: this.cmdProps.type === 'image' ? post.data.url : '' },
       footer: { text: `👍 ${post.data.ups} | 💬 ${post.data.num_comments}` }
