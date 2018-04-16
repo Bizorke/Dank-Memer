@@ -17,7 +17,7 @@ module.exports = new GenericCommand(
   },
   {
     triggers: ['search', 'dumpsterdive'],
-    cooldown: 6e4,
+    cooldown: 3e4,
     donorBlocked: true,
     cooldownMessage: 'There is currently a homeless man eating from that dumpster, try again in ',
     description: 'haha ur poor so you have to search for coins in a dumpster hahaha'

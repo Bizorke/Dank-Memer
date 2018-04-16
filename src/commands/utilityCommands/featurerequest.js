@@ -15,7 +15,7 @@ module.exports = new GenericCommand(
 
     return 'Your feature request has been sent to the developers. Feel free to suggest more after the cooldown.'
   }, {
-    triggers: ['request', 'featurerequest'],
+    triggers: ['featurerequest'],
     description: 'Use this command to request a feature you\'d like the bot to have.',
     missingArgs: 'Use this command to request a feature you\'d like the bot to have. Try again'
   }

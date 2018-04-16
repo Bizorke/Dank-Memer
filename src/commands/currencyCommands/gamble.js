@@ -61,8 +61,8 @@ module.exports = new GenericCommand(
   },
   {
     triggers: ['gamble', 'bet'],
-    cooldown: 3e4,
-    donorCD: 1e4,
+    cooldown: 1e4,
+    donorCD: 5e3,
     description: 'Take your chances at gambling. Warning, I am very good at stealing your money.',
     cooldownMessage: 'If I let you bet whenever you wanted, you\'d be a lot more poor. Wait ',
     missingArgs: 'You gotta gamble some of ur coins bro, `pls gamble #/all/half` for example, dummy'

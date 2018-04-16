@@ -40,8 +40,8 @@ module.exports = new GenericCommand(
   },
   {
     triggers: ['share', 'give'],
-    cooldown: 9e5,
-    donorCD: 6e5,
+    cooldown: 1e4,
+    donorCD: 1000,
     description: 'share some coins with someone',
     missingArgs: 'You need to choose who to share with and how many coins dummy'
   }

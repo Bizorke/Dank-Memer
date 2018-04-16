@@ -8,7 +8,7 @@ module.exports = new GenericCommand(
         color: Memer.randomColor(),
         title: '📫 You have received a message from the developers!',
         description: args.slice(1).join(' '),
-        footer: { text: 'To reply, please use pls vent.' }
+        footer: { text: 'To reply, please use pls request.' }
       }})
       msg.addReaction('📧')
     } catch (e) {

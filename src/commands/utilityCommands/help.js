@@ -5,7 +5,7 @@ module.exports = new GenericCommand(
     if (!args[0]) {
       let categories = {}
       for (const command of Memer.cmds) {
-        if (command.props.ownerOnly) {
+        if (command.props.ownerOnly || command.props.hide) {
           continue
         }
 

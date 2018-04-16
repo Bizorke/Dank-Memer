@@ -29,6 +29,7 @@ module.exports = new GenericCommand(
     }
   }, {
     triggers: ['deny'],
+    hide: true,
     usage: '{command} <id> <amount> [message]',
     description: 'melmsie stinks'
   }

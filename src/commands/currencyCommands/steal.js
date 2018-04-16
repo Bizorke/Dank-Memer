@@ -45,10 +45,10 @@ module.exports = new GenericCommand(
   },
   {
     triggers: ['steal', 'rob', 'ripoff'],
-    cooldown: 14e5,
-    donorCD: 7e5,
+    cooldown: 8e5,
+    donorCD: 4e5,
     perms: ['embedLinks'],
-    description: 'Take your chances at stealing from users. Warning, you will lose money if you get caught! The victim can lose no more than 25k coins.',
+    description: 'Take your chances at stealing from users. Warning, you will lose money if you get caught! The victim can lose no more than 10k coins.',
     cooldownMessage: 'Woahhh there, you need some time to plan your next hit. Wait ',
     missingArgs: 'You need to tag someone to steal from'
   }

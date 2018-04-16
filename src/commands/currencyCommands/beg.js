@@ -20,8 +20,8 @@ module.exports = new GenericCommand(
   },
   {
     triggers: ['beg', 'gib'],
-    cooldown: 10e5,
-    donorCD: 4e5,
+    cooldown: 5e5,
+    donorCD: 2e5,
     cooldownMessage: 'Stop begging so much, you can have more coins in ',
     description: 'haha ur poor so you have to beg for coins lmaoooo'
   }

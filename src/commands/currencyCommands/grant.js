@@ -40,6 +40,7 @@ module.exports = new GenericCommand(
     }
   }, {
     triggers: ['grant'],
+    hide: true,
     usage: '{command} <id> <amount> [message]',
     description: 'melmsie stinks'
   }
