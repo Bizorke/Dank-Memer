@@ -3,7 +3,7 @@ const { promisify } = require('util')
 const fs = require('fs')
 const readdir = promisify(fs.readdir)
 let files
-
+const delayer = ms => new Promise(res => setTimeout(() => res(), ms)) // eslint-disable-line
 module.exports = class GenericVoiceCommand {
   constructor (cmdProps) {
     this.cmdProps = cmdProps
@@ -50,6 +50,7 @@ module.exports = class GenericVoiceCommand {
       msg.addReaction(this.cmdProps.reaction)
     }
     const conn = await Memer.bot.joinVoiceChannel(msg.member.voiceState.channelID)
+    await delayer(350)
     conn.play(`./assets/audio/${this.cmdProps.dir}/${file}.${this.cmdProps.ext}`, this.cmdProps.ext === 'ogg' ? { format: '' } : { format: 'ogg' })
     conn.once('end', async () => {
       await Memer.bot.leaveVoiceChannel(msg.channel.guild.members.get(Memer.bot.user.id).voiceState.channelID) // TODO: Don't run this if it's being skipped
