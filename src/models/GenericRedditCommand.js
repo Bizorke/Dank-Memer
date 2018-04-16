@@ -13,6 +13,13 @@ module.exports = class GenericRedditCommand {
 
   async run ({ Memer, msg, addCD }) {
     const res = await get(`https://www.reddit.com${this.cmdProps.endpoint}`)
+      .catch(() => null)
+
+    if (!res) {
+      await addCD()
+      return 'meme machine 🅱roke'
+    }
+
     const posts = res.body.data.children.filter(filters[this.cmdProps.type])
 
     const indexes = Memer.indexes[this.cmdProps.triggers[0]]
