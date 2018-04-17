@@ -169,7 +169,7 @@ exports.handleMeDaddy = async function (msg) {
     let message = await this.errorMessages(e)
     if (!message) {
       msg.channel.createMessage(`Something went wrong while executing this hecking command: \`${e.message}\` \nPlease join here (<https://discord.gg/ebUqc7F>) if the issue doesn't stop being an ass and tell staff that it's an \`unknown error\``)
-      await this.bot.createMessage('431692509895458833', `**Error: ${e.message}**\nCommand Ran: ${command.props.triggers[0]}\nSupplied arguments: ${cleanArgs.join(' ')}\nServer ID: ${msg.channel.guild.id}\nCluster ${this.clusterID}| Shard ${msg.channel.guild.shard.id}\n\`\`\` ${e.stack} \`\`\``)
+      await this.bot.createMessage('431692509895458833', `**Error: ${e.message}**\nCommand Ran: ${command.props.triggers[0]}\nSupplied arguments: ${cleanArgs.join(' ')}\nServer ID: ${msg.channel.guild.id}\nCluster ${this.clusterID} | Shard ${msg.channel.guild.shard.id}\n\`\`\` ${e.stack} \`\`\``)
       this.log(`Command error:\n\tCommand: ${command.props.triggers[0]}\n\tSupplied arguments: ${cleanArgs.join(' ')}\n\tServer ID: ${msg.channel.guild.id}\n\tError: ${e.stack}`, 'error')
     } else {
       msg.channel.createMessage(message)

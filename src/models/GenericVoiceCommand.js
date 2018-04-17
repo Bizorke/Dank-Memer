@@ -49,7 +49,8 @@ module.exports = class GenericVoiceCommand {
       msg.addReaction(this.cmdProps.reaction)
     }
     const conn = await Memer.bot.joinVoiceChannel(msg.member.voiceState.channelID)
-    await delayer(350)
+    Memer.log(`Joining voicechannel ${msg.member.voiceState.channelID}\n` +
+              `\tAlready connected?: ${Memer.bot.voiceConnections.has(msg.channel.guild.id)}`)
     console.log(file + this.cmdProps.ext)
     conn.play(`./assets/audio/${this.cmdProps.dir}/${file}.${this.cmdProps.ext}`, { format: 'ogg' })
     conn.once('end', async () => {
