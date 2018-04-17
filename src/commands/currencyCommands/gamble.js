@@ -53,7 +53,7 @@ module.exports = new GenericCommand(
     } else {
       await Memer.db.removeCoins(msg.author.id, bet)
       return {
-        title: `Lmfao you lost ${bet} coins.`,
+        title: `Lmfao you lost ${Number(bet)} coins.`,
         description: `Now you've got ${(coins.coin - bet) < 0 ? 0 : coins.coin - bet}.`,
         footer: {text: 'You are really bad at this. I suggest not doing this anymore.'}
       }
