@@ -54,6 +54,7 @@ module.exports = class GenericVoiceCommand {
     console.log(file + this.cmdProps.ext)
     conn.play(`./assets/audio/${this.cmdProps.dir}/${file}.${this.cmdProps.ext}`, { format: 'ogg' })
     conn.once('end', async () => {
+      Memer.log(`[stream-end] Leaving voicechannel ${conn.channelID}`)
       await Memer.bot.leaveVoiceChannel(msg.channel.guild.members.get(Memer.bot.user.id).voiceState.channelID) // TODO: Don't run this if it's being skipped
       if (Memer.bot.voiceConnections.has(msg.channel.guild.id)) {
         Memer.bot.voiceConnections.remove(Memer.bot.voiceConnections.get(msg.channel.guild.id))
