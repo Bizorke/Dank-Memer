@@ -9,7 +9,7 @@ module.exports = new GenericCommand(
     pls = await Promise.all(pls.map(async g => Object.assign(await Memer.ipc.fetchGuild(g.id), { pls: g.pls })))
     return {
       title: 'Top 10 servers (Commands Ran)',
-      description: pls.map((u, i) => `${emojis[i] || '👏'} ${u.coin} - ${u.username}#${u.discriminator}`).join('\n'),
+      description: pls.map((g, i) => `${emojis[i] || '👏'} ${g.pls} - ${g.name}`).join('\n'),
       footer: { text: `Your server has ran ${you.pls} commands` }
     }
   },
