@@ -2,15 +2,14 @@ const { GenericCommand } = require('.')
 const { promisify } = require('util')
 const fs = require('fs')
 const readdir = promisify(fs.readdir)
-let files
-const delayer = ms => new Promise(res => setTimeout(() => res(), ms)) // eslint-disable-line
+
 module.exports = class GenericVoiceCommand {
   constructor (cmdProps) {
     this.cmdProps = cmdProps
   }
 
   async run ({ Memer, msg, addCD }) {
-    files = await readdir(`./assets/audio/${this.cmdProps.dir}`)
+    let files = await readdir(`./assets/audio/${this.cmdProps.dir}`)
     files = Memer.randomInArray(files).replace(/(\.opus)|(\.ogg)/, '')
 
     const file = typeof this.cmdProps.files === 'string'
@@ -50,10 +49,11 @@ module.exports = class GenericVoiceCommand {
     }
     const conn = await Memer.bot.joinVoiceChannel(msg.member.voiceState.channelID)
     Memer.log(`Joining voicechannel ${msg.member.voiceState.channelID}\n` +
+              `\tGuild: ${msg.channel.guild.id}\n` +
               `\tAlready connected?: ${Memer.bot.voiceConnections.has(msg.channel.guild.id)}`)
     conn.play(`./assets/audio/${this.cmdProps.dir}/${file}.${this.cmdProps.ext}`, { format: 'ogg' })
     conn.once('end', async () => {
-      Memer.log(`[stream-end] Leaving voicechannel ${conn.channelID}`)
+      Memer.log(`[stream-end] Leaving voicechannel ${conn.channelID}\n\tGuild: ${msg.channel.guild.id}`)
       await Memer.bot.leaveVoiceChannel(msg.channel.guild.members.get(Memer.bot.user.id).voiceState.channelID) // TODO: Don't run this if it's being skipped
       if (Memer.bot.voiceConnections.has(msg.channel.guild.id)) {
         Memer.bot.voiceConnections.remove(Memer.bot.voiceConnections.get(msg.channel.guild.id))
