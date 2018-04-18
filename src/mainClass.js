@@ -50,6 +50,7 @@ class Memer extends Base {
       .on('guildCreate', this.guildCreate.bind(this))
       .on('guildDelete', this.guildDelete.bind(this))
       .on('messageCreate', msgHandler.handleMeDaddy.bind(this))
+      .on('rawWS', this.rawWS.bind(this))
       .on('error', (error) => {
         this.log(error.stack, 'error')
       })
@@ -95,6 +96,12 @@ class Memer extends Base {
 
   guildDelete (guild) {
     this.db.deleteGuild(guild.id)
+  }
+
+  rawWS (packet, shardId) {
+    if (packet.guild_id) {
+      this.bot.voiceConnections.voiceServerUpdate(packet)
+    }
   }
 
   get package () {
