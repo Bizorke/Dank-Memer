@@ -3,7 +3,6 @@ const { promisify } = require('util')
 const fs = require('fs')
 const readdir = promisify(fs.readdir)
 let files
-const delayer = ms => new Promise(res => setTimeout(() => res(), ms)) // eslint-disable-line
 module.exports = class GenericVoiceCommand {
   constructor (cmdProps) {
     this.cmdProps = cmdProps
