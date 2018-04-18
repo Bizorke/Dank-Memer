@@ -19,7 +19,7 @@ class GenericImageCommand {
       ? this.cmdProps.reqURL.replace('$URL', datasrc)
       : `http://www.dank-memer-is-lots-of.fun/api/${this.cmdProps.triggers[0]}`)
       .set('Api-Key', Memer.config.imgenKey)
-      .set('data-src', datasrc)
+      .set('data-src', encodeURIComponent(datasrc))
 
     if (data.status === 200 && (!isLocalhost || data.body.status === 200)) {
       const file = isLocalhost ? Buffer.from(data.body.file, 'utf8') : data.body

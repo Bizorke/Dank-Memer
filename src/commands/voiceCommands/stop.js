@@ -18,7 +18,7 @@ module.exports = new GenericCommand(
       return 'Smh you can\'t stop when I\'m not connected'
     }
 
-    Memer.log(`[stop] Leaving voicechannel ${Memer.bot.voiceConnections.get(msg.channel.guild.id).channelID}`)
+    Memer.log(`[stop] Leaving voicechannel ${Memer.bot.voiceConnections.get(msg.channel.guild.id).channelID}\n\tGuild: ${msg.channel.guild.id}`)
     await Memer.bot.leaveVoiceChannel(Memer.bot.voiceConnections.get(msg.channel.guild.id).channelID)
     msg.addReaction('❌').catch(() => {}) // Usually if the user deletes the message before the bot can react
   }, {
