@@ -1,7 +1,11 @@
 let gifs = require('../assets/arrays/permGifs.json')
 // let categoryStats = {}
 // let commandStats = {}
+let StatsD = require('node-dogstatsd').StatsD
+let dStats = new StatsD()
 exports.handleMeDaddy = async function (msg) {
+  dStats.increment('global.seen')
+  dStats.increment(`global.region.${msg.channel.guild.region}`)
   if (
     !msg.channel.guild ||
     msg.author.bot ||
@@ -48,6 +52,9 @@ exports.handleMeDaddy = async function (msg) {
   } else if (command.props.donorOnly && !isDonor) {
     return msg.channel.createMessage('This command is for donors only. You can find more information by using `pls donate` if you are interested.')
   }
+  dStats.increment(`category.${command.category}`)
+  dStats.increment(`region.${msg.channel.guild.region}`)
+  dStats.increment(`cmd.${command.cmdProps.triggers[0]}`)
   /* Starting this later
   if (categoryStats[command.category]) {
     categoryStats[command.category]++
@@ -81,7 +88,7 @@ exports.handleMeDaddy = async function (msg) {
         footer: { text: 'Thanks for your support!' }
       }
     }
-
+    dStats.increment('cooldown')
     return msg.channel.createMessage(isDonor ? donorMessage : cooldownMessage)
   }
   const addCooldown = () => this.db.addCooldown(command.props.triggers[0], msg.author.id)
@@ -91,6 +98,7 @@ exports.handleMeDaddy = async function (msg) {
     if (command.props.perms.some(perm => !permissions.has(perm))) {
       const neededPerms = command.props.perms.filter(perm => !permissions.has(perm))
       if (permissions.has('sendMessages')) {
+        dStats.increment('permError')
         if (permissions.has('embedLinks')) {
           if (neededPerms.length > 1) {
             msg.channel.createMessage({ embed: {
@@ -166,6 +174,7 @@ exports.handleMeDaddy = async function (msg) {
       await msg.channel.createMessage(res, res.file)
     }
   } catch (e) {
+    dStats.increment('error')
     let message = await this.errorMessages(e)
     if (!message) {
       msg.channel.createMessage(`Something went wrong while executing this hecking command: \`${e.message}\` \nPlease join here (<https://discord.gg/ebUqc7F>) if the issue doesn't stop being an ass and tell staff that it's an \`unknown error\``)
