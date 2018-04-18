@@ -32,7 +32,7 @@ module.exports = new GenericCommand(
     return {
       title: `Here are your ${coinsEarned} daily coins`,
       description: `If you would like to learn more about different ways to spend and earn coins, run \`pls guide\` and read up on all we have to offer!`,
-      thumbnail: {url: 'https://dankmemer.lol/coin.png'},
+      thumbnail: {url: 'http://www.dank-memer-is-lots-of.fun/coin.png'},
       footer: {text: `Total Coins: ${coins.coin} | Streak: ${streak} | Multiplier ${donor ? '50%' : '0%'}`}
     }
   },
