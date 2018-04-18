@@ -5,7 +5,6 @@ let StatsD = require('node-dogstatsd').StatsD
 let dStats = new StatsD()
 exports.handleMeDaddy = async function (msg) {
   dStats.increment('global.seen')
-  dStats.increment(`global.region.${msg.channel.guild.region}`)
   if (
     !msg.channel.guild ||
     msg.author.bot ||
@@ -13,7 +12,7 @@ exports.handleMeDaddy = async function (msg) {
   ) {
     return
   }
-
+  dStats.increment(`global.region.${msg.channel.guild.region}`)
   const gConfig = await this.db.getGuild(msg.channel.guild.id) || {
     prefix: this.config.defaultPrefix,
     disabledCommands: []
