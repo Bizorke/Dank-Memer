@@ -3,6 +3,7 @@ const { GenericCommand } = require('../../models/')
 module.exports = new GenericCommand(
   async ({ Memer, msg, args, addCD }) => {
     let coins = await Memer.db.getCoins(msg.author.id)
+    let voted = await Memer.db.isVoter(msg.author.id)
 
     let bet = args[0]
     if (!bet) {
@@ -40,6 +41,9 @@ module.exports = new GenericCommand(
       if (donor) {
         winnings = Math.round(winnings + (winnings * 0.5))
       }
+      if (!voted) {
+        msg.channel.createMessage('Looks like you have not voted before!\nIf you go here and vote, you can get 750 coins each day that you do it!\n<https://discordbots.org/bot/memes/vote>')
+      }
       if (winnings === bet) {
         return 'You broke even. This means you\'re lucky I think?'
       }
@@ -52,6 +56,9 @@ module.exports = new GenericCommand(
       }
     } else {
       await Memer.db.removeCoins(msg.author.id, bet)
+      if (!voted) {
+        msg.channel.createMessage('Awww sucks to lose. Looks like you have not voted before!\nIf you go here and vote, you can get 750 coins each day that you do it!\n<https://discordbots.org/bot/memes/vote>')
+      }
       return {
         title: `Lmfao you lost ${Number(bet)} coins.`,
         description: `Now you've got ${(coins.coin - bet) < 0 ? 0 : coins.coin - bet}.`,

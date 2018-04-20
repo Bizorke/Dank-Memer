@@ -1,10 +1,6 @@
 let gifs = require('../assets/arrays/permGifs.json')
-// let categoryStats = {}
-// let commandStats = {}
-let StatsD = require('node-dogstatsd').StatsD
-let dStats = new StatsD()
 exports.handleMeDaddy = async function (msg) {
-  dStats.increment('global.seen')
+  this.increment('global.seen')
   if (
     !msg.channel.guild ||
     msg.author.bot ||
@@ -12,7 +8,7 @@ exports.handleMeDaddy = async function (msg) {
   ) {
     return
   }
-  dStats.increment(`global.region.${msg.channel.guild.region}`)
+  this.increment(`global.region.${msg.channel.guild.region}`)
   const gConfig = await this.db.getGuild(msg.channel.guild.id) || {
     prefix: this.config.defaultPrefix,
     disabledCommands: []
@@ -51,23 +47,29 @@ exports.handleMeDaddy = async function (msg) {
   } else if (command.props.donorOnly && !isDonor) {
     return msg.channel.createMessage('This command is for donors only. You can find more information by using `pls donate` if you are interested.')
   }
-  dStats.increment(`category.${command.category}`)
-  dStats.increment(`region.${msg.channel.guild.region}`)
-  dStats.increment(`cmd.${command.cmdProps.triggers[0]}`)
-  /* Starting this later
-  if (categoryStats[command.category]) {
-    categoryStats[command.category]++
-  } else {
-    categoryStats[command.category] = 1
+  let size = msg.channel.guild.members.size
+
+  if (size <= 25) {
+    this.increment('guild.small')
+  } else if (size > 25 && size < 1000) {
+    this.increment('guild.average')
+  } else if (size > 1000) {
+    this.increment('guild.large')
   }
-  if (commandStats[command.cmdProps.triggers[0]]) {
-    commandStats[command.cmdProps.triggers[0]]++
-  } else {
-    commandStats[command.cmdProps.triggers[0]] = 1
+
+  if (isDonor) {
+    this.increment('donor.cmd')
   }
-  */
+
+  this.increment('total.commands')
+  this.increment(`category.${command.category}`)
+  this.increment(`region.${msg.channel.guild.region}`)
+  this.increment(`cmd.${command.cmdProps.triggers[0]}`)
+
   this.db.addPls(msg.channel.guild.id, msg.author.id)
-  if (msg.member.roles.some(id => msg.channel.guild.roles.get(id).name === 'no memes for you')) return
+  if (msg.member.roles.some(id => msg.channel.guild.roles.get(id).name === 'no memes for you')) {
+    this.increment('role.blocked')
+  }
 
   const cooldown = await this.db.getCooldown(command.props.triggers[0], msg.author.id)
   if (cooldown > Date.now()) {
@@ -87,7 +89,7 @@ exports.handleMeDaddy = async function (msg) {
         footer: { text: 'Thanks for your support!' }
       }
     }
-    dStats.increment('cooldown')
+    this.increment('cooldown')
     return msg.channel.createMessage(isDonor ? donorMessage : cooldownMessage)
   }
   const addCooldown = () => this.db.addCooldown(command.props.triggers[0], msg.author.id)
@@ -97,7 +99,7 @@ exports.handleMeDaddy = async function (msg) {
     if (command.props.perms.some(perm => !permissions.has(perm))) {
       const neededPerms = command.props.perms.filter(perm => !permissions.has(perm))
       if (permissions.has('sendMessages')) {
-        dStats.increment('permError')
+        this.increment('permError')
         if (permissions.has('embedLinks')) {
           if (neededPerms.length > 1) {
             msg.channel.createMessage({ embed: {
@@ -143,6 +145,10 @@ exports.handleMeDaddy = async function (msg) {
         }}
       )
     } else {
+      let voterrr = await this.db.isVoter(msg.author.id)
+      if (!voterrr && command.cmdProps.triggers[0] === 'meme') {
+        msg.channel.createMessage('Help support the bot by voting for us!\n<https://discordbots.org/bot/memes/vote>\n(This message will not appear after voting)')
+      }
       msg.reply = (str) => { msg.channel.createMessage(`${msg.author.mention}, ${str}`) }
 
       let res = await command.run({
@@ -173,7 +179,7 @@ exports.handleMeDaddy = async function (msg) {
       await msg.channel.createMessage(res, res.file)
     }
   } catch (e) {
-    dStats.increment('error')
+    this.increment('error')
     let message = await this.errorMessages(e)
     if (!message) {
       msg.channel.createMessage(`Something went wrong while executing this hecking command: \`${e.message}\` \nPlease join here (<https://discord.gg/ebUqc7F>) if the issue doesn't stop being an ass and tell staff that it's an \`unknown error\``)

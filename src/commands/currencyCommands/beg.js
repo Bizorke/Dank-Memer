@@ -12,6 +12,10 @@ module.exports = new GenericCommand(
     }
     await addCD()
     await Memer.db.addCoins(msg.author.id, chances)
+    let voted = await Memer.db.isVoter(msg.author.id)
+    if (!voted) {
+      msg.channel.createMessage('Looks like you have not voted before!\nIf you go here and vote, you can get 750 coins each day that you do it!\n<https://discordbots.org/bot/memes/vote>')
+    }
     return {
       title: `Guys, watch this. ${msg.author.username} is about to beg.`,
       description: `**${msg.author.username}**: pls give me coins, you're the best meme bot ever...\n**Best Meme Bot ever**: Ok fine you little bitch. I grant you ${chances} coins, now you have ${coins.coin + chances}`,
