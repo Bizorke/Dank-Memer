@@ -21,6 +21,8 @@ module.exports = new GenericCommand(
         return 'Prompt timed out, canceling your application.'
       } else if (!amount.cleanContent) {
         return 'hmmmm'
+      } else if (amount.content.length > 20) {
+        return 'Ha, keep it realistic fam'
       }
 
       msg.channel.createMessage('Why do you need coins? Make this a good reason!')
@@ -29,8 +31,6 @@ module.exports = new GenericCommand(
         return 'Prompt timed out, canceling your application.'
       } else if (!reason.cleanContent) {
         return 'hmmmmmmm'
-      } else if (reason.content.length > 1000) {
-        return 'Hey I\'m not here to listen to your life story, keep it short.'
       }
       await addCD()
 
