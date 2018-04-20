@@ -19,10 +19,10 @@ module.exports = new GenericCommand(
       const amount = await Memer.MessageCollector.awaitMessage(msg.channel.id, msg.author.id, 30e3)
       if (!amount) {
         return 'Prompt timed out, canceling your application.'
-      } else if (!amount.cleanContent) {
+      } else if (!amount.cleanContent || !Number(amount.content)) {
         return 'hmmmm'
-      } else if (amount.content.length > 20) {
-        return 'Ha, keep it realistic fam'
+      } else if (Number(amount.content) > 10000) {
+        return 'Keep it under 10K, fam'
       }
 
       msg.channel.createMessage('Why do you need coins? Make this a good reason!')
