@@ -262,34 +262,19 @@ module.exports = Bot => ({
 
   removeCoins: async function removeCoins (id, amount) {
     let coins = await this.getCoins(id)
-    if (coins.coin - amount <= 0) {
-      coins.coin = 0
-    } else {
-      coins.coin -= amount
-    }
+
+    coins.coin = Math.max(0, coins.coin - amount)
 
     return Bot.r.table('users')
       .insert(coins, { conflict: 'update' })
   },
 
-  grabCoin: async function grabCoin (id) {
-    let coins = await Bot.r.table('users')
+  getCoins: async function getCoins (id) {
+    const coins = await Bot.r.table('users')
       .get(id)
+      .default({ coin: 0 })
       .run()
 
-    if (!coins) {
-      return Bot.r.table('users')
-        .insert({ id, coin: 0 }, { returnChanges: true })
-        .run()
-    }
-    return coins
-  },
-
-  getCoins: async function getCoins (id) {
-    let coins = await this.grabCoin(id)
-    if (coins.changes) {
-      coins = ~~(coins.changes[0] || {}).new_val
-    }
     return coins
   },
 
