@@ -272,7 +272,7 @@ module.exports = Bot => ({
   getCoins: async function getCoins (id) {
     const coins = await Bot.r.table('users')
       .get(id)
-      .default({ coin: 0 })
+      .default({ id, coin: 0 })
       .run()
 
     return coins
