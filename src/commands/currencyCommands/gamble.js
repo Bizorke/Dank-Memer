@@ -49,6 +49,7 @@ module.exports = new GenericCommand(
       }
 
       await Memer.db.addCoins(msg.author.id, winnings)
+      Memer.ddog.incrementBy('gambling.winnings', Number(winnings))
       return {
         title: `Damn it, you won ${winnings} coins.`,
         description: `Now you've got ${coins.coin + parseInt(winnings)}.`,
@@ -56,6 +57,7 @@ module.exports = new GenericCommand(
       }
     } else {
       await Memer.db.removeCoins(msg.author.id, bet)
+      Memer.ddog.incrementBy('gambling.losings', Number(bet))
       if (!voted) {
         msg.channel.createMessage('Awww sucks to lose. Looks like you have not voted before!\nIf you go here and vote, you can get 750 coins each day that you do it!\n<https://discordbots.org/bot/memes/vote>')
       }

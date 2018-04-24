@@ -25,20 +25,24 @@ module.exports = new GenericCommand(
 
     if (stealingOdds <= 90) { // fail section
       Memer.db.removeCoins(msg.author.id, 100)
+      Memer.ddog.incrementBy('steal.caught', 100)
       return 'You got caught and lost 100 coins!'
     } else if (stealingOdds < 90 && stealingOdds <= 97) { // 5% payout
       let worth = Math.round(victimCoins.coin * 0.05)
       Memer.db.addCoins(msg.author.id, worth)
+      Memer.ddog.incrementBy('steal.small', Number(worth))
       Memer.db.removeCoins(msg.mentions[0].id, worth)
       return `You managed to steal a small amount before leaving!\nYour payout was **${worth} coins.**`
     } else if (stealingOdds < 97 && stealingOdds <= 99) { // 30% payout
       let worth = Math.round(victimCoins.coin * 0.3)
       Memer.db.addCoins(msg.author.id, worth)
+      Memer.ddog.incrementBy('steal.medium', Number(worth))
       Memer.db.removeCoins(msg.mentions[0].id, worth)
       return `You managed to steal a sizeable amount before leaving!\nYour payout was **${worth} coins.**`
     } else { // full theft up to 10k
       let worth = Math.round(victimCoins.coin)
       Memer.db.addCoins(msg.author.id, worth)
+      Memer.ddog.incrementBy('steal.large', Number(worth))
       Memer.db.removeCoins(msg.mentions[0].id, worth)
       return `You managed to steal a sizeable amount before leaving!\nYour payout was **${worth} coins.**`
     }

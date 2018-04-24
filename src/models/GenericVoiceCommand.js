@@ -27,10 +27,13 @@ module.exports = class GenericVoiceCommand {
     }
 
     if (Memer.bot.voiceConnections.has(msg.channel.guild.id)) {
+      Memer.ddog.increment('vc.one')
       if (!Memer.bot.voiceConnections.get(msg.channel.guild.id).speaking) {
+        Memer.ddog.increment('vc.two')
         Memer.bot.voiceConnections.remove(Memer.bot.voiceConnections.get(msg.channel.guild.id))
       }
       if (this.cmdProps.skipIfPlaying && Memer.bot.voiceConnections.get(msg.channel.guild.id)) {
+        Memer.ddog.increment('vc.three')
         Memer.bot.voiceConnections.get(msg.channel.guild.id).stopPlaying()
       } else {
         return this.cmdProps.existingConn
@@ -55,6 +58,7 @@ module.exports = class GenericVoiceCommand {
       Memer.log(`[stream-end] Leaving voicechannel ${conn.channelID}`)
       await Memer.bot.leaveVoiceChannel(msg.channel.guild.members.get(Memer.bot.user.id).voiceState.channelID) // TODO: Don't run this if it's being skipped
       if (Memer.bot.voiceConnections.has(msg.channel.guild.id)) {
+        Memer.ddog.increment('vc.four')
         Memer.bot.voiceConnections.remove(Memer.bot.voiceConnections.get(msg.channel.guild.id))
       }
     })

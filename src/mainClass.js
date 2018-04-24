@@ -2,6 +2,7 @@ const { readdirSync } = require('fs')
 const { join } = require('path')
 const { get } = require('snekfetch')
 const { Base } = global.memeBase || require('eris-sharder')
+const StatsD = require('node-dogstatsd').StatsD
 
 const msgHandler = require('./handlers/msgHandler.js')
 const MessageCollector = require('./utils/MessageCollector.js')
@@ -15,6 +16,7 @@ class Memer extends Base {
     this.config = require('./config.json')
     this.r = require('rethinkdbdash')()
     this.db = require('./utils/dbFunctions.js')(this)
+    this.ddog = new StatsD()
     this.cmds = []
     this.tags = {}
     this.indexes = {
@@ -44,7 +46,7 @@ class Memer extends Base {
   launch () {
     this.loadCommands()
     this.MessageCollector = new MessageCollector(this.bot)
-
+    this.ddog.increment('function.launch')
     this.bot
       .on('ready', this.ready.bind(this))
       .on('guildCreate', this.guildCreate.bind(this))
@@ -63,12 +65,14 @@ class Memer extends Base {
       name: 'pls help',
       type: 0
     })
+    this.ddog.increment('function.ready')
 
     this.mentionRX = new RegExp(`^<@!*${this.bot.user.id}>`)
     this.mockIMG = await get('https://pbs.twimg.com/media/DAU-ZPHUIAATuNy.jpg').then(r => r.body)
   }
 
   loadCommands () {
+    this.ddog.increment('function.loadCommands')
     const categories = readdirSync(join(__dirname, 'commands'))
 
     for (const categoryPath of categories) {
@@ -81,6 +85,7 @@ class Memer extends Base {
   }
 
   guildCreate (guild) {
+    this.ddog.increment('event.guildCreate')
     const embed = {
       color: 12054271,
       description: this.intro,
@@ -94,6 +99,7 @@ class Memer extends Base {
   }
 
   guildDelete (guild) {
+    this.ddog.increment('event.guildDelete')
     this.db.deleteGuild(guild.id)
   }
 

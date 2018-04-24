@@ -1,6 +1,6 @@
 let gifs = require('../assets/arrays/permGifs.json')
 exports.handleMeDaddy = async function (msg) {
-  // this.ddog.increment('global.seen')
+  this.ddog.increment('global.seen')
   if (
     !msg.channel.guild ||
     msg.author.bot ||
@@ -8,7 +8,7 @@ exports.handleMeDaddy = async function (msg) {
   ) {
     return
   }
-  // this.ddog.increment(`global.region.${msg.channel.guild.region}`)
+  this.ddog.increment(`global.region.${msg.channel.guild.region}`)
   const gConfig = await this.db.getGuild(msg.channel.guild.id) || {
     prefix: this.config.defaultPrefix,
     disabledCommands: []
@@ -50,25 +50,25 @@ exports.handleMeDaddy = async function (msg) {
   let size = msg.channel.guild.members.size
 
   if (size <= 25) {
-    // this.ddog.increment('guild.small')
+    this.ddog.increment('guild.small')
   } else if (size > 25 && size < 1000) {
-    // this.ddog.increment('guild.average')
+    this.ddog.increment('guild.average')
   } else if (size > 1000) {
-    // this.ddog.increment('guild.large')
+    this.ddog.increment('guild.large')
   }
 
   if (isDonor) {
-    // this.ddog.increment('donor.cmd')
+    this.ddog.increment('donor.cmd')
   }
 
-  // this.ddog.increment('total.commands')
-  // this.ddog.increment(`category.${command.category}`)
-  // this.ddog.increment(`region.${msg.channel.guild.region}`)
-  // this.ddog.increment(`cmd.${command.cmdProps.triggers[0]}`)
+  this.ddog.increment('total.commands')
+  this.ddog.increment(`category.${command.category}`)
+  this.ddog.increment(`region.${msg.channel.guild.region}`)
+  this.ddog.increment(`cmd.${command.cmdProps.triggers[0]}`)
 
   this.db.addPls(msg.channel.guild.id, msg.author.id)
   if (msg.member.roles.some(id => msg.channel.guild.roles.get(id).name === 'no memes for you')) {
-    // this.ddog.increment('role.blocked')
+    this.ddog.increment('role.blocked')
   }
 
   const cooldown = await this.db.getCooldown(command.props.triggers[0], msg.author.id)
@@ -89,7 +89,7 @@ exports.handleMeDaddy = async function (msg) {
         footer: { text: 'Thanks for your support!' }
       }
     }
-    // this.ddog.increment('cooldown')
+    this.ddog.increment('cooldown')
     return msg.channel.createMessage(isDonor ? donorMessage : cooldownMessage)
   }
   const addCooldown = () => this.db.addCooldown(command.props.triggers[0], msg.author.id)
@@ -99,7 +99,7 @@ exports.handleMeDaddy = async function (msg) {
     if (command.props.perms.some(perm => !permissions.has(perm))) {
       const neededPerms = command.props.perms.filter(perm => !permissions.has(perm))
       if (permissions.has('sendMessages')) {
-        // this.ddog.increment('permError')
+        this.ddog.increment('permError')
         if (permissions.has('embedLinks')) {
           if (neededPerms.length > 1) {
             msg.channel.createMessage({ embed: {
@@ -147,6 +147,7 @@ exports.handleMeDaddy = async function (msg) {
     } else {
       let voterrr = await this.db.isVoter(msg.author.id)
       if (!voterrr && command.cmdProps.triggers[0] === 'meme') {
+        this.ddog.increment('dbl.ad')
         msg.channel.createMessage('Help support the bot by voting for us!\n<https://discordbots.org/bot/memes/vote>\n(This message will not appear after voting)')
       }
       msg.reply = (str) => { msg.channel.createMessage(`${msg.author.mention}, ${str}`) }
@@ -179,7 +180,7 @@ exports.handleMeDaddy = async function (msg) {
       await msg.channel.createMessage(res, res.file)
     }
   } catch (e) {
-    // this.ddog.increment('error')
+    this.ddog.increment('error')
     let message = await this.errorMessages(e)
     if (!message) {
       msg.channel.createMessage(`Something went wrong while executing this hecking command: \`${e.message}\` \nPlease join here (<https://discord.gg/ebUqc7F>) if the issue doesn't stop being an ass and tell staff that it's an \`unknown error\``)
