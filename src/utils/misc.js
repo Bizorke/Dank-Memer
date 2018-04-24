@@ -8,11 +8,11 @@ module.exports = {
     }
 
     if (e.message.includes('Voice connection timeout')) {
-      return `Discord fucked something up. 😠\n\nTo fix this, you have to kick me and reinvite me back. I know, it is stupid. 🙄\nIf it still doesn't work after that, join (<https://discord.gg/ebUqc7F>) and tell support it is error \`vc2\`.`
+      return `Discord fucked something up. 😠\n\nTo fix this, first try running \`pls stop\`.\nIf that doesn't work, you have to kick me and reinvite me back. I know, it is stupid. 🙄\nIf it still doesn't work after that, join (<https://discord.gg/ebUqc7F>) and tell support it is error \`vc2\`.`
     }
 
     if (e.message.includes('Already encoding')) {
-      return `Something fucked up. 😠\n\nTo fix this, change your server region, and if it still doesn't work you have to kick me and reinvite me back. I know, it is stupid. 🙄\nIf it still doesn't work after that, join (<https://discord.gg/ebUqc7F>) and tell support it is error \`vc3\`.`
+      return `Something fucked up. 😠\n\nWe're pretty sure this error happens when you're running voice commands too quickly. So slow down 🙄\nIf it's still happening after a while, (<https://discord.gg/ebUqc7F>) and tell support it is error \`vc3\`.`
     }
 
     // Currency Errors
