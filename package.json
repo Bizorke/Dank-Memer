@@ -24,7 +24,7 @@
   "homepage": "https://github.com/dank-memer/Dank-Memer#readme",
   "dependencies": {
     "cheerio": "^1.0.0-rc.2",
-    "eris-sharder": "^1.7.8",
+    "eris-sharder": "github:Discord-Sharders/eris-sharder#dev",
     "eslint-config-standard": "^11.0.0",
     "node-dogstatsd": "0.0.7",
     "rethinkdbdash": "^2.3.31",

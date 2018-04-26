@@ -145,11 +145,6 @@ exports.handleMeDaddy = async function (msg) {
         }}
       )
     } else {
-      let voterrr = await this.db.isVoter(msg.author.id)
-      if (!voterrr && command.cmdProps.triggers[0] === 'meme') {
-        this.ddog.increment('dbl.ad')
-        msg.channel.createMessage('Help support the bot by voting for us!\n<https://discordbots.org/bot/memes/vote>\n(This message will not appear after voting)')
-      }
       msg.reply = (str) => { msg.channel.createMessage(`${msg.author.mention}, ${str}`) }
 
       let res = await command.run({
