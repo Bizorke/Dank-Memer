@@ -1,12 +1,13 @@
 const { GenericMediaCommand } = require('../../models/')
 
 module.exports = new GenericMediaCommand({
-  triggers: ['neko', 'lewd'],
+  triggers: ['anal', 'asshole'],
   description: 'owo lewd',
   isNSFW: true,
 
-  title: 'Here, take some lewd nekos.',
+  title: 'Does this mean ass > tits?',
   message: 'Free nudes from nekos.life',
   JSONKey: 'url',
-  reqURL: 'https://nekos.life/api/v2/img/lewd'
+  reqURL: 'https://boob.bot/api/v2/img/anal',
+  tokenKey: 'porn'
 })
