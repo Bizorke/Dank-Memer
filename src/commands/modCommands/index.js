@@ -4,5 +4,5 @@ const commands = require('fs').readdirSync(__dirname)
 
 module.exports = {
   commands,
-  name: '🔊 Music Commands'
+  name: '🔨 Mod Commands'
 }

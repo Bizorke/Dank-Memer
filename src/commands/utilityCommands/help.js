@@ -11,6 +11,14 @@ module.exports = new GenericCommand(
         if (command.props.ownerOnly || command.props.hide) {
           continue
         }
+        if (db.disabledCommands.includes(command.props.triggers[0])) {
+          let category = categories['❌ Disabled Commands']
+          if (!category) {
+            category = categories['❌ Disabled Commands'] = []
+          }
+          category.push(command.props.triggers[0])
+          continue
+        }
 
         let category = categories[command.category]
         if (!category) {
@@ -18,10 +26,11 @@ module.exports = new GenericCommand(
         }
         category.push(command.props.triggers[0])
       }
+      Memer.log(categories)
 
       return {
         title: help.title,
-        description: help.message,
+        description: help.message + '\nSee a [list of all commands](https://dankmemer.lol/)',
         fields: Object.keys(categories).map(category => ({ name: category, value: `${categories[category].length} commands\n\`${prefix} help ${category.split(' ')[1].toLowerCase()}\``, inline: true })),
         footer: { text: help.footer }
       }
@@ -40,11 +49,19 @@ module.exports = new GenericCommand(
           { 'name': 'Aliases:', 'value': command.props.triggers.join(', ') }
         ]
       }
-    } else if (categorySearch) {
+    } else if (categorySearch || args[0].toLowerCase() === 'disabled') {
       await addCD()
       let categories = {}
       for (const command of Memer.cmds) {
         if (command.props.ownerOnly || command.props.hide) {
+          continue
+        }
+        if (db.disabledCommands.includes(command.props.triggers[0])) {
+          let category = categories['❌ Disabled Commands']
+          if (!category) {
+            category = categories['❌ Disabled Commands'] = []
+          }
+          category.push(command.props.triggers[0])
           continue
         }
 
@@ -56,10 +73,11 @@ module.exports = new GenericCommand(
       }
       const categoryName = Object.keys(categories).find(c => c.split(' ')[1].toLowerCase() === args[0])
       const commands = categories[categoryName]
+      let footy = categoryName === '❌ Disabled Commands' ? `use ${prefix} enable to add these back` : `use ${prefix} before each command!`
       return {
         title: categoryName,
         description: commands.join(', '),
-        footer: { text: `use ${prefix} before each command!` }
+        footer: { text: footy }
       }
     }
   },
