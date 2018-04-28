@@ -2,7 +2,7 @@ const { GenericCommand } = require('../../models/')
 
 module.exports = new GenericCommand(
   async ({ Memer, msg }) => {
-    if (!msg.channel.guild.members.get('270904126974590976').voiceState.channelID) {
+    if (!msg.channel.guild.members.get(Memer.bot.user.id).voiceState.channelID) {
       return 'I\'m not even in a voice channel?'
     }
 
