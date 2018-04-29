@@ -2,7 +2,7 @@ const { readdirSync } = require('fs')
 const { join } = require('path')
 const { get } = require('snekfetch')
 const { Base } = global.memeBase || require('eris-sharder')
-const StatsD = require('node-dogstatsd').StatsD
+const { StatsD } = require('node-dogstatsd')
 
 const msgHandler = require('./handlers/msgHandler.js')
 const MessageCollector = require('./utils/MessageCollector.js')
