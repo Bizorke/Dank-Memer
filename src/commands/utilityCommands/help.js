@@ -7,16 +7,14 @@ module.exports = new GenericCommand(
     let help = Memer.config.help
     if (!args[0]) {
       let categories = {}
+      let disabled = []
       for (const command of Memer.cmds) {
         if (command.props.ownerOnly || command.props.hide) {
           continue
         }
+
         if (db.disabledCommands.includes(command.props.triggers[0])) {
-          let category = categories['❌ Disabled Commands']
-          if (!category) {
-            category = categories['❌ Disabled Commands'] = []
-          }
-          category.push(command.props.triggers[0])
+          disabled.push(command.props.triggers[0])
           continue
         }
 
@@ -26,12 +24,18 @@ module.exports = new GenericCommand(
         }
         category.push(command.props.triggers[0])
       }
-      Memer.log(categories)
-
+      if (disabled.length === 0) {
+        return {
+          title: help.title,
+          description: help.message + '\nSee a [list of all commands](https://dankmemer.lol/)',
+          fields: Object.keys(categories).map(category => ({ name: category, value: `${categories[category].length} commands\n\`${prefix} help ${category.split(' ')[1].toLowerCase()}\``, inline: true })),
+          footer: { text: help.footer }
+        }
+      }
       return {
         title: help.title,
         description: help.message + '\nSee a [list of all commands](https://dankmemer.lol/)',
-        fields: Object.keys(categories).map(category => ({ name: category, value: `${categories[category].length} commands\n\`${prefix} help ${category.split(' ')[1].toLowerCase()}\``, inline: true })),
+        fields: Object.keys(categories).map(category => ({ name: category, value: `${categories[category].length} commands\n\`${prefix} help ${category.split(' ')[1].toLowerCase()}\``, inline: true })).concat({ name: 'Disabled Commands', value: disabled.join(', ') }),
         footer: { text: help.footer }
       }
     }
