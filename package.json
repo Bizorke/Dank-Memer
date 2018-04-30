@@ -23,6 +23,7 @@
   },
   "homepage": "https://github.com/dank-memer/Dank-Memer#readme",
   "dependencies": {
+    "asciiart-logo": "^0.1.7",
     "cheerio": "^1.0.0-rc.2",
     "eris-sharder": "github:MercyDoesCode/eris-sharder",
     "eslint-config-standard": "^11.0.0",
