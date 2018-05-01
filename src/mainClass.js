@@ -86,6 +86,7 @@ class Memer extends Base {
 
   guildCreate (guild) {
     this.ddog.increment('event.guildCreate')
+    this.ddog.increment('total.guildsGained')
     const embed = {
       color: 12054271,
       description: this.intro,
@@ -100,6 +101,7 @@ class Memer extends Base {
 
   guildDelete (guild) {
     this.ddog.increment('event.guildDelete')
+    this.ddog.decrement('total.guildsGained')
     this.db.deleteGuild(guild.id)
   }
 

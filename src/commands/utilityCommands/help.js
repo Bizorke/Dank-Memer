@@ -28,7 +28,7 @@ module.exports = new GenericCommand(
         return {
           title: help.title,
           description: help.message + '\nSee a [list of all commands](https://dankmemer.lol/)',
-          fields: Object.keys(categories).sort((a, b) => categories[b].length - categories[a].length).map(category => ({ name: category, value: `${categories[category].length} commands\n\`${prefix} help ${category.split(' ')[1].toLowerCase()}\``, inline: true })).concat({ name: 'Disabled Commands', value: disabled.join(', ') }),
+          fields: Object.keys(categories).sort((a, b) => categories[b].length - categories[a].length).map(category => ({ name: category, value: `${categories[category].length} commands\n\`${prefix} help ${category.split(' ')[1].toLowerCase()}\``, inline: true })),
           footer: { text: help.footer }
         }
       }

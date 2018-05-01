@@ -2,6 +2,8 @@ const config = require('./config.json')
 const { Master: Sharder } = require('eris-sharder')
 const { post } = require('snekfetch')
 const r = require('rethinkdbdash')()
+const StatsD = require('node-dogstatsd').StatsD
+let s = new StatsD()
 
 const master = new Sharder(config.token, '/mainClass.js', {
   stats: true,
@@ -17,7 +19,6 @@ const master = new Sharder(config.token, '/mainClass.js', {
       GUILD_BAN_ADD: true,
       GUILD_BAN_REMOVE: true,
       TYPING_START: true,
-      // if new problems start, blame these experimental disabled events
       MESSAGE_DELETE: true,
       MESSAGE_DELETE_BULK: true,
       MESSAGE_UPDATE: true
@@ -29,6 +30,10 @@ const master = new Sharder(config.token, '/mainClass.js', {
 })
 
 master.on('stats', res => {
+  s.gauge('bot.guilds', res.guilds)
+  s.gauge('bot.users', res.users)
+  s.gauge('bot.voice', res.voice)
+  s.gauge('bot.mem', res.mem)
   r.table('stats')
     .insert({ id: 1, stats: res }, { conflict: 'update' })
     .run()

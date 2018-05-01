@@ -8,7 +8,7 @@ module.exports = {
     if (args[0].toLowerCase() === 'all') {
       try {
         Memer.cmds.map(cmd => {
-          delete require.cache[require.resolve(`../../${cmd.props.triggers[0]}`)]
+          delete require.cache[require.resolve(`../../../${cmd.props.triggers[0]}`)]
         })
         Memer.cmds = []
         Memer.loadCommands()

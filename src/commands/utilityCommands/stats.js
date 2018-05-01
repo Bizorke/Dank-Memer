@@ -37,6 +37,7 @@ module.exports = new GenericCommand(
     const stats = await Memer.db.getStats()
     const CPUUsage = await getCPUUsage()
     return {
+      footer: { text: `Version ${Memer.package.droneVersion}` },
       fields: [
         {
           name: 'Server Statistics',
@@ -50,13 +51,13 @@ module.exports = new GenericCommand(
           inline: true
         },
         {
-          name: 'Various Statistics',
+          name: 'Bot Statistics',
           value: [
             `${Memer.parseTime(process.uptime())} uptime`,
             `${stats.users.toLocaleString()} users`,
-            `${msg.channel.guild.shard.latency.toFixed(2)}ms shard latency`,
-            `Bot v${Memer.package.version}`,
-            `${Memer.cmds.length} commands`
+            `${msg.channel.guild.shard.latency.toFixed()}ms (((ping)))`,
+            `${stats.voice} VCs`,
+            `${(stats.totalRam / 1000).toFixed(1)}gb/${(os.totalmem() / 1073741824).toFixed(1)}gb memory`
           ].join('\n'),
           inline: true
         },
@@ -64,7 +65,7 @@ module.exports = new GenericCommand(
           name: 'System Statistics',
           value: [
             `${CPUUsage.toFixed(1)}% CPU usage`,
-            `${(stats.totalRam / 1000).toFixed(1)}gb/${(os.totalmem() / 1073741824).toFixed(1)}gb memory`,
+            `${((os.totalmem() - os.freemem()) / 1073741824).toFixed(1)}gb/${(os.totalmem() / 1073741824).toFixed(1)}gb memory`,
             `${Memer.parseTime(os.uptime())} uptime`,
             `${os.platform} based server`,
             `Node ${process.version}`

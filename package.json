@@ -1,6 +1,7 @@
 {
   "name": "dank-memer",
-  "version": "9.5.0",
+  "version": "6.9",
+  "droneVersion": "3.sick.1.46.ebullioscopy.1525107281.7",
   "description": "A discord entertainment based bot, with an emphasis on memes.",
   "main": "memer.js",
   "scripts": {
