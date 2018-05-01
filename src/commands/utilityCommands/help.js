@@ -61,13 +61,15 @@ module.exports = new GenericCommand(
         if (command.props.ownerOnly || command.props.hide) {
           continue
         }
-        if (db.disabledCommands.includes(command.props.triggers[0])) {
-          let category = categories['❌ Disabled Commands']
-          if (!category) {
-            category = categories['❌ Disabled Commands'] = []
+        if (db) {
+          if (db.disabledCommands.includes(command.props.triggers[0])) {
+            let category = categories['❌ Disabled Commands']
+            if (!category) {
+              category = categories['❌ Disabled Commands'] = []
+            }
+            category.push(command.props.triggers[0])
+            continue
           }
-          category.push(command.props.triggers[0])
-          continue
         }
 
         let category = categories[command.category]
