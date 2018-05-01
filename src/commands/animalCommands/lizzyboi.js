@@ -5,6 +5,6 @@ module.exports = new GenericMediaCommand({
   description: 'See some cute lizzybois!',
 
   title: '🦎',
-  reqURL: 'https://testy.nekos.life/api/v2/img/lizard',
+  reqURL: 'https://nekos.life/api/v2/img/lizard',
   JSONKey: 'url'
 })
