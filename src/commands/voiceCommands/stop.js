@@ -24,7 +24,6 @@ module.exports = new GenericCommand(
       return 'Smh you can\'t stop when I\'m not connected. Give me a chance to connect before you are rude and make me stop. 😠'
     }
 
-    Memer.log(`[stop] Leaving voicechannel ${Memer.bot.voiceConnections.get(msg.channel.guild.id).channelID}\n\tGuild: ${msg.channel.guild.id}`)
     await Memer.bot.leaveVoiceChannel(msg.channel.guild.members.get(Memer.bot.user.id).voiceState.channelID)
     await msg.channel.createMessage('okokok im leaving now, no need to be rude')
   }, {

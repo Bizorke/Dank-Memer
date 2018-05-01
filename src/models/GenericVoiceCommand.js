@@ -2,19 +2,28 @@ const { GenericCommand } = require('.')
 const { promisify } = require('util')
 const fs = require('fs')
 const readdir = promisify(fs.readdir)
-let files
+let filesDir
+let file
 module.exports = class GenericVoiceCommand {
   constructor (cmdProps) {
     this.cmdProps = cmdProps
   }
 
-  async run ({ Memer, msg, addCD }) {
-    files = await readdir(`./assets/audio/${this.cmdProps.dir}`)
-    files = Memer.randomInArray(files).replace(/(\.opus)|(\.ogg)/, '')
+  async run ({ Memer, msg, args, addCD }) {
+    filesDir = await readdir(`./assets/audio/${this.cmdProps.dir}`)
+    let files = Memer.randomInArray(filesDir).replace(/(\.opus)|(\.ogg)/, '')
 
-    const file = typeof this.cmdProps.files === 'string'
-      ? this.cmdProps.files
-      : files
+    if (this.cmdProps.soundboard) {
+      if (args.length === 0) {
+        return 'You need to specify which sfx to play.\nChoose one from here: <https://goo.gl/X6EyRq>'
+      }
+      file = args.join(' ').toLowerCase()
+      if (!filesDir.includes(`${file}.opus`)) return 'That isnt an option...\nChoose one from here: <https://goo.gl/X6EyRq>'
+    } else {
+      file = typeof this.cmdProps.files === 'string'
+        ? this.cmdProps.files
+        : files
+    }
 
     if (!msg.member.voiceState.channelID) {
       return msg.reply('join a voice channel fam')
@@ -51,11 +60,8 @@ module.exports = class GenericVoiceCommand {
       msg.addReaction(this.cmdProps.reaction)
     }
     const conn = await Memer.bot.joinVoiceChannel(msg.member.voiceState.channelID)
-    Memer.log(`Joining voicechannel ${msg.member.voiceState.channelID}\n` +
-              `\tAlready connected?: ${Memer.bot.voiceConnections.has(msg.channel.guild.id)}`)
     conn.play(`./assets/audio/${this.cmdProps.dir}/${file}.${this.cmdProps.ext}`, { format: 'ogg' })
     conn.once('end', async () => {
-      Memer.log(`[stream-end] Leaving voicechannel ${conn.channelID}`)
       await Memer.bot.leaveVoiceChannel(msg.channel.guild.members.get(Memer.bot.user.id).voiceState.channelID) // TODO: Don't run this if it's being skipped
       if (Memer.bot.voiceConnections.has(msg.channel.guild.id)) {
         Memer.ddog.increment('vc.four')

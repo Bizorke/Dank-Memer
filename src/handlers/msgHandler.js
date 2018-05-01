@@ -78,14 +78,14 @@ exports.handleMeDaddy = async function (msg) {
 
     const cooldownMessage = {
       embed: {
-        title: 'You are being ratelimited <:errorSign:428021845078573058>',
-        description: cooldownWarning + (waitTime > 60 ? `${this.parseTime(waitTime)}` : `${waitTime.toFixed()} seconds`) + `\n\n<:ratelimited:430818160434741250> Default Cooldown: ${this.parseTime(command.props.cooldown / 1000)}\n<:donateSign:428024864700497921> [Donor](https://www.patreon.com/dankmemerbot) Cooldown: ${command.props.donorBlocked ? this.parseTime(command.props.cooldown / 1000) : this.parseTime(command.props.donorCD / 1000)}`
+        title: 'You are being ratelimited!!!!!!!',
+        description: cooldownWarning + (waitTime > 60 ? `${this.parseTime(waitTime)}` : `${waitTime.toFixed()} seconds`) + `\n\nDefault Cooldown: ${this.parseTime(command.props.cooldown / 1000)}\n[Donor](https://www.patreon.com/dankmemerbot) Cooldown: ${command.props.donorBlocked ? this.parseTime(command.props.cooldown / 1000) : this.parseTime(command.props.donorCD / 1000)}`
       }
     }
     const donorMessage = {
       embed: {
-        title: 'You are being ratelimited <:errorSign:428021845078573058>',
-        description: cooldownWarning + (waitTime > 60 ? `${this.parseTime(waitTime)}` : `${waitTime.toFixed()} seconds`) + `\n<:donateSign:428024864700497921> [Donor](https://www.patreon.com/dankmemerbot) Cooldown: ${command.props.donorBlocked ? this.parseTime(command.props.cooldown / 1000) : this.parseTime(command.props.donorCD / 1000)}`,
+        title: 'You are being ratelimited......',
+        description: cooldownWarning + (waitTime > 60 ? `${this.parseTime(waitTime)}` : `${waitTime.toFixed()} seconds`) + `\n[Donor](https://www.patreon.com/dankmemerbot) Cooldown: ${command.props.donorBlocked ? this.parseTime(command.props.cooldown / 1000) : this.parseTime(command.props.donorCD / 1000)}`,
         footer: { text: 'Thanks for your support!' }
       }
     }
