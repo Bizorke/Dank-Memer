@@ -3,6 +3,11 @@ const { GenericCommand } = require('../../models/')
 module.exports = new GenericCommand(
   async ({ cleanArgs }) => {
     let args = cleanArgs
+
+    if (args.join(' ').length > 55) {
+      return 'Keep it under 55 characters fam'
+    }
+
     if (args.length === 1) {
       return args[0].split('').join(' <a:partyparrot:429416315695005696> ')
     } else {
