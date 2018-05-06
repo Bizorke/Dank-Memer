@@ -4,12 +4,12 @@ const reaction = [
   '<:feelsautisticman:397488382500143104>',
   '<:reee:397488383963955211>',
   '<:feelsbadman:397488381648699403>',
-  '<a:MonkaShake:415269882792378390>',
+  '<a:monkas:429416313450921986>',
   '<:feelscringeman:397488381011165194>',
   '<:feelsdabman:397489529319194653>',
   '<:feelsLMAOman:419494568103378944>',
   '<:feelsgreatman:397488378548977671>',
-  '<a:pepeclap:404925858940452864>'
+  '<a:feelsSWEATman:429475850740826112>'
 ]
 
 module.exports = new GenericCommand(
