@@ -46,7 +46,7 @@ module.exports = new GenericCommand(
             `${(stats.users / stats.guilds).toFixed()} average server size`,
             `${stats.largeGuilds.toLocaleString()} large servers`,
             `${stats.exclusiveGuilds.toLocaleString()} exclusive servers`,
-            `${(200000 - stats.guilds).toLocaleString()} until 200k`
+            `${(300000 - stats.guilds).toLocaleString()} until 300k`
           ].join('\n'),
           inline: true
         },
