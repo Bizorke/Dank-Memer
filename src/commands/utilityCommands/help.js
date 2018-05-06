@@ -42,11 +42,10 @@ module.exports = new GenericCommand(
     }
 
     const command = Memer.cmds.find(c => c.props.triggers.includes(args[0]))
-    const categorySearch = Memer.cmds.find(c => c.category.split(' ')[1].toLowerCase().includes(args[0]))
+    const categorySearch = Memer.cmds.find(c => c.category.split(' ')[1].toLowerCase() === args[0].toLowerCase())
 
     if (command) {
       await addCD()
-      Memer.log(command)
       return {
         fields: [
           { 'name': 'Description:', 'value': command.props.description },

@@ -23,11 +23,11 @@ module.exports = new GenericCommand(
     if (!Memer.bot.voiceConnections.get(msg.channel.guild.id).ready) {
       return 'Smh you can\'t stop when I\'m not connected. Give me a chance to connect before you are rude and make me stop. 😠'
     }
-
+    await Memer.bot.voiceConnections.get(msg.channel.guild.id).stopPlaying()
     await Memer.bot.leaveVoiceChannel(msg.channel.guild.members.get(Memer.bot.user.id).voiceState.channelID)
     await msg.channel.createMessage('okokok im leaving now, no need to be rude')
   }, {
     triggers: ['stop'],
-    description: 'STOP FARTING'
+    description: 'stop the music!!!!!'
   }
 )

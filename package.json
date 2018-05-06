@@ -1,6 +1,6 @@
 {
   "name": "dank-memer",
-  "version": "6.9",
+  "version": "6.9.4",
   "droneVersion": "3.sick.1.46.ebullioscopy.1525107281.7",
   "description": "A discord entertainment based bot, with an emphasis on memes.",
   "main": "memer.js",
@@ -26,7 +26,7 @@
   "dependencies": {
     "asciiart-logo": "^0.1.7",
     "cheerio": "^1.0.0-rc.2",
-    "eris-sharder": "github:MercyDoesCode/eris-sharder",
+    "eris-sharder": "github:melmsie/eris-sharder#dev",
     "eslint-config-standard": "^11.0.0",
     "node-dogstatsd": "0.0.7",
     "programmatic-repl": "^1.1.4",
