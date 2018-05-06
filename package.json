@@ -29,6 +29,7 @@
     "eris-sharder": "github:MercyDoesCode/eris-sharder",
     "eslint-config-standard": "^11.0.0",
     "node-dogstatsd": "0.0.7",
+    "programmatic-repl": "^1.1.4",
     "rethinkdbdash": "^2.3.31",
     "snekfetch": "^3.6.4",
     "standard": "^11.0.1"
