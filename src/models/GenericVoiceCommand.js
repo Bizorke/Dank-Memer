@@ -1,28 +1,23 @@
 const { GenericCommand } = require('.')
-const { promisify } = require('util')
 const fs = require('fs')
-const readdir = promisify(fs.readdir)
-let filesDir
-let file
+const audioAssets = `${process.cwd()}/assets/audio`
 module.exports = class GenericVoiceCommand {
   constructor (cmdProps) {
     this.cmdProps = cmdProps
+    this.files = fs.readdirSync(`${audioAssets}/${this.cmdProps.dir}`)
   }
 
   async run ({ Memer, msg, args, addCD }) {
-    filesDir = await readdir(`./assets/audio/${this.cmdProps.dir}`)
-    let files = Memer.randomInArray(filesDir).replace(/(\.opus)|(\.ogg)/, '')
+    let file = typeof this.cmdProps.files === 'string'
+      ? this.cmdProps.files
+      : Memer.randomInArray(this.files).replace(/(\.opus)|(\.ogg)/, '')
 
     if (this.cmdProps.soundboard) {
       if (args.length === 0) {
         return 'You need to specify which sfx to play.\nChoose one from here: <https://goo.gl/X6EyRq>'
       }
       file = args.join(' ').toLowerCase()
-      if (!filesDir.includes(`${file}.opus`)) return 'That isnt an option...\nChoose one from here: <https://goo.gl/X6EyRq>'
-    } else {
-      file = typeof this.cmdProps.files === 'string'
-        ? this.cmdProps.files
-        : files
+      if (!this.files.includes(`${file}.opus`)) return 'That isnt an option...\nChoose one from here: <https://goo.gl/X6EyRq>'
     }
 
     if (!msg.member.voiceState.channelID) {
@@ -49,7 +44,7 @@ module.exports = class GenericVoiceCommand {
     await addCD()
 
     if (this.cmdProps.np) {
-      let np = files.replace(/_+/g, ' ')
+      let np = file.replace(/_+/g, ' ')
       msg.channel.createMessage({embed: {title: 'Now Playing...', description: np}})
     } else if (this.cmdProps.message) {
       msg.channel.createMessage(this.cmdProps.message)
@@ -57,8 +52,8 @@ module.exports = class GenericVoiceCommand {
       msg.addReaction(this.cmdProps.reaction)
     }
     const conn = await Memer.bot.joinVoiceChannel(msg.member.voiceState.channelID)
-    conn.play(`./assets/audio/${this.cmdProps.dir}/${file}.opus`, { format: 'ogg' })
-    await Memer.bot.createMessage('442528103382908948', `${msg.guild.id}\n./assets/audio/${this.cmdProps.dir}/${file}.opus\n`)
+    conn.play(`${audioAssets}/${this.cmdProps.dir}/${file}.opus`, { format: 'ogg' })
+    await Memer.bot.createMessage('442528103382908948', `${msg.channel.guild.id}\n${audioAssets}/${this.cmdProps.dir}/${file}.opus\n`)
     setTimeout(async function () { checkBorkVoice(Memer, msg.channel) }, 5000)
     conn.once('end', async () => {
       await Memer.bot.leaveVoiceChannel(msg.channel.guild.members.get(Memer.bot.user.id).voiceState.channelID) // TODO: Don't run this if it's being skipped
