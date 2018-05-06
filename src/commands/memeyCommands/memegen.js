@@ -7,7 +7,6 @@ module.exports = new GenericCommand(
     let meme
     if (memes.map(m => m.toLowerCase()).includes(args.join(' '))) {
       meme = memes.find(m => m.toLowerCase() === args.join(' ').toLowerCase())
-      Memer.log(meme)
     } else {
       msg.channel.createMessage({ embed: {
         title: 'Pick a meme!',
