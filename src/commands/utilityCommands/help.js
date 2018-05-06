@@ -79,6 +79,11 @@ module.exports = new GenericCommand(
       }
       const categoryName = Object.keys(categories).find(c => c.split(' ')[1].toLowerCase() === args[0])
       const commands = categories[categoryName]
+
+      if (!commands) {
+        return 'that\'s not a valid category smh'
+      }
+
       let footy = categoryName === '❌ Disabled Commands' ? `use ${prefix} enable to add these back` : `use ${prefix} before each command!`
       return {
         title: categoryName,
