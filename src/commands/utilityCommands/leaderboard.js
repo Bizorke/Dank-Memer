@@ -3,6 +3,10 @@ const emojis = [':first_place:', ':second_place:', ':third_place:']
 
 module.exports = new GenericCommand(
   async ({Memer, msg}) => {
+    let stats = await Memer.db.getStats()
+    if (stats.clusters[stats.clusters.length - 1].uptime === 0) {
+      return 'bot is still loading, hold ur horses damn'
+    }
     const bigmeme = (id) => new Promise(resolve => {
       setTimeout(() => resolve({ id }), 1000)
       Memer.ipc.fetchGuild(id)
@@ -11,10 +15,12 @@ module.exports = new GenericCommand(
 
     let pls = await Memer.db.topPls()
     let you = await Memer.db.getPls(msg.channel.guild.id)
+    console.log(1)
     pls = await Promise.all(pls.map(async g => Object.assign(await bigmeme(g.id), { pls: g.pls })))
+    console.log(2)
     return {
-      title: 'Top 10 servers (Commands Ran)',
-      description: pls.map((g, i) => `${emojis[i] || '👏'} ${g.pls} - ${g.name || (Memer.db.deletePls(g.id) && 'LOL WHO DIS')}`).join('\n'),
+      title: 'Top 15 servers (Commands Ran)',
+      description: pls.map((g, i) => `${emojis[i] || '👏'} ${g.pls.toLocaleString()} - ${g.name || (Memer.db.deletePls(g.id) && 'LOL WHO DIS')}`).join('\n'),
       footer: { text: `Your server has ran ${you.pls} commands` }
     }
   },
