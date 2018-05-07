@@ -7,7 +7,7 @@ let s = new StatsD()
 
 const master = new Sharder(config.token, '/mainClass.js', {
   stats: true,
-  name: 'ass',
+  name: 'aeth hand',
   webhooks: config.webhooks,
   clientOptions: {
     disableEvents: {
@@ -26,7 +26,8 @@ const master = new Sharder(config.token, '/mainClass.js', {
     disableEveryone: true,
     messageLimit: 0
   },
-  shards: config.shardCount || 1
+  shards: config.shardCount || 1,
+  statsInterval: 5000
 })
 
 master.on('stats', res => {
@@ -36,6 +37,13 @@ master.on('stats', res => {
   s.gauge('bot.mem', res.mem)
   r.table('stats')
     .insert({ id: 1, stats: res }, { conflict: 'update' })
+    .run()
+})
+
+process.on('SIGINT', () => {
+  r.table('stats')
+    .get(1)
+    .delete()
     .run()
 })
 
