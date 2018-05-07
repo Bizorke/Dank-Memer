@@ -104,7 +104,7 @@ module.exports = {
   },
 
   paginate: (text, limit = 2000) => {
-    const lines = text.trim().split('\n')
+    const lines = text.split('\n')
     const pages = []
 
     let chunk = ''
