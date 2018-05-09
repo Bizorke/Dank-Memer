@@ -40,11 +40,13 @@ master.on('stats', res => {
     .run()
 })
 
-process.on('SIGINT', () => {
-  r.table('stats')
+process.on('SIGINT', async () => {
+  await r.table('stats')
     .get(1)
     .delete()
     .run()
+
+  process.exit()
 })
 
 if (require('cluster').isMaster && !config.dev) {
