@@ -5,7 +5,7 @@ class GenericImageCommand {
   constructor (commandProps, URLParseFN) {
     this.cmdProps = commandProps
     this.URLParseFN = URLParseFN || this.defaultURLParseFN
-    this.requestURL = commandProps.reqURL || 'http://www.dank-memer-is-lots-of.fun/api/$ENDPOINT'
+    this.requestURL = `http://127.0.0.1:5000/api/${commandProps.triggers[0]}` // commandProps.reqURL || 'http://www.dank-memer-is-lots-of.fun/api/$ENDPOINT'
   }
 
   async run ({ Memer, msg, cleanArgs: args, addCD }) {
