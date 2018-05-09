@@ -15,9 +15,7 @@ module.exports = new GenericCommand(
 
     let pls = await Memer.db.topPls()
     let you = await Memer.db.getPls(msg.channel.guild.id)
-    console.log(1)
     pls = await Promise.all(pls.map(async g => Object.assign(await bigmeme(g.id), { pls: g.pls })))
-    console.log(2)
     return {
       title: 'Top 15 servers (Commands Ran)',
       description: pls.map((g, i) => `${emojis[i] || '👏'} ${g.pls.toLocaleString()} - ${g.name || (Memer.db.deletePls(g.id) && 'LOL WHO DIS')}`).join('\n'),

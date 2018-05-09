@@ -8,32 +8,35 @@ module.exports = new GenericCommand(
     if (stats.clusters[stats.clusters.length - 1].uptime === 0) {
       return 'bot is still loading, hold ur horses damn'
     }
-    /* if (args && args[0] === '-all') {
+    if (args && args[0] === '-all') {
+      const bigmeme = (id) => new Promise(resolve => {
+        setTimeout(() => resolve({ id }), 1000)
+        Memer.ipc.fetchUser(id)
+          .then(resolve) // this is intentional and also stupid but still intentional
+      })
       let pls = await Memer.db.topCoins()
-      console.log('hi')
-      pls = await Promise.all(pls.map(async g => Object.assign(await Memer.ipc.fetchUser(g.id), { coin: g.coin })))
-      console.log('hi')
+      pls = await Promise.all(pls.map(async g => Object.assign(await bigmeme(g.id), { coin: g.coin })))
       return {
         title: 'Top 15 Global Richest Users',
-        description: pls.map((u, i) => `${emojis[i] || '👏'} ${u.coin.toLocaleString()} - ${u.username}#${u.discriminator}`).join('\n'),
+        description: pls.map((u, i) => `${emojis[i] || '👏'} ${u.coin.toLocaleString()} - ${u.username ? u.username + '#' + u.discriminator : (Memer.db.removeUser(u.id) && 'LOL WHO DIS')}`).join('\n'),
         footer: { text: `Global Leaderboard` }
       }
-    } else { */
-    let pls = []
-    let members = msg.channel.guild.members
-    for (const ok of members) {
-      let ding = await Memer.db.getUser(ok[0])
-      pls.push(ding)
+    } else {
+      let pls = []
+      let members = msg.channel.guild.members
+      for (const ok of members) {
+        let ding = await Memer.db.getUser(ok[0])
+        pls.push(ding)
+      }
+      pls = pls.filter(u => u.coin > 0)
+      pls = pls.sort((a, b) => b.coin - a.coin).slice(0, 5)
+      pls = await Promise.all(pls.map(async g => Object.assign(await Memer.ipc.fetchUser(g.id), { coin: g.coin })))
+      return {
+        title: `richest users in this server`,
+        description: pls.map((u, i) => `${emojis[i] || '👏'} ${u.coin.toLocaleString()} - ${u.username}#${u.discriminator}`).join('\n'),
+        footer: { text: `${msg.channel.guild.name} | add -all to see global` }
+      }
     }
-    pls = pls.filter(u => u.coin > 0)
-    pls = pls.sort((a, b) => b.coin - a.coin).slice(0, 5)
-    pls = await Promise.all(pls.map(async g => Object.assign(await Memer.ipc.fetchUser(g.id), { coin: g.coin })))
-    return {
-      title: `richest users in this server`,
-      description: pls.map((u, i) => `${emojis[i] || '👏'} ${u.coin.toLocaleString()} - ${u.username}#${u.discriminator}`).join('\n'),
-      footer: { text: `${msg.channel.guild.name} | global leaderboards coming soon` }
-    }
-    // }
   },
   {
     triggers: ['rich', 'richest', 'toponepercent'],
