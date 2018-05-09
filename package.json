@@ -1,7 +1,7 @@
 {
   "name": "dank-memer",
   "version": "6.9.4",
-  "droneVersion": "3.sick.1.46.ebullioscopy.1525107281.7",
+  "droneVersion": "5.hungry.0.53.deorbiting.1525884736.7",
   "description": "A discord entertainment based bot, with an emphasis on memes.",
   "main": "memer.js",
   "scripts": {
