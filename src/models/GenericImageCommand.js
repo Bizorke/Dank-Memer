@@ -8,8 +8,8 @@ class GenericImageCommand {
     this.requestURL = `http://127.0.0.1:5000/api/${commandProps.triggers[0]}` // commandProps.reqURL || 'http://www.dank-memer-is-lots-of.fun/api/$ENDPOINT'
   }
 
-  async run ({ Memer, msg, cleanArgs: args, addCD }) {
-    const datasrc = this.URLParseFN(msg, args)
+  async run ({ Memer, msg, cleanArgs, addCD }) {
+    const datasrc = this.URLParseFN(msg, cleanArgs)
     if (!datasrc) {
       return
     }
@@ -27,27 +27,6 @@ class GenericImageCommand {
   }
 
   defaultURLParseFN (msg, args) {
-    if (this.cmdProps.textOnly) {
-      if (this.cmdProps.requiredArgs) {
-        if (!args[0]) {
-          msg.channel.createMessage(this.cmdProps.requiredArgs)
-          return false
-        }
-
-        if (args.join(' ').length > this.cmdProps.textLimit) {
-          msg.channel.createMessage(`Too long. You're ${args.join(' ').length - this.cmdProps.textLimit} characters over the limit!`)
-          return false
-        }
-      }
-
-      return { text: args.join(' ') }
-    }
-
-    let avatarurl = (msg.mentions[0] || msg.author).dynamicAvatarURL('png', 1024)
-    if (['jpg', 'jpeg', 'gif', 'png', 'webp'].some(ext => args.join(' ').includes(ext))) {
-      avatarurl = args.join(' ').replace(/gif|webp/g, 'png').replace(/<|>/g, '')
-    }
-
     if (this.cmdProps.requiredArgs) {
       if (!args[0]) {
         msg.channel.createMessage(this.cmdProps.requiredArgs)
@@ -58,21 +37,45 @@ class GenericImageCommand {
         msg.channel.createMessage(`Too long. You're ${args.join(' ').length - this.cmdProps.textLimit} characters over the limit!`)
         return false
       }
+    }
 
-      if (!/^[\x00-\x7F]*$/.test(args.join(' '))) { // eslint-disable-line
-        msg.channel.createMessage('Your argument contains invalid characters. Please try again.')
-        return false
+    let ret = {}
+
+    if (this.cmdProps.textOnly) {
+      ret.text = args.join(' ')
+    } else {
+      const argIsUrl = (args[0] || '').replace(/<|>/g, '').match(/https?:\/\/.+\.(?:jpg|jpeg|gif|png|webp)/gi)
+
+      if (argIsUrl) {
+        ret.avatar1 = argIsUrl[0]
+        args.shift()
+      } else {
+        const user = msg.mentions[0] || msg.author
+        ret.avatar1 = user.dynamicAvatarURL('png', 1024)
+        ret.username1 = user.username
+
+        if (msg.mentions[0]) {
+          const member = msg.channel.guild.members.get(user.id)
+
+          if (member) {
+            args = args.join(' ').slice(`@${member.nick || member.username}`.length).trim().split(' ')
+          }
+        }
       }
 
-      return { avatar1: avatarurl, text: args.join(' ').replace(/’+/g, "'") }
-    } else if (this.cmdProps.doubleAvatar) {
-      const authorurl = (msg.mentions[0]
-        ? msg.author
-        : msg.channel.guild.shard.client.user)
-        .dynamicAvatarURL('png', 1024)
-      return { avatar1: avatarurl, avatar2: authorurl }
+      if (this.cmdProps.requiredArgs) {
+        ret.text = args.join(' ')
+      } else if (this.cmdProps.doubleAvatar) {
+        const user2 = msg.mentions[0]
+          ? msg.author
+          : msg.channel.guild.shard.client.user
+
+        ret.avatar2 = user2.dynamicAvatarURL('png', 1024)
+        ret.username2 = user2.username
+      }
     }
-    return { avatar1: avatarurl }
+
+    return ret
   }
 
   get props () {
