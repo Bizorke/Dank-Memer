@@ -15,8 +15,9 @@ class GenericImageCommand {
     }
 
     const data = await get(this.requestURL.replace('$ENDPOINT', this.cmdProps.triggers[0]))
-        .query(datasrc)
+      .query(datasrc)
 
+    // TODO: Check response content-type, set Authorization header
     if (data.status === 200) {
       await addCD()
       msg.channel.createMessage('', { file: data.body, name: `${this.cmdProps.triggers[0]}.${this.cmdProps.format || 'png'}` })
