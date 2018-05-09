@@ -25,14 +25,14 @@ module.exports = new GenericCommand(
         msg.channel.createMessage('Looks like you have not voted before!\nIf you go here and vote, you can get 750 coins each day that you do it!\n<https://discordbots.org/bot/memes/vote>')
 
         return {
-          title: `You have ${coins.coin} coins.`,
+          title: `You have ${coins.coin.toLocaleString()} coins.`,
           description: `To learn more about Dank Memer's currency, run \`pls guide\`\nTo see possible ways of earning more coins, do \`pls earn\``,
           thumbnail: {url: 'http://www.dank-memer-is-lots-of.fun/coin.png'},
           footer: {text: 'Hey stupid, do not spend it all in one place.'}
         }
       }
       return {
-        title: `You have ${coins.coin} coins.`,
+        title: `You have ${coins.coin.toLocaleString()} coins.`,
         description: `To learn more about Dank Memer's currency, run \`pls guide\`\nTo see possible ways of earning more coins, do \`pls earn\`\n[Vote](https://discordbots.org/bot/270904126974590976/vote) each 24hr for 750 coins!`,
         thumbnail: {url: 'http://www.dank-memer-is-lots-of.fun/coin.png'},
         footer: {text: 'Hey stupid, do not spend it all in one place.'}

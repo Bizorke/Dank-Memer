@@ -7,7 +7,7 @@ module.exports = new GenericCommand(
     Memer.db.addCoins(msg.author.id, winnings)
     return {
       title: `${msg.author.username} has redeemed their monthly donor rewards!`,
-      description: `You donated $${multiplier}, so you get ${winnings} coins!\nThank you for your support!`
+      description: `You donated $${multiplier}, so you get ${winnings.toLocaleString()} coins!\nThank you for your support!`
     }
   },
   {

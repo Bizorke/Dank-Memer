@@ -23,17 +23,17 @@ module.exports = new GenericCommand(
     }
     const donor = await Memer.db.isDonor(msg.author.id)
     if (donor) {
-      coinsEarned = Math.round(coinsEarned + (coinsEarned * 0.5))
+      coinsEarned = Math.round(coinsEarned + (coinsEarned * 0.35))
     }
     await Memer.db.addCoins(msg.author.id, coinsEarned)
     let coins = await Memer.db.getCoins(msg.author.id)
     await addCD()
 
     return {
-      title: `Here are your ${coinsEarned} daily coins`,
+      title: `Here are your ${coinsEarned.toLocaleString()} daily coins`,
       description: `If you would like to learn more about different ways to spend and earn coins, run \`pls guide\` and read up on all we have to offer!`,
       thumbnail: {url: 'http://www.dank-memer-is-lots-of.fun/coin.png'},
-      footer: {text: `Total Coins: ${coins.coin} | Streak: ${streak} | Multiplier ${donor ? '50%' : '0%'}`}
+      footer: {text: `Total Coins: ${coins.coin.toLocaleString()} | Streak: ${streak} | Multiplier ${donor ? '35%' : '0%'}`}
     }
   },
   {

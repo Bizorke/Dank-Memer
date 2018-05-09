@@ -29,14 +29,14 @@ module.exports = new GenericCommand(
     if (given < 0) {
       return {description: 'You can\'t share 0 coins you dumb'}
     }
-    if (given > 10000) {
+    if (given > 25000) {
       return {description: 'You can\'t share more than 10k coins since people abused this'}
     }
 
     await addCD()
     await Memer.db.addCoins(msg.mentions[0].id, given)
     await Memer.db.removeCoins(msg.author.id, given)
-    return {description: `You gave ${msg.mentions[0].username} ${given} coins, now you have ${giverCoins.coin - given} and they've got ${takerCoins.coin + given}`}
+    return {description: `You gave ${msg.mentions[0].username} ${given.toLocaleString()} coins, now you have ${(giverCoins.coin - given).toLocaleString()} and they've got ${(takerCoins.coin + given).toLocaleString()}`}
   },
   {
     triggers: ['share', 'give'],
