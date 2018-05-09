@@ -3,7 +3,7 @@ module.exports = {
   fn: async ({ Memer, msg }) => {
     try {
       for (const path in require.cache) {
-        if (path.includes('/commands/')) {
+        if (path.includes('commands')) {
           delete require.cache[path]
         }
       }
