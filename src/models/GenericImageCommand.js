@@ -5,6 +5,7 @@ class GenericImageCommand {
   constructor (commandProps, URLParseFN) {
     this.cmdProps = commandProps
     this.URLParseFN = URLParseFN || this.defaultURLParseFN
+    this.requestURL = commandProps.reqURL || 'http://www.dank-memer-is-lots-of.fun/api/$ENDPOINT'
   }
 
   async run ({ Memer, msg, cleanArgs: args, addCD }) {
@@ -13,18 +14,12 @@ class GenericImageCommand {
       return
     }
 
-    const isLocalhost = !this.cmdProps.reqURL
+    const data = await get(this.requestURL.replace('$ENDPOINT', this.cmdProps.triggers[0]))
+        .query(datasrc)
 
-    const data = await get(!isLocalhost
-      ? this.cmdProps.reqURL.replace('$URL', datasrc)
-      : `http://www.dank-memer-is-lots-of.fun/api/${this.cmdProps.triggers[0]}`)
-      .set('Api-Key', Memer.config.imgenKey)
-      .set('data-src', encodeURIComponent(datasrc))
-
-    if (data.status === 200 && (!isLocalhost || data.body.status === 200)) {
-      const file = isLocalhost ? Buffer.from(data.body.file, 'utf8') : data.body
+    if (data.status === 200) {
       await addCD()
-      msg.channel.createMessage('', { file, name: `${this.cmdProps.triggers[0]}.${this.cmdProps.format || 'png'}` })
+      msg.channel.createMessage('', { file: data.body, name: `${this.cmdProps.triggers[0]}.${this.cmdProps.format || 'png'}` })
     } else {
       msg.channel.createMessage(`Error: ${data.text}`)
     }
@@ -44,7 +39,7 @@ class GenericImageCommand {
         }
       }
 
-      return args.join(' ')
+      return { text: args.join(' ') }
     }
 
     let avatarurl = (msg.mentions[0] || msg.author).dynamicAvatarURL('png', 1024)
@@ -68,15 +63,15 @@ class GenericImageCommand {
         return false
       }
 
-      return JSON.stringify([`${avatarurl}`, args.join(' ').replace(/’+/g, "'")])
+      return { avatar1: avatarurl, text: args.join(' ').replace(/’+/g, "'") }
     } else if (this.cmdProps.doubleAvatar) {
       const authorurl = (msg.mentions[0]
         ? msg.author
         : msg.channel.guild.shard.client.user)
         .dynamicAvatarURL('png', 1024)
-      return JSON.stringify([`${avatarurl}`, `${authorurl}`])
+      return { avatar1: avatarurl, avatar2: authorurl }
     }
-    return avatarurl
+    return { avatar1: avatarurl }
   }
 
   get props () {
