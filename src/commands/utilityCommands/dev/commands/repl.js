@@ -10,7 +10,10 @@ module.exports = {
       stringifyResults: true,
       name: 'dank.repl'
     }, {
-      Memer
+      Memer,
+      get top () {
+        return Memer.db.topCoins()
+      }
     })
 
     const runCommand = async () => {
