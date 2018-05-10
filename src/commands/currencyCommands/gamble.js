@@ -33,7 +33,7 @@ module.exports = new GenericCommand(
     // await addCD()
 
     if (Math.random() >= 0.60) {
-      let winAmount = Math.random()
+      let winAmount = Math.random() + 0.5
       let random = Math.round(Math.random())
       winAmount = winAmount + random
       let winnings = Math.round(bet * winAmount)

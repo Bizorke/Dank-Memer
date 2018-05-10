@@ -5,6 +5,9 @@ module.exports = new GenericCommand(
     if (!msg.mentions[0]) {
       return {description: 'try running the command again, but this time actually tag someone to steal from'}
     }
+    if (msg.author.id === msg.mentions[0].id) {
+      return 'hey stupid, seems pretty dumb to steal from urself'
+    }
     let perpCoins = await Memer.db.getCoins(msg.author.id)
     let victimCoins = await Memer.db.getCoins(msg.mentions[0].id)
     let donor = await Memer.db.isDonor(msg.mentions[0].id)
