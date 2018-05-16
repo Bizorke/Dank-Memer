@@ -51,12 +51,14 @@ module.exports = class GenericVoiceCommand {
     } else {
       msg.addReaction(this.cmdProps.reaction)
     }
+
     const conn = await Memer.bot.joinVoiceChannel(msg.member.voiceState.channelID)
     conn.play(`${audioAssets}/${this.cmdProps.dir}/${file}.opus`, { format: 'ogg' })
-    await Memer.bot.createMessage('442528103382908948', `${msg.channel.guild.id}\n${audioAssets}/${this.cmdProps.dir}/${file}.opus\n`)
-    setTimeout(async function () { checkBorkVoice(Memer, msg.channel) }, 5000)
+
+    setTimeout(() => checkBorkVoice(Memer, msg.channel), 5000)
+
     conn.once('end', async () => {
-      await Memer.bot.leaveVoiceChannel(msg.channel.guild.members.get(Memer.bot.user.id).voiceState.channelID) // TODO: Don't run this if it's being skipped
+      await Memer.bot.leaveVoiceChannel(conn.channelID) // TODO: Don't run this if it's being skipped
     })
   }
 
@@ -73,12 +75,14 @@ module.exports = class GenericVoiceCommand {
 }
 
 async function checkBorkVoice (Memer, channel) {
-  if (Memer.bot.voiceConnections.has(channel.guild.id)) {
-    if (!Memer.bot.voiceConnections.get(channel.guild.id).playing) {
-      await Memer.bot.leaveVoiceChannel(channel.guild.members.get(Memer.bot.user.id).voiceState.channelID)
+  const voiceConnection = Memer.bot.voiceConnections.get(channel.guild.id)
+
+  if (voiceConnection) {
+    if (!voiceConnection.playing && voiceConnection.ready) {
+      await Memer.bot.leaveVoiceChannel(voiceConnection.channelID)
       Memer.ddog.increment('leftVoice')
       return channel.createMessage('Hm, it seems that I am in the voice channel but not playing anything. I decided to leave')
     }
-    return setTimeout(async function () { checkBorkVoice(Memer, channel) }, 10000)
+    return setTimeout(() => checkBorkVoice(Memer, channel), 10000)
   }
 }
