@@ -53,7 +53,6 @@ module.exports = class GenericVoiceCommand {
     }
     const conn = await Memer.bot.joinVoiceChannel(msg.member.voiceState.channelID)
     conn.play(`${audioAssets}/${this.cmdProps.dir}/${file}.opus`, { format: 'ogg' })
-    await Memer.bot.createMessage('442528103382908948', `${msg.channel.guild.id}\n${audioAssets}/${this.cmdProps.dir}/${file}.opus\n`)
     setTimeout(async function () { checkBorkVoice(Memer, msg.channel) }, 5000)
     conn.once('end', async () => {
       await Memer.bot.leaveVoiceChannel(msg.channel.guild.members.get(Memer.bot.user.id).voiceState.channelID) // TODO: Don't run this if it's being skipped
