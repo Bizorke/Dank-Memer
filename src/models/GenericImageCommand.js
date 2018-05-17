@@ -8,8 +8,8 @@ class GenericImageCommand {
     this.requestURL = `http://127.0.0.1:5000/api/${commandProps.triggers[0]}` // commandProps.reqURL || 'http://www.dank-memer-is-lots-of.fun/api/$ENDPOINT'
   }
 
-  async run ({ Memer, msg, cleanArgs, addCD }) {
-    const datasrc = this.URLParseFN(msg, cleanArgs)
+  async run ({ Memer, msg, addCD }) {
+    const datasrc = this.URLParseFN(msg)
     if (!datasrc) {
       return
     }
@@ -26,15 +26,15 @@ class GenericImageCommand {
     }
   }
 
-  defaultURLParseFN (msg, args) {
+  defaultURLParseFN (msg) {
     if (this.cmdProps.requiredArgs) {
-      if (!args[0]) {
+      if (msg.args.isEmpty()) {
         msg.channel.createMessage(this.cmdProps.requiredArgs)
         return false
       }
 
-      if (args.join(' ').length > this.cmdProps.textLimit) {
-        msg.channel.createMessage(`Too long. You're ${args.join(' ').length - this.cmdProps.textLimit} characters over the limit!`)
+      if (msg.args.textLength() > this.cmdProps.textLimit) {
+        msg.channel.createMessage(`Too long. You're ${msg.args.textLength() - this.cmdProps.textLimit} characters over the limit!`)
         return false
       }
     }
@@ -42,34 +42,23 @@ class GenericImageCommand {
     let ret = {}
 
     if (this.cmdProps.textOnly) {
-      ret.text = args.join(' ')
+      ret.text = msg.args.cleanContent(true)
     } else {
-      const argIsUrl = (args[0] || '').replace(/<|>/g, '').match(/https?:\/\/.+\.(?:jpg|jpeg|gif|png|webp)/gi)
+      const argIsUrl = (msg.args.getArgument(0) || '').replace(/<|>/g, '').match(/^https?:\/\/.+\.(?:jpg|jpeg|gif|png|webp)$/i)
 
       if (argIsUrl) {
         ret.avatar1 = argIsUrl[0]
-        args.shift()
+        msg.args.drop(0)
       } else {
-        const user = msg.mentions[0] || msg.author
+        const user = msg.args.resolveUser() || msg.author
         ret.avatar1 = user.dynamicAvatarURL('png', 1024)
         ret.username1 = user.username
-
-        if (msg.mentions[0]) {
-          const member = msg.channel.guild.members.get(user.id)
-
-          if (member) {
-            args = args.join(' ').slice(`@${member.nick || member.username}`.length).trim().split(' ')
-          }
-        }
       }
 
       if (this.cmdProps.requiredArgs) {
-        ret.text = args.join(' ')
+        ret.text = msg.args.cleanContent(true)
       } else if (this.cmdProps.doubleAvatar) {
-        const user2 = msg.mentions[0]
-          ? msg.author
-          : msg.channel.guild.shard.client.user
-
+        const user2 = msg.args.resolveUser() || msg.channel.guild.shard.client.user
         ret.avatar2 = user2.dynamicAvatarURL('png', 1024)
         ret.username2 = user2.username
       }
