@@ -30,7 +30,7 @@ module.exports = new GenericCommand(
       return {description: 'You can\'t share 0 coins you dumb'}
     }
     if (given > 25000) {
-      return {description: 'You can\'t share more than 10k coins since people abused this'}
+      return {description: 'You can\'t share more than 25k coins.'}
     }
 
     await addCD()
