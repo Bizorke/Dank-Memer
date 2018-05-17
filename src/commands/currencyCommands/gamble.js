@@ -30,9 +30,10 @@ module.exports = new GenericCommand(
       return { title: `You only have ${coins.coin.toLocaleString()} coins, dont bluff me.` }
     }
 
-    // await addCD()
+    await addCD()
+    let blahblah = Math.random()
 
-    if (Math.random() >= 0.90) {
+    if (blahblah >= 0.90) {
       let winAmount = Math.random() + 1
       let random = Math.round(Math.random())
       winAmount = winAmount + random
@@ -52,7 +53,7 @@ module.exports = new GenericCommand(
         description: `Now you've got ${(coins.coin + parseInt(winnings)).toLocaleString()}.`,
         footer: {text: `Multiplier ${donor ? '35%' : '0%'} | Win Percentage: ${winAmount.toFixed(2) * 100}%`}
       }
-    } else if (winnings >= 0.55) {
+    } else if (blahblah >= 0.55) {
       let winAmount = Math.random() + 0.2
       let winnings = Math.round(bet * winAmount)
       const donor = await Memer.db.isDonor(msg.author.id)
