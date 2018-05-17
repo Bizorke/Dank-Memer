@@ -32,10 +32,28 @@ module.exports = new GenericCommand(
 
     // await addCD()
 
-    if (Math.random() >= 0.60) {
-      let winAmount = Math.random() + 0.5
+    if (Math.random() >= 0.90) {
+      let winAmount = Math.random() + 1
       let random = Math.round(Math.random())
       winAmount = winAmount + random
+      let winnings = Math.round(bet * winAmount)
+      const donor = await Memer.db.isDonor(msg.author.id)
+      if (donor) {
+        winnings = Math.round(winnings + (winnings * 0.35))
+      }
+      if (winnings === bet) {
+        return 'You broke even. This means you\'re lucky I think?'
+      }
+
+      await Memer.db.addCoins(msg.author.id, winnings)
+      Memer.ddog.incrementBy('gambling.winnings', Number(winnings))
+      return {
+        title: `Damn it, you won ${winnings.toLocaleString()} coins.`,
+        description: `Now you've got ${(coins.coin + parseInt(winnings)).toLocaleString()}.`,
+        footer: {text: `Multiplier ${donor ? '35%' : '0%'} | Win Percentage: ${winAmount.toFixed(2) * 100}%`}
+      }
+    } else if (winnings >= 0.55) {
+      let winAmount = Math.random() + 0.2
       let winnings = Math.round(bet * winAmount)
       const donor = await Memer.db.isDonor(msg.author.id)
       if (donor) {
