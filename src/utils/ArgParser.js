@@ -153,6 +153,10 @@ class ArgParser {
     return args.join(' ')
   }
 
+  gather () {
+    return this.args.join(' ')
+  }
+
   drop (index) {
     this.args.splice(index, 1)
   }
