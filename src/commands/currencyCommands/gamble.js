@@ -33,7 +33,7 @@ module.exports = new GenericCommand(
     await addCD()
     let blahblah = Math.random()
 
-    if (blahblah >= 0.90) {
+    if (blahblah >= 0.95) {
       let winAmount = Math.random() + 1
       let random = Math.round(Math.random())
       winAmount = winAmount + random
@@ -51,10 +51,10 @@ module.exports = new GenericCommand(
       return {
         title: `Damn it, you won ${winnings.toLocaleString()} coins.`,
         description: `Now you've got ${(coins.coin + parseInt(winnings)).toLocaleString()}.`,
-        footer: {text: `Multiplier ${donor ? '35%' : '0%'} | Win Percentage: ${winAmount.toFixed(2) * 100}%`}
+        footer: {text: `Multiplier ${donor ? '35%' : '0%'} | Percent of bet won: ${winAmount.toFixed(2) * 100}%`}
       }
-    } else if (blahblah >= 0.55) {
-      let winAmount = Math.random() + 0.2
+    } else if (blahblah >= 0.65) {
+      let winAmount = Math.random() + 0.4
       let winnings = Math.round(bet * winAmount)
       const donor = await Memer.db.isDonor(msg.author.id)
       if (donor) {
@@ -69,7 +69,7 @@ module.exports = new GenericCommand(
       return {
         title: `Damn it, you won ${winnings.toLocaleString()} coins.`,
         description: `Now you've got ${(coins.coin + parseInt(winnings)).toLocaleString()}.`,
-        footer: {text: `Multiplier ${donor ? '35%' : '0%'} | Win Percentage: ${winAmount.toFixed(2) * 100}%`}
+        footer: {text: `Multiplier ${donor ? '35%' : '0%'} | Percent of bet won: ${winAmount.toFixed(2) * 100}%`}
       }
     } else {
       await Memer.db.removeCoins(msg.author.id, bet)

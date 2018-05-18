@@ -12,18 +12,18 @@ module.exports = new GenericCommand(
     let victimCoins = await Memer.db.getCoins(msg.mentions[0].id)
     let donor = await Memer.db.isDonor(msg.mentions[0].id)
     let shield
-    if (perpCoins.coin < 1000) {
-      return { title: 'You need at least 1000 to try and rob someone.' }
+    if (perpCoins.coin < 500) {
+      return { title: 'You need at least 500 coins to try and rob someone.' }
     }
     if (Memer.config.devs.includes(msg.mentions[0].id) && !Memer.config.devs.includes(msg.author.id)) {
-      Memer.db.removeCoins(msg.author.id, 1000)
-      return { title: 'Tried stealing from the devs? There goes 1000 of your coins. Nice job.' }
+      Memer.db.removeCoins(msg.author.id, 500)
+      return { title: 'Tried stealing from the devs? There goes 500 of your coins. Nice job.' }
     }
-    if (victimCoins.coin < 1000) {
-      return { title: 'The victim doesn\'t have at least 1000 coins, not worth it man' }
+    if (victimCoins.coin < 500) {
+      return { title: 'The victim doesn\'t have at least 500 coins, not worth it man' }
     }
-    if (victimCoins.coin > 20e3) {
-      victimCoins.coin = 20e3
+    if (victimCoins.coin > 1e7) {
+      victimCoins.coin = 1e7
     }
     if (donor) {
       if (donor < 5) { // $1-$4 gets 5% shields
@@ -51,6 +51,7 @@ module.exports = new GenericCommand(
     if (stealingOdds <= 90) { // fail section
       Memer.db.removeCoins(msg.author.id, 1000)
       Memer.db.addCoins(msg.mentions[0].id, 1000)
+      Memer.ddog.increment('stealFail')
       return {
         title: `You got caught! 🚓`,
         description: `You were forced to pay the person you attempted to steal from **1000 coins** as a penalty!`
@@ -59,6 +60,7 @@ module.exports = new GenericCommand(
       let worth = Math.round(victimCoins.coin * 0.1)
       Memer.db.addCoins(msg.author.id, worth)
       Memer.db.removeCoins(msg.mentions[0].id, worth)
+      Memer.ddog.increment('stealSmall')
       return {
         title: `${msg.author.username} got away! 💸`,
         description: `You managed to steal a small amount before leaving!\nYour payout was **${worth.toLocaleString()} coins.`,
@@ -68,15 +70,17 @@ module.exports = new GenericCommand(
       let worth = Math.round(victimCoins.coin * 0.4)
       Memer.db.addCoins(msg.author.id, worth)
       Memer.db.removeCoins(msg.mentions[0].id, worth)
+      Memer.ddog.increment('stealLarge')
       return {
         title: `${msg.author.username} got away! 💸`,
         description: `You managed to steal a decent amount before leaving!\nYour payout was **${worth.toLocaleString()} coins.`,
         footer: { text: `Victim Shields: ${shield} | Payout: 40%` }
       }
-    } else { // full theft up to 10k
+    } else { // full theft up to 10 million
       let worth = Math.round(victimCoins.coin)
       Memer.db.addCoins(msg.author.id, worth)
       Memer.db.removeCoins(msg.mentions[0].id, worth)
+      Memer.ddog.increment('stealMAX')
       return {
         title: `${msg.author.username} got away! 💰`,
         description: `You managed to steal a TON before leaving!\nYour payout was **${worth.toLocaleString()} coins.`,
@@ -86,8 +90,8 @@ module.exports = new GenericCommand(
   },
   {
     triggers: ['steal', 'rob', 'ripoff'],
-    cooldown: 8e5,
-    donorCD: 4e5,
+    cooldown: 9e5,
+    donorCD: 45e4,
     perms: ['embedLinks'],
     description: 'Take your chances at stealing from users. Warning, you will lose money if you get caught! The victim can lose no more than 10k coins.',
     cooldownMessage: 'Woahhh there, you need some time to plan your next hit. Wait ',
