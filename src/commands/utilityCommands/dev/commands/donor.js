@@ -1,5 +1,5 @@
 module.exports = {
-  help: 'donor <add | remove> <1 | 5 | 10> <id | @tag>',
+  help: 'donor <add/rem> <$> <id>',
   fn: async ({ Memer, msg, args }) => {
     const ids = msg.mentions[0] ? msg.mentions.map(u => u.id) : args.slice(2).filter(arg => parseInt(arg))
 
@@ -13,7 +13,7 @@ module.exports = {
     if (args[0] === 'add') {
       ids.forEach(id => Memer.db.addDonor(id, parseInt(args[1])))
       return `Successfully added ${ids.join(', ')} to tier ${args[1]}.`
-    } else if (args[0] === 'remove') {
+    } else if (args[0] === 'rem') {
       ids.forEach(id => Memer.db.removeDonor(id))
       return `Successfully removed ${ids.join(', ')}.`
     }
