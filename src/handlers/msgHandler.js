@@ -30,7 +30,7 @@ exports.handleMeDaddy = async function (msg) {
 
   let [command, ...args] = msg.content.slice(triggerLength).split(/\s+/g)
   const cleanArgs = msg.cleanContent.slice(cleanTriggerLength).split(/\s+/g).slice(1) // Preserving this so it doesn't break anything
-  // You should use msg.args.cleanContent(cleanContent: boolean), though
+  // You should use msg.args.cleanContent(consumeRest: boolean), though
 
   msg.args = new ArgParser(msg, args)
 
