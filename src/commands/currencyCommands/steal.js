@@ -22,8 +22,8 @@ module.exports = new GenericCommand(
     if (victimCoins.coin < 500) {
       return { title: 'The victim doesn\'t have at least 500 coins, not worth it man' }
     }
-    if (victimCoins.coin > 1e7) {
-      victimCoins.coin = 1e7
+    if (victimCoins.coin > 25e6) {
+      victimCoins.coin = 25e6
     }
     if (donor) {
       if (donor < 5) { // $1-$4 gets 5% shields
