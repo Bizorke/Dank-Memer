@@ -18,11 +18,11 @@ class GenericImageCommand {
       .query(datasrc)
 
     // TODO: Check response content-type, set Authorization header
-    if (data.status === 200) {
+    if (data.status === 200 && data.headers['content-type'].startsWith('image/')) {
       await addCD()
       msg.channel.createMessage('', { file: data.body, name: `${this.cmdProps.triggers[0]}.${this.cmdProps.format || 'png'}` })
     } else {
-      msg.channel.createMessage(`Error: ${data.text}`)
+      msg.channel.createMessage(`Something went wrong while executing this hecking command!\`\`\`\n${data.text}\`\`\`\n\nJoin here (<https://discord.gg/ebUqc7F>) if the issue doesn't stop being an ass`)
     }
   }
 
