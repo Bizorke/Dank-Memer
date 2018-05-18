@@ -13,9 +13,10 @@ class ArgParser {
   /**
      * Resolves a user using the next argument in the list or all remaining arguments
      * @param {Boolean} consumeRest Whether to use the rest of the arguments to resolve the user or not
+     * @param {Boolean} consumeOnFail Whether to consume the arguments or preserve them if the args weren't resolved
      * @return {Null|Object} Null if the argument couldn't be resolved, otherwise the user object
      */
-  resolveUser (consumeRest = false) {
+  resolveUser (consumeRest = false, consumeOnFail = true) {
     // TODO: Quotation support
     const args = consumeRest
       ? this.args.splice(0).join(' ')
@@ -26,16 +27,23 @@ class ArgParser {
     }
 
     const idMatch = idMatcher.exec(args) || userMentionMatcher.exec(args)
+    let ret = null
 
     if (idMatch) { // Found the user by mention or raw ID
-      return this.bot.users.get(idMatch[1])
+      ret = this.bot.users.get(idMatch[1])
     } else { // Find the user by their username (and discrim?)
       if (args.length > 5 && args.slice(-5, -4) === '#') { // we have a discrim
-        return this.bot.users.find(user => `${user.username}#${user.discriminator}` === args)
+        ret = this.bot.users.find(user => `${user.username}#${user.discriminator}` === args)
       } else {
-        return this.bot.users.find(user => user.username === args)
+        ret = this.bot.users.find(user => user.username === args)
       }
     }
+
+    if (!ret && !consumeOnFail) {
+      this.args.unshift(args.split(' '))
+    }
+
+    return ret
   }
 
   /**

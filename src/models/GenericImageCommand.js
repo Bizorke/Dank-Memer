@@ -50,7 +50,7 @@ class GenericImageCommand {
         ret.avatar1 = argIsUrl[0]
         msg.args.drop(0)
       } else {
-        const user = msg.args.resolveUser() || msg.author
+        const user = msg.args.resolveUser(false, false) || msg.author
         ret.avatar1 = user.dynamicAvatarURL('png', 1024)
         ret.username1 = user.username
       }
@@ -58,7 +58,7 @@ class GenericImageCommand {
       if (this.cmdProps.requiredArgs) {
         ret.text = msg.args.cleanContent(true)
       } else if (this.cmdProps.doubleAvatar) {
-        const user2 = msg.args.resolveUser() || msg.channel.guild.shard.client.user
+        const user2 = msg.args.resolveUser(false, false) || msg.channel.guild.shard.client.user
         ret.avatar2 = user2.dynamicAvatarURL('png', 1024)
         ret.username2 = user2.username
       }
