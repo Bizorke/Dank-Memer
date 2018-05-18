@@ -49,12 +49,12 @@ module.exports = new GenericCommand(
     let stealingOdds = Math.floor(Math.random() * 100) + 1
 
     if (stealingOdds <= 90) { // fail section
-      Memer.db.removeCoins(msg.author.id, 1000)
-      Memer.db.addCoins(msg.mentions[0].id, 1000)
+      Memer.db.removeCoins(msg.author.id, 500)
+      Memer.db.addCoins(msg.mentions[0].id, 500)
       Memer.ddog.increment('stealFail')
       return {
         title: `You got caught! 🚓`,
-        description: `You were forced to pay the person you attempted to steal from **1000 coins** as a penalty!`
+        description: `You were forced to pay the person you attempted to steal from **500 coins** as a penalty!`
       }
     } else if (stealingOdds > 90 && stealingOdds <= 97) { // 10% payout
       let worth = Math.round(victimCoins.coin * 0.1)
