@@ -63,7 +63,7 @@ module.exports = new GenericCommand(
       Memer.ddog.increment('stealSmall')
       return {
         title: `${msg.author.username} got away! 💸`,
-        description: `You managed to steal a small amount before leaving!\nYour payout was **${worth.toLocaleString()} coins.`,
+        description: `You managed to steal a small amount before leaving!\nYour payout was **${worth.toLocaleString()}** coins.`,
         footer: { text: `Victim Shields: ${shield} | Payout: 10%` }
       }
     } else if (stealingOdds > 97 && stealingOdds <= 99) { // 40% payout
@@ -73,7 +73,7 @@ module.exports = new GenericCommand(
       Memer.ddog.increment('stealLarge')
       return {
         title: `${msg.author.username} got away! 💸`,
-        description: `You managed to steal a decent amount before leaving!\nYour payout was **${worth.toLocaleString()} coins.`,
+        description: `You managed to steal a decent amount before leaving!\nYour payout was **${worth.toLocaleString()}** coins.`,
         footer: { text: `Victim Shields: ${shield} | Payout: 40%` }
       }
     } else { // full theft up to 10 million
@@ -83,7 +83,7 @@ module.exports = new GenericCommand(
       Memer.ddog.increment('stealMAX')
       return {
         title: `${msg.author.username} got away! 💰`,
-        description: `You managed to steal a TON before leaving!\nYour payout was **${worth.toLocaleString()} coins.`,
+        description: `You managed to steal a TON before leaving!\nYour payout was **${worth.toLocaleString()}** coins.`,
         footer: { text: `Victim Shields: ${shield} | Payout: MAX` }
       }
     }
