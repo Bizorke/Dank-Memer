@@ -30,6 +30,18 @@ module.exports = new GenericCommand(
       return { title: `You only have ${coins.coin.toLocaleString()} coins, dont bluff me.` }
     }
 
+    if (bet > 1e6) {
+      await Memer.bot.createMessage('447982225246519296', { embed: {
+        title: 'Gambled',
+        author: { name: `${msg.author.username}#${msg.author.discriminator} | ${msg.author.id}` },
+        description: `Amount: ${bet.toLocaleString()}`,
+        fields: [{ name: 'Sent from:', value: `#${msg.channel.name} in ${msg.channel.guild.name}` }],
+        color: Memer.randomColor(),
+        footer: { text: `Guild ID: ${msg.channel.guild.id}` },
+        timestamp: new Date()
+      }})
+    }
+
     await addCD()
     let blahblah = Math.random()
 

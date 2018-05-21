@@ -29,8 +29,16 @@ module.exports = new GenericCommand(
     if (given < 0) {
       return {description: 'You can\'t share 0 coins you dumb'}
     }
-    if (given > 25000) {
-      return {description: 'You can\'t share more than 25k coins.'}
+    if (given > 1e6) {
+      await Memer.bot.createMessage('447982225246519296', { embed: {
+        title: 'Shared',
+        author: { name: `${msg.author.username}#${msg.author.discriminator} | ${msg.author.id}` },
+        description: `Amount: ${given.toLocaleString()}`,
+        fields: [{ name: 'Sent from:', value: `#${msg.channel.name} in ${msg.channel.guild.name}` }],
+        color: Memer.randomColor(),
+        footer: { text: `Guild ID: ${msg.channel.guild.id}` },
+        timestamp: new Date()
+      }})
     }
 
     await addCD()
