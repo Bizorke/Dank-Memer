@@ -15,10 +15,6 @@ module.exports = new GenericCommand(
     if (perpCoins.coin < 500) {
       return { title: 'You need at least 500 coins to try and rob someone.' }
     }
-    if (Memer.config.devs.includes(msg.mentions[0].id) && !Memer.config.devs.includes(msg.author.id)) {
-      Memer.db.removeCoins(msg.author.id, 500)
-      return { title: 'Tried stealing from the devs? There goes 500 of your coins. Nice job.' }
-    }
     if (victimCoins.coin < 500) {
       return { title: 'The victim doesn\'t have at least 500 coins, not worth it man' }
     }
@@ -91,7 +87,7 @@ module.exports = new GenericCommand(
   {
     triggers: ['steal', 'rob', 'ripoff'],
     cooldown: 9e5,
-    donorCD: 45e4,
+    donorCD: 2e5,
     perms: ['embedLinks'],
     description: 'Take your chances at stealing from users. Warning, you will lose money if you get caught! The victim can lose no more than 10k coins.',
     cooldownMessage: 'Woahhh there, you need some time to plan your next hit. Wait ',
