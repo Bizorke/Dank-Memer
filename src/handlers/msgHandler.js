@@ -8,7 +8,7 @@ exports.handleMeDaddy = async function (msg) {
   ) {
     return
   }
-  this.ddog.increment(`global.region.${msg.channel.guild.region}`)
+
   const gConfig = await this.db.getGuild(msg.channel.guild.id) || {
     prefix: this.config.defaultPrefix,
     disabledCommands: []
@@ -47,23 +47,17 @@ exports.handleMeDaddy = async function (msg) {
   } else if (command.props.donorOnly && !isDonor) {
     return msg.channel.createMessage('This command is for donors only. You can find more information by using `pls donate` if you are interested.')
   }
-  let size = msg.channel.guild.members.size
 
-  if (size <= 25) {
-    this.ddog.increment('guild.small')
-  } else if (size > 25 && size < 1000) {
-    this.ddog.increment('guild.average')
-  } else if (size > 1000) {
-    this.ddog.increment('guild.large')
+  let { lastCmd } = await this.db.getSpam(msg.author.id)
+
+  if (Date.now() - lastCmd < 1000) {
+    await this.db.addSpam(msg.author.id)
   }
 
-  if (isDonor) {
-    this.ddog.increment('donor.cmd')
-  }
+  await this.db.addCmd(msg.author.id)
 
   this.ddog.increment('total.commands')
   this.ddog.increment(`category.${command.category}`, 1, ['tag:one'])
-  this.ddog.increment(`region.${msg.channel.guild.region}`)
   this.ddog.increment(`cmd.${command.cmdProps.triggers[0]}`, 1, ['tag:two'])
 
   this.db.addPls(msg.channel.guild.id, msg.author.id)
@@ -99,7 +93,6 @@ exports.handleMeDaddy = async function (msg) {
     if (command.props.perms.some(perm => !permissions.has(perm))) {
       const neededPerms = command.props.perms.filter(perm => !permissions.has(perm))
       if (permissions.has('sendMessages')) {
-        this.ddog.increment('permError')
         if (permissions.has('embedLinks')) {
           if (neededPerms.length > 1) {
             msg.channel.createMessage({ embed: {

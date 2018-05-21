@@ -184,6 +184,8 @@ module.exports = Bot => ({
         id: id,
         coin: 0,
         pls: 1,
+        lastCmd: Date.now(),
+        spam: 0,
         streak: { time: 0, streak: 0 },
         upvoted: false
       }, { conflict: 'update', returnChanges: true })
@@ -203,6 +205,8 @@ module.exports = Bot => ({
       .insert({
         id: id,
         pls: 1,
+        lastCmd: Date.now(),
+        spam: 0,
         streak: { time: 0, streak: 0 },
         upvoted: false
       }, { conflict: 'update', returnChanges: true })
@@ -219,6 +223,10 @@ module.exports = Bot => ({
         pls = pls.changes[0].new_val
       }
       return pls
+    }
+    if (!pls.lastCmd || !pls.spam) {
+      pls.spam = 0
+      pls.lastCmd = Date.now()
     }
     return pls
   },
@@ -288,6 +296,32 @@ module.exports = Bot => ({
     streak.streak = ~~streak.streak + 1
 
     await Bot.r.table('users').insert({ id, streak }, { conflict: 'update' }).run()
+  },
+
+  addSpam: async function addSpam (id) {
+    let { spam } = await this.getSpam(id)
+    spam = ~~spam + 1
+
+    await Bot.r.table('users').insert({ id, spam }, { conflict: 'update' }).run()
+  },
+
+  topSpam: async function topSpam () {
+    const res = await Bot.r.table('users')
+      .orderBy({index: Bot.r.desc('spam')})
+      .limit(10)
+      .run()
+    return res
+  },
+
+  addCmd: async function addCmd (id) {
+    let { lastCmd } = await this.getSpam(id)
+    lastCmd = Date.now()
+    await Bot.r.table('users').insert({ id, lastCmd }, { conflict: 'update' }).run()
+  },
+
+  getSpam: async function getSpam (id) {
+    let users = await this.getUser(id)
+    return users
   },
 
   getStreak: async function getStreak (id) {
