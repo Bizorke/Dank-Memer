@@ -48,7 +48,14 @@ exports.handleMeDaddy = async function (msg) {
     return msg.channel.createMessage('This command is for donors only. You can find more information by using `pls donate` if you are interested.')
   }
 
-  let { lastCmd } = await this.db.getSpam(msg.author.id)
+  let { spam, lastCmd } = await this.db.getSpam(msg.author.id)
+
+  if (spam > 1e4) {
+    await this.db.addBlock(msg.author.id)
+    await this.db.removeUser(msg.author.id)
+    await this.bot.createMessage('430419142458212362', `${msg.author.username}#${msg.author.discriminator} ${msg.author.id}\nUser was forcefully removed for spamming over 10k times.`)
+    return
+  }
 
   if (Date.now() - lastCmd < 1000) {
     await this.db.addSpam(msg.author.id)
@@ -63,6 +70,7 @@ exports.handleMeDaddy = async function (msg) {
   this.db.addPls(msg.channel.guild.id, msg.author.id)
   if (msg.member.roles.some(id => msg.channel.guild.roles.get(id).name === 'no memes for you')) {
     this.ddog.increment('role.blocked')
+    return
   }
 
   const cooldown = await this.db.getCooldown(command.props.triggers[0], msg.author.id)
