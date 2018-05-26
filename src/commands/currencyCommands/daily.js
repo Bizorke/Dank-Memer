@@ -14,26 +14,24 @@ module.exports = new GenericCommand(
       } else {
         streak = 1
       }
-      // streak = streak.streak ? streak.streak + 1 : 1
     }
 
-    let coinsEarned = 250
+    let coinsEarned = 1200
     if (streak > 1) {
-      coinsEarned = 250 + Math.round(2.5 * streak)
+      coinsEarned = coinsEarned + Math.round((0.02 * coinsEarned) * streak)
     }
     const donor = await Memer.db.isDonor(msg.author.id)
     if (donor) {
-      coinsEarned = Math.round(coinsEarned + (coinsEarned * 0.5))
+      coinsEarned = Math.round(coinsEarned + (coinsEarned * 0.35))
     }
     await Memer.db.addCoins(msg.author.id, coinsEarned)
-    let coins = await Memer.db.getCoins(msg.author.id)
     await addCD()
 
     return {
-      title: `Here are your ${coinsEarned} daily coins`,
+      title: `Here are your ${coinsEarned.toLocaleString()} daily coins`,
       description: `If you would like to learn more about different ways to spend and earn coins, run \`pls guide\` and read up on all we have to offer!`,
       thumbnail: {url: 'http://www.dank-memer-is-lots-of.fun/coin.png'},
-      footer: {text: `Total Coins: ${coins.coin} | Streak: ${streak} | Multiplier ${donor ? '50%' : '0%'}`}
+      footer: {text: `Streak: ${streak} (+${2.5 * streak}) | Multiplier ${donor ? '35%' : '0%'}`}
     }
   },
   {

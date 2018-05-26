@@ -12,7 +12,7 @@ module.exports = {
     let user = await Memer.ipc.fetchUser(id)
     return {
       title: `${user.username}#${user.discriminator}`,
-      description: `Usage: ${db.pls}\nCoins: ${db.coin}\nUpvoted: ${db.upvoted}\nDonor: ${!donor ? 'false' : `$${donor}`}`
+      description: `Usage: ${db.pls}\nLast Cmd: ${new Date(db.lastCmd).toUTCString()}\nSpam: ${db.spam}\nCoins: ${db.coin}\nStreak: ${db.streak.streak}\nUpvoted: ${db.upvoted}\nDonor: ${!donor ? 'false' : `$${donor}`}`
     }
   }
 }

@@ -1,5 +1,5 @@
 module.exports = {
-  help: 'Show message time vs system time.',
+  help: 'msg time vs sys time.',
   fn: async ({ Memer, msg, args }) => {
     let message = new Date(msg.timestamp).toTimeString()
     let now = new Date(Date.now())

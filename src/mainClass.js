@@ -93,7 +93,7 @@ class Memer extends Base {
       fields: [
         {name: 'Important Links', value: this.links}
       ],
-      footer: { text: 'Message Melmsie#0001 if you have any questions!' }
+      footer: { text: 'Join the support server if you have any questions!' }
     }
     guild.channels.get(guild.channels.filter(c => c.type === 0).map(c => c.id)[0]).createMessage({ embed })
       .catch(() => {})

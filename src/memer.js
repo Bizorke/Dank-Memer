@@ -22,7 +22,7 @@ let s = new StatsD()
 
 const master = new Sharder(config.token, '/mainClass.js', {
   stats: true,
-  name: ':triumph:',
+  name: 'Maymays',
   webhooks: config.webhooks,
   clientOptions: {
     disableEvents: {
@@ -42,7 +42,7 @@ const master = new Sharder(config.token, '/mainClass.js', {
     messageLimit: 0
   },
   shards: config.shardCount || 1,
-  statsInterval: 5000
+  statsInterval: 1e4
 })
 
 master.on('stats', res => {

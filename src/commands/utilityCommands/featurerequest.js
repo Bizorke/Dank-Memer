@@ -13,6 +13,8 @@ module.exports = new GenericCommand(
       timestamp: new Date()
     }})
 
+    await addCD()
+
     return 'Your feature request has been sent to the developers. Feel free to suggest more after the cooldown.'
   }, {
     triggers: ['featurerequest'],

@@ -10,7 +10,7 @@ exports.handleMeDaddy = async function (msg) {
   ) {
     return
   }
-  this.ddog.increment(`global.region.${msg.channel.guild.region}`)
+
   const gConfig = await this.db.getGuild(msg.channel.guild.id) || {
     prefix: this.config.defaultPrefix,
     disabledCommands: []
@@ -52,28 +52,30 @@ exports.handleMeDaddy = async function (msg) {
   } else if (command.props.donorOnly && !isDonor) {
     return msg.channel.createMessage('This command is for donors only. You can find more information by using `pls donate` if you are interested.')
   }
-  let size = msg.channel.guild.members.size
 
-  if (size <= 25) {
-    this.ddog.increment('guild.small')
-  } else if (size > 25 && size < 1000) {
-    this.ddog.increment('guild.average')
-  } else if (size > 1000) {
-    this.ddog.increment('guild.large')
+  let { spam, lastCmd } = await this.db.getSpam(msg.author.id)
+
+  if (spam > 1e4) {
+    await this.db.addBlock(msg.author.id)
+    await this.db.removeUser(msg.author.id)
+    await this.bot.createMessage('430419142458212362', `${msg.author.username}#${msg.author.discriminator} ${msg.author.id}\nUser was forcefully removed for spamming over 10k times.`)
+    return
   }
 
-  if (isDonor) {
-    this.ddog.increment('donor.cmd')
+  if (Date.now() - lastCmd < 1000) {
+    await this.db.addSpam(msg.author.id)
   }
+
+  await this.db.addCmd(msg.author.id)
 
   this.ddog.increment('total.commands')
   this.ddog.increment(`category.${command.category}`, 1, ['tag:one'])
-  this.ddog.increment(`region.${msg.channel.guild.region}`)
   this.ddog.increment(`cmd.${command.cmdProps.triggers[0]}`, 1, ['tag:two'])
 
   this.db.addPls(msg.channel.guild.id, msg.author.id)
   if (msg.member.roles.some(id => msg.channel.guild.roles.get(id).name === 'no memes for you')) {
     this.ddog.increment('role.blocked')
+    return
   }
 
   const cooldown = await this.db.getCooldown(command.props.triggers[0], msg.author.id)
@@ -104,7 +106,6 @@ exports.handleMeDaddy = async function (msg) {
     if (command.props.perms.some(perm => !permissions.has(perm))) {
       const neededPerms = command.props.perms.filter(perm => !permissions.has(perm))
       if (permissions.has('sendMessages')) {
-        this.ddog.increment('permError')
         if (permissions.has('embedLinks')) {
           if (neededPerms.length > 1) {
             msg.channel.createMessage({ embed: {

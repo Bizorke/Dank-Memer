@@ -28,14 +28,14 @@ module.exports = new GenericCommand(
       if (disabled.length === 0) {
         return {
           title: help.title,
-          description: help.message + '\nSee a [list of all commands](https://dankmemer.lol/)',
+          description: help.message + '\n[DANK](https://goo.gl/4mKBgd) [MEME](https://goo.gl/4mKBgd) [MERCH](https://goo.gl/4mKBgd)\nGet some dank meme merch here: [touch this link](https://goo.gl/4mKBgd)',
           fields: Object.keys(categories).sort((a, b) => categories[b].length - categories[a].length).map(category => ({ name: category, value: `${categories[category].length} commands\n\`${prefix} help ${category.split(' ')[1].toLowerCase()}\``, inline: true })),
           footer: { text: help.footer }
         }
       }
       return {
         title: help.title,
-        description: help.message + '\nSee a [list of all commands](https://dankmemer.lol/)',
+        description: help.message + '\n[DANK](https://goo.gl/4mKBgd) [MEME](https://goo.gl/4mKBgd) [MERCH](https://goo.gl/4mKBgd)\nGet some dank meme merch here: [touch this link](https://goo.gl/4mKBgd)',
         fields: Object.keys(categories).sort((a, b) => categories[b].length - categories[a].length).map(category => ({ name: category, value: `${categories[category].length} commands\n\`${prefix} help ${category.split(' ')[1].toLowerCase()}\``, inline: true })).concat({ name: 'Disabled Commands', value: disabled.join(', ') }),
         footer: { text: help.footer }
       }
