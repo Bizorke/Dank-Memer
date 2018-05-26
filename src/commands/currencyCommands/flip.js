@@ -1,7 +1,7 @@
 const { GenericCommand } = require('../../models/')
 
 module.exports = new GenericCommand(
-  async ({ Memer, msg, args, addCD }) => {
+  async ({ Memer, msg, addCD }) => {
     let coins = await Memer.db.getCoins(msg.author.id)
     if (coins.coin === 0) {
       return { title: 'You have no coins.' }
@@ -11,7 +11,7 @@ module.exports = new GenericCommand(
     const heads = 1
     const tails = 2
 
-    msg.channel.createMessage('Call `heads` or `tails`\nYou have about 10 seconds before I toss!')
+    msg.channel.createMessage('Call `heads` or `tails`\nYou have about 10 seconds before I give up.')
 
     const choice = await Memer.MessageCollector.awaitMessage(msg.channel.id, msg.author.id, 1e4)
 

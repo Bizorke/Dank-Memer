@@ -1,15 +1,49 @@
 const { GenericCommand } = require('../../models/')
+const winStrings = [
+  'bravissimo!',
+  'GEE GOSH DARN',
+  'HELL YEAH MAN, LETS GO AGAIN',
+  'Hot diddly dandy!',
+  'HOT DIGGETY DAMN',
+  'Oh joy, oh boy, where do we go from here?',
+  'Ooh-la-la!',
+  'Ta-da',
+  'Va-va-voom',
+  'Whoopee!',
+  'Yoowza!',
+  'Zoinks!'
+]
+const lossStrings = [
+  'Ack',
+  'Bah',
+  'Shucks',
+  'Egads',
+  'Arghhhh',
+  'Sheesh',
+  'Boo-hoo',
+  'Bwah-hah-hah',
+  'Lah-de-dah',
+  'Nana na nana na',
+  'Neener-neener',
+  'Whoop-de-doo',
+  'Phooey',
+  'Hamana-hamana',
+  'Woopsie',
+  'fiddlesticks!',
+  'balderdash!',
+  'what a bunch of malarkey!'
+]
 
 module.exports = new GenericCommand(
-  async ({ Memer, msg, args, addCD }) => {
+  async ({ Memer, msg, addCD }) => {
     let coins = await Memer.db.getCoins(msg.author.id)
 
-    let bet = args[0]
+    let bet = msg.args.args[0]
     if (!bet) {
-      return { title: 'You need to bet something.' }
+      return 'You need to bet something.'
     }
     if (bet < 1) {
-      return { title: 'You can\'t bet less than 1 coin you dumbass.' }
+      return 'You can\'t bet less than 1 coin you dumbass.'
     }
     if (isNaN(bet)) {
       if (bet === 'all') {
@@ -17,29 +51,17 @@ module.exports = new GenericCommand(
       } else if (bet === 'half') {
         bet = Math.round(coins.coin / 2)
       } else {
-        return { title: 'You have to bet actual coins, dont try to break me.' }
+        return 'You have to bet actual coins, dont try to break me.'
       }
     }
     if (!Number.isInteger(Number(bet))) {
-      return { title: 'AHA! You cannot break me anymore! Must be a whole number, dumb butt.' }
+      return 'AHA! You cannot break me anymore! Must be a whole number, dumb butt.'
     }
     if (coins.coin === 0) {
-      return { title: 'You have no coins.' }
+      return 'You have no coins.'
     }
     if (bet > coins.coin) {
-      return { title: `You only have ${coins.coin.toLocaleString()} coins, dont bluff me.` }
-    }
-
-    if (bet > 1e6) {
-      await Memer.bot.createMessage('447982225246519296', { embed: {
-        title: 'Gambled',
-        author: { name: `${msg.author.username}#${msg.author.discriminator} | ${msg.author.id}` },
-        description: `Amount: ${bet.toLocaleString()}`,
-        fields: [{ name: 'Sent from:', value: `#${msg.channel.name} in ${msg.channel.guild.name}` }],
-        color: Memer.randomColor(),
-        footer: { text: `Guild ID: ${msg.channel.guild.id}` },
-        timestamp: new Date()
-      }})
+      return `You only have ${coins.coin.toLocaleString()} coins, dont bluff me.`
     }
 
     await addCD()
@@ -60,11 +82,8 @@ module.exports = new GenericCommand(
 
       await Memer.db.addCoins(msg.author.id, winnings)
       Memer.ddog.incrementBy('gambling.winnings', Number(winnings))
-      return {
-        title: `Damn it, you won ${winnings.toLocaleString()} coins.`,
-        description: `Now you've got ${(coins.coin + parseInt(winnings)).toLocaleString()}.`,
-        footer: {text: `Multiplier ${donor ? '35%' : '0%'} | Percent of bet won: ${winAmount.toFixed(2) * 100}%`}
-      }
+      let wins = Memer.randomInArray(winStrings)
+      return `${wins}\nYou won **${winnings.toLocaleString()}** coins. \n**Multiplier**: ${donor ? '35%' : '0%'} | **Percent of bet won**: ${winAmount.toFixed(2) * 100}%`
     } else if (blahblah >= 0.65) {
       let winAmount = Math.random() + 0.4
       let winnings = Math.round(bet * winAmount)
@@ -78,19 +97,13 @@ module.exports = new GenericCommand(
 
       await Memer.db.addCoins(msg.author.id, winnings)
       Memer.ddog.incrementBy('gambling.winnings', Number(winnings))
-      return {
-        title: `Damn it, you won ${winnings.toLocaleString()} coins.`,
-        description: `Now you've got ${(coins.coin + parseInt(winnings)).toLocaleString()}.`,
-        footer: {text: `Multiplier ${donor ? '35%' : '0%'} | Percent of bet won: ${winAmount.toFixed(2) * 100}%`}
-      }
+      let wins = Memer.randomInArray(winStrings)
+      return `${wins}\nYou won **${winnings.toLocaleString()}** coins. \n**Multiplier**: ${donor ? '35%' : '0%'} | **Percent of bet won**: ${winAmount.toFixed(2) * 100}%`
     } else {
       await Memer.db.removeCoins(msg.author.id, bet)
       Memer.ddog.incrementBy('gambling.losings', Number(bet))
-      return {
-        title: `Lmfao you lost ${Number(bet).toLocaleString()} coins.`,
-        description: `Now you've got ${((coins.coin - bet) < 0 ? 0 : coins.coin - bet).toLocaleString()}.`,
-        footer: {text: 'You are really bad at this. I suggest not doing this anymore.'}
-      }
+      let loss = Memer.randomInArray(lossStrings)
+      return `${loss}\nYou lost **${Number(bet).toLocaleString()}** coins.`
     }
   },
   {

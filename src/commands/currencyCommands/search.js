@@ -1,7 +1,7 @@
 const { GenericCommand } = require('../../models/')
 let message
 module.exports = new GenericCommand(
-  async ({ Memer, msg, args, addCD }) => {
+  async ({ Memer, msg, addCD }) => {
     const chances = Math.floor(Math.random() * 3)
     if (chances === 0) {
       message = 'Looks like you didn\'t find any coins in the dumpster. At least you found some day old bread! 🍞'

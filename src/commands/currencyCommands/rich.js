@@ -1,7 +1,8 @@
 const { GenericCommand } = require('../../models/')
 
 module.exports = new GenericCommand(
-  async ({Memer, msg, args, addCD}) => {
+  async ({Memer, msg, addCD}) => {
+    let args = msg.args.args
     await addCD()
     const emojis = [':first_place:', ':second_place:', ':third_place:']
     let stats = await Memer.db.getStats()

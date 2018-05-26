@@ -1,7 +1,7 @@
 const { GenericCommand } = require('../../models/')
 
 module.exports = new GenericCommand(
-  async ({ Memer, msg, args, addCD }) => {
+  async ({ Memer, msg, addCD }) => {
     let { streak } = await Memer.db.getStreak(msg.author.id)
 
     if (streak && Date.now() - streak.time > 172800000) { // 24 hours, 2 days because one-day cooldown
