@@ -5,78 +5,66 @@ class GenericImageCommand {
   constructor (commandProps, URLParseFN) {
     this.cmdProps = commandProps
     this.URLParseFN = URLParseFN || this.defaultURLParseFN
+    this.requestURL = `http://127.0.0.1:5000/api/${commandProps.triggers[0]}` // commandProps.reqURL || 'http://www.dank-memer-is-lots-of.fun/api/$ENDPOINT'
   }
 
-  async run ({ Memer, msg, cleanArgs: args, addCD }) {
-    const datasrc = this.URLParseFN(msg, args)
+  async run ({ Memer, msg, addCD }) {
+    const datasrc = this.URLParseFN(msg)
     if (!datasrc) {
       return
     }
 
-    const isLocalhost = !this.cmdProps.reqURL
+    const data = await get(this.requestURL.replace('$ENDPOINT', this.cmdProps.triggers[0]))
+      .query(datasrc)
 
-    const data = await get(!isLocalhost
-      ? this.cmdProps.reqURL.replace('$URL', datasrc)
-      : `http://www.dank-memer-is-lots-of.fun/api/${this.cmdProps.triggers[0]}`)
-      .set('Api-Key', Memer.config.imgenKey)
-      .set('data-src', encodeURIComponent(datasrc))
-
-    if (data.status === 200 && (!isLocalhost || data.body.status === 200)) {
-      const file = isLocalhost ? Buffer.from(data.body.file, 'utf8') : data.body
+    // TODO: Check response content-type, set Authorization header
+    if (data.status === 200 && data.headers['content-type'].startsWith('image/')) {
       await addCD()
-      msg.channel.createMessage('', { file, name: `${this.cmdProps.triggers[0]}.${this.cmdProps.format || 'png'}` })
+      msg.channel.createMessage('', { file: data.body, name: `${this.cmdProps.triggers[0]}.${this.cmdProps.format || 'png'}` })
     } else {
-      msg.channel.createMessage(`Error: ${data.text}`)
+      msg.channel.createMessage(`Something went wrong while executing this hecking command!\`\`\`\n${data.text}\`\`\`\n\nJoin here (<https://discord.gg/ebUqc7F>) if the issue doesn't stop being an ass`)
     }
   }
 
-  defaultURLParseFN (msg, args) {
-    if (this.cmdProps.textOnly) {
-      if (this.cmdProps.requiredArgs) {
-        if (!args[0]) {
-          msg.channel.createMessage(this.cmdProps.requiredArgs)
-          return false
-        }
-
-        if (args.join(' ').length > this.cmdProps.textLimit) {
-          msg.channel.createMessage(`Too long. You're ${args.join(' ').length - this.cmdProps.textLimit} characters over the limit!`)
-          return false
-        }
-      }
-
-      return args.join(' ')
-    }
-
-    let avatarurl = (msg.mentions[0] || msg.author).dynamicAvatarURL('png', 1024)
-    if (['jpg', 'jpeg', 'gif', 'png', 'webp'].some(ext => args.join(' ').includes(ext))) {
-      avatarurl = args.join(' ').replace(/gif|webp/g, 'png').replace(/<|>/g, '')
-    }
-
+  defaultURLParseFN (msg) {
     if (this.cmdProps.requiredArgs) {
-      if (!args[0]) {
+      if (msg.args.isEmpty()) {
         msg.channel.createMessage(this.cmdProps.requiredArgs)
         return false
       }
 
-      if (args.join(' ').length > this.cmdProps.textLimit) {
-        msg.channel.createMessage(`Too long. You're ${args.join(' ').length - this.cmdProps.textLimit} characters over the limit!`)
+      if (msg.args.textLength() > this.cmdProps.textLimit) {
+        msg.channel.createMessage(`Too long. You're ${msg.args.textLength() - this.cmdProps.textLimit} characters over the limit!`)
         return false
       }
-
-      if (!/^[\x00-\x7F]*$/.test(args.join(' '))) { // eslint-disable-line
-        msg.channel.createMessage('Your argument contains invalid characters. Please try again.')
-        return false
-      }
-
-      return JSON.stringify([`${avatarurl}`, args.join(' ').replace(/’+/g, "'")])
-    } else if (this.cmdProps.doubleAvatar) {
-      const authorurl = (msg.mentions[0]
-        ? msg.author
-        : msg.channel.guild.shard.client.user)
-        .dynamicAvatarURL('png', 1024)
-      return JSON.stringify([`${avatarurl}`, `${authorurl}`])
     }
-    return avatarurl
+
+    let ret = {}
+
+    if (this.cmdProps.textOnly) {
+      ret.text = msg.args.cleanContent(true)
+    } else {
+      const argIsUrl = (msg.args.getArgument(0) || '').replace(/<|>/g, '').match(/^https?:\/\/.+\.(?:jpg|jpeg|gif|png|webp)$/i)
+
+      if (argIsUrl) {
+        ret.avatar1 = argIsUrl[0]
+        msg.args.drop(0)
+      } else {
+        const user = msg.args.resolveUser(false, false) || msg.author
+        ret.avatar1 = user.dynamicAvatarURL('png', 1024)
+        ret.username1 = user.username
+      }
+
+      if (this.cmdProps.requiredArgs) {
+        ret.text = msg.args.cleanContent(true)
+      } else if (this.cmdProps.doubleAvatar) {
+        const user2 = msg.args.resolveUser(false, false) || msg.channel.guild.shard.client.user
+        ret.avatar2 = user2.dynamicAvatarURL('png', 1024)
+        ret.username2 = user2.username
+      }
+    }
+
+    return ret
   }
 
   get props () {

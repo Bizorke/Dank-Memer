@@ -1,4 +1,6 @@
-let gifs = require('../assets/arrays/permGifs.json')
+const gifs = require('../assets/arrays/permGifs.json')
+const ArgParser = require('../utils/ArgParser.js')
+
 exports.handleMeDaddy = async function (msg) {
   this.ddog.increment('global.seen')
   if (
@@ -27,7 +29,10 @@ exports.handleMeDaddy = async function (msg) {
   }
 
   let [command, ...args] = msg.content.slice(triggerLength).split(/\s+/g)
-  const cleanArgs = msg.cleanContent.slice(cleanTriggerLength).split(/\s+/g).slice(1)
+  const cleanArgs = msg.cleanContent.slice(cleanTriggerLength).split(/\s+/g).slice(1) // Preserving this so it doesn't break anything
+  // You should use msg.args.cleanContent(consumeRest: boolean), though
+
+  msg.args = new ArgParser(msg, args)
 
   command = command && (this.cmds.find(c => c.props.triggers.includes(command.toLowerCase())) || this.tags[command.toLowerCase()])
 
