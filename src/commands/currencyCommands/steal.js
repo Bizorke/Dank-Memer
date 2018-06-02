@@ -75,8 +75,8 @@ module.exports = new GenericCommand(
   },
   {
     triggers: ['steal', 'rob', 'ripoff'],
-    cooldown: 1,
-    donorCD: 1,
+    cooldown: 8e5,
+    donorCD: 4e5,
     perms: ['embedLinks'],
     description: 'Take your chances at stealing from users. Warning, you will lose money if you get caught!',
     cooldownMessage: 'Woahhh there, you need some time to plan your next hit. Wait ',
