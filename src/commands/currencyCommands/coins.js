@@ -2,12 +2,9 @@ const { GenericCommand } = require('../../models/')
 
 module.exports = new GenericCommand(
   async ({ Memer, msg, addCD }) => {
-    let user = msg.args.resolveUser()
+    let user = msg.args.resolveUser(true)
     if (user) {
       let coins = await Memer.db.getCoins(user.id)
-      if (!Number.isInteger(coins.coin)) {
-        coins = Memer.db.fixCoins(user.id)
-      }
       await addCD()
       return {
         title: `${user.username} has ${coins.coin.toLocaleString()} coins.`,
@@ -17,9 +14,6 @@ module.exports = new GenericCommand(
       }
     } else {
       let coins = await Memer.db.getCoins(msg.author.id)
-      if (!Number.isInteger(coins.coin)) {
-        coins = Memer.db.fixCoins(msg.author.id)
-      }
       await addCD()
       return {
         title: `You have ${coins.coin.toLocaleString()} coins.`,

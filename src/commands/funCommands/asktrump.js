@@ -4,8 +4,8 @@ const { trumpPhotos, trumpResponses } = require('../../assets/arrays/trump.json'
 const questionRegex = /\?/g
 
 module.exports = new GenericCommand(
-  async ({ Memer, msg, args, addCD }) => {
-    args = args.join(' ')
+  async ({ Memer, msg, addCD }) => {
+    let args = msg.args.args.join(' ')
     const qLength = (args.match(questionRegex) || []).length
 
     await addCD()

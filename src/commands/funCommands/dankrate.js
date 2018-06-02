@@ -13,7 +13,8 @@ const reaction = [
 ]
 
 module.exports = new GenericCommand(
-  async ({ msg, args }) => {
+  async ({ msg }) => {
+    let args = msg.args.args
     let target = !args[0] || args[0].toLowerCase() === 'me'
       ? 'You are'
       : (
