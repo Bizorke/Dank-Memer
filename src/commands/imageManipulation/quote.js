@@ -5,6 +5,6 @@ module.exports = new GenericImageCommand({
   usage: '{command} <user to impersonate> <thing to make them say>',
   description: 'make people say stuff',
 
-  requiredArgs: 'Well what do you want people to say?',
+  requiredArgs: 'Who is saying what? ',
   textLimit: 250
 })
