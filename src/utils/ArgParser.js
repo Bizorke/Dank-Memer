@@ -43,7 +43,7 @@ class ArgParser {
       this.args.unshift(...args.split(' '))
     }
 
-    return ret
+    return ret ? ret.user : null
   }
 
   /**
