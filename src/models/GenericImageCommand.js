@@ -5,7 +5,7 @@ class GenericImageCommand {
   constructor (commandProps, URLParseFN) {
     this.cmdProps = commandProps
     this.URLParseFN = URLParseFN || this.defaultURLParseFN
-    this.requestURL = commandProps.reqURL || 'http://127.0.0.1:65535/api/$ENDPOINT'
+    this.requestURL = `http://127.0.0.1:5000/api/${commandProps.triggers[0]}` // commandProps.reqURL || 'http://www.dank-memer-is-lots-of.fun/api/$ENDPOINT'
   }
 
   async run ({ Memer, msg, addCD }) {
@@ -16,8 +16,9 @@ class GenericImageCommand {
 
     const data = await get(this.requestURL.replace('$ENDPOINT', this.cmdProps.triggers[0]))
       .query(datasrc)
-      .set('Authorization', Memer.config.imgenKey)
+      .set('Authorization', 'test')
 
+    // TODO: Check response content-type, set Authorization header
     if (data.status === 200 && data.headers['content-type'].startsWith('image/')) {
       await addCD()
       msg.channel.createMessage('', { file: data.body, name: `${this.cmdProps.triggers[0]}.${this.cmdProps.format || 'png'}` })
