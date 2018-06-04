@@ -1,7 +1,7 @@
 module.exports = {
   help: 'Show user info',
   fn: async ({ Memer, msg }) => {
-    let id = await msg.args.resolveUser()
+    let id = msg.args.resolveUser(true)
     if (!id) {
       return 'you need to mention a user or give an id'
     }

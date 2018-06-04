@@ -9,6 +9,7 @@ module.exports = new GenericCommand(
     let random
     let slotString = '**[:slot_machine: l SLOTS ]\n-----------------\n**'
     let bet = Number(msg.args.args[0])
+    bet = Math.round(bet)
     let winnings
     let result
     let count
@@ -35,16 +36,16 @@ module.exports = new GenericCommand(
       }
     }
     slotString += '**-----------------**\n'
-    if (slotsNums[3] === slotsNums[4] || slotsNums[3] === slotsNums[5] || slotsNums[4] === slotsNums[5]) {
-      slotString += '**| : : : WIN : : : |**'
-      winnings = bet * 2
-      result = `Two matches! You've doubled your bet`
-      await addCD()
-      await Memer.db.addCoins(msg.author.id, winnings)
-    } else if (slotsNums[3] === slotsNums[4] && slotsNums[3] === slotsNums[5] && slotsNums[4] === slotsNums[5]) {
+    if (slotsNums[3] === slotsNums[4] && slotsNums[3] === slotsNums[5] && slotsNums[4] === slotsNums[5]) {
       slotString += '**| : : : WIN : : : |**'
       winnings = bet * 3
       result = `THREE MATCHES! You've tripled your bet`
+      await addCD()
+      await Memer.db.addCoins(msg.author.id, winnings)
+    } else if (slotsNums[3] === slotsNums[4] || slotsNums[3] === slotsNums[5] || slotsNums[4] === slotsNums[5]) {
+      slotString += '**| : : : WIN : : : |**'
+      winnings = bet * 2
+      result = `Two matches! You've doubled your bet`
       await addCD()
       await Memer.db.addCoins(msg.author.id, winnings)
     } else {
@@ -58,7 +59,7 @@ module.exports = new GenericCommand(
   },
   {
     triggers: ['slots'],
-    cooldown: 1e4,
+    cooldown: 6e4,
     donorBlocked: true,
     cooldownMessage: 'You won less than an hour ago, you are going to bankrupt the house. Wait ',
     description: 'Take your chances at the slot machines!'
