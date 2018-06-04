@@ -1,11 +1,11 @@
 module.exports = {
   help: 'Show user info',
-  fn: async ({ Memer, msg }) => {
-    let id = msg.args.resolveUser(true)
-    if (!id) {
-      return 'you need to mention a user or give an id'
+  fn: async ({ Memer, args }) => {
+    if (!args[0] && isNaN(args[0])) {
+      return 'you need to give an id'
     }
-    id = id.id
+    let id = args[0]
+
     let db = await Memer.db.getUser(id)
     let donor = await Memer.db.isDonor(id)
     let user = await Memer.ipc.fetchUser(id)
