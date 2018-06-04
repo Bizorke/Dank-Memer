@@ -1,18 +1,60 @@
 const { GenericCommand } = require('../../models/')
-const isOpus = require('../../utils/isOpus.js')
+const { exists, isOpus, getFiles, getFileSize, saveAudioData } = require('../../utils/audioUtils.js')
+const basePath = `${process.cwd()}/assets/audio/custom`
 
 module.exports = new GenericCommand(
-  async ({ Memer, msg, args, addCD }) => {
+  async ({ Memer, msg, addCD }) => {
     if (!msg.attachments[0]) {
-      return 'You gotta give me a sound clip smh'
+      return 'Sure, let me just save silence... you need to attach a sound clip.'
+    }
+
+    const fileName = msg.args.nextArgument()
+
+    if (!fileName) {
+      return 'Whaddya want to call this clip?'
+    }
+
+    if (!/^[a-zA-Z0-9]+$/.test(fileName)) {
+      return 'filename must be alphanumeric, living in windows 95 era 😤'
+    }
+
+    if (await exists(`${basePath}/${msg.author.id}/${fileName}.opus`)) {
+      return 'Looks like a clip with that name already exists. SAD!'
+    }
+
+    const files = await getFiles(`${basePath}/${msg.author.id}/`)
+      .catch(() => [])
+
+    const isDonor = await Memer.db.isDonor(msg.author.id)
+
+    if (!isDonor && files.length >= 3) {
+      return 'No more clips for you, you\'ve hit the maximum limit of 3 clips!'
+    } else if (isDonor && files.length >= 10) {
+      return 'No more clips for you, you\'ve hit the maximum limit of 10 clips!'
     }
 
     const opus = await isOpus(msg.attachments[0].url)
 
     if (!opus) {
-      return 'gotta gimme a sound clip in opus format :triumph:'
-    } else {
-      return 'gucci, thx bb'
+      return 'Nah fam, clip\'s gotta be in opus format. I won\'t take anything less 😤'
+    }
+
+    const fileSize = await getFileSize(msg.attachments[0].url)
+
+    if (fileSize <= 0) {
+      return 'File is too small (!?) what kind of fuckery is this'
+    }
+
+    if (fileSize > 131072) { // 128KiB
+      return 'woah i\'m not made of space! keep it under 128KB kthx'
+    }
+
+    try {
+      await saveAudioData(msg.attachments[0].url, `${basePath}/${msg.author.id}`, `${fileName}.opus`)
+      return 'k ur clip is ready, use the `playclip` command to use it'
+    } catch (e) {
+      Memer.log(`[addclip] Failed to save clip!\n\t${e}`)
+      return `Something went wrong while saving your hecking clip\n\`\`\`\n${e.message}\`\`\`\n\nJoin here (https://discord.gg/ebUqc7F) if the issue doesn't stop being an ass`
     }
   },
   {
