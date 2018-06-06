@@ -49,8 +49,8 @@ module.exports = new GenericCommand(
       Memer.db.addCoins(msg.author.id, worth)
       Memer.db.removeCoins(user.id, worth)
       Memer.ddog.increment('stealSmall')
-      const channel = await Memer.bot.getDMChannel(user.id)
-      if (user.id === '270904126974590976') {
+      if (!user.bot) {
+        const channel = await Memer.bot.getDMChannel(user.id)
         await channel.createMessage(`**${msg.author.username}#${msg.author.discriminator}** has stolen **${worth.toLocaleString()}** coins from you!`)
       }
       return `You managed to steal a small amount before leaving! 💸\nYour payout was **${worth.toLocaleString()}** coins.`
@@ -59,8 +59,8 @@ module.exports = new GenericCommand(
       Memer.db.addCoins(msg.author.id, worth)
       Memer.db.removeCoins(user.id, worth)
       Memer.ddog.increment('stealLarge')
-      const channel = await Memer.bot.getDMChannel(user.id)
-      if (user.id === '270904126974590976') {
+      if (!user.bot) {
+        const channel = await Memer.bot.getDMChannel(user.id)
         await channel.createMessage(`**${msg.author.username}#${msg.author.discriminator}** has stolen **${worth.toLocaleString()}** coins from you!`)
       }
       return `You managed to steal a large amount before leaving! 💰\nYour payout was **${worth.toLocaleString()}** coins.`
@@ -69,8 +69,8 @@ module.exports = new GenericCommand(
       Memer.db.addCoins(msg.author.id, worth)
       Memer.db.removeCoins(user.id, worth)
       Memer.ddog.increment('stealMAX')
-      const channel = await Memer.bot.getDMChannel(user.id)
-      if (user.id === '270904126974590976') {
+      if (!user.bot) {
+        const channel = await Memer.bot.getDMChannel(user.id)
         await channel.createMessage(`**${msg.author.username}#${msg.author.discriminator}** has stolen **${worth.toLocaleString()}** coins from you!`)
       }
       return `You managed to steal a TON before leaving! 🤑\nYour payout was **${worth.toLocaleString()}** coins.`
