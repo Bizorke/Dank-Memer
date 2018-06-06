@@ -67,7 +67,7 @@ module.exports = new GenericCommand(
     await addCD()
     let blahblah = Math.random()
 
-    if (blahblah >= 0.95) {
+    if (blahblah >= 0.75) {
       let winAmount = Math.random() + 1
       let random = Math.round(Math.random())
       winAmount = winAmount + random
@@ -84,7 +84,7 @@ module.exports = new GenericCommand(
       Memer.ddog.incrementBy('gambling.winnings', Number(winnings))
       let wins = Memer.randomInArray(winStrings)
       return `${wins}\nYou won **${winnings.toLocaleString()}** coins. \n**Multiplier**: ${donor ? '35%' : '0%'} | **Percent of bet won**: ${winAmount.toFixed(2) * 100}%`
-    } else if (blahblah >= 0.65) {
+    } else if (blahblah >= 0.45) {
       let winAmount = Math.random() + 0.4
       let winnings = Math.round(bet * winAmount)
       const donor = await Memer.db.isDonor(msg.author.id)
@@ -108,7 +108,7 @@ module.exports = new GenericCommand(
   },
   {
     triggers: ['gamble', 'bet'],
-    cooldown: 5e3,
+    cooldown: 3e3,
     donorCD: 2e3,
     description: 'Take your chances at gambling. Warning, I am very good at stealing your money.',
     cooldownMessage: 'If I let you bet whenever you wanted, you\'d be a lot more poor. Wait ',

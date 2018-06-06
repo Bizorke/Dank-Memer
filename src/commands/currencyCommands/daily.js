@@ -16,7 +16,7 @@ module.exports = new GenericCommand(
       }
     }
 
-    let coinsEarned = 1200
+    let coinsEarned = 12000
     if (streak > 1) {
       coinsEarned = coinsEarned + Math.round((0.02 * coinsEarned) * streak)
     }

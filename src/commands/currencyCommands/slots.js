@@ -59,7 +59,7 @@ module.exports = new GenericCommand(
   },
   {
     triggers: ['slots'],
-    cooldown: 6e4,
+    cooldown: 3e4,
     donorBlocked: true,
     cooldownMessage: 'You won less than an hour ago, you are going to bankrupt the house. Wait ',
     description: 'Take your chances at the slot machines!'

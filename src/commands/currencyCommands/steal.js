@@ -19,9 +19,6 @@ module.exports = new GenericCommand(
     if (victimCoins.coin < min) {
       return `The victim doesn't have at least ${min} coins, not worth it man`
     }
-    if (victimCoins.coin > 1e12) {
-      victimCoins.coin = 1e12
-    }
     if (donor < 5) { // $1-$4 gets 5% shields
       victimCoins.coin = victimCoins.coin - (victimCoins.coin * 0.05)
     } else if (donor < 10 && donor > 4) { // $5-$9 gets 25% shields
@@ -36,7 +33,7 @@ module.exports = new GenericCommand(
     await addCD()
     let stealingOdds = Math.floor(Math.random() * 100) + 1
 
-    if (stealingOdds <= 75) { // fail section
+    if (stealingOdds <= 50) { // fail section
       let punish
       if ((perpCoins.coin * 0.05) < 500) {
         punish = 500
@@ -47,21 +44,25 @@ module.exports = new GenericCommand(
       Memer.db.addCoins(user.id, Math.round(punish))
       Memer.ddog.increment('stealFail')
       return `You were caught! You paid the person you stole from **${Math.round(punish)}** coins.`
-    } else if (stealingOdds > 75 && stealingOdds <= 95) { // 10% payout
-      let worth = Math.round(victimCoins.coin * 0.1)
+    } else if (stealingOdds > 50 && stealingOdds <= 80) { // 30% payout
+      let worth = Math.round(victimCoins.coin * 0.3)
       Memer.db.addCoins(msg.author.id, worth)
       Memer.db.removeCoins(user.id, worth)
       Memer.ddog.increment('stealSmall')
       const channel = await Memer.bot.getDMChannel(user.id)
-      await channel.createMessage(`**${msg.author.username}#${msg.author.discriminator}** has stolen **${worth.toLocaleString()}** coins from you!`)
+      if (!user.bot) {
+        await channel.createMessage(`**${msg.author.username}#${msg.author.discriminator}** has stolen **${worth.toLocaleString()}** coins from you!`)
+      }
       return `You managed to steal a small amount before leaving! 💸\nYour payout was **${worth.toLocaleString()}** coins.`
-    } else if (stealingOdds > 95 && stealingOdds <= 98) { // 40% payout
-      let worth = Math.round(victimCoins.coin * 0.4)
+    } else if (stealingOdds > 80 && stealingOdds <= 90) { // 50% payout
+      let worth = Math.round(victimCoins.coin * 0.5)
       Memer.db.addCoins(msg.author.id, worth)
       Memer.db.removeCoins(user.id, worth)
       Memer.ddog.increment('stealLarge')
       const channel = await Memer.bot.getDMChannel(user.id)
-      await channel.createMessage(`**${msg.author.username}#${msg.author.discriminator}** has stolen **${worth.toLocaleString()}** coins from you!`)
+      if (!user.bot) {
+        await channel.createMessage(`**${msg.author.username}#${msg.author.discriminator}** has stolen **${worth.toLocaleString()}** coins from you!`)
+      }
       return `You managed to steal a large amount before leaving! 💰\nYour payout was **${worth.toLocaleString()}** coins.`
     } else { // full theft up to 1 trillion
       let worth = Math.round(victimCoins.coin)
@@ -69,14 +70,16 @@ module.exports = new GenericCommand(
       Memer.db.removeCoins(user.id, worth)
       Memer.ddog.increment('stealMAX')
       const channel = await Memer.bot.getDMChannel(user.id)
-      await channel.createMessage(`**${msg.author.username}#${msg.author.discriminator}** has stolen **${worth.toLocaleString()}** coins from you!`)
+      if (!user.bot) {
+        await channel.createMessage(`**${msg.author.username}#${msg.author.discriminator}** has stolen **${worth.toLocaleString()}** coins from you!`)
+      }
       return `You managed to steal a TON before leaving! 🤑\nYour payout was **${worth.toLocaleString()}** coins.`
     }
   },
   {
     triggers: ['steal', 'rob', 'ripoff'],
-    cooldown: 8e5,
-    donorCD: 4e5,
+    cooldown: 2e5,
+    donorCD: 1e5,
     perms: ['embedLinks'],
     description: 'Take your chances at stealing from users. Warning, you will lose money if you get caught!',
     cooldownMessage: 'Woahhh there, you need some time to plan your next hit. Wait ',

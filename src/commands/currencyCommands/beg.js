@@ -2,7 +2,7 @@ const { GenericCommand } = require('../../models/')
 
 module.exports = new GenericCommand(
   async ({ Memer, msg, addCD }) => {
-    let chances = Math.floor(Math.random() * 40) + 1
+    let chances = Math.floor(Math.random() * 400) + 1
     chances = chances + 10
 
     let coins = await Memer.db.getCoins(msg.author.id)
@@ -24,8 +24,8 @@ module.exports = new GenericCommand(
   },
   {
     triggers: ['beg', 'gib'],
-    cooldown: 5e5,
-    donorCD: 2e5,
+    cooldown: 2e5,
+    donorCD: 1e5,
     cooldownMessage: 'Stop begging so much, you can have more coins in ',
     description: 'haha ur poor so you have to beg for coins lmaoooo'
   }

@@ -2,7 +2,7 @@ const { GenericCommand } = require('../../models/')
 module.exports = new GenericCommand(
   async ({ Memer, msg, addCD }) => {
     const multiplier = await Memer.db.isDonor(msg.author.id)
-    const winnings = Number(multiplier) * 2500
+    const winnings = Number(multiplier) * 25000
     await addCD()
     Memer.db.addCoins(msg.author.id, winnings)
     return {
