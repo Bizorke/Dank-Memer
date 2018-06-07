@@ -26,11 +26,10 @@ module.exports = new GenericCommand(
       .catch(() => [])
 
     const isDonor = await Memer.db.isDonor(msg.author.id)
+    const maxClips = isDonor ? 10 : 3
 
-    if (!isDonor && files.length >= 3) {
-      return 'No more clips for you, you\'ve hit the maximum limit of 3 clips!'
-    } else if (isDonor && files.length >= 10) {
-      return 'No more clips for you, you\'ve hit the maximum limit of 10 clips!'
+    if (files.length >= maxClips) {
+      return `No more clips for you, you\'ve hit the maximum limit of ${maxClips} clips!`
     }
 
     const opus = await isOpus(msg.attachments[0].url)
