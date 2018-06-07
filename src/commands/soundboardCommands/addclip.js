@@ -29,7 +29,7 @@ module.exports = new GenericCommand(
     const maxClips = isDonor ? 10 : 3
 
     if (files.length >= maxClips) {
-      return `No more clips for you, you\'ve hit the maximum limit of ${maxClips} clips!`
+      return `No more clips for you, you've hit the maximum limit of ${maxClips} clips!`
     }
 
     const opus = await isOpus(msg.attachments[0].url)

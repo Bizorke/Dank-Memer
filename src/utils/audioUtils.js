@@ -1,5 +1,5 @@
 const sf = require('snekfetch')
-const fs = require('fs')
+const { constants, promises: fs } = require('fs')
 
 async function isOpus (url) {
   const res = await sf.get(url)
@@ -33,90 +33,45 @@ async function getFileSize (url) {
   return res.headers['content-length'] || 0
 }
 
-function saveAudioData (url, dir, file) {
-  return new Promise((resolve, reject) => {
-    sf.get(url)
-      .catch(reject)
-      .then(res => {
-        writeBuffer(dir, file, res.body)
-          .catch(reject)
-          .then(resolve)
-      })
-  })
-}
-
-function makeDir (dir) {
-  return new Promise((resolve, reject) => {
-    exists(dir).then(res => {
-      if (res) {
-        return resolve()
-      }
-
-      fs.mkdir(dir, (err) => {
-        if (err) {
-          return reject(err)
-        }
-
-        resolve()
-      })
-    })
-  })
-}
-
-function writeBuffer (path, file, buffer) {
-  // TODO: Use fs/promise?
-  return new Promise((resolve, reject) => {
-    makeDir(path)
-      .then(() => {
-        fs.writeFile(`${path}/${file}`, buffer, (err) => {
-          if (err) {
-            reject(err)
-          } else {
-            resolve()
-          }
-        })
-      })
-      .catch(reject)
-  })
-}
-
-function getFiles (path) {
-  return new Promise((resolve, reject) => {
-    fs.readdir(path, (err, files) => {
-      if (err) {
-        reject(err)
-      } else {
-        resolve(files)
-      }
-    })
-  })
-}
-
-function removeFile (path) {
-  return new Promise((resolve, reject) => {
-    exists(path)
-      .then(res => {
-        if (!res) {
-          return reject(`File ${path} not found`) // eslint-disable-line
-        }
-
-        fs.unlink(path, (err) => {
-          if (err) {
-            return reject(err)
-          }
-
-          resolve()
-        })
-      })
-  })
-}
-
 function exists (path) {
-  return new Promise((resolve, reject) => {
-    fs.access(path, fs.constants.R_OK, (err) => {
-      resolve(err === null)
-    })
-  })
+  const res = fs.access(path, constants.R_OK)
+    .then(() => true)
+    .catch(() => false)
+
+  return res
+}
+
+async function saveAudioData (url, dir, file) {
+  const res = await sf.get(url)
+  await writeBuffer(dir, file, res.body)
+}
+
+async function makeDir (dir) {
+  const ex = await exists(dir)
+
+  if (!ex) {
+    await fs.mkdir(dir)
+  }
+}
+
+async function writeBuffer (path, file, buffer) {
+  await makeDir(path)
+  await fs.writeFile(`${path}/${file}`, buffer)
+}
+
+async function getFiles (path) {
+  const files = await fs.readdir(path)
+  return files
+}
+
+async function removeFile (path) {
+  const ex = await exists(path)
+
+  if (ex) {
+    await fs.unlink(path)
+  } else {
+    throw new Error(`Cannot delete ${path}; does not exist`)
+  }
 }
 
 module.exports = {
