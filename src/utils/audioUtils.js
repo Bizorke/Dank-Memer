@@ -60,8 +60,7 @@ async function writeBuffer (path, file, buffer) {
 }
 
 async function getFiles (path) {
-  const files = await fs.readdir(path)
-  return files
+  return fs.readdir(path)
 }
 
 async function removeFile (path) {
