@@ -58,7 +58,7 @@ module.exports = new GenericCommand(
   },
   {
     triggers: ['addclip'],
-    usage: '{command}',
+    usage: '{command} <clipname>',
     description: 'Add a soundboard clip!',
     perms: ['embedLinks']
   }
