@@ -7,7 +7,7 @@ module.exports = {
     let id = args[0]
 
     let db = await Memer.db.getUser(id)
-    let donor = await Memer.db.isDonor(id)
+    let donor = await Memer.db.checkDonor(id)
     let user = await Memer.ipc.fetchUser(id)
     return {
       title: `${user.username}#${user.discriminator}`,

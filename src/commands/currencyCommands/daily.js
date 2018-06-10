@@ -20,7 +20,7 @@ module.exports = new GenericCommand(
     if (streak > 1) {
       coinsEarned = coinsEarned + Math.round((0.02 * coinsEarned) * streak)
     }
-    const donor = await Memer.db.isDonor(msg.author.id)
+    const donor = await Memer.db.checkDonor(msg.author.id)
     if (donor) {
       coinsEarned = Math.round(coinsEarned + (coinsEarned * 0.35))
     }

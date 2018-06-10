@@ -6,7 +6,7 @@ exports.handleMeDaddy = async function (msg) {
   if (
     !msg.channel.guild ||
     msg.author.bot ||
-    await this.db.isBlocked(msg.author.id, msg.channel.guild.id)
+    await this.db.checkBlocked(msg.author.id, msg.channel.guild.id)
   ) {
     return
   }
@@ -16,7 +16,7 @@ exports.handleMeDaddy = async function (msg) {
     disabledCommands: []
   }
 
-  let isDonor = await this.db.isDonor(msg.author.id)
+  let isDonor = await this.db.checkDonor(msg.author.id)
 
   const selfMember = msg.channel.guild.members.get(this.bot.user.id)
   const mention = `<@${selfMember.nick ? '!' : ''}${selfMember.id}>`
@@ -56,7 +56,7 @@ exports.handleMeDaddy = async function (msg) {
   let { spam, lastCmd } = await this.db.getSpam(msg.author.id)
 
   if (spam > 1e4) {
-    await this.db.addBlock(msg.author.id)
+    await this.db.createBlock(msg.author.id)
     await this.db.removeUser(msg.author.id)
     await this.bot.createMessage('430419142458212362', `${msg.author.username}#${msg.author.discriminator} ${msg.author.id}\nUser was forcefully removed for spamming over 10k times.`)
     return
@@ -78,7 +78,7 @@ exports.handleMeDaddy = async function (msg) {
     return
   }
 
-  const cooldown = await this.db.getCooldown(command.props.triggers[0], msg.author.id)
+  const cooldown = await this.db.getSpecificCooldown(command.props.triggers[0], msg.author.id)
   if (cooldown > Date.now()) {
     const waitTime = (cooldown - Date.now()) / 1000
     let cooldownWarning = command.props.cooldownMessage || `**Time left until you can run the command again:** `
@@ -99,7 +99,7 @@ exports.handleMeDaddy = async function (msg) {
     this.ddog.increment('cooldown')
     return msg.channel.createMessage(isDonor ? donorMessage : cooldownMessage)
   }
-  const addCooldown = () => this.db.addCooldown(command.props.triggers[0], msg.author.id)
+  const updateCooldowns = () => this.db.updateCooldowns(command.props.triggers[0], msg.author.id)
 
   try {
     const permissions = msg.channel.permissionsOf(this.bot.user.id)
@@ -158,7 +158,7 @@ exports.handleMeDaddy = async function (msg) {
         args,
         cleanArgs,
         Memer: this,
-        addCD: addCooldown
+        addCD: updateCooldowns
       })
       if (!res) {
         return

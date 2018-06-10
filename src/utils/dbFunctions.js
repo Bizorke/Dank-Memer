@@ -29,12 +29,12 @@ module.exports = Bot => ({
       .run()
   },
 
-  addCooldown: async function addCooldown (command, ownerID) {
+  updateCooldowns: async function createCooldown (command, ownerID) {
     const pCommand = Bot.cmds.find(c => c.props.triggers.includes(command.toLowerCase()))
     if (!pCommand) {
       return
     }
-    const isDonor = await this.isDonor(ownerID)
+    const isDonor = await this.checkDonor(ownerID)
     let cooldown
     if (isDonor && !pCommand.props.donorBlocked) {
       cooldown = pCommand.props.donorCD
@@ -63,7 +63,7 @@ module.exports = Bot => ({
     if (!pCommand) {
       return
     }
-    const isDonor = await this.isDonor(ownerID)
+    const isDonor = await this.checkDonor(ownerID)
     if (isDonor && !pCommand.props.donorBlocked) {
       const cooldown = pCommand.props.donorCD
       return Bot.r.table('cooldowns')
@@ -74,20 +74,20 @@ module.exports = Bot => ({
       .insert({ id: ownerID, cooldowns: [ { [command]: Date.now() + cooldown } ] })
   },
 
-  getCooldowns: async function getCooldown (ownerID) {
+  getCooldowns: async function getCooldowns (ownerID) {
     return Bot.r.table('cooldowns')
       .get(ownerID)
       .run()
   },
 
-  clearCooldowns: async function clearCooldowns (ownerID) {
+  deleteCooldowns: async function deleteCooldowns (ownerID) {
     return Bot.r.table('cooldowns')
       .get(ownerID)
       .delete()
       .run()
   },
 
-  getCooldown: async function getCooldown (command, ownerID) {
+  getSpecificCooldown: async function getSpecificCooldown (command, ownerID) {
     const profile = await Bot.r.table('cooldowns').get(ownerID).run()
     if (!profile) {
       return 1
@@ -99,7 +99,7 @@ module.exports = Bot => ({
     return profile.cooldowns.find(item => item[command])[command]
   },
 
-  addBlock: async function addBlock (id) {
+  createBlock: async function createBlock (id) {
     return Bot.r.table('blocked')
       .insert({ id })
       .run()
@@ -112,7 +112,7 @@ module.exports = Bot => ({
       .run()
   },
 
-  isBlocked: async function isBlocked (guildID, authorID = 1) {
+  checkBlocked: async function checkBlocked (guildID, authorID = 1) {
     const res = await Bot.r.table('blocked').get(guildID).run() ||
                 await Bot.r.table('blocked').get(authorID).run()
 
@@ -120,31 +120,28 @@ module.exports = Bot => ({
   },
 
   addPls: async function addPls (guildID, userID) {
-    let pls = await this.getPls(guildID)
-    let userPls = await this.getUser(userID)
-    if (!pls) {
+    let guild = await this.getPls(guildID)
+    let user = await this.getUser(userID)
+    if (!guild) {
       return this.initPls(guildID)
     }
-    if (!userPls) {
+    if (!user) {
       return this.initUser(userID)
     }
-    if (!userPls.pls) {
-      return this.updateLegacyUser(userID)
-    }
-    pls.pls++
-    userPls.pls++
+    guild.pls++
+    user.pls++
 
-    Bot.r.table('users')
-      .insert(userPls, {conflict: 'update'})
+    Bot.r.table('guildUsage')
+      .insert(guild, { conflict: 'update' })
       .run()
 
-    return Bot.r.table('pls')
-      .insert(pls, { conflict: 'update' })
+    return Bot.r.table('users')
+      .insert(user, {conflict: 'update'})
       .run()
   },
 
   initPls: async function initPls (guildID) {
-    return Bot.r.table('pls')
+    return Bot.r.table('guildUsage')
       .insert({
         id: guildID,
         pls: 1
@@ -153,27 +150,27 @@ module.exports = Bot => ({
   },
 
   deletePls: async function deletePls (guildID) {
-    return Bot.r.table('pls')
+    return Bot.r.table('guildUsage')
       .get(guildID)
       .delete()
       .run()
   },
 
   getPls: async function getPls (guildID) {
-    let pls = await Bot.r.table('pls')
+    let res = await Bot.r.table('guildUsage')
       .get(guildID)
       .run()
-    if (!pls) {
+    if (!res) {
       this.initPls(guildID)
       return 0
     }
-    return pls
+    return res
   },
 
   topPls: async function topPls () {
-    const res = await Bot.r.table('pls')
+    const res = await Bot.r.table('guildUsage')
       .orderBy({index: Bot.r.desc('pls')})
-      .limit(15)
+      .limit(10)
       .run()
     return res
   },
@@ -181,13 +178,28 @@ module.exports = Bot => ({
   initUser: async function initUser (id) {
     return Bot.r.table('users')
       .insert({
-        id: id,
-        coin: 0,
-        pls: 1,
-        lastCmd: Date.now(),
-        spam: 0,
-        streak: { time: 0, streak: 0 },
-        upvoted: false
+        id: id, // User id/rethink id
+        pls: 1, // Total commands ran
+        lastCmd: Date.now(), // Last command time
+        lastRan: 'nothing', // Last command ran
+        spam: 0, // Spam means 2 commands in less than 1s
+        pocket: 0, // Coins not in bank account
+        bank: 0, // Coins in bank account
+        lost: 0, // Total coins lost
+        won: 0, // Total coins won
+        shared: 0, // Transferred to other players
+        streak: { time: 0, streak: 0 }, // Daily coin gathering streak
+        items: {
+          multi: 0, // Multiplier
+          spin: 0, // Fidget Spinners
+          memes: 0, // Memes
+          tide: 0, // Tide Pods
+          incr: 0 // Incremental purchases
+        },
+        donor: false, // Donor status, false or $amount
+        godMode: false, // No cooldowns, only for select few
+        vip: false, // Same cooldowns as donors without paying
+        upvoted: false // DBL voter status
       }, { conflict: 'update', returnChanges: true })
       .run()
   },
@@ -195,40 +207,27 @@ module.exports = Bot => ({
   topUsers: async function topUsers () {
     const res = await Bot.r.table('users')
       .orderBy({index: Bot.r.desc('pls')})
-      .limit(15)
+      .limit(15) // TODO: Make 10 along with other (top) functions
       .run()
     return res
   },
 
-  updateLegacyUser: async function updateLegacyUser (id) {
-    return Bot.r.table('users')
-      .insert({
-        id: id,
-        pls: 1,
-        lastCmd: Date.now(),
-        spam: 0,
-        streak: { time: 0, streak: 0 },
-        upvoted: false
-      }, { conflict: 'update', returnChanges: true })
-      .run()
-  },
-
   getUser: async function getUser (userID) {
-    let pls = await Bot.r.table('users')
+    let res = await Bot.r.table('users')
       .get(userID)
       .run()
-    if (!pls) {
-      pls = await this.initUser(userID)
-      if (pls.changes[0]) {
-        pls = pls.changes[0].new_val
+    if (!res) {
+      res = await this.initUser(userID)
+      if (res.changes[0]) {
+        res = res.changes[0].new_val
       }
-      return pls
+      return res
     }
-    if (!pls.lastCmd || !pls.spam) {
-      pls.spam = 0
-      pls.lastCmd = Date.now()
+    if (!res.lastCmd || !res.spam) {
+      res.spam = 0
+      res.lastCmd = Date.now()
     }
-    return pls
+    return res
   },
 
   removeUser: async function removeUser (userID) {
@@ -238,52 +237,52 @@ module.exports = Bot => ({
       .run()
   },
 
-  isVoter: async function isVoter (id) {
-    let user = await this.getUser(id)
-    return user.upvoted
+  checkVoter: async function checkVoter (id) {
+    let res = await this.getUser(id)
+    return res.upvoted
   },
 
-  addCoins: async function addCoins (id, amount) {
-    let coins = await this.getCoins(id)
-    coins.coin += amount
+  addPocket: async function addPocket (id, amount) {
+    let res = await this.getPocket(id)
+    res.pocket += amount
 
     return Bot.r.table('users')
-      .insert(coins, { conflict: 'update' })
+      .insert(res, { conflict: 'update' })
   },
 
-  topCoins: async function topCoins () {
+  topPocket: async function topPocket () {
     const res = await Bot.r.table('users')
-      .orderBy({index: Bot.r.desc('coin')})
-      .limit(15)
+      .orderBy({index: Bot.r.desc('pocket')})
+      .limit(10)
       .run()
     return res
   },
 
-  fixCoins: async function fixCoins (id, amount) {
-    let coins = await this.getCoins(id)
-    coins.coin = Math.round(coins.coin)
+  roundPocket: async function roundPocket (id, amount) {
+    let res = await this.getPocket(id)
+    res.pocket = Math.round(res.pocket)
 
     Bot.r.table('users')
-      .insert(coins, { conflict: 'update' })
-    return coins
+      .insert(res, { conflict: 'update' })
+    return res
   },
 
-  removeCoins: async function removeCoins (id, amount) {
-    let coins = await this.getCoins(id)
+  removePocket: async function removePocket (id, amount) {
+    let res = await this.getPocket(id)
 
-    coins.coin = Math.max(0, coins.coin - amount)
+    res.pocket = Math.max(0, res.pocket - amount)
 
     return Bot.r.table('users')
-      .insert(coins, { conflict: 'update' })
+      .insert(res, { conflict: 'update' })
   },
 
-  getCoins: async function getCoins (id) {
-    const coins = await Bot.r.table('users')
+  getPocket: async function getPocket (id) {
+    const res = await Bot.r.table('users')
       .get(id)
-      .default({ id, coin: 0 })
+      .default({ id, pocket: 0 })
       .run()
 
-    return coins
+    return res
   },
 
   addStreak: async function addStreak (id) {
@@ -320,13 +319,13 @@ module.exports = Bot => ({
   },
 
   getSpam: async function getSpam (id) {
-    let users = await this.getUser(id)
-    return users
+    let res = await this.getUser(id)
+    return res
   },
 
   getStreak: async function getStreak (id) {
-    let users = await this.getUser(id)
-    return users
+    let res = await this.getUser(id)
+    return res
   },
 
   resetStreak: async function removeStreak (id) {
@@ -350,7 +349,7 @@ module.exports = Bot => ({
       .run()
   },
 
-  isDonor: async function isDonor (id) {
+  checkDonor: async function checkDonor (id) {
     const res = await Bot.r.table('donors')
       .get(id)
       .run()

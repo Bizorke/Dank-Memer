@@ -6,13 +6,13 @@ module.exports = new GenericCommand(
     chances = chances + 10
 
     let coins = await Memer.db.getCoins(msg.author.id)
-    const donor = await Memer.db.isDonor(msg.author.id)
+    const donor = await Memer.db.checkDonor(msg.author.id)
     if (donor) {
       chances = Math.round(chances + (chances * 0.5))
     }
     await addCD()
     await Memer.db.addCoins(msg.author.id, chances)
-    let voted = await Memer.db.isVoter(msg.author.id)
+    let voted = await Memer.db.checkVoter(msg.author.id)
     if (!voted) {
       msg.channel.createMessage('Looks like you have not voted before!\nIf you go here and vote, you can get 750 coins each day that you do it!\n<https://discordbots.org/bot/memes/vote>')
     }

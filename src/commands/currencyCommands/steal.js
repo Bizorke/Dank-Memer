@@ -12,7 +12,7 @@ module.exports = new GenericCommand(
     }
     let perpCoins = await Memer.db.getCoins(msg.author.id)
     let victimCoins = await Memer.db.getCoins(user.id)
-    let donor = await Memer.db.isDonor(user.id)
+    let donor = await Memer.db.checkDonor(user.id)
     if (perpCoins.coin < min) {
       return `You need at least ${min} coins to try and rob someone.`
     }

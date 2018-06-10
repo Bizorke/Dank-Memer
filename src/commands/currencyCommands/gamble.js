@@ -72,7 +72,7 @@ module.exports = new GenericCommand(
       let random = Math.round(Math.random())
       winAmount = winAmount + random
       let winnings = Math.round(bet * winAmount)
-      const donor = await Memer.db.isDonor(msg.author.id)
+      const donor = await Memer.db.checkDonor(msg.author.id)
       if (donor) {
         winnings = Math.round(winnings + (winnings * 0.35))
       }
@@ -87,7 +87,7 @@ module.exports = new GenericCommand(
     } else if (blahblah >= 0.45) {
       let winAmount = Math.random() + 0.4
       let winnings = Math.round(bet * winAmount)
-      const donor = await Memer.db.isDonor(msg.author.id)
+      const donor = await Memer.db.checkDonor(msg.author.id)
       if (donor) {
         winnings = Math.round(winnings + (winnings * 0.35))
       }

@@ -5,7 +5,7 @@ module.exports = {
       return 'you need to give an id'
     }
     let id = args[0]
-    await Memer.db.addBlock(id, 'user')
+    await Memer.db.createBlock(id, 'user')
     await Memer.db.removeUser(id)
     return 'User blacklisted and removed from database.'
   }

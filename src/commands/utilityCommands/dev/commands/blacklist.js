@@ -11,7 +11,7 @@ module.exports = {
     }
 
     if (args[0].toLowerCase() === 'add') {
-      ids.forEach(id => Memer.db.addBlock(id, parseInt(args[1])))
+      ids.forEach(id => Memer.db.createBlock(id, parseInt(args[1])))
       return `Successfully blacklisted ${ids.join(', ')}.`
     } else if (args[0].toLowerCase() === 'rem') {
       ids.forEach(id => Memer.db.removeBlock(id))
