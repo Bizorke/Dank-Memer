@@ -12,7 +12,6 @@ module.exports = new GenericCommand(
   {
     triggers: ['listclip', 'listclips', 'clips'],
     usage: '{command}',
-    description: 'Lists your custom soundclips',
-    perms: ['embedLinks']
+    description: 'Lists your custom soundclips'
   }
 )
