@@ -20,7 +20,6 @@ module.exports = new GenericCommand(
   {
     triggers: ['deleteclip'],
     usage: '{command} <clipname>',
-    description: 'Removes a custom sound clip',
-    perms: ['embedLinks']
+    description: 'Removes a custom sound clip'
   }
 )
