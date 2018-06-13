@@ -1,7 +1,7 @@
 const { GenericCommand } = require('../../models/')
 let min = 500
 
-let dmStolenUser = async (Memer, user, msg, worth) => {
+const dmStolenUser = async (Memer, user, msg, worth) => {
   if (!user.bot) {
     try {
       const channel = await Memer.bot.getDMChannel(user.id)
