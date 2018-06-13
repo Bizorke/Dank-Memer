@@ -1,6 +1,6 @@
 const config = require('../config.json')
 
-let errors = {
+const errors = {
 
   // Voice related errors
   'Disconnected': `Discord fucked something up. 😠\n\nTo fix this, you have to got to server settings and change the voice region.\nIf it still doesn't work after that, join (<https://discord.gg/ebUqc7F>) and tell support it is error \`vc1\`.`,
@@ -62,13 +62,13 @@ module.exports = {
 
   parseTime: (time) => {
     const methods = [
-      {name: 'd', count: 86400},
-      {name: 'h', count: 3600},
-      {name: 'm', count: 60},
-      {name: 's', count: 1}
+      { name: 'd', count: 86400 },
+      { name: 'h', count: 3600 },
+      { name: 'm', count: 60 },
+      { name: 's', count: 1 }
     ]
 
-    const timeStr = [Math.floor(time / methods[0].count).toString() + methods[0].name]
+    const timeStr = [ Math.floor(time / methods[0].count).toString() + methods[0].name ]
     for (let i = 0; i < 3; i++) {
       timeStr.push(Math.floor(time % methods[i].count / methods[i + 1].count).toString() + methods[i + 1].name)
     }
