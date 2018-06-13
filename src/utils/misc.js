@@ -75,9 +75,15 @@ module.exports = {
     return Math.floor(Math.random() * 0xFFFFFF)
   },
 
+  getMultiplier: (id, user, userDB) => {
+    // TODO: support server, donor, staff, dev
+  },
+
   randomInArray: (array) => {
     return array[Math.floor(Math.random() * array.length)]
   },
+
+  sleep: (ms) => new Promise(resolve => setTimeout(resolve, ms)),
 
   removeDuplicates: (array) => {
     return Array.from(new Set(array).values())
