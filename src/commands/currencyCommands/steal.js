@@ -1,6 +1,17 @@
 const { GenericCommand } = require('../../models/')
 let min = 500
 
+const dmStolenUser = async (Memer, user, msg, worth) => {
+  if (!user.bot) {
+    try {
+      const channel = await Memer.bot.getDMChannel(user.id)
+      await channel.createMessage(`**${msg.author.username}#${msg.author.discriminator}** has stolen **${worth.toLocaleString()}** coins from you!`)
+    } catch (err) {
+      await msg.channel.createMessage(`${user.mention}, **${msg.author.username}#${msg.author.discriminator}** just stole **${worth.toLocaleString()}** coins from you!`)
+    }
+  }
+}
+
 module.exports = new GenericCommand(
   async ({ Memer, msg, args, addCD }) => {
     let user = msg.args.resolveUser(true)
@@ -49,30 +60,21 @@ module.exports = new GenericCommand(
       Memer.db.addCoins(msg.author.id, worth)
       Memer.db.removeCoins(user.id, worth)
       Memer.ddog.increment('stealSmall')
-      if (!user.bot) {
-        const channel = await Memer.bot.getDMChannel(user.id)
-        await channel.createMessage(`**${msg.author.username}#${msg.author.discriminator}** has stolen **${worth.toLocaleString()}** coins from you!`)
-      }
+      await dmStolenUser(Memer, user, msg, worth)
       return `You managed to steal a small amount before leaving! 💸\nYour payout was **${worth.toLocaleString()}** coins.`
     } else if (stealingOdds > 80 && stealingOdds <= 90) { // 50% payout
       let worth = Math.round(victimCoins.coin * 0.5)
       Memer.db.addCoins(msg.author.id, worth)
       Memer.db.removeCoins(user.id, worth)
       Memer.ddog.increment('stealLarge')
-      if (!user.bot) {
-        const channel = await Memer.bot.getDMChannel(user.id)
-        await channel.createMessage(`**${msg.author.username}#${msg.author.discriminator}** has stolen **${worth.toLocaleString()}** coins from you!`)
-      }
+      await dmStolenUser(Memer, user, msg, worth)
       return `You managed to steal a large amount before leaving! 💰\nYour payout was **${worth.toLocaleString()}** coins.`
     } else { // full theft up to 1 trillion
       let worth = Math.round(victimCoins.coin)
       Memer.db.addCoins(msg.author.id, worth)
       Memer.db.removeCoins(user.id, worth)
       Memer.ddog.increment('stealMAX')
-      if (!user.bot) {
-        const channel = await Memer.bot.getDMChannel(user.id)
-        await channel.createMessage(`**${msg.author.username}#${msg.author.discriminator}** has stolen **${worth.toLocaleString()}** coins from you!`)
-      }
+      await dmStolenUser(Memer, user, msg, worth)
       return `You managed to steal a TON before leaving! 🤑\nYour payout was **${worth.toLocaleString()}** coins.`
     }
   },
