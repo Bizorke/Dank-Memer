@@ -44,6 +44,7 @@ class Memer extends Base {
   }
 
   launch () {
+    this.log(`Launch: ${process.memoryUsage().rss / 1024 / 1024}`)
     this.loadCommands()
     this.MessageCollector = new MessageCollector(this.bot)
     this.ddog.increment('function.launch')
@@ -61,6 +62,7 @@ class Memer extends Base {
   }
 
   async ready () {
+    this.log(`Ready: ${process.memoryUsage().rss / 1024 / 1024}`)
     this.bot.editStatus(null, {
       name: 'pls help',
       type: 0
@@ -68,10 +70,12 @@ class Memer extends Base {
     this.ddog.increment('function.ready')
 
     this.mentionRX = new RegExp(`^<@!*${this.bot.user.id}>`)
+    this.sillyFace = await get('http://your-stupidity.needs-to-s.top/b06dbf.png').then(r => r.body)
     this.mockIMG = await get('https://pbs.twimg.com/media/DAU-ZPHUIAATuNy.jpg').then(r => r.body)
   }
 
   loadCommands () {
+    this.log(`Commands: ${process.memoryUsage().rss / 1024 / 1024}`)
     this.ddog.increment('function.loadCommands')
     const categories = readdirSync(join(__dirname, 'commands'))
 
