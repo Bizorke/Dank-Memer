@@ -3,13 +3,13 @@ const { GenericCommand } = require('../../models/')
 module.exports = new GenericCommand(
   async ({ Memer, msg, args, addCD }) => {
     let perms = msg.channel.permissionsOf(msg.author.id)
-    if (!perms.has('kickMembers')) {
-      return 'lol you do not have kick members perms and you know it'
+    if (!perms.has('banMembers')) {
+      return 'lol you do not have ban members perms and you know it'
     }
     if (msg.channel.guild.memberCount < 3) {
       return 'hey this will not work with just the two of us'
     }
-    msg.channel.createMessage('This will kick someone at random in your server if it has the permission to do so.\nAre you sure you want to continue? (Yes/No)')
+    msg.channel.createMessage('This will ban someone at random in your server if it has the permission to do so.\nAre you sure you want to continue? (Yes/No)')
     const prompt = await Memer.MessageCollector.awaitMessage(msg.channel.id, msg.author.id, 30e3)
     if (!prompt) {
       return 'I guess you have more important things to do than answer me.'
@@ -18,23 +18,23 @@ module.exports = new GenericCommand(
     } else if (prompt.content.toLowerCase() !== 'yes') {
       return `${prompt.content} was not an option, it was a yes or no question ffs.`
     }
-    let kicked = await rollUser(Memer, msg)
+    let banned = await rollUser(Memer, msg)
     await addCD()
-    msg.channel.createMessage(`Attempting to kick ${kicked.user.username}#${kicked.user.discriminator}...`)
-    const hahayes = `${kicked.user.username}#${kicked.user.discriminator}`
+    msg.channel.createMessage(`Attempting to ban ${banned.user.username}#${banned.user.discriminator}...`)
+    const hahayes = `${banned.user.username}#${banned.user.discriminator}`
     await Memer.sleep(1500)
-    kicked.kick(`randomly kicked by ${msg.author.username}`)
-      .then(() => { return msg.channel.createMessage(`lmfao ${hahayes} was kicked`) })
+    banned.ban(0, `randomly banned by ${msg.author.username}`)
+      .then(() => { return msg.channel.createMessage(`lmfao ${hahayes} was banned`) })
       .catch((err) => {
-        msg.channel.createMessage(`looks like I dont have perms to kick ${kicked.user.username}#${kicked.user.discriminator}, try putting my role above everyone else to make this real fun..`)
+        msg.channel.createMessage(`looks like I dont have perms to ban ${banned.user.username}#${banned.user.discriminator}, try putting my role above everyone else to make this real fun..`)
         throw err
       })
   },
   {
-    triggers: ['randomkick', 'kickroulette'],
+    triggers: ['randomban', 'banroulette'],
     usage: '{command}',
-    description: 'Warning, this will kick a random person.',
-    perms: ['kickMembers', 'embedLinks']
+    description: 'Warning, this will ban a random person.',
+    perms: ['banMembers', 'embedLinks']
   }
 )
 
