@@ -12,7 +12,7 @@ module.exports = {
     }, {
       Memer,
       get top () {
-        return Memer.db.topCoins()
+        return Memer.db.topPocket()
       }
     })
 
