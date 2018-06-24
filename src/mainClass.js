@@ -44,7 +44,6 @@ class Memer extends Base {
   }
 
   launch () {
-    this.log(`Launch: ${process.memoryUsage().rss / 1024 / 1024}`)
     this.loadCommands()
     this.MessageCollector = new MessageCollector(this.bot)
     this.ddog.increment('function.launch')
@@ -75,7 +74,6 @@ class Memer extends Base {
   }
 
   loadCommands () {
-    this.log(`Commands: ${process.memoryUsage().rss / 1024 / 1024}`)
     this.ddog.increment('function.loadCommands')
     const categories = readdirSync(join(__dirname, 'commands'))
 
