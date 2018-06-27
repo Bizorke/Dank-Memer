@@ -33,9 +33,9 @@ class ArgParser {
       ret = this.msg.channel.guild.members.get(idMatch[1])
     } else { // Find the user by their username (and discrim?)
       if (args.length > 5 && args.slice(-5, -4) === '#') { // we have a discrim
-        ret = this.msg.channel.guild.members.find(member => `${member.username}#${member.discriminator}` === args)
+        ret = this.msg.channel.guild.members.find(member => `${member.nick || member.username}#${member.discriminator}` === args)
       } else {
-        ret = this.msg.channel.guild.members.find(member => member.username === args)
+        ret = this.msg.channel.guild.members.find(member => (member.nick || member.username) === args)
       }
     }
 
