@@ -22,9 +22,10 @@ module.exports = new GenericCommand(
           : `${args.join(' ')} is a`
       )
     const rating = Math.floor(Math.random() * 100) + 1
+    const emoji = Math.ceil(rating / reaction.length) - 1
     return {
       title: 'waifu r8 machine',
-      description: `${target} ${rating}/100 waifu ${reaction[Number((rating / 10).toFixed()) - 1]}`
+      description: `${target} ${rating}/100 waifu ${reaction[emoji]}`
     }
   },
   {
