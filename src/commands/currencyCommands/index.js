@@ -4,5 +4,6 @@ const commands = require('fs').readdirSync(__dirname)
 
 module.exports = {
   commands,
-  name: '💰 Currency Commands'
+  name: '💰 Currency',
+  description: 'Gambling, banks, and stealing stuff. What more could you want?'
 }

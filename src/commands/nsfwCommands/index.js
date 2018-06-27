@@ -4,5 +4,6 @@ const commands = require('fs').readdirSync(__dirname)
 
 module.exports = {
   commands,
-  name: '😏 NSFW Commands'
+  name: '😏 NSFW',
+  description: 'Haha ok yes, this is for 18+ horndogs'
 }

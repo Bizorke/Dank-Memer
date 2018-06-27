@@ -4,5 +4,6 @@ const commands = require('fs').readdirSync(__dirname)
 
 module.exports = {
   commands,
-  name: '📷 Image Manipulation'
+  name: '📷 Image',
+  description: 'Manipulate images with these commands!'
 }

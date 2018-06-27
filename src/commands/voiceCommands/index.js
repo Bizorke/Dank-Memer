@@ -4,5 +4,6 @@ const commands = require('fs').readdirSync(__dirname)
 
 module.exports = {
   commands,
-  name: '🎵 Music Commands'
+  name: '🎵 Music',
+  description: 'Here are some basic music commands with pre-loaded playlists. Want custom music? Pay for premium meme bot, or use some other bot idk'
 }

@@ -4,5 +4,6 @@ const commands = require('fs').readdirSync(__dirname)
 
 module.exports = {
   commands,
-  name: '🔨 Mod Commands'
+  name: '🔨 Moderation',
+  description: 'Who needs a mod bot, when dank memer can ban people for you instead?'
 }

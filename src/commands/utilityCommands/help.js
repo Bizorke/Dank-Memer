@@ -7,6 +7,7 @@ module.exports = new GenericCommand(
     let help = Memer.config.help
     if (!args[0]) {
       let categories = {}
+      let description = {}
       let disabled = []
       for (const command of Memer.cmds) {
         if (command.props.ownerOnly || command.props.hide) {
@@ -24,18 +25,24 @@ module.exports = new GenericCommand(
           category = categories[command.category] = []
         }
         category.push(command.props.triggers[0])
+
+        let desc = description[command.category]
+        if (!desc) {
+          desc = description[command.category] = command.description
+        }
       }
+      console.log(description['🎵 Music'])
       if (disabled.length === 0) {
         return {
           title: help.title,
-          description: help.message + '\n[DANK](https://goo.gl/4mKBgd) [MEME](https://goo.gl/4mKBgd) [MERCH](https://goo.gl/4mKBgd)\nGet some dank meme merch here: [touch this link](https://goo.gl/4mKBgd)',
-          fields: Object.keys(categories).sort((a, b) => categories[b].length - categories[a].length).map(category => ({ name: category, value: `${categories[category].length} commands\n\`${prefix} help ${category.split(' ')[1].toLowerCase()}\``, inline: true })),
+          description: help.message,
+          fields: Object.keys(categories).sort((a, b) => categories[b].length - categories[a].length).map(category => ({ name: `${category}`, value: `\`${prefix} help ${category.split(' ')[1].toLowerCase()}\`\n[Hover for info](http://your-stupidity.needs-to-s.top/5dbd46.png "${description[category]}\n${categories[category].length} total commands")`, inline: true })),
           footer: { text: help.footer }
         }
       }
       return {
         title: help.title,
-        description: help.message + '\n[DANK](https://goo.gl/4mKBgd) [MEME](https://goo.gl/4mKBgd) [MERCH](https://goo.gl/4mKBgd)\nGet some dank meme merch here: [touch this link](https://goo.gl/4mKBgd)',
+        description: help.message,
         fields: Object.keys(categories).sort((a, b) => categories[b].length - categories[a].length).map(category => ({ name: category, value: `${categories[category].length} commands\n\`${prefix} help ${category.split(' ')[1].toLowerCase()}\``, inline: true })).concat({ name: 'Disabled Commands', value: disabled.join(', ') }),
         footer: { text: help.footer }
       }

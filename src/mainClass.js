@@ -81,6 +81,7 @@ class Memer extends Base {
       const category = require(join(__dirname, 'commands', categoryPath))
       for (const command of category.commands) {
         command.category = category.name
+        command.description = category.description
         this.cmds.push(command)
       }
     }

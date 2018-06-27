@@ -4,5 +4,6 @@ const commands = require('fs').readdirSync(__dirname)
 
 module.exports = {
   commands,
-  name: '⚙ Config Commands'
+  name: '⚙ Config',
+  description: 'Configure the bot to your liking, all settings are per server.'
 }

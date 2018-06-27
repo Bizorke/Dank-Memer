@@ -4,5 +4,6 @@ const commands = require('fs').readdirSync(__dirname)
 
 module.exports = {
   commands,
-  name: '🔊 Sound Commands'
+  name: '🔊 Sound',
+  description: 'Sounds effects and custom sound clips, what more could you need?'
 }
