@@ -4,5 +4,6 @@ const commands = require('fs').readdirSync(__dirname)
 
 module.exports = {
   commands,
-  name: '🆗 Text Commands'
+  name: '🆗 Text',
+  description: 'MaNiPuLaTe TeXt HaHa YeS'
 }
