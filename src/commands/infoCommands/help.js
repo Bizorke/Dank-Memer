@@ -31,7 +31,6 @@ module.exports = new GenericCommand(
           desc = description[command.category] = command.description
         }
       }
-      console.log(description['🎵 Music'])
       if (disabled.length === 0) {
         return {
           title: help.title,
