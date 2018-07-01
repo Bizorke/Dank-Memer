@@ -2,7 +2,7 @@ const { GenericCommand } = require('../../models/')
 
 module.exports = new GenericCommand(
   async ({ Memer, msg, addCD }) => {
-    let { streak } = await Memer.db.getStreak(msg.author.id)
+    let { streak } = await Memer.db.getUser(msg.author.id)
 
     if (streak && Date.now() - streak.time > 172800000) { // 24 hours, 2 days because one-day cooldown
       await Memer.db.resetStreak(msg.author.id)
@@ -12,26 +12,22 @@ module.exports = new GenericCommand(
       if (streak) {
         streak = streak.streak + 1
       } else {
-        streak = 1
+        streak = 0
       }
     }
 
-    let coinsEarned = 12000
-    if (streak > 1) {
+    let coinsEarned = 100
+    if (streak >= 1) {
       coinsEarned = coinsEarned + Math.round((0.02 * coinsEarned) * streak)
     }
-    const donor = await Memer.db.checkDonor(msg.author.id)
-    if (donor) {
-      coinsEarned = Math.round(coinsEarned + (coinsEarned * 0.35))
-    }
-    await Memer.db.addCoins(msg.author.id, coinsEarned)
+    await Memer.db.addPocket(msg.author.id, coinsEarned)
     await addCD()
 
     return {
-      title: `Here are your ${coinsEarned.toLocaleString()} daily coins`,
-      description: `If you would like to learn more about different ways to spend and earn coins, run \`pls guide\` and read up on all we have to offer!`,
+      title: `Here are your daily coins, ${msg.author.username}`,
+      description: `**${coinsEarned.toLocaleString()} coins** were placed in your pocket.\n\nSee how to earn or spend them with \`pls guide\``,
       thumbnail: {url: 'http://www.dank-memer-is-lots-of.fun/coin.png'},
-      footer: {text: `Streak: ${streak} (+${2.5 * streak}) | Multiplier ${donor ? '35%' : '0%'}`}
+      footer: {text: `Streak: ${streak} days (+${Math.round((0.02 * coinsEarned) * streak)} coins)`}
     }
   },
   {

@@ -48,8 +48,153 @@ module.exports = {
     return Math.floor(Math.random() * 0xFFFFFF)
   },
 
-  getMultiplier: (id, user, userDB) => {
-    // TODO: support server, donor, staff, dev
+  calcMultiplier: (Memer, user, userDB, donor, msg) => {
+    // calculates total multiplier based on multiple variables
+    let guildMember = msg.channel.guild.members.get(msg.author.id)
+    let date = new Date(msg.timestamp)
+    let day
+    let time
+    let total
+    total = userDB.upgrades.multi
+    if (Memer.config.devs.includes(user.id)) {
+      console.log('dev: +5%')
+      total += 5
+    }
+    if (guildMember.game && guildMember.game.name.toLowerCase().includes('dank memer')) {
+      total += 0.5
+    }
+    if (msg.channel.guild.emojis.length >= 69) {
+      if (msg.channel.guild.emojis.length === 69) {
+        total += 0.5
+      }
+      total += 0.5
+    }
+    if (msg.channel.name.toLowerCase().includes('dank-memer')) {
+      total += 0.5
+    }
+    if (userDB.upvoted) {
+      console.log('upvoted: +0.5%')
+      total += 0.5
+    }
+    if (msg.channel.guild.members.has('419254454169108480')) {
+      console.log('premium server: +0.5%')
+      total += 0.5
+    }
+    if (donor) {
+      console.log(`$${donor} donor: +0.5% per $1`)
+      total += donor * 0.5
+    }
+    if (userDB.spam < 25) {
+      console.log('noSpam: +0.5%')
+      total += 0.5
+    }
+    if (userDB.streak.streak >= 15) {
+      console.log('long streak: +0.5%')
+      total += 0.5
+    }
+    if (user.username.toLowerCase().includes('dank')) {
+      console.log('dank name: +0.5%')
+      total += 0.5
+    }
+    if (msg.channel.guild.id === '397472167631257600') {
+      console.log('support server: +0.5%')
+      total += 0.5
+    }
+    if (date.getMinutes() === 20 && date.getHours() === 4) {
+      console.log('weed time')
+      total += 4.2
+      time = true
+    }
+    if (date.getDay() === 20 && date.getMonth() === 4) {
+      console.log('weed day')
+      total += 4.2
+      day = true
+    }
+    if (time && day) {
+      console.log('SMOKE WEED EVERY DAY')
+      total += 420
+    }
+    return total
+  },
+
+  showMultiplier: (Memer, user, userDB, donor, msg) => {
+    // calculates total multiplier based on multiple variables
+    let guildMember = msg.channel.guild.members.get(msg.author.id)
+    let date = new Date(msg.timestamp)
+    let time
+    let day
+    let count = 14
+    let end = {
+      locked: 0,
+      unlocked: { total: 0, list: [] },
+      bought: userDB.upgrades.multi
+    }
+    if (Memer.config.devs.includes(user.id)) {
+      end.unlocked.total += 1
+      end.unlocked.list.push('Developer')
+    }
+    if (guildMember.game && guildMember.game.name.toLowerCase().includes('dank memer')) {
+      end.unlocked.total += 1
+      end.unlocked.list.push('[Playing dank memer](http://your-stupidity.needs-to-s.top/c3342d.gif)')
+    }
+    if (msg.channel.guild.emojis.length === 69) {
+      end.unlocked.total += 1
+      end.unlocked.list.push('69 emotes in the server')
+    }
+    if (msg.channel.name.toLowerCase() === ('dank-memer')) {
+      end.unlocked.total += 1
+      end.unlocked.list.push('[Channel is dank-memer](http://your-stupidity.needs-to-s.top/9bf273.png)')
+    }
+    if (userDB.upvoted) {
+      end.unlocked.total += 1
+      end.unlocked.list.push('[Voted for the bot](https://discordbots.org/bot/memes/vote)')
+    }
+    if (msg.channel.guild.members.has('419254454169108480')) {
+      end.unlocked.total += 1
+      end.unlocked.list.push('Premium server')
+    }
+    if (donor) {
+      end.unlocked.total += 1
+      end.unlocked.list.push('[Donor](https://www.patreon.com/dankmemerbot)')
+    }
+    if (userDB.spam < 25) {
+      end.unlocked.total += 1
+      end.unlocked.list.push('Doesn\'t spam the bot')
+    }
+    if (userDB.streak.streak >= 15) {
+      end.unlocked.total += 1
+      end.unlocked.list.push('15+ daily streak')
+    }
+    if (user.username.toLowerCase().includes('dank')) {
+      end.unlocked.total += 1
+      end.unlocked.list.push('Username is dank')
+    }
+    if (msg.channel.guild.id === '397472167631257600') {
+      end.unlocked.total += 1
+      end.unlocked.list.push('In support server')
+    }
+    if (date.getMinutes() === 20 && date.getHours() === 4) {
+      end.unlocked.total += 1
+      end.unlocked.list.push('4:20')
+      time = true
+    }
+    if (date.getDay() === 20 && date.getMonth() === 4) {
+      end.unlocked.total += 1
+      end.unlocked.list.push('4/20')
+      day = true
+    }
+    if (time && day) {
+      end.unlocked.total += 1
+      end.unlocked.list.push('4/20 + 4:20')
+    }
+    end.locked = count - end.unlocked.total
+    return end
+  },
+
+  decodeHtmlEntity: (str) => { // Found here: https://gist.github.com/CatTail/4174511
+    return str.replace(/&#(\d+);/g, function (match, dec) {
+      return String.fromCharCode(dec)
+    })
   },
 
   randomInArray: (array) => {

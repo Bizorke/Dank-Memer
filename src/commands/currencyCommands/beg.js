@@ -2,31 +2,22 @@ const { GenericCommand } = require('../../models/')
 
 module.exports = new GenericCommand(
   async ({ Memer, msg, addCD }) => {
-    let chances = Math.floor(Math.random() * 400) + 1
-    chances = chances + 10
-
-    let coins = await Memer.db.getCoins(msg.author.id)
-    const donor = await Memer.db.checkDonor(msg.author.id)
-    if (donor) {
-      chances = Math.round(chances + (chances * 0.5))
-    }
-    await addCD()
-    await Memer.db.addCoins(msg.author.id, chances)
-    let voted = await Memer.db.checkVoter(msg.author.id)
-    if (!voted) {
-      msg.channel.createMessage('Looks like you have not voted before!\nIf you go here and vote, you can get 750 coins each day that you do it!\n<https://discordbots.org/bot/memes/vote>')
-    }
-    return {
-      title: `Guys, watch this. ${msg.author.username} is about to beg.`,
-      description: `**${msg.author.username}**: pls give me coins, you're the best meme bot ever...\n**Best Meme Bot ever**: Ok fine you little bitch. I grant you ${chances} coins, now you have ${(coins.coin + chances).toLocaleString()}`,
-      footer: { text: `Multiplier: ${donor ? '50%' : '0%'}` }
+    const prompt = await msg.channel.createMessage('Hm, let me think...')
+    await Memer.sleep(1000)
+    await prompt.edit('Hm, let me think... <:feelsthinkman:397488376728780800>')
+    await Memer.sleep(2000)
+    if (Math.random() >= 0.5) {
+      Memer.db.addPocket(msg.author.id, 1)
+      await prompt.edit('Ok sure, have some coins.')
+    } else {
+      await prompt.edit('Nah, no coins for you.')
     }
   },
   {
-    triggers: ['beg', 'gib'],
-    cooldown: 2e5,
-    donorCD: 1e5,
-    cooldownMessage: 'Stop begging so much, you can have more coins in ',
+    triggers: ['beg'],
+    cooldown: 1,
+    donorCD: 1,
+    cooldownMessage: 'Stop begging so much, it makes you look like a little baby.\nYou can have more coins in ',
     description: 'haha ur poor so you have to beg for coins lmaoooo'
   }
 )

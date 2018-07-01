@@ -10,8 +10,11 @@ module.exports = {
     let donor = await Memer.db.checkDonor(id)
     let user = await Memer.ipc.fetchUser(id)
     return {
-      title: `${user.username}#${user.discriminator}`,
-      description: `Usage: ${db.pls.toLocaleString()}\nLast Cmd: ${new Date(db.lastCmd).toUTCString()}\nSpam: ${db.spam.toLocaleString()}\nCoins: ${db.coin.toLocaleString()}\nStreak: ${db.streak.streak.toLocaleString()}\nUpvoted: ${db.upvoted}\nDonor: ${!donor ? 'false' : `$${donor}`}`
+      title: `${user.username}#${user.discriminator} ${id}`,
+      fields: [
+        { name: 'Currency', value: `Pocket: ${db.pocket.toLocaleString()}\nBank: ${db.bank.toLocaleString()}\nGained: ${db.won.toLocaleString()}\nLost: ${db.lost.toLocaleString()}\nShared: ${db.shared.toLocaleString()}\nStreak: ${db.streak.streak.toLocaleString()}`, inline: true },
+        { name: 'User', value: `Usage: ${db.pls.toLocaleString()}\nLast Cmd: ${new Date(db.lastCmd).toLocaleDateString()}\nLast Ran: ${db.lastRan}\nSpam: ${db.spam.toLocaleString()}\nUpvoted: ${db.upvoted}\nDonor: ${!donor ? 'false' : `$${donor}`}`, inline: true }
+      ]
     }
   }
 }
