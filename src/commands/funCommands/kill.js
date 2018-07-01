@@ -1,13 +1,13 @@
 const kill = require('../../assets/arrays/kill.json')
 const { GenericCommand } = require('../../models/')
 
-const youAreDead = 'Ok you\'re dead. Please tag someone else to kill.'
-
 module.exports = new GenericCommand(
-  async ({ Memer, msg, args, addCD }) => {
-    let user = msg.args.resolveUser(true)
+  async ({ Memer, msg, addCD }) => {
+    const user = msg.args.resolveUser(true, false)
 
-    if (!user || args[0] === 'me' || user.id === msg.author.id) return youAreDead
+    if (msg.args.args[0] === 'me' || (user && user.id === msg.author.id)) return 'Ok you\'re dead. Please tag someone else to kill.'
+
+    if (!user) return 'do that again, but this time actually mention someone to kill them'
 
     return Memer.randomInArray(kill)
       .replace(/\$mention/g, user.username)
