@@ -1,38 +1,4 @@
 const { GenericCommand } = require('../../models/')
-const winStrings = [
-  'bravissimo!',
-  'GEE GOSH DARN',
-  'HELL YEAH MAN, LETS GO AGAIN',
-  'Hot diddly dandy!',
-  'HOT DIGGETY DAMN',
-  'Oh joy, oh boy, where do we go from here?',
-  'Ooh-la-la!',
-  'Ta-da',
-  'Va-va-voom',
-  'Whoopee!',
-  'Yoowza!',
-  'Zoinks!'
-]
-const lossStrings = [
-  'Ack',
-  'Bah',
-  'Shucks',
-  'Egads',
-  'Arghhhh',
-  'Sheesh',
-  'Boo-hoo',
-  'Bwah-hah-hah',
-  'Lah-de-dah',
-  'Nana na nana na',
-  'Neener-neener',
-  'Whoop-de-doo',
-  'Phooey',
-  'Hamana-hamana',
-  'Woopsie',
-  'fiddlesticks!',
-  'balderdash!',
-  'what a bunch of malarkey!'
-]
 
 module.exports = new GenericCommand(
   async ({ Memer, msg, addCD }) => {
@@ -82,8 +48,7 @@ module.exports = new GenericCommand(
 
       await Memer.db.addCoins(msg.author.id, winnings)
       Memer.ddog.incrementBy('gambling.winnings', Number(winnings))
-      let wins = Memer.randomInArray(winStrings)
-      return `${wins}\nYou won **${winnings.toLocaleString()}** coins. \n**Multiplier**: ${donor ? '35%' : '0%'} | **Percent of bet won**: ${winAmount.toFixed(2) * 100}%`
+      return `You won **${winnings.toLocaleString()}** coins. \n**Multiplier**: ${donor ? '35%' : '0%'} | **Percent of bet won**: ${winAmount.toFixed(2) * 100}%`
     } else if (blahblah >= 0.45) {
       let winAmount = Math.random() + 0.4
       let winnings = Math.round(bet * winAmount)
@@ -97,13 +62,11 @@ module.exports = new GenericCommand(
 
       await Memer.db.addCoins(msg.author.id, winnings)
       Memer.ddog.incrementBy('gambling.winnings', Number(winnings))
-      let wins = Memer.randomInArray(winStrings)
-      return `${wins}\nYou won **${winnings.toLocaleString()}** coins. \n**Multiplier**: ${donor ? '35%' : '0%'} | **Percent of bet won**: ${winAmount.toFixed(2) * 100}%`
+      return `You won **${winnings.toLocaleString()}** coins. \n**Multiplier**: ${donor ? '35%' : '0%'} | **Percent of bet won**: ${winAmount.toFixed(2) * 100}%`
     } else {
       await Memer.db.removeCoins(msg.author.id, bet)
       Memer.ddog.incrementBy('gambling.losings', Number(bet))
-      let loss = Memer.randomInArray(lossStrings)
-      return `${loss}\nYou lost **${Number(bet).toLocaleString()}** coins.`
+      return `You lost **${Number(bet).toLocaleString()}** coins.`
     }
   },
   {

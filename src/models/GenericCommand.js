@@ -8,6 +8,9 @@ module.exports = class GenericCommand {
     if (this.props.missingArgs && !args[0]) {
       return this.props.missingArgs
     }
+    if (this.props.minArgs && args.length < this.props.minArgs) {
+      return this.props.missingArgs
+    }
     return this.fn({ Memer, msg, args, addCD, cleanArgs })
   }
 
