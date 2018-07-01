@@ -30,7 +30,12 @@ build/Release
 node_modules
 jspm_packages
 
+# Editors
+.idea/
 .vscode
+
+# For development
+rethinkdb_data/
 
 # Optional npm cache directory
 .npm
