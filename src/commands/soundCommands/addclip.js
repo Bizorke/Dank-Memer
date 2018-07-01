@@ -35,7 +35,7 @@ module.exports = new GenericCommand(
     const opus = await isOpus(msg.attachments[0].url)
 
     if (!opus) {
-      return 'Nah fam, clip\'s gotta be in opus format. I won\'t take anything less 😤'
+      return 'Nah fam, clip\'s gotta be in opus format 😤 You can download youtube videos as opus from <https://ytdl.serux.pro>'
     }
 
     const fileSize = await getFileSize(msg.attachments[0].url)
