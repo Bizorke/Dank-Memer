@@ -4,10 +4,44 @@ module.exports = Bot => ({
       .insert({
         id: guildID,
         prefix: Bot.config.defaultPrefix,
+        modlog: '',
+        disabledCategories: [],
         disabledCommands: []
       })
       .run()
     return this.getGuild(guildID)
+  },
+
+  updateModlog: async function updateModlog (guildID, channelID) {
+    let res = await this.getGuild(guildID)
+    if (channelID === 0) {
+      res.modlog = 0
+    }
+    res.modlog = channelID
+
+    return Bot.r.table('guilds')
+      .insert(res, { conflict: 'update' })
+  },
+
+  fetchModlog: async function fetchModlog (guildID) {
+    let res = await this.getGuild(guildID)
+    if (!res) {
+      res = await this.createGuild(guildID)
+    }
+    let modlog
+    console.log(res.modlog)
+    if (!res.modlog) {
+      res.modlog = 0
+      await Bot.r.table('guilds')
+        .insert(res, { conflict: 'update' })
+    }
+    if (res.modlog === 0) {
+      modlog = false
+    } else {
+      modlog = res.modlog
+    }
+
+    return modlog
   },
 
   getGuild: async function getGuild (guildID) {
@@ -188,13 +222,21 @@ module.exports = Bot => ({
         lost: 0, // Total coins lost
         won: 0, // Total coins won
         shared: 0, // Transferred to other players
-        streak: { time: 0, streak: 0 }, // Daily coin gathering streak
+        streak: {
+          time: 0, // Time since last daily command
+          streak: 0 // Total current streak
+        },
         items: {
-          multi: 0, // Multiplier
           spin: 0, // Fidget Spinners
           memes: 0, // Memes
-          tide: 0, // Tide Pods
-          incr: 0 // Incremental purchases
+          tide: 0 // Tide Pods
+        },
+        upgrades: {
+          incr: 0, // Incremental upgrades
+          multi: 0, // Multiplier upgrades
+          vault: 0, // Bank Vault upgrades
+          shares: 0, // Sharing upgrades
+          luck: 0 // Luck upgrades
         },
         donor: false, // Donor status, false or $amount
         godMode: false, // No cooldowns, only for select few
@@ -243,8 +285,17 @@ module.exports = Bot => ({
   },
 
   addPocket: async function addPocket (id, amount) {
-    let res = await this.getPocket(id)
+    let res = await this.getUser(id)
     res.pocket += amount
+    res.won += amount
+
+    return Bot.r.table('users')
+      .insert(res, { conflict: 'update' })
+  },
+
+  addBank: async function addPocket (id, amount) {
+    let res = await this.getUser(id)
+    res.bank += amount
 
     return Bot.r.table('users')
       .insert(res, { conflict: 'update' })
@@ -259,7 +310,7 @@ module.exports = Bot => ({
   },
 
   roundPocket: async function roundPocket (id, amount) {
-    let res = await this.getPocket(id)
+    let res = await this.getUser(id)
     res.pocket = Math.round(res.pocket)
 
     Bot.r.table('users')
@@ -268,21 +319,20 @@ module.exports = Bot => ({
   },
 
   removePocket: async function removePocket (id, amount) {
-    let res = await this.getPocket(id)
+    let res = await this.getUser(id)
 
     res.pocket = Math.max(0, res.pocket - amount)
-
+    res.lost -= amount
     return Bot.r.table('users')
       .insert(res, { conflict: 'update' })
   },
 
-  getPocket: async function getPocket (id) {
-    const res = await Bot.r.table('users')
-      .get(id)
-      .default({ id, pocket: 0 })
-      .run()
+  removeBank: async function removePocket (id, amount) {
+    let res = await this.getUser(id)
 
-    return res
+    res.bank = Math.max(0, res.bank - amount)
+    return Bot.r.table('users')
+      .insert(res, { conflict: 'update' })
   },
 
   addStreak: async function addStreak (id) {
