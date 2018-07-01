@@ -14,7 +14,7 @@ const videos = [
 ]
 
 module.exports = new GenericCommand(
-  async ({ Memer, msg, args }) => {
+  async ({ Memer }) => {
     return {
       title: 'Minecraft Porn',
       description: `You must [click here](${Memer.randomInArray(videos)}) to watch this weird shit.`,

@@ -2,8 +2,7 @@ const { GenericCommand } = require('../../models/')
 
 module.exports = new GenericCommand(
   async ({ cleanArgs }) => {
-    let args = cleanArgs
-    return '```css\n>' + args.join(' ') + '\n```'
+    return '```css\n>' + cleanArgs.join(' ') + '\n```'
   }, {
     triggers: ['greentext', '>', 'gt'],
     description: 'Make the bot say whatever you want with greentext',

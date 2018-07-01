@@ -3,7 +3,7 @@ const { exists, isOpus, getFiles, getFileSize, saveAudioData } = require('../../
 const basePath = `${process.cwd()}/assets/audio/custom`
 
 module.exports = new GenericCommand(
-  async ({ Memer, msg, addCD }) => {
+  async ({ Memer, msg }) => {
     if (!msg.attachments[0]) {
       return 'Sure, let me just save silence... you need to attach a sound clip.'
     }

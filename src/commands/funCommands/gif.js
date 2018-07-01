@@ -2,7 +2,7 @@ const { GenericCommand } = require('../../models/')
 const { get } = require('snekfetch')
 
 module.exports = new GenericCommand(
-  async ({ Memer, msg, args, addCD }) => {
+  async ({ Memer, msg }) => {
     let search = encodeURIComponent(msg.args.args.join(' '))
     const data = await get(`https://api.giphy.com/v1/gifs/search?api_key=${Memer.config.gif}&q=${search}&limit=25&offset=0&rating=PG-13&lang=en`)
     return {

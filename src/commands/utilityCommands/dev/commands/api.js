@@ -2,7 +2,7 @@ const { get } = require('snekfetch')
 
 module.exports = {
   help: 'see api server data',
-  fn: async ({ Memer, msg, args }) => {
+  fn: async () => {
     const res = await get('http://www.dank-memer-is-lots-of.fun/stats')
     let stats = res.body
     let cmds = stats.apiCmds

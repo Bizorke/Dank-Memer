@@ -3,7 +3,7 @@ const { exists, removeFile } = require('../../utils/audioUtils.js')
 const basePath = `${process.cwd()}/assets/audio/custom`
 
 module.exports = new GenericCommand(
-  async ({ Memer, msg, addCD }) => {
+  async ({ Memer, msg }) => {
     const fileName = msg.args.nextArgument()
 
     if (!await exists(`${basePath}/${msg.author.id}/${fileName}.opus`)) {

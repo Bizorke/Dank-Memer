@@ -1,7 +1,7 @@
 const { GenericCommand } = require('../../models/')
 
 module.exports = new GenericCommand(
-  async ({ Memer, msg, addCD }) => {
+  async ({ Memer, msg }) => {
     const prompt = await msg.channel.createMessage('⚠ **WARNING, ALL DATA ON NON-REMOVABLE DISK DRIVE C: WILL BE LOST!**')
     await Memer.sleep(1500)
     await prompt.edit('⚠ **WARNING, ALL DATA ON NON-REMOVABLE DISK DRIVE C: WILL BE LOST!**\nProceed with format (Y/N)?')

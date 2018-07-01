@@ -1,7 +1,7 @@
 const { GenericCommand } = require('../../models/')
 
 module.exports = new GenericCommand(
-  async ({ Memer, args, msg }) => {
+  async ({ Memer }) => {
     return {
       content: '',
       file: { file: Memer.sillyFace, name: 'mock.jpg' }
