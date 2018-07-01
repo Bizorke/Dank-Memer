@@ -37,6 +37,7 @@ class Memer extends Base {
       'memeeconomy': {},
       'blacktwitter': {},
       'antijoke': {},
+      'antiantijoke': {},
       'sequel': {}
 
     }
