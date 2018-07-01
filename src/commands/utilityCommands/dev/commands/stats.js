@@ -12,7 +12,7 @@ module.exports = {
     data.clusters = data.clusters.map(c => {
       return [
         `${c.cluster === Memer.clusterID ? '*' : ' '}[${(c.cluster).toString().padStart(2)}]`,
-        `GUILDS:   ${c.guilds}`,
+        `GUILDS:   ${c.guilds.toString().padStart(5)}`,
         `SHARDS:  ${c.shards}`,
         `RAM: ${parseFloat(c.ram).toFixed(2)}MB`,
         `UPTIME: ${Memer.parseTime(c.uptime / 1000)}`
