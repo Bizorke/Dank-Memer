@@ -4,5 +4,6 @@ module.exports = new GenericImageCommand({
   triggers: ['slap', 'batslap', 'batman'],
   description: 'Slap someone shitless with this.',
 
-  doubleAvatar: true
+  doubleAvatar: true,
+  flipAvatars: true
 })
