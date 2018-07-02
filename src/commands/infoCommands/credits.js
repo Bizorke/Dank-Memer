@@ -25,14 +25,18 @@ const mDonors = [
   'jack#33301'
 ]
 const staff = [
-  'Aly#0022',
-  'LeMythe#7739',
-  'Erman The German#6598',
+  'AssumedQui#6764',
   'xXBuilderBXx#8265',
-  'shadowscar00#0001',
-  'SquiDaddy#6969',
-  'Someguy...#3552',
-  'TheExiledBanana#4865'
+  'Chase#7739',
+  'Hestia#0023',
+  'Hᵃᶜʰⁱᵏᵒ🐶#3838',
+  'I SHOT MY LEG#9008',
+  'William#2018',
+  'perryprog#9657',
+  'SquiDaddy#4277',
+  'StuffBeGood#5410',
+  'Juan Pablo#2655',
+  'ZoupFox#8667'
 ]
 
 module.exports = new GenericCommand(
