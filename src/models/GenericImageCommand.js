@@ -20,7 +20,10 @@ class GenericImageCommand {
 
     if (data.status === 200 && data.headers['content-type'].startsWith('image/')) {
       await addCD()
-      msg.channel.createMessage('', { file: data.body, name: `${this.cmdProps.triggers[0]}.${this.cmdProps.format || 'png'}` })
+      msg.channel.createMessage('', {
+        file: data.body,
+        name: `${this.cmdProps.triggers[0]}.${this.cmdProps.format || 'png'}`
+      })
     } else {
       msg.channel.createMessage(`Something went wrong while executing this hecking command!\`\`\`\n${data.text}\`\`\`\n\nJoin here (<https://discord.gg/ebUqc7F>) if the issue doesn't stop being an ass`)
     }
@@ -44,23 +47,41 @@ class GenericImageCommand {
     if (this.cmdProps.textOnly) {
       ret.text = msg.args.cleanContent(true)
     } else {
-      const argIsUrl = (msg.args.getArgument(0) || '').replace(/<|>/g, '').match(/^https?:\/\/.+\.(?:jpg|jpeg|gif|png|webp)$/i)
+      const argIsUrl = (msg.args.getArgument(0) || '').replace(/[<>]/g, '').match(/^https?:\/\/.+\.(?:jpg|jpeg|gif|png|webp)$/i)
 
-      if (argIsUrl) {
-        ret.avatar1 = argIsUrl[0]
-        msg.args.drop(0)
+      if (this.cmdProps.doubleAvatar) {
+        if (argIsUrl) {
+          ret.avatar2 = argIsUrl[0]
+          msg.args.drop(1)
+        } else {
+          let parsedUser = msg.args.resolveUser(false)
+          let parsedUser2 = msg.args.resolveUser(false)
+          let user
+          let user2
+
+          user = parsedUser || msg.channel.guild.shard.client.user
+          user = (!parsedUser2 && parsedUser) ? msg.author : user
+          user = parsedUser2 ? parsedUser : user
+
+          user2 = parsedUser2 || parsedUser || msg.author
+
+          ret.avatar1 = user.dynamicAvatarURL('png', 1024)
+          ret.username1 = user.username
+          ret.avatar2 = user2.dynamicAvatarURL('png', 1024)
+          ret.username2 = user2.username
+        }
       } else {
-        const user = msg.args.resolveUser(false, false) || msg.author
-        ret.avatar1 = user.dynamicAvatarURL('png', 1024)
-        ret.username1 = user.username
-      }
-
-      if (this.cmdProps.requiredArgs) {
-        ret.text = msg.args.cleanContent(true)
-      } else if (this.cmdProps.doubleAvatar) {
-        const user2 = msg.args.resolveUser(false, false) || msg.channel.guild.shard.client.user
-        ret.avatar2 = user2.dynamicAvatarURL('png', 1024)
-        ret.username2 = user2.username
+        if (argIsUrl) {
+          ret.avatar1 = argIsUrl[0]
+          msg.args.drop(0)
+        } else {
+          const user = msg.args.resolveUser(false, false) || msg.author
+          ret.avatar1 = user.dynamicAvatarURL('png', 1024)
+          ret.username1 = user.username
+        }
+        if (this.cmdProps.requiredArgs) {
+          ret.text = msg.args.cleanContent(true)
+        }
       }
     }
 

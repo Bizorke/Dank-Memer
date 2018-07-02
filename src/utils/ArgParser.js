@@ -11,11 +11,11 @@ class ArgParser {
   }
 
   /**
-     * Resolves a user using the next argument in the list or all remaining arguments
-     * @param {Boolean} consumeRest Whether to use the rest of the arguments to resolve the user or not
-     * @param {Boolean} consumeOnFail Whether to consume the arguments or preserve them if the args weren't resolved
-     * @return {Null|Object} Null if the argument couldn't be resolved, otherwise the user object
-     */
+   * Resolves a user using the next argument in the list or all remaining arguments
+   * @param {Boolean} consumeRest Whether to use the rest of the arguments to resolve the user or not
+   * @param {Boolean} consumeOnFail Whether to consume the arguments or preserve them if the args weren't resolved
+   * @return {Null|Object} Null if the argument couldn't be resolved, otherwise the user object
+   */
   resolveUser (consumeRest = false, consumeOnFail = true) {
     // TODO: Quotation support
     const args = consumeRest
@@ -47,10 +47,10 @@ class ArgParser {
   }
 
   /**
-     * Resolves a channel using the next argument in the list or all remaining arguments
-     * @param {Boolean} consumeRest Whether to use the rest of the arguments to resolve the channel or not
-     * @return {Null|Object} Null if the argument couldn't be resolved, otherwise the channel object
-     */
+   * Resolves a channel using the next argument in the list or all remaining arguments
+   * @param {Boolean} consumeRest Whether to use the rest of the arguments to resolve the channel or not
+   * @return {Null|Object} Null if the argument couldn't be resolved, otherwise the channel object
+   */
   resolveChannel (consumeRest = false) {
     const args = consumeRest
       ? this.args.splice(0).join(' ')
@@ -74,10 +74,10 @@ class ArgParser {
   }
 
   /**
-     * Resolves a role using the next argument in the list or all remaining arguments
-     * @param {Boolean} consumeRest Whether to use the rest of the arguments to resolve the role or not
-     * @return {Null|Object} Null if the argument couldn't be resolved, otherwise the role object
-     */
+   * Resolves a role using the next argument in the list or all remaining arguments
+   * @param {Boolean} consumeRest Whether to use the rest of the arguments to resolve the role or not
+   * @return {Null|Object} Null if the argument couldn't be resolved, otherwise the role object
+   */
   resolveRole (consumeRest = false) {
     const args = consumeRest
       ? this.args.splice(0).join(' ')
@@ -97,19 +97,19 @@ class ArgParser {
   }
 
   /**
-     * Returns the next word(s) in the argument list
-     * @param {Boolean} consumeRest Whether to return the remaining arguments or a single argument
-     * @return {Null|String} Null if the arg list is empty, otherwise the arguments
-     */
+   * Returns the next word(s) in the argument list
+   * @param {Boolean} consumeRest Whether to return the remaining arguments or a single argument
+   * @return {Null|String} Null if the arg list is empty, otherwise the arguments
+   */
   nextArgument (consumeRest = false) {
     return consumeRest ? this.args.splice(0).join(' ') : this.args.shift()
   }
 
   /**
-     * Returns the arguments with cleaned mentions
-     * @param {Boolean} consumeRest Whether to use the remaining arguments or a single argument
-     * @return {Null|String} Null if the arg list is empty, otherwise the cleaned arguments
-     */
+   * Returns the arguments with cleaned mentions
+   * @param {Boolean} consumeRest Whether to use the remaining arguments or a single argument
+   * @return {Null|String} Null if the arg list is empty, otherwise the cleaned arguments
+   */
   cleanContent (consumeRest = false) {
     let args = consumeRest
       ? this.args.splice(0).join(' ')
@@ -157,8 +157,7 @@ class ArgParser {
   }
 
   getArgument (index = 0) {
-    const args = this.args.slice(index, 1)
-    return args.join(' ')
+    return this.args.slice(index, 1).join(' ')
   }
 
   gather () {
