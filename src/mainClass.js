@@ -109,7 +109,7 @@ class Memer extends Base {
     this.db.deleteGuild(guild.id)
   }
 
-  rawWS (packet, shardId) {
+  rawWS (packet) {
     if (packet.guild_id) {
       this.bot.voiceConnections.voiceServerUpdate(packet)
     }

@@ -50,7 +50,7 @@ module.exports = new GenericCommand(
       await Memer.db.addCoins(msg.author.id, winnings)
     } else {
       slotString += '**| : : : LOSS : : : |**'
-      winnings = bet * 0
+      winnings = 0
       result = `No matches... You've lost`
       await Memer.db.removeCoins(msg.author.id, bet)
     }

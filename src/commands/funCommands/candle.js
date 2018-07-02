@@ -1,7 +1,7 @@
 const { GenericCommand } = require('../../models/')
 
 module.exports = new GenericCommand(
-  async ({ msg, args }) => {
+  async ({ msg }) => {
     if (msg.args.args.join(' ').length > 100) {
       return 'meh, too many letters'
     }

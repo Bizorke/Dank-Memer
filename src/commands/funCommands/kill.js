@@ -2,7 +2,7 @@ const kill = require('../../assets/arrays/kill.json')
 const { GenericCommand } = require('../../models/')
 
 module.exports = new GenericCommand(
-  async ({ Memer, msg, addCD }) => {
+  async ({ Memer, msg }) => {
     const user = msg.args.resolveUser(true, false)
 
     if (msg.args.args[0] === 'me' || (user && user.id === msg.author.id)) return 'Ok you\'re dead. Please tag someone else to kill.'

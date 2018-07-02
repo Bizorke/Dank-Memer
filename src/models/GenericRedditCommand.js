@@ -3,7 +3,7 @@ const { get } = require('snekfetch')
 
 const filters = {
   image: post => post.data.post_hint === 'image',
-  text: post => !post.data.post_hint !== 'image' && post.data.selftext.length <= 2000 && post.data.title.length <= 256
+  text: post => post.data.post_hint !== 'image' && post.data.selftext.length <= 2000 && post.data.title.length <= 256
 }
 
 module.exports = class GenericRedditCommand {

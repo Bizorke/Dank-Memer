@@ -1,6 +1,6 @@
 module.exports = {
   help: 'reload [command | all]',
-  fn: async ({ Memer, msg }) => {
+  fn: async ({ Memer }) => {
     try {
       for (const path in require.cache) {
         if (path.includes('commands')) {

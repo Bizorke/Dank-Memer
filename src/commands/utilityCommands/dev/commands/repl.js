@@ -3,7 +3,7 @@ const ProgrammaticREPL = require('programmatic-repl')
 
 module.exports = {
   help: 'repl',
-  fn: async ({ Memer, msg, args }) => {
+  fn: async ({ Memer, msg }) => {
     const REPL = new ProgrammaticREPL({
       includeNative: true,
       includeBuiltinLibs: true,

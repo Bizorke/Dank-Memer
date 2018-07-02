@@ -34,11 +34,9 @@ async function getFileSize (url) {
 }
 
 function exists (path) {
-  const res = fs.access(path, constants.R_OK)
+  return fs.access(path, constants.R_OK)
     .then(() => true)
     .catch(() => false)
-
-  return res
 }
 
 async function saveAudioData (url, dir, file) {

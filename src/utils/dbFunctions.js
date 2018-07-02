@@ -202,11 +202,10 @@ module.exports = Bot => ({
   },
 
   topPls: async function topPls () {
-    const res = await Bot.r.table('guildUsage')
+    return Bot.r.table('guildUsage')
       .orderBy({index: Bot.r.desc('pls')})
       .limit(10)
       .run()
-    return res
   },
 
   initUser: async function initUser (id) {
@@ -247,11 +246,10 @@ module.exports = Bot => ({
   },
 
   topUsers: async function topUsers () {
-    const res = await Bot.r.table('users')
+    return Bot.r.table('users')
       .orderBy({index: Bot.r.desc('pls')})
       .limit(15) // TODO: Make 10 along with other (top) functions
       .run()
-    return res
   },
 
   getUser: async function getUser (userID) {
@@ -302,14 +300,13 @@ module.exports = Bot => ({
   },
 
   topPocket: async function topPocket () {
-    const res = await Bot.r.table('users')
+    return Bot.r.table('users')
       .orderBy({index: Bot.r.desc('pocket')})
       .limit(10)
       .run()
-    return res
   },
 
-  roundPocket: async function roundPocket (id, amount) {
+  roundPocket: async function roundPocket (id) {
     let res = await this.getUser(id)
     res.pocket = Math.round(res.pocket)
 
@@ -355,27 +352,23 @@ module.exports = Bot => ({
   },
 
   topSpam: async function topSpam () {
-    const res = await Bot.r.table('users')
+    return Bot.r.table('users')
       .orderBy({index: Bot.r.desc('spam')})
       .limit(10)
       .run()
-    return res
   },
 
   addCmd: async function addCmd (id) {
-    let { lastCmd } = await this.getSpam(id)
-    lastCmd = Date.now()
+    let lastCmd = Date.now()
     await Bot.r.table('users').insert({ id, lastCmd }, { conflict: 'update' }).run()
   },
 
   getSpam: async function getSpam (id) {
-    let res = await this.getUser(id)
-    return res
+    return this.getUser(id)
   },
 
   getStreak: async function getStreak (id) {
-    let res = await this.getUser(id)
-    return res
+    return this.getUser(id)
   },
 
   resetStreak: async function removeStreak (id) {

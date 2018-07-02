@@ -3,7 +3,7 @@ const { getFiles } = require('../../utils/audioUtils.js')
 const basePath = `${process.cwd()}/assets/audio/custom`
 
 module.exports = new GenericCommand(
-  async ({ Memer, msg, addCD }) => {
+  async ({ Memer, msg }) => {
     const files = await getFiles(`${basePath}/${msg.author.id}/`)
       .catch(() => [])
 
