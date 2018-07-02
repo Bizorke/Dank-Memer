@@ -5,5 +5,4 @@ module.exports = new GenericImageCommand({
   description: 'Slap someone shitless with this.',
 
   doubleAvatar: true,
-  flipAvatars: true
 })

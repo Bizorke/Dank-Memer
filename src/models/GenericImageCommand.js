@@ -8,17 +8,6 @@ class GenericImageCommand {
     this.requestURL = commandProps.reqURL || 'http://127.0.0.1:65535/api/$ENDPOINT'
   }
 
-  get props () {
-    return new GenericCommand(
-      null,
-      Object.assign({
-        cooldown: 6000,
-        donorCD: 2000,
-        perms: ['embedLinks', 'attachFiles']
-      }, this.cmdProps)
-    ).props
-  }
-
   async run ({ Memer, msg, addCD }) {
     const datasrc = this.URLParseFN(msg)
     if (!datasrc) {
@@ -76,8 +65,6 @@ class GenericImageCommand {
 
           user2 = parsedUser2 || parsedUser || msg.author
 
-          if (this.cmdProps.flipAvatars) user2 = [user, user = user2][0] // flips user and user2
-
           ret.avatar1 = user.dynamicAvatarURL('png', 1024)
           ret.username1 = user.username
           ret.avatar2 = user2.dynamicAvatarURL('png', 1024)
@@ -92,11 +79,24 @@ class GenericImageCommand {
           ret.avatar1 = user.dynamicAvatarURL('png', 1024)
           ret.username1 = user.username
         }
-        if (this.cmdProps.requiredArgs) ret.text = msg.args.cleanContent(true)
+        if (this.cmdProps.requiredArgs) {
+          ret.text = msg.args.cleanContent(true)
+        }
       }
     }
 
     return ret
+  }
+
+  get props () {
+    return new GenericCommand(
+      null,
+      Object.assign({
+        cooldown: 6000,
+        donorCD: 2000,
+        perms: ['embedLinks', 'attachFiles']
+      }, this.cmdProps)
+    ).props
   }
 }
 

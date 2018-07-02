@@ -7,7 +7,6 @@ class ArgParser {
   constructor (msg, args) {
     this.msg = msg
     this.args = args
-    this.originalArgs = args.slice(0) // this way the array isn't modified, because javascriptTM
     this.bot = msg._client
   }
 
