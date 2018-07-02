@@ -58,7 +58,8 @@ exports.handleMeDaddy = async function (msg) {
   if (spam > 1e4) {
     await this.db.createBlock(msg.author.id)
     await this.db.removeUser(msg.author.id)
-    await this.bot.createMessage('430419142458212362', `${msg.author.username}#${msg.author.discriminator} ${msg.author.id}\nUser was forcefully removed for spamming over 10k times.`)
+    const channel = this.config.spamReportChannel || '430419142458212362'
+    await this.bot.createMessage(channel, `${msg.author.username}#${msg.author.discriminator} ${msg.author.id}\nUser was forcefully removed for spamming over 10k times.`)
     return
   }
 
@@ -108,14 +109,16 @@ exports.handleMeDaddy = async function (msg) {
       if (permissions.has('sendMessages')) {
         if (permissions.has('embedLinks')) {
           if (neededPerms.length > 1) {
-            msg.channel.createMessage({ embed: {
-              'title': 'oh no!',
-              'description': `You need to add **${neededPerms.join(', ')}** to use this command!\nGo to **Server settings => Roles => Dank Memer** to change this!`,
-              'color': this.randomColor(),
-              'footer': {
-                'text': 'If it still doesn\'t work, check channel permissions too!'
+            msg.channel.createMessage({
+              embed: {
+                'title': 'oh no!',
+                'description': `You need to add **${neededPerms.join(', ')}** to use this command!\nGo to **Server settings => Roles => Dank Memer** to change this!`,
+                'color': this.randomColor(),
+                'footer': {
+                  'text': 'If it still doesn\'t work, check channel permissions too!'
+                }
               }
-            }})
+            })
           } else {
             msg.channel.createMessage(
               {
@@ -141,14 +144,16 @@ exports.handleMeDaddy = async function (msg) {
       }
     } else if (command.props.isNSFW && !msg.channel.nsfw) {
       msg.channel.createMessage(
-        {'embed': {
-          'title': 'NSFW not allowed here',
-          'description': 'Use NSFW commands in a NSFW marked channel (look in channel settings, dummy)',
-          'color': this.randomColor(),
-          'image': {
-            'url': gifs.nsfw
+        {
+          'embed': {
+            'title': 'NSFW not allowed here',
+            'description': 'Use NSFW commands in a NSFW marked channel (look in channel settings, dummy)',
+            'color': this.randomColor(),
+            'image': {
+              'url': gifs.nsfw
+            }
           }
-        }}
+        }
       )
     } else {
       msg.reply = (str) => { msg.channel.createMessage(`${msg.author.mention}, ${str}`) }
@@ -184,13 +189,14 @@ exports.handleMeDaddy = async function (msg) {
     this.ddog.increment('error')
     let date = new Date(Date.now())
     let message = await this.errorMessages(e)
+    const channel = this.config.errorChannel || '431692509895458833'
     if (!message) {
       msg.channel.createMessage(`Something went wrong while executing this hecking command: \`${e.message}\` \nPlease join here (<https://discord.gg/ebUqc7F>) if the issue doesn't stop being an ass and tell staff that it's an \`unknown error\``)
-      await this.bot.createMessage('431692509895458833', `**Error: ${e.message}**\nCommand Ran: ${command.props.triggers[0]}\nDate: ${date.toUTCString()}\nSupplied arguments: ${cleanArgs.join(' ')}\nServer ID: ${msg.channel.guild.id}\nCluster ${this.clusterID} | Shard ${msg.channel.guild.shard.id}\n\`\`\` ${e.stack} \`\`\``)
+      await this.bot.createMessage(channel, `**Error: ${e.message}**\nCommand Ran: ${command.props.triggers[0]}\nDate: ${date.toUTCString()}\nSupplied arguments: ${cleanArgs.join(' ')}\nServer ID: ${msg.channel.guild.id}\nCluster ${this.clusterID} | Shard ${msg.channel.guild.shard.id}\n\`\`\` ${e.stack} \`\`\``)
       this.log(`Command error:\n\tCommand: ${command.props.triggers[0]}\n\tSupplied arguments: ${cleanArgs.join(' ')}\n\tServer ID: ${msg.channel.guild.id}\n\tError: ${e.stack}`, 'error')
     } else {
       msg.channel.createMessage(message)
-      await this.bot.createMessage('431692509895458833', `**Error: ${e.message}**\nCommand Ran: ${command.props.triggers[0]}\nDate: ${date.toUTCString()}\nSupplied arguments: ${cleanArgs.join(' ')}\nServer ID: ${msg.channel.guild.id}\nCluster ${this.clusterID} | Shard ${msg.channel.guild.shard.id}\n\`\`\` ${e.stack} \`\`\``)
+      await this.bot.createMessage(channel, `**Error: ${e.message}**\nCommand Ran: ${command.props.triggers[0]}\nDate: ${date.toUTCString()}\nSupplied arguments: ${cleanArgs.join(' ')}\nServer ID: ${msg.channel.guild.id}\nCluster ${this.clusterID} | Shard ${msg.channel.guild.shard.id}\n\`\`\` ${e.stack} \`\`\``)
       this.log(`Command error:\n\tCommand: ${command.props.triggers[0]}\n\tSupplied arguments: ${cleanArgs.join(' ')}\n\tServer ID: ${msg.channel.guild.id}\n\tError: ${e.stack}`, 'error')
     }
   }

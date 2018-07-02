@@ -1,9 +1,10 @@
 const { GenericCommand } = require('../../models/')
-const VENT_CID = '430835458000420864'
 
 module.exports = new GenericCommand(
   async ({ Memer, msg, args, addCD }) => {
-    await Memer.bot.createMessage(VENT_CID, { embed: {
+    const channel = Memer.config.featureRequestChannel || '430835458000420864'
+
+    await Memer.bot.createMessage(channel, { embed: {
       title: 'New request:',
       author: { name: `${msg.author.username}#${msg.author.discriminator} | ${msg.author.id}` },
       description: args.join(' '),
