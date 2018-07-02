@@ -15,9 +15,8 @@ module.exports = new GenericCommand(
       .emptyLine()
       .render() + '\n```'
   }, {
-    triggers: ['ascii'],
-    description: 'Write in ascii via the bot',
-    usage: '{command} <what you want the bot to ascii>',
-    missingArgs: 'What do you want me to ascii?'
+    triggers: ['hi'],
+    description: 'Say hi',
+    usage: '{command}'
   }
 )
