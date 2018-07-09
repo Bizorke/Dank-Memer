@@ -2,5 +2,5 @@ const { GenericImageCommand } = require('../../models/')
 
 module.exports = new GenericImageCommand({
   triggers: ['laid', 'getlaid'],
-  description: 'lol rekt'
+  description: 'feel free to post to me_irl'
 })

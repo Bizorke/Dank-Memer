@@ -3,8 +3,8 @@ const { GenericImageCommand } = require('../../models/')
 module.exports = new GenericImageCommand({
   triggers: ['floor', 'theflooris'],
   usage: '{command} <something to make the floor>',
-  description: 'hi, no desc for you',
+  description: 'the floor is using commands in the right channel',
 
-  requiredArgs: 'You need to add something to to make the floor, try again.',
+  requiredArgs: 'You need to add something to make the floor, try again.',
   textLimit: 57
 })
