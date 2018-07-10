@@ -104,6 +104,22 @@ class ArgParser {
   }
 
   /**
+   * Resolves multiple users by consuming the remaining arguments
+   * @return {Array<Object>} An array of user objects. Could be empty.
+   */
+  resolveUsers () {
+    const resolved = []
+
+    let user
+
+    while ((user = this.resolveUser(false)) !== null) {
+      resolved.push(user)
+    }
+
+    return resolved
+  }
+
+  /**
    * Returns the next word(s) in the argument list
    * @param {Boolean} consumeRest Whether to return the remaining arguments or a single argument
    * @return {Null|String} Null if the arg list is empty, otherwise the arguments

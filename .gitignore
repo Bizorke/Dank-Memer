@@ -43,6 +43,6 @@ rethinkdb_data/
 # Optional REPL history
 .node_repl_history
 config.json
-src/config.json
 package-lock.json
 package.json
+src/assets/audio/custom/
