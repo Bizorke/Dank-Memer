@@ -51,7 +51,7 @@ class ArgParser {
    * @param {Boolean} consumeRest Whether to use the rest of the arguments to resolve the channel or not
    * @return {Null|Object} Null if the argument couldn't be resolved, otherwise the channel object
    */
-  resolveChannel (consumeRest = false) {
+  resolveChannel (consumeRest = false, consumeOnFail = true) {
     const args = consumeRest
       ? this.args.splice(0).join(' ')
       : this.args.shift()
@@ -66,9 +66,16 @@ class ArgParser {
       return this.bot.getChannel(idMatch[1])
     } else {
       if (!this.msg.channel.guild) {
+        if (!consumeOnFail) {
+          this.args.unshift(...args.split(' '))
+        }
         return null // Only allow name-lookup for channels locally due to the performance impact this would have for searching lots of guilds
       } else {
-        return this.msg.channel.guild.channels.find(channel => channel.name === args)
+        let c = this.msg.channel.guild.channels.find(channel => channel.name === args)
+        if (!c && !consumeOnFail) {
+          this.args.unshift(...args.split(' '))
+        }
+        return c
       }
     }
   }
