@@ -4,6 +4,8 @@ module.exports = new GenericMediaCommand({
   triggers: ['porngif', 'porn'],
   description: 'Basically a porn video but with gifs',
   isNSFW: true,
+  voter: true,
+  vMessage: 'Hey, at least you aren\'t dealing with viruses and ads. Be thankful.',
 
   title: 'Here, take some gifs ;)',
   message: 'Free nudes thanks to boobbot & tom <3',
