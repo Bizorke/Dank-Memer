@@ -8,6 +8,11 @@ module.exports = class GenericMediaCommand {
   }
 
   async run ({ Memer, msg, addCD }) {
+    let voted = await Memer.db.checkVoter(msg.author.id)
+    if (this.props.voter && !voted) {
+      return `**WOAH** you need to vote at https://discordbots.org/bot/memes/vote to use this command.\n${this.props.vMessage}`
+    }
+
     const data = await get(this.props.reqURL, this.props.tokenKey && {
       headers: {
         Authorization: Memer.config[this.props.tokenKey],
@@ -32,8 +37,8 @@ module.exports = class GenericMediaCommand {
     return new GenericCommand(
       null,
       Object.assign({
-        cooldown: 3000,
-        donorCD: 1000,
+        cooldown: 2000,
+        donorCD: 500,
         perms: ['embedLinks']
       }, this.cmdProps)
     ).props

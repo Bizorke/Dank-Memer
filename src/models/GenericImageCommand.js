@@ -92,8 +92,8 @@ class GenericImageCommand {
     return new GenericCommand(
       null,
       Object.assign({
-        cooldown: 6000,
-        donorCD: 2000,
+        cooldown: 3000,
+        donorCD: 1000,
         perms: ['embedLinks', 'attachFiles']
       }, this.cmdProps)
     ).props

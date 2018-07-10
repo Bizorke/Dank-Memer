@@ -57,8 +57,8 @@ module.exports = class GenericSoundboardCommand {
     return new GenericCommand(
       null,
       Object.assign({
-        cooldown: 5000,
-        donorCD: 3000,
+        cooldown: 3000,
+        donorCD: 1000,
         perms: ['addReactions']
       }, this.cmdProps)
     ).props
