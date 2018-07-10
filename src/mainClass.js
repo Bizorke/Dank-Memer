@@ -69,7 +69,6 @@ class Memer extends Base {
     this.ddog.increment('function.ready')
 
     this.mentionRX = new RegExp(`^<@!*${this.bot.user.id}>`)
-    this.sillyFace = await get('http://your-stupidity.needs-to-s.top/b06dbf.png').then(r => r.body)
     this.mockIMG = await get('https://pbs.twimg.com/media/DAU-ZPHUIAATuNy.jpg').then(r => r.body)
   }
 
