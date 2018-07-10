@@ -47,7 +47,7 @@ class GenericImageCommand {
     if (this.cmdProps.textOnly) {
       ret.text = msg.args.cleanContent(true)
     } else {
-      const argIsUrl = (msg.args.getArgument(0) || '').replace(/[<>]/g, '').match(/^https?:\/\/.+\.(?:jpg|jpeg|gif|png|webp)$/i)
+      const argIsUrl = (msg.args.getArgument(0) || '').replace(/[<>]/g, '').match(/^https?:\/\/.+\.(?:jpg|jpeg|gif|png)$/i)
 
       if (this.cmdProps.doubleAvatar) {
         if (argIsUrl) {
