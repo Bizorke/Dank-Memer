@@ -9,7 +9,7 @@ module.exports = new GenericCommand(
 
     await addCD()
 
-    const purgeAmount = Math.min(Math.max(msg.args.getArgument(0) || 10, 1), 100)
+    const purgeAmount = Math.min(Math.max(msg.args.nextArgument() || 10, 1), 100)
     let filter = null
 
     switch (msg.args.nextArgument()) {
