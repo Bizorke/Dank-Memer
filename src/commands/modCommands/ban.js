@@ -29,13 +29,21 @@ module.exports = new GenericCommand(
       } else {
         reason = 'No reason given'
       }
+    } else {
+      reason = msg.args.args.join(' ')
     }
 
     let banned = user
     await addCD()
     const hahayes = `${banned.username}#${banned.discriminator}`
-    Memer.bot.banGuildMember(msg.channel.guild.id, banned.id, `${reason} | banned by ${msg.author.username}`)
-      .then(() => { return msg.channel.createMessage(`\`${hahayes}\` was banned, good fricken riddance`) })
+    let modlog = await Memer.db.fetchModlog(msg.channel.guild.id)
+    Memer.bot.banGuildMember(msg.channel.guild.id, banned.id, 1, `${reason} | banned by ${msg.author.username}`)
+      .then(() => {
+        if (modlog) {
+          Memer.bot.createMessage(modlog, `**${hahayes}** was banned by **${msg.author.username}#${msg.author.discriminator}**\nReason: *${reason}*`)
+        }
+        return msg.channel.createMessage(`\`${hahayes}\` was banned, good fricken riddance`)
+      })
       .catch((err) => {
         msg.channel.createMessage(`looks like I dont have perms to ban \`${banned.username}#${banned.discriminator}\`, I guess I have a lower role than them ¯\\_(ツ)_/¯`)
         throw err

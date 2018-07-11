@@ -32,10 +32,16 @@ module.exports = new GenericCommand(
     }
 
     let kicked = user
+    let modlog = await Memer.db.fetchModlog(msg.channel.guild.id)
     await addCD()
     const hahayes = `${kicked.username}#${kicked.discriminator}`
     Memer.bot.kickGuildMember(msg.channel.guild.id, kicked.id, `${reason} | kicked by ${msg.author.username}`)
-      .then(() => { return msg.channel.createMessage(`\`${hahayes}\` was kicked, rekt af`) })
+      .then(() => {
+        if (modlog) {
+          Memer.bot.createMessage(modlog, `**${hahayes}** was kicked by **${msg.author.username}#${msg.author.discriminator}**\nReason: *${reason}*`)
+        }
+        return msg.channel.createMessage(`\`${hahayes}\` was kicked, rekt af`)
+      })
       .catch((err) => {
         msg.channel.createMessage(`looks like I dont have perms to kick \`${kicked.username}#${kicked.discriminator}\`, I guess I have a lower role than them ¯\\_(ツ)_/¯`)
         throw err

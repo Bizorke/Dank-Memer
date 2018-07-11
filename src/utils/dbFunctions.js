@@ -14,6 +14,9 @@ module.exports = Bot => ({
 
   updateModlog: async function updateModlog (guildID, channelID) {
     let res = await this.getGuild(guildID)
+    if (!res) {
+      res = await this.createGuild(guildID)
+    }
     if (channelID === 0) {
       res.modlog = 0
     }
