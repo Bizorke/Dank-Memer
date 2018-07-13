@@ -11,16 +11,28 @@ module.exports = class GenericRedditCommand {
     this.cmdProps = cmdProps
   }
 
-  async run ({ Memer, msg, addCD }) {
-    const res = await get(`https://www.reddit.com${this.cmdProps.endpoint}`)
-      .catch(() => null)
+  async run ({ Memer, msg, args, addCD }) {
+    let res
+
+    const cachedEntry = await Memer.redis.getAsync(this.cmdProps.endpoint)
+      .then(res => JSON.parse(res))
+
+    if (cachedEntry) {
+      res = cachedEntry
+    } else {
+      res = await get(`https://www.reddit.com${this.cmdProps.endpoint}`)
+        .then(res => res.body)
+        .catch(() => null)
+
+      Memer.redis.setAsync(this.cmdProps.endpoint, JSON.stringify(res), 'EX', 15 * 60)
+    }
 
     if (!res) {
       await addCD()
       return 'meme machine 🅱roke'
     }
 
-    const posts = res.body.data.children.filter(filters[this.cmdProps.type])
+    const posts = res.data.children.filter(filters[this.cmdProps.type])
 
     const indexes = Memer.indexes[this.cmdProps.triggers[0]]
     let index = indexes[msg.channel.guild.id]
@@ -43,6 +55,9 @@ module.exports = class GenericRedditCommand {
         footer: { text: `👍 ${post.data.ups} | 💬 ${post.data.num_comments}` }
       }
     }
+
+    console.log(this.cmdProps.type === 'image' ? post.data.url : '')
+
     return {
       title: postTitle,
       url: `https://www.reddit.com${post.data.permalink}`,
