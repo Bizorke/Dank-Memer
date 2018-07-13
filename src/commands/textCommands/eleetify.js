@@ -2,7 +2,7 @@ const { GenericCommand } = require('../../models/')
 const leet = require('../../utils/leetGenerator')
 
 module.exports = new GenericCommand(
-  async ({ cleanArgs }) => leet(cleanArgs.join(' '), true).replace('\\', '\\\\'),
+  async ({ cleanArgs }) => leet(cleanArgs.join(' '), true).replace(/\\/g, '\\\\'),
   {
     triggers: ['eleetify', 'eleet', '31337'],
     description: '83<0|\\/|3 4 31337 |-|4<|<3.-',

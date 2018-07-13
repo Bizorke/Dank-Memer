@@ -56,8 +56,6 @@ module.exports = class GenericRedditCommand {
       }
     }
 
-    console.log(this.cmdProps.type === 'image' ? post.data.url : '')
-
     return {
       title: postTitle,
       url: `https://www.reddit.com${post.data.permalink}`,
