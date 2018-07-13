@@ -80,7 +80,7 @@ exports.handleMeDaddy = async function (msg) {
   }
 
   const cooldown = await this.db.getSpecificCooldown(command.props.triggers[0], msg.author.id)
-  if (cooldown > Date.now()) {
+  if (cooldown > Date.now() && process.env.NODE_ENV !== 'dev') {
     const waitTime = (cooldown - Date.now()) / 1000
     let cooldownWarning = command.props.cooldownMessage || `**Time left until you can run the command again:** `
 
