@@ -43,7 +43,9 @@ class Memer extends Base {
     Object.assign(this, require('./utils/misc.js'))
   }
 
-  launch () {
+  async launch () {
+    this.redis = await require('./utils/redisClient.js')()
+
     this.loadCommands()
     this.MessageCollector = new MessageCollector(this.bot)
     this.ddog.increment('function.launch')
