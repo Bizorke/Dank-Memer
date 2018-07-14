@@ -22,7 +22,9 @@ module.exports = new GenericCommand(
       return { content: `Specify a command to disable, or multiple.\n\nExample: \`${gConfig.prefix} disable meme trigger shitsound\` or \`${gConfig.prefix} disable meme\``, reply: true }
     }
 
-    const invalid = args.filter(cmd => (!Memer.cmds.find(c => c.props.triggers.includes(cmd)) && cmd !== 'nsfw') || ['disable', 'enable'].includes(cmd))
+    const categories = Memer.cmds.map(c => c.category.split(' ')[1].toLowerCase())
+
+    const invalid = args.filter(cmd => (!Memer.cmds.find(c => c.props.triggers.includes(cmd)) && !categories.includes(cmd)) || ['disable', 'enable'].includes(cmd))
 
     if (invalid.length > 0) {
       return { content: `The following commands are invalid: \n\n${invalid.map(cmd => `\`${cmd.toLowerCase()}\``).join(', ')}\n\nPlease make sure all of your commands are valid (case-sensitive!) and try again.`, reply: true }
