@@ -26,6 +26,41 @@ module.exports = Bot => ({
       .insert(res, { conflict: 'update' })
   },
 
+  updateDevUpdates: async function updateModlog (guildID, channelID) {
+    let res = await this.getGuild(guildID)
+    if (!res) {
+      res = await this.createGuild(guildID)
+    }
+    if (channelID === 0) {
+      res.updates = 0
+    }
+    res.updates = channelID
+
+    return Bot.r.table('guilds')
+      .insert(res, { conflict: 'update' })
+  },
+
+  fetchDevUpdates: async function fetchModlog (guildID) {
+    let res = await this.getGuild(guildID)
+    if (!res) {
+      res = await this.createGuild(guildID)
+    }
+    let updates
+    console.log(res.updates)
+    if (!res.updates) {
+      res.updates = 0
+      await Bot.r.table('guilds')
+        .insert(res, { conflict: 'update' })
+    }
+    if (res.updates === 0) {
+      updates = false
+    } else {
+      updates = res.modlog
+    }
+
+    return updates
+  },
+
   fetchModlog: async function fetchModlog (guildID) {
     let res = await this.getGuild(guildID)
     if (!res) {

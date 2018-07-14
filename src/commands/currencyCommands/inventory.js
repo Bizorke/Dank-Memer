@@ -8,7 +8,7 @@ module.exports = new GenericCommand(
       await addCD()
       return {
         title: `Here is ${user.username}'s inventory`,
-        description: `**Their Pocket**: ${pocket.toLocaleString()} coins.\n**Bank Account**: ${bank.toLocaleString()} coins\n\n**Items Owned**\nMemes: ${items.memes}\nSpinners: ${items.spin}\nTide Pods: ${items.tide}`,
+        description: `**Their Pocket**: ${pocket.toLocaleString()} coins.\n**Bank Account**: ${bank.toLocaleString()} coins\n\n**Items Owned (Coming soon)**\nMemes: ${items.memes}\nSpinners: ${items.spin}\nTide Pods: ${items.tide}`,
         thumbnail: {url: 'http://www.dank-memer-is-lots-of.fun/coin.png'},
         footer: { text: 'to see what upgrades they have, use the upgrades command' }
       }
@@ -17,7 +17,7 @@ module.exports = new GenericCommand(
       await addCD()
       return {
         title: `Here is your inventory, ${msg.author.username}`,
-        description: `**Your Pocket**: ${pocket.toLocaleString()} coins.\n**Bank Account**: ${bank.toLocaleString()} coins\n\n**Items Owned**\nMemes: ${items.memes}\nSpinners: ${items.spin}\nTide Pods: ${items.tide}`,
+        description: `**Your Pocket**: ${pocket.toLocaleString()} coins\n**Bank Account**: ${bank.toLocaleString()} coins\n\n**Items Owned (Coming soon)**\nMemes: ${items.memes}\nSpinners: ${items.spin}\nTide Pods: ${items.tide}`,
         thumbnail: {url: 'http://www.dank-memer-is-lots-of.fun/coin.png'},
         footer: { text: 'to see what upgrades you have, use the upgrades command' }
       }

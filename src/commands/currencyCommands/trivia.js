@@ -68,8 +68,8 @@ module.exports = new GenericCommand(
   },
   {
     triggers: ['trivia'],
-    cooldown: 1,
-    donorCD: 1,
+    cooldown: 35e4,
+    donorCD: 20e4,
     description: 'Answer some trivia for a chance to win some coins.'
   }
 )

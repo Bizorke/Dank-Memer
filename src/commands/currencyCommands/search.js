@@ -9,7 +9,7 @@ module.exports = new GenericCommand(
       message = `You found **${chances > 1 ? chances + ' coins' : chances + ' coin'}** in the dumpster!\nCongrats I think? Idk, all I know is that you smell bad now.`
     }
     await addCD()
-    await Memer.db.addCoins(msg.author.id, chances)
+    await Memer.db.addPocket(msg.author.id, chances)
     return {
       title: `${msg.author.username} searches in a dumpster for some coins...`,
       description: message

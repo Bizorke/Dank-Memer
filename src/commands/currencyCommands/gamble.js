@@ -2,7 +2,11 @@ const { GenericCommand } = require('../../models/')
 
 module.exports = new GenericCommand(
   async ({ Memer, msg, addCD }) => {
-    let coins = await Memer.db.getCoins(msg.author.id)
+    let user = msg.author
+    let userDB = await Memer.db.getUser(user.id)
+    let donor = await Memer.db.checkDonor(user.id)
+    let multi = await Memer.calcMultiplier(Memer, user, userDB, donor, msg)
+    let coins = userDB.pocket
 
     let bet = msg.args.args[0]
     if (!bet) {
@@ -33,39 +37,30 @@ module.exports = new GenericCommand(
     await addCD()
     let blahblah = Math.random()
 
-    if (blahblah >= 0.75) {
-      let winAmount = Math.random() + 1
+    if (blahblah > 0.95) {
+      let winAmount = Math.random() + 0.8
       let random = Math.round(Math.random())
       winAmount = winAmount + random
       let winnings = Math.round(bet * winAmount)
-      const donor = await Memer.db.checkDonor(msg.author.id)
-      if (donor) {
-        winnings = Math.round(winnings + (winnings * 0.35))
-      }
+      winnings = winnings + Math.round(winnings * (multi / 100))
       if (winnings === bet) {
         return 'You broke even. This means you\'re lucky I think?'
       }
 
-      await Memer.db.addCoins(msg.author.id, winnings)
-      Memer.ddog.incrementBy('gambling.winnings', Number(winnings))
-      return `You won **${winnings.toLocaleString()}** coins. \n**Multiplier**: ${donor ? '35%' : '0%'} | **Percent of bet won**: ${winAmount.toFixed(2) * 100}%`
-    } else if (blahblah >= 0.45) {
+      await Memer.db.addPocket(msg.author.id, winnings)
+      return `You won **${winnings.toLocaleString()}** coins. \n**Multiplier**: ${multi}% | **Percent of bet won**: ${winnings.toFixed(2) * 100}%`
+    } else if (blahblah > 0.90) {
       let winAmount = Math.random() + 0.4
       let winnings = Math.round(bet * winAmount)
-      const donor = await Memer.db.checkDonor(msg.author.id)
-      if (donor) {
-        winnings = Math.round(winnings + (winnings * 0.35))
-      }
+      winnings = winnings + Math.round(winnings * (multi / 100))
       if (winnings === bet) {
         return 'You broke even. This means you\'re lucky I think?'
       }
 
-      await Memer.db.addCoins(msg.author.id, winnings)
-      Memer.ddog.incrementBy('gambling.winnings', Number(winnings))
-      return `You won **${winnings.toLocaleString()}** coins. \n**Multiplier**: ${donor ? '35%' : '0%'} | **Percent of bet won**: ${winAmount.toFixed(2) * 100}%`
+      await Memer.db.addPocket(msg.author.id, winnings)
+      return `You won **${winnings.toLocaleString()}** coins. \n**Multiplier**: ${multi}% | **Percent of bet won**: ${winAmount.toFixed(2) * 100}%`
     } else {
-      await Memer.db.removeCoins(msg.author.id, bet)
-      Memer.ddog.incrementBy('gambling.losings', Number(bet))
+      await Memer.db.removePocket(msg.author.id, bet)
       return `You lost **${Number(bet).toLocaleString()}** coins.`
     }
   },

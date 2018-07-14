@@ -2,6 +2,7 @@ const { GenericCommand } = require('../../models/')
 
 module.exports = new GenericCommand(
   async ({ Memer, msg, addCD }) => {
+    /*
     let args = msg.args.args
     let given
     let user
@@ -33,6 +34,8 @@ module.exports = new GenericCommand(
     await Memer.db.addCoins(user.id, given)
     await Memer.db.removeCoins(msg.author.id, given)
     return `You gave ${user.username} ${given.toLocaleString()} coins, now you have ${(giverCoins.coin - given).toLocaleString()} and they've got ${(takerCoins.coin + given).toLocaleString()}`
+    */
+    return 'sharing is not currently available. It will return with the shop update.'
   },
   {
     triggers: ['share', 'give'],

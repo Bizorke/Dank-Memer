@@ -1,5 +1,5 @@
 const { GenericCommand } = require('../../models/')
-let min = 500
+let min = 100
 
 const dmStolenUser = async (Memer, user, msg, worth) => {
   if (!user.bot) {
@@ -21,58 +21,60 @@ module.exports = new GenericCommand(
     if (msg.author.id === user.id) {
       return 'hey stupid, seems pretty dumb to steal from urself'
     }
-    let perpCoins = await Memer.db.getCoins(msg.author.id)
-    let victimCoins = await Memer.db.getCoins(user.id)
+    let perp = await Memer.db.getUser(msg.author.id)
+    let victim = await Memer.db.getUser(user.id)
+    let perpCoins = perp.pocket
+    let victimCoins = victim.pocket
     let donor = await Memer.db.checkDonor(user.id)
-    if (perpCoins.coin < min) {
+    if (perpCoins < min) {
       return `You need at least ${min} coins to try and rob someone.`
     }
-    if (victimCoins.coin < min) {
+    if (victimCoins < min) {
       return `The victim doesn't have at least ${min} coins, not worth it man`
     }
     if (donor < 5) { // $1-$4 gets 5% shields
-      victimCoins.coin = victimCoins.coin - (victimCoins.coin * 0.05)
+      victimCoins = victimCoins - (victimCoins * 0.05)
     } else if (donor < 10 && donor > 4) { // $5-$9 gets 25% shields
-      victimCoins.coin = victimCoins.coin - (victimCoins.coin * 0.25)
+      victimCoins = victimCoins - (victimCoins * 0.25)
     } else if (donor < 15 && donor > 9) { // $10-$14 gets 60% shields
-      victimCoins.coin = victimCoins.coin - (victimCoins.coin * 0.6)
+      victimCoins = victimCoins - (victimCoins * 0.6)
     } else if (donor < 20 && donor > 14) { // $15-$19 gets 80% shields
-      victimCoins.coin = victimCoins.coin - (victimCoins.coin * 0.8)
+      victimCoins = victimCoins - (victimCoins * 0.8)
     } else if (donor > 19) { // $20+ gets 95% shields
-      victimCoins.coin = victimCoins.coin - (victimCoins.coin * 0.95)
+      victimCoins = victimCoins - (victimCoins * 0.95)
     }
     await addCD()
     let stealingOdds = Math.floor(Math.random() * 100) + 1
 
-    if (stealingOdds <= 50) { // fail section
+    if (stealingOdds <= 60) { // fail section
       let punish
-      if ((perpCoins.coin * 0.05) < 500) {
-        punish = 500
+      if ((perpCoins * 0.05) < 100) {
+        punish = 100
       } else {
-        punish = perpCoins.coin * 0.05
+        punish = perpCoins * 0.05
       }
-      Memer.db.removeCoins(msg.author.id, Math.round(punish))
-      Memer.db.addCoins(user.id, Math.round(punish))
+      Memer.db.removePocket(msg.author.id, Math.round(punish))
+      Memer.db.addPocket(user.id, Math.round(punish))
       Memer.ddog.increment('stealFail')
       return `You were caught! You paid the person you stole from **${Math.round(punish)}** coins.`
-    } else if (stealingOdds > 50 && stealingOdds <= 80) { // 30% payout
-      let worth = Math.round(victimCoins.coin * 0.3)
-      Memer.db.addCoins(msg.author.id, worth)
-      Memer.db.removeCoins(user.id, worth)
+    } else if (stealingOdds > 60 && stealingOdds <= 80) { // 30% payout
+      let worth = Math.round(victimCoins * 0.3)
+      Memer.db.addPocket(msg.author.id, worth)
+      Memer.db.removePocket(user.id, worth)
       Memer.ddog.increment('stealSmall')
       await dmStolenUser(Memer, user, msg, worth)
       return `You managed to steal a small amount before leaving! 💸\nYour payout was **${worth.toLocaleString()}** coins.`
     } else if (stealingOdds > 80 && stealingOdds <= 90) { // 50% payout
-      let worth = Math.round(victimCoins.coin * 0.5)
-      Memer.db.addCoins(msg.author.id, worth)
-      Memer.db.removeCoins(user.id, worth)
+      let worth = Math.round(victimCoins * 0.5)
+      Memer.db.addPocket(msg.author.id, worth)
+      Memer.db.removePocket(user.id, worth)
       Memer.ddog.increment('stealLarge')
       await dmStolenUser(Memer, user, msg, worth)
       return `You managed to steal a large amount before leaving! 💰\nYour payout was **${worth.toLocaleString()}** coins.`
     } else { // full theft up to 1 trillion
-      let worth = Math.round(victimCoins.coin)
-      Memer.db.addCoins(msg.author.id, worth)
-      Memer.db.removeCoins(user.id, worth)
+      let worth = Math.round(victimCoins)
+      Memer.db.addPocket(msg.author.id, worth)
+      Memer.db.removePocket(user.id, worth)
       Memer.ddog.increment('stealMAX')
       await dmStolenUser(Memer, user, msg, worth)
       return `You managed to steal a TON before leaving! 🤑\nYour payout was **${worth.toLocaleString()}** coins.`
@@ -80,8 +82,8 @@ module.exports = new GenericCommand(
   },
   {
     triggers: ['steal', 'rob', 'ripoff'],
-    cooldown: 2e5,
-    donorCD: 1e5,
+    cooldown: 5e5,
+    donorCD: 3e5,
     perms: ['embedLinks'],
     description: 'Take your chances at stealing from users. Warning, you will lose money if you get caught!',
     cooldownMessage: 'Woahhh there, you need some time to plan your next hit. Wait ',

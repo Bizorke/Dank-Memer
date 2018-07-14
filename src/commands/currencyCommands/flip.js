@@ -2,7 +2,8 @@ const { GenericCommand } = require('../../models/')
 
 module.exports = new GenericCommand(
   async ({ Memer, msg, addCD }) => {
-    let coins = await Memer.db.getCoins(msg.author.id)
+    let { pocket } = await Memer.db.getUser(msg.author.id)
+    let coins = pocket
     if (coins.coin === 0) {
       return { title: 'You have no coins.' }
     }
@@ -19,14 +20,14 @@ module.exports = new GenericCommand(
       return 'I flipped the coin, but you didn\'t call it in time!'
     } else if (choice.content.toLowerCase().includes('heads')) {
       if (coinFlip === heads) {
-        await Memer.db.addCoins(msg.author.id, 1)
+        await Memer.db.addPocket(msg.author.id, 1)
         return 'It was heads! You have been awarded one coin!'
       } else {
         return 'aw it was tails and you suck, sad day for you'
       }
     } else if (choice.content.toLowerCase().includes('tails')) {
       if (coinFlip === tails) {
-        await Memer.db.addCoins(msg.author.id, 1)
+        await Memer.db.addPocket(msg.author.id, 1)
         return 'It was tails! You have been awarded one coin!'
       } else {
         return 'aw it was heads and you suck, sad day for you'

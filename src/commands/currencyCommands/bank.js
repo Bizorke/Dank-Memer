@@ -2,24 +2,40 @@ const { GenericCommand } = require('../../models/')
 
 module.exports = new GenericCommand(
   async ({ Memer, msg, addCD }) => {
-    let { bank } = await Memer.db.getUser(msg.author.id)
-    console.log(msg.args.args)
+    let { bank, pocket, pls, upgrades } = await Memer.db.getUser(msg.author.id)
     if (msg.args.args[0]) {
-      if (msg.args.args[0].toLowerCase() === 'deposit') {
-        return 'deposit'
-      } else if (msg.args.args[0].toLowerCase() === 'withdraw') {
-        return 'withdraw'
-      } else {
-        return 'Hm, thats not how this command works, second argument should be deposit or withdraw'
+      switch (msg.args.args[0].toLowerCase()) {
+        case 'deposit':
+          if (Number(msg.args.args[1]) && Number(msg.args.args[1]) <= pocket) {
+            if (Number(msg.args.args[1]) > 250 + (upgrades.vault * 100) + ((pls / 100) * 20)) {
+              return `You can only hold ${250 + (upgrades.vault * 100) + ((pls / 100) * 20)} coins in your bank right now. To hold more, use the bot more.`
+            }
+            await addCD()
+            await Memer.db.addBank(msg.author.id, Number(msg.args.args[1]))
+            await Memer.db.removePocket(msg.author.id, Number(msg.args.args[1]))
+            return `${Number(msg.args.args[1])} coin[s] deposited.`
+          } else {
+            return `Your second argument should be a number and no more than what you have in your pocket (${pocket})`
+          }
+        case 'withdraw':
+          if (Number(msg.args.args[1]) && Number(msg.args.args[1]) <= bank) {
+            await addCD()
+            await Memer.db.addPocket(msg.author.id, Number(msg.args.args[1]))
+            await Memer.db.removeBank(msg.author.id, Number(msg.args.args[1]))
+            return `${Number(msg.args.args[1])} coin[s] withdrawn.`
+          } else {
+            return `Your second argument should be a number and no more than what you have in your bank (${bank})`
+          }
+        default:
+          return 'Hm, thats not how this command works, first argument should be deposit or withdraw'
       }
     } else {
       const db = await Memer.db.getGuild(msg.channel.guild.id)
       const prefix = db ? db.prefix : Memer.config.defaultPrefix
-      await addCD()
       return {
-        title: `Current Balance: ${bank}`,
-        description: `You can deposit coins with \`${prefix} bank deposit #\`\nYou can withdraw coins with \`${prefix} bank withdraw #\``,
-        footer: { text: 'You can earn more vault space by buying upgrades!' }
+        title: `${msg.author.username}'s account:`,
+        description: `**Current Balance**: ${bank}/${Math.round(250 + (upgrades.vault * 100) + ((pls / 100) * 20))}\nYou can deposit coins with \`${prefix} bank deposit #\`\nYou can withdraw coins with \`${prefix} bank withdraw #\``,
+        footer: { text: 'You can earn more vault space by using the bot more often' }
       }
     }
   },

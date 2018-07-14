@@ -8,7 +8,7 @@ module.exports = new GenericCommand(
       await addCD()
       return {
         title: `Here is ${user.username}'s upgrades`,
-        description: `**Multiplier Upgrades**: ${upgrades.multi}\n**Vault Upgrades**: ${upgrades.vault}\n**Share Upgrades**: ${upgrades.shares}\n**Luck Upgrades**: ${upgrades.luck}`,
+        description: `**Multiplier Upgrades**: ${upgrades.multi}/5\n**Vault Upgrades**: ${upgrades.vault}/5\n**Share Upgrades**: ${upgrades.shares}/5\n**Luck Upgrades**: ${upgrades.luck}/5`,
         footer: { text: 'to see what they own, use the inventory command' }
       }
     } else {
@@ -16,7 +16,7 @@ module.exports = new GenericCommand(
       await addCD()
       return {
         title: `Here are your upgrades, ${msg.author.username}`,
-        description: `**Multiplier Upgrades**: ${upgrades.multi}\n**Vault Upgrades**: ${upgrades.vault}\n**Share Upgrades**: ${upgrades.shares}\n**Luck Upgrades**: ${upgrades.luck}`,
+        description: `**Multiplier Upgrades**: ${upgrades.multi}/5\n**Vault Upgrades**: ${upgrades.vault}/5\n**Share Upgrades**: ${upgrades.shares}/5\n**Luck Upgrades**: ${upgrades.luck}/5`,
         footer: { text: 'to see what you own, use the inventory command' }
       }
     }
