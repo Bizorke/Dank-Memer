@@ -46,7 +46,7 @@ exports.handleMeDaddy = async function (msg) {
     !command ||
     (command.props.ownerOnly && !this.config.devs.includes(msg.author.id)) ||
     gConfig.disabledCommands.includes(command.props.triggers[0]) ||
-    (gConfig.disabledCommands.includes(command.category.split(' ')[1].toLowerCase()) && !gConfig.disabledCommands.includes(command.props.triggers[0]))
+    (gConfig.disabledCommands.includes('nsfw') && command.props.isNSFW)
   ) {
     return
   } else if (command.props.donorOnly && !isDonor) {

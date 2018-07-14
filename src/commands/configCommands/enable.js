@@ -8,16 +8,12 @@ module.exports = new GenericCommand(
 
     const gConfig = await Memer.db.getGuild(msg.channel.guild.id) || await Memer.db.createGuild(msg.channel.guild.id)
 
-    const categories = Memer.cmds.map(c => c.category.split(' ')[1].toLowerCase())
-
     args = Memer.removeDuplicates(args
       .map(cmd => {
         return (Memer.cmds.find(c => c.props.triggers.includes(cmd)) || { props: { triggers: [cmd] } }).props.triggers[0]
       }))
-    cmds = Memer.removeDuplicates(args.map(cmd => Memer.cmds.find(c => c.props.triggers.includes(cmd)) || categories.includes(cmd)))
 
-    const arentDisabled = args.filter(cmd => !gConfig.disabledCommands.includes(cmd.triggers[0]) &&
-      !gConfig.disabledCommands.includes(cmd.category.split(' ')[1].toLowerCase()))
+    const arentDisabled = args.filter(cmd => !gConfig.disabledCommands.includes(cmd))
     if (arentDisabled[0]) {
       return `These commands aren't disabled:\n\n${arentDisabled.map(c => `\`${c}\``).join(', ')}\n\nHow tf do you plan to enable already enabled commands??`
     }
@@ -25,9 +21,7 @@ module.exports = new GenericCommand(
     if (!args[0]) {
       return `Specify a command to enable, or multiple.\n\nExample: \`${gConfig.prefix} enable meme trigger shitsound\` or \`${gConfig.prefix} enable meme\``
     }
-
-
-    if (args.some(cmd => !Memer.cmds.find(c => c.props.triggers.includes(cmd)) && !categories.includes(cmd))) {
+    if (args.some(cmd => !Memer.cmds.find(c => c.props.triggers.includes(cmd)) && cmd !== 'nsfw')) {
       return `The following commands are invalid: \n\n${args.filter(cmd => !Memer.cmds.find(c => c.props.triggers.includes(cmd))).map(cmd => `\`${cmd.props.triggers[0]}\``).join(', ')}\n\nPlease make sure all of your commands are valid and try again.`
     }
 
