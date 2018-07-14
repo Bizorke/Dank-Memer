@@ -41,7 +41,6 @@ const master = new Sharder(config.token, '/mainClass.js', {
     disableEveryone: true,
     messageLimit: 0
   },
-  clusters: 1,
   shards: config.shardCount || 1,
   statsInterval: 1e4
 })
