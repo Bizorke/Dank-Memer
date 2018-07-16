@@ -4,7 +4,7 @@ module.exports = new GenericCommand(
     const multiplier = await Memer.db.checkDonor(msg.author.id)
     const winnings = Number(multiplier) * 25
     await addCD()
-    Memer.db.addCoins(msg.author.id, winnings)
+    Memer.db.addPocket(msg.author.id, winnings)
     return {
       title: `${msg.author.username} has redeemed their monthly donor rewards!`,
       description: `You donated $${multiplier}, so you get ${winnings.toLocaleString()} coins!\nThank you for your support!`
