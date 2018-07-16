@@ -8,7 +8,10 @@ module.exports = new GenericCommand(
         case 'deposit':
           if (Number(msg.args.args[1]) && Number(msg.args.args[1]) <= pocket) {
             if (Number(msg.args.args[1]) + bank > 250 + (upgrades.vault * 100) + ((pls / 100) * 20)) {
-              return `You can only hold ${250 + (upgrades.vault * 100) + ((pls / 100) * 20)} coins in your bank right now. To hold more, use the bot more.`
+              return `You can only hold ${Math.round(250 + (upgrades.vault * 100) + ((pls / 100) * 20))} coins in your bank right now. To hold more, use the bot more.`
+            }
+            if (Number(msg.args.args[1]) < 1 || !Number.isInteger(Number(Number(msg.args.args[1])))) {
+              return 'Needs to be a whole number greater than 0'
             }
             await addCD()
             await Memer.db.addBank(msg.author.id, Number(msg.args.args[1]))
@@ -19,6 +22,9 @@ module.exports = new GenericCommand(
           }
         case 'withdraw':
           if (Number(msg.args.args[1]) && Number(msg.args.args[1]) <= bank) {
+            if (Number(msg.args.args[1]) < 1 || !Number.isInteger(Number(Number(msg.args.args[1])))) {
+              return 'Needs to be a whole number greater than 0'
+            }
             await addCD()
             await Memer.db.addPocket(msg.author.id, Number(msg.args.args[1]))
             await Memer.db.removeBank(msg.author.id, Number(msg.args.args[1]))
