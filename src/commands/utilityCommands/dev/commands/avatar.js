@@ -11,7 +11,6 @@ async function setAvatar (Memer, url) {
     if (err) {
       throw err
     }
-    console.log(JSON.stringify(res.body))
     Memer.bot.editSelf({ avatar: `data:${res.header['content-type']};base64,${res.body.toString('base64')}` })
   })
 }

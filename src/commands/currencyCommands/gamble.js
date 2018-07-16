@@ -7,7 +7,6 @@ module.exports = new GenericCommand(
     let donor = await Memer.db.checkDonor(user.id)
     let multi = await Memer.calcMultiplier(Memer, user, userDB, donor, msg)
     let coins = userDB.pocket
-    Memer.log(userDB)
 
     let bet = msg.args.args[0]
     if (!bet) {

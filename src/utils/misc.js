@@ -57,7 +57,6 @@ module.exports = {
     let total
     total = userDB.upgrades.multi
     if (Memer.config.devs.includes(user.id)) {
-      console.log('dev: +5%')
       total += 5
     }
     if (guildMember.game && guildMember.game.name.toLowerCase().includes('dank memer')) {
@@ -73,45 +72,35 @@ module.exports = {
       total += 0.5
     }
     if (userDB.upvoted) {
-      console.log('upvoted: +0.5%')
       total += 0.5
     }
     if (msg.channel.guild.members.has('419254454169108480')) {
-      console.log('premium server: +0.5%')
       total += 0.5
     }
     if (donor) {
-      console.log(`$${donor} donor: +0.5% per $1`)
       total += donor * 0.5
     }
     if (userDB.spam < 25) {
-      console.log('noSpam: +0.5%')
       total += 0.5
     }
     if (userDB.streak.streak >= 15) {
-      console.log('long streak: +0.5%')
       total += 0.5
     }
     if (user.username.toLowerCase().includes('dank')) {
-      console.log('dank name: +0.5%')
       total += 0.5
     }
     if (msg.channel.guild.id === '397472167631257600') {
-      console.log('support server: +0.5%')
       total += 0.5
     }
     if (date.getMinutes() === 20 && date.getHours() === 4) {
-      console.log('weed time')
       total += 4.2
       time = true
     }
     if (date.getDay() === 20 && date.getMonth() === 4) {
-      console.log('weed day')
       total += 4.2
       day = true
     }
     if (time && day) {
-      console.log('SMOKE WEED EVERY DAY')
       total += 420
     }
     return total

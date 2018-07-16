@@ -7,7 +7,6 @@ module.exports = new GenericCommand(
     let donor = await Memer.db.checkDonor(user.id)
     let total = await Memer.calcMultiplier(Memer, user, userDB, donor, msg)
     let show = await Memer.showMultiplier(Memer, user, userDB, donor, msg)
-    console.log(total)
     await addCD()
     return {
       title: `Here is some info about your Multipliers, ${user.username}`,

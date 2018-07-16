@@ -46,7 +46,6 @@ module.exports = Bot => ({
       res = await this.createGuild(guildID)
     }
     let updates
-    console.log(res.updates)
     if (!res.updates) {
       res.updates = 0
       await Bot.r.table('guilds')
@@ -67,7 +66,6 @@ module.exports = Bot => ({
       res = await this.createGuild(guildID)
     }
     let modlog
-    console.log(res.modlog)
     if (!res.modlog) {
       res.modlog = 0
       await Bot.r.table('guilds')
