@@ -7,7 +7,7 @@ module.exports = new GenericCommand(
       switch (msg.args.args[0].toLowerCase()) {
         case 'deposit':
           if (Number(msg.args.args[1]) && Number(msg.args.args[1]) <= pocket) {
-            if (Number(msg.args.args[1]) > 250 + (upgrades.vault * 100) + ((pls / 100) * 20)) {
+            if (Number(msg.args.args[1]) + bank > 250 + (upgrades.vault * 100) + ((pls / 100) * 20)) {
               return `You can only hold ${250 + (upgrades.vault * 100) + ((pls / 100) * 20)} coins in your bank right now. To hold more, use the bot more.`
             }
             await addCD()
