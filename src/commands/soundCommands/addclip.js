@@ -25,7 +25,7 @@ module.exports = new GenericCommand(
     const files = await getFiles(`${basePath}/${msg.author.id}/`)
       .catch(() => [])
 
-    const isDonor = await Memer.db.isDonor(msg.author.id)
+    const isDonor = await Memer.db.checkDonor(msg.author.id)
     const maxClips = isDonor ? 10 : 3
 
     if (files.length >= maxClips) {
