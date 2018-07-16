@@ -82,7 +82,7 @@ module.exports = new GenericCommand(
   },
   {
     triggers: ['steal', 'rob', 'ripoff'],
-    cooldown: 5e5,
+    cooldown: 4e5,
     donorCD: 3e5,
     perms: ['embedLinks'],
     description: 'Take your chances at stealing from users. Warning, you will lose money if you get caught!',

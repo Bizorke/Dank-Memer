@@ -35,7 +35,7 @@ module.exports = new GenericCommand(
         return {
           title: help.title,
           description: help.message,
-          fields: Object.keys(categories).sort((a, b) => categories[b].length - categories[a].length).map(category => ({ name: `${category}`, value: `\`${prefix} help ${category.split(' ')[1].toLowerCase()}\`\n[Hover for info](http://your-stupidity.needs-to-s.top/5dbd46.png "${description[category]}\n${categories[category].length} total commands")`, inline: true })),
+          fields: Object.keys(categories).sort((a, b) => categories[b].length - categories[a].length).map(category => ({ name: `${category}`, value: `\`${prefix} help ${category.split(' ')[1].toLowerCase()}\`\n[Hover for info](https://gist.github.com/melmsie/e36d102e7871a0bf6d007198b0d0ae05 "${description[category]}\n${categories[category].length} total commands")`, inline: true })),
           footer: { text: help.footer }
         }
       }

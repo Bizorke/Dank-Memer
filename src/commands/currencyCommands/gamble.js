@@ -7,6 +7,7 @@ module.exports = new GenericCommand(
     let donor = await Memer.db.checkDonor(user.id)
     let multi = await Memer.calcMultiplier(Memer, user, userDB, donor, msg)
     let coins = userDB.pocket
+    Memer.log(userDB)
 
     let bet = msg.args.args[0]
     if (!bet) {
@@ -17,9 +18,9 @@ module.exports = new GenericCommand(
     }
     if (isNaN(bet)) {
       if (bet === 'all') {
-        bet = coins.coin
+        bet = coins
       } else if (bet === 'half') {
-        bet = Math.round(coins.coin / 2)
+        bet = Math.round(coins / 2)
       } else {
         return 'You have to bet actual coins, dont try to break me.'
       }
@@ -27,11 +28,11 @@ module.exports = new GenericCommand(
     if (!Number.isInteger(Number(bet))) {
       return 'AHA! You cannot break me anymore! Must be a whole number, dumb butt.'
     }
-    if (coins.coin === 0) {
+    if (coins === 0) {
       return 'You have no coins.'
     }
-    if (bet > coins.coin) {
-      return `You only have ${coins.coin.toLocaleString()} coins, dont bluff me.`
+    if (bet > coins) {
+      return `You only have ${coins.toLocaleString()} coins, dont bluff me.`
     }
 
     await addCD()

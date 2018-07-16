@@ -2,6 +2,7 @@ const { GenericCommand } = require('../../models/')
 
 module.exports = new GenericCommand(
   async ({ Memer, msg, addCD }) => {
+    await addCD()
     const prompt = await msg.channel.createMessage('Hm, let me think...')
     await Memer.sleep(1000)
     await prompt.edit('Hm, let me think... <:feelsthinkman:397488376728780800>')
@@ -15,8 +16,8 @@ module.exports = new GenericCommand(
   },
   {
     triggers: ['beg'],
-    cooldown: 6e4,
-    donorCD: 5e4,
+    cooldown: 12e4,
+    donorCD: 6e4,
     cooldownMessage: 'Stop begging so much, it makes you look like a little baby.\nYou can have more coins in ',
     description: 'haha ur poor so you have to beg for coins lmaoooo'
   }

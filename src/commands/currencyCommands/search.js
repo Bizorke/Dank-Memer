@@ -2,7 +2,7 @@ const { GenericCommand } = require('../../models/')
 let message
 module.exports = new GenericCommand(
   async ({ Memer, msg, addCD }) => {
-    const chances = Math.floor(Math.random() * 100)
+    const chances = Math.floor(Math.random() * 5)
     if (chances === 0) {
       message = 'Looks like you didn\'t find any coins in the dumpster. At least you found some day old bread! 🍞'
     } else {
@@ -17,7 +17,7 @@ module.exports = new GenericCommand(
   },
   {
     triggers: ['search', 'dumpsterdive'],
-    cooldown: 3e4,
+    cooldown: 5e5,
     donorBlocked: true,
     cooldownMessage: 'There is currently a homeless man eating from that dumpster, try again in ',
     description: 'haha ur poor so you have to search for coins in a dumpster hahaha'
