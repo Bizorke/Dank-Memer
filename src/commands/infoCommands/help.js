@@ -83,7 +83,7 @@ module.exports = new GenericCommand(
         }
         category.push(command.props.triggers[0])
       }
-      const categoryName = Object.keys(categories).find(c => c.split(' ')[1].toLowerCase() === args[0])
+      const categoryName = Object.keys(categories).find(c => c.split(' ')[1].toLowerCase() === args[0].toLowerCase())
       const commands = categories[categoryName]
 
       if (!commands) {
