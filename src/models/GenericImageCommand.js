@@ -75,7 +75,7 @@ class GenericImageCommand {
           ret.avatar1 = argIsUrl[0]
           msg.args.drop(0)
         } else {
-          const user = msg.args.resolveUser(false, false) || msg.author
+          const user = msg.args.resolveUser(true, false) || msg.author
           ret.avatar1 = user.dynamicAvatarURL('png', 1024)
           ret.username1 = user.username
         }
