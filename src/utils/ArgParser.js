@@ -76,6 +76,8 @@ class ArgParser {
     if (!ret && !consumeOnFail) {
       this.args.unshift(...args.split(' '))
     }
+
+    return ret
   }
 
   /**
