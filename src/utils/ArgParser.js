@@ -61,22 +61,20 @@ class ArgParser {
     }
 
     const idMatch = idMatcher.exec(args) || channelMentionMatcher.exec(args)
+    let ret = null
 
     if (idMatch) {
-      return this.bot.getChannel(idMatch[1])
+      ret = this.bot.getChannel(idMatch[1])
     } else {
       if (!this.msg.channel.guild) {
-        if (!consumeOnFail) {
-          this.args.unshift(...args.split(' '))
-        }
-        return null // Only allow name-lookup for channels locally due to the performance impact this would have for searching lots of guilds
+        ret = null // Only allow name-lookup for channels locally due to the performance impact this would have for searching lots of guilds
       } else {
-        let c = this.msg.channel.guild.channels.find(channel => channel.name === args)
-        if (!c && !consumeOnFail) {
-          this.args.unshift(...args.split(' '))
-        }
-        return c
+        ret = this.msg.channel.guild.channels.find(channel => channel.name === args)
       }
+    }
+
+    if (!ret && !consumeOnFail) {
+      this.args.unshift(...args.split(' '))
     }
   }
 
