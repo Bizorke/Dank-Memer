@@ -47,6 +47,7 @@ class Memer extends Base {
     this.redis = await require('./utils/redisClient.js')()
 
     this.loadCommands()
+    this.createIPC()
     this.MessageCollector = new MessageCollector(this.bot)
     this.ddog.increment('function.launch')
     this.bot
@@ -72,6 +73,47 @@ class Memer extends Base {
 
     this.mentionRX = new RegExp(`^<@!*${this.bot.user.id}>`)
     this.mockIMG = await get('https://pbs.twimg.com/media/DAU-ZPHUIAATuNy.jpg').then(r => r.body)
+  }
+
+  createIPC () {
+    this.ipc.register('reloadCommands', () => {
+      for (const path in require.cache) {
+        if (path.includes('src/commands')) {
+          delete require.cache[path]
+        }
+      }
+      this.log('Commands reloaded probably')
+
+      this.cmds = []
+      this.loadCommands()
+    })
+    this.ipc.register('reloadMost', () => {
+      for (const path in require.cache) {
+        if (path.includes('src/utils') || path.includes('src/commands') || path.includes('src/models') || path.includes('src/assets') || path.includes('src/handlers')) {
+          delete require.cache[path]
+        }
+      }
+      this.cmds = []
+      this.loadCommands()
+      this.loadUtils()
+      this.log('Most things reloaded probably')
+    })
+    this.ipc.register('reloadConfig', () => {
+      for (const path in require.cache) {
+        if (path.includes('src/config')) {
+          delete require.cache[path]
+        }
+      }
+      this.config = require('./config.json')
+      this.log('Config reloaded probably')
+    })
+  }
+
+  async loadUtils () {
+    this.log = require('./utils/logger.js')
+    this.db = require('./utils/dbFunctions.js')(this)
+    this.redis = await require('./utils/redisClient.js')()
+    Object.assign(this, require('./utils/misc.js'))
   }
 
   loadCommands () {
