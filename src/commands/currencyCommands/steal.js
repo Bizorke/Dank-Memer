@@ -53,28 +53,28 @@ module.exports = new GenericCommand(
       } else {
         punish = perpCoins * 0.05
       }
-      Memer.db.removePocket(msg.author.id, Math.round(punish))
-      Memer.db.addPocket(user.id, Math.round(punish))
+      await Memer.db.removePocket(msg.author.id, Math.round(punish))
+      await Memer.db.addPocket(user.id, Math.round(punish))
       Memer.ddog.increment('stealFail')
       return `You were caught! You paid the person you stole from **${Math.round(punish)}** coins.`
     } else if (stealingOdds > 60 && stealingOdds <= 80) { // 30% payout
       let worth = Math.round(victimCoins * 0.3)
-      Memer.db.addPocket(msg.author.id, worth)
-      Memer.db.removePocket(user.id, worth)
+      await Memer.db.addPocket(msg.author.id, worth)
+      await Memer.db.removePocket(user.id, worth)
       Memer.ddog.increment('stealSmall')
       await dmStolenUser(Memer, user, msg, worth)
       return `You managed to steal a small amount before leaving! 💸\nYour payout was **${worth.toLocaleString()}** coins.`
     } else if (stealingOdds > 80 && stealingOdds <= 90) { // 50% payout
       let worth = Math.round(victimCoins * 0.5)
-      Memer.db.addPocket(msg.author.id, worth)
-      Memer.db.removePocket(user.id, worth)
+      await Memer.db.addPocket(msg.author.id, worth)
+      await Memer.db.removePocket(user.id, worth)
       Memer.ddog.increment('stealLarge')
       await dmStolenUser(Memer, user, msg, worth)
       return `You managed to steal a large amount before leaving! 💰\nYour payout was **${worth.toLocaleString()}** coins.`
     } else { // full theft up to 1 trillion
       let worth = Math.round(victimCoins)
-      Memer.db.addPocket(msg.author.id, worth)
-      Memer.db.removePocket(user.id, worth)
+      await Memer.db.addPocket(msg.author.id, worth)
+      await Memer.db.removePocket(user.id, worth)
       Memer.ddog.increment('stealMAX')
       await dmStolenUser(Memer, user, msg, worth)
       return `You managed to steal a TON before leaving! 🤑\nYour payout was **${worth.toLocaleString()}** coins.`
