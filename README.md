@@ -1,6 +1,6 @@
 ## Authors
 
-* **Melmsie** - *Initial work and owner* - [GitHub Profile](https://github.com/melmsie)
+* **Mel** - *Initial work and owner* - [GitHub Profile](https://github.com/melmsie)
 * **Aetheryx** - *I like trains* - [GitHub Profile](https://github.com/Aetheryx)
 * **CyberRonin** - *Melmsie is my lover* [Github Profile](https://github.com/TheCyberRonin)
 * **Ken** - *Haha yes* - [GitHub Profile](https://github.com/NotWeeb)
