@@ -39,7 +39,7 @@ module.exports = new GenericCommand(
       ]
     }
   }, {
-    triggers: ['stats', 'info'],
+    triggers: ['stats'],
     description: 'Returns basic information and statistics about Dank Memer.',
     perms: ['embedLinks']
   }
