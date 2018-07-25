@@ -11,7 +11,7 @@ module.exports = new GenericCommand(
       msg.channel.createMessage({ embed: {
         title: 'Pick a meme!',
         color: Memer.randomColor(),
-        description: 'I need you to tell me which meme you want to make. Pick from [this list](https://github.com/melmsie/Dank-Memer/wiki/Memegen-list) and reply with your answer.'
+        description: 'I need you to tell me which meme you want to make. Pick from [this list](https://gist.github.com/melmsie/1b59c3fd389e49b62dc5b706c1ac6140) and reply with your answer.'
       }})
 
       const memeMsg = await Memer.MessageCollector.awaitMessage(msg.channel.id, msg.author.id, 30e3)

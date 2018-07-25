@@ -8,7 +8,7 @@ module.exports = new GenericCommand(
     await prompt.edit('Hm, let me think... <:feelsthinkman:397488376728780800>')
     await Memer.sleep(2000)
     if (Math.random() >= 0.5) {
-      Memer.db.addPocket(msg.author.id, 1)
+      await Memer.db.addPocket(msg.author.id, 1)
       await prompt.edit('Ok sure, have a coin.')
     } else {
       await prompt.edit('Nah, no coin for you.')
