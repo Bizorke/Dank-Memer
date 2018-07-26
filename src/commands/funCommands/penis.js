@@ -6,8 +6,8 @@ module.exports = new GenericCommand(
       ? msg.author.username
       : (
         msg.mentions[0]
-          ? `${msg.mentions[0].nick || msg.mentions[0].username} is`
-          : `${args.join(' ')} is`
+          ? msg.mentions[0].nick || msg.mentions[0].username
+          : args.join(' ')
       )
     return {
       title: 'peepee size machine',
