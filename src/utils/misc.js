@@ -40,9 +40,9 @@ const errors = {
 module.exports = {
   errorMessages: async (e) => errors[Object.keys(errors).find((error) => e.message.includes(error))] || false,
 
-  intro: `Sup nerds. My name is **Dank Memer**.\n\nTo get started, send \`${config.defaultPrefix} help\`. All commands are run this way, for example, pls meme.\n\nThere ARE NSFW commands on this bot, but you can disable them with \`pls disable nsfw\`\n\nI am maintained by Mel#0004, who can be found at [this server](https://discord.gg/ebUqc7F) if you need to talk to him.`,
+  intro: `Sup nerds. My name is **Dank Memer**.\n\nTo get started, send \`${config.defaultPrefix} help\`. All commands are run this way, for example, pls meme.\n\nThere ARE NSFW commands on this bot, but you can disable them with \`pls disable nsfw\`\n`,
 
-  links: '[Support Server](https://discord.gg/ebUqc7F) - Get help for the bot and meme around\n[DANK MEME MERCH!](https://goo.gl/4mKBgd) - Our sponser has some sick meme attire for you\n[Official Twitter](https://twitter.com/dankmemerbot) - Sometimes win free stuff and meme around\n[Invite Link](https://goo.gl/BPWvB9) - Add the bot to another server and meme around',
+  links: '<:technicalsupport:471490462968971264> [Support Server](https://discord.gg/ebUqc7F) - Get help for the bot and meme around\n<:twitter:471490461454827530> [Official Twitter](https://twitter.com/dankmemerbot) - Sometimes win free stuff and meme around\n<:coininhand:471490461467410463> [Patreon Page](https://www.patreon.com/dankmemerbot) - Help support the bot development, and get some sweet perks!\n<:discordlogo:471490461396369409> [Invite Link](https://goo.gl/BPWvB9) - Add the bot to another server and meme around',
 
   randomColor: () => {
     return Math.floor(Math.random() * 0xFFFFFF)
@@ -214,6 +214,49 @@ module.exports = {
     }
 
     return timeStr.filter(g => !g.startsWith('0')).join(', ')
+  },
+
+  punish: async (Memer, id, type, reason, optionalBlock = true, optionalWipe = true) => {
+    if (!reason) {
+      reason = 'No reason given.'
+    }
+    if (!type) {
+      type = 'user'
+    }
+    let name
+    let object
+    if (type === 'user') {
+      object = await Memer.ipc.fetchUser(id)
+      if (!object) {
+        name = 'not sure of the username...'
+      } else {
+        name = `${object.username}#${object.discriminator}`
+      }
+    } else {
+      object = await Memer.ipc.fetchGuild(id)
+      if (!object) {
+        name = 'not sure of the server name'
+      } else {
+        name = object.name
+      }
+    }
+    if (optionalBlock) {
+      Memer.db.createBlock(id)
+    }
+    if (optionalWipe) {
+      switch (type) {
+        case 'user':
+          await Memer.db.removeUser(id)
+          break
+        case 'guild':
+        case 'server':
+          await Memer.db.deletePls(id)
+          await Memer.db.deleteGuild(id)
+          break
+      }
+    }
+    const channel = Memer.config.spamReportChannel || '397477232240754698'
+    await Memer.bot.createMessage(channel, `The ${type} **${name}** (*${id}*) was blacklisted.\n**Reason**: ${reason}`)
   },
 
   paginate: (text, limit = 2000) => {

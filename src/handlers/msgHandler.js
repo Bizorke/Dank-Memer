@@ -56,10 +56,8 @@ exports.handleMeDaddy = async function (msg) {
   let { spam, lastCmd } = await this.db.getSpam(msg.author.id)
 
   if (spam > 1e4) {
-    await this.db.createBlock(msg.author.id)
-    await this.db.removeUser(msg.author.id)
-    const channel = this.config.spamReportChannel || '430419142458212362'
-    await this.bot.createMessage(channel, `${msg.author.username}#${msg.author.discriminator} ${msg.author.id}\nUser was forcefully removed for spamming over 10k times.`)
+    let reason = 'Blacklisted for spamming over 10,000 times.'
+    await this.punish(this, msg.author.id, 'user', reason)
     return
   }
 

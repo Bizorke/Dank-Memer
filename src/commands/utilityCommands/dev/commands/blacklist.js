@@ -1,21 +1,18 @@
 module.exports = {
-  help: 'bl <add/rem> <id>',
-  fn: async ({ Memer, msg, args }) => {
-    const ids = msg.mentions[0] ? msg.mentions.map(u => u.id) : args.slice(2).filter(arg => parseInt(arg))
-
-    if (
-      !args[0] || !args[1] ||
-      !['add', 'rem'].includes(args[0].toLowerCase())
-    ) {
-      return 'Argument error. Make sure your first argument is one of `add` or `remove`, your second an ID or a mention (ID\'s user only).'
+  help: 'bl <id> <reason>',
+  fn: async ({ Memer, msg }) => {
+    let [type, id, ...reason] = msg.args.args
+    if (!Number(id)) {
+      msg.channel.createMessage('Your first argument needs to be an id.')
     }
-
-    if (args[0].toLowerCase() === 'add') {
-      ids.forEach(id => Memer.db.createBlock(id, parseInt(args[1])))
-      return `Successfully blacklisted ${ids.join(', ')}.`
-    } else if (args[0].toLowerCase() === 'rem') {
-      ids.forEach(id => Memer.db.removeBlock(id))
-      return `Successfully unblacklisted ${ids.join(', ')}.`
+    if (!type) {
+      type = 'user'
     }
+    if (!reason || reason.length === 0) {
+      reason = `No reason given.\nBlacklisted by ${msg.author.username}`
+    } else {
+      reason = reason.join(' ') + `\nBlacklisted by ${msg.author.username}`
+    }
+    Memer.punish(Memer, id, type, reason, true, false)
   }
 }
