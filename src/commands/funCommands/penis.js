@@ -12,7 +12,7 @@ module.exports = new GenericCommand(
       )
     return {
       title: 'peepee size machine',
-      description: `${target}'s penis\n8${'='.repeat(Math.floor(Math.random() * (config.developers.includes(msg.author.id) ? 0 : 10)) + 1)}D`
+      description: `${target}'s penis\n8${'='.repeat(Math.floor(Math.random() * (config.devs.includes(msg.author.id) ? 0 : 10)) + 1)}D`
     }
   },
   {
