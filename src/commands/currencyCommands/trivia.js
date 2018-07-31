@@ -23,15 +23,15 @@ module.exports = new GenericCommand(
 
     switch (trivia.difficulty) {
       case 'easy':
-        time = 10 * 1000
+        time = 18 * 1000
         worth = 1
         break
       case 'medium':
-        time = 10 * 1000
+        time = 15 * 1000
         worth = 2
         break
       case 'hard':
-        time = 10 * 1000
+        time = 15 * 1000
         worth = 3
         break
     }
