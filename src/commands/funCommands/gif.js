@@ -5,6 +5,9 @@ module.exports = new GenericCommand(
   async ({ Memer, msg }) => {
     let search = encodeURIComponent(msg.args.args.join(' '))
     const data = await get(`https://api.giphy.com/v1/gifs/search?api_key=${Memer.config.gif}&q=${search}&limit=25&offset=0&rating=PG-13&lang=en`)
+
+    if (!data.body.data[0]) return 'rip, I can\'t find any images for that. try something else.'
+
     return {
       title: `First Result for "${decodeURIComponent(search)}" on GIPHY`,
       // description: 'Powered by [GIPHY](https://giphy.com/)',
