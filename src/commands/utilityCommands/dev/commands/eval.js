@@ -27,7 +27,7 @@ module.exports = {
     if (input.length + result.length > 994) {
       const res = await post('https://hastepaste.com/api/create')
         .set('Content-Type', 'application/x-www-form-urlencoded')
-        .send(`raw=false&text=${input}\n\n${result}`)
+        .send(`raw=false&ext=javascript&text=${encodeURIComponent(input + '\n\n' + result)}`)
         .catch(err => msg.channel.createMessage(err.message))
       return `Eval exceeds 1000 characters. View here: ${res.body}`
     } else {
