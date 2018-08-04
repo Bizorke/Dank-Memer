@@ -39,7 +39,7 @@ module.exports = new GenericCommand(
     }
 
     const maymay = await Memer.http.get('https://ronreiter-meme-generator.p.mashape.com/meme')
-      .query({ bottom: bottom.cleanContent, font: 'Impact', font_size: 35, meme, top: top.cleanContent })
+      .query({ bottom: encodeURIComponent(bottom.cleanContent), font: 'Impact', font_size: 35, meme, top: encodeURIComponent(top.cleanContent) })
       .set('X-Mashape-Key', Memer.config.mashape)
 
     await addCD()
