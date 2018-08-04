@@ -1,8 +1,7 @@
 const { GenericCommand } = require('../../models/')
-const snek = require('snekfetch')
 
 module.exports = new GenericCommand(
-  async ({ Memer, msg, args }) => {
+  async ({ Memer, args }) => {
     let reqURL
     let imageURL
     if (args[0].length === 6 && !args[0].includes(',')) {
@@ -14,7 +13,7 @@ module.exports = new GenericCommand(
     } else {
       return 'this is not a valid format!\nYou need to specify a hex (Example: `000000`) or RGB (Example: `100, 100, 100`) color for this command.'
     }
-    let req = await snek.get(reqURL)
+    let req = await Memer.http.get(reqURL)
     return {
       title: req.body.name.value,
       thumbnail: { url: imageURL },

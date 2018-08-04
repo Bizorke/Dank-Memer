@@ -15,7 +15,7 @@
 
 const config = require('./config.json')
 const { Master: Sharder } = require('eris-sharder')
-const { post } = require('snekfetch')
+const { post } = require('./utils/http')
 const r = require('rethinkdbdash')()
 const StatsD = require('node-dogstatsd').StatsD
 let s = new StatsD()

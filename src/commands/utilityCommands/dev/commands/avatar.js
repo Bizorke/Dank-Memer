@@ -7,10 +7,6 @@ module.exports = {
 }
 
 async function setAvatar (Memer, url) {
-  require('snekfetch').get(url).end((err, res) => {
-    if (err) {
-      throw err
-    }
-    Memer.bot.editSelf({ avatar: `data:${res.header['content-type']};base64,${res.body.toString('base64')}` })
-  })
+  const { body, headers } = await Memer.http.get(url)
+  Memer.bot.editSelf({ avatar: `data:${headers['content-type']};base64,${body.toString('base64')}` })
 }

@@ -1,5 +1,4 @@
 const { inspect } = require('util')
-const { post } = require('snekfetch')
 
 module.exports = {
   help: 'eval <script>',
@@ -25,7 +24,7 @@ module.exports = {
     }
 
     if (input.length + result.length > 994) {
-      const res = await post('https://hastepaste.com/api/create')
+      const res = await Memer.http.post('https://hastepaste.com/api/create')
         .set('Content-Type', 'application/x-www-form-urlencoded')
         .send(`raw=false&text=${input}\n\n${result}`)
         .catch(err => msg.channel.createMessage(err.message))

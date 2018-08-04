@@ -1,9 +1,8 @@
-const { get } = require('snekfetch')
 const { GenericCommand } = require('../../models')
 
 module.exports = new GenericCommand(
-  async ({ addCD }) => {
-    const data = await get('http://api.icndb.com/jokes/random')
+  async ({ Memer, addCD }) => {
+    const data = await Memer.http.get('http://api.icndb.com/jokes/random')
 
     await addCD()
     return {

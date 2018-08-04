@@ -1,8 +1,8 @@
-const sf = require('snekfetch')
+const { get } = require('../utils/http')
 const { constants, promises: fs } = require('fs')
 
 async function isOpus (url) {
-  const res = await sf.get(url)
+  const res = await get(url)
     .set('Range', 'bytes=0-35')
     .catch(() => ({})) // eslint-disable-line
 

@@ -1,5 +1,4 @@
 const { GenericCommand } = require('../models/')
-const { get } = require('snekfetch')
 
 const filters = {
   image: post => post.data.post_hint === 'image',
@@ -11,7 +10,7 @@ module.exports = class GenericRedditCommand {
     this.cmdProps = cmdProps
   }
 
-  async run ({ Memer, msg, args, addCD }) {
+  async run ({ Memer, msg, addCD }) {
     let res
 
     const cachedEntry = await Memer.redis.getAsync(this.cmdProps.endpoint)
@@ -20,7 +19,7 @@ module.exports = class GenericRedditCommand {
     if (cachedEntry) {
       res = cachedEntry
     } else {
-      res = await get(`https://www.reddit.com${this.cmdProps.endpoint}`)
+      res = await Memer.http.get(`https://www.reddit.com${this.cmdProps.endpoint}`)
         .then(res => res.body)
         .catch(() => null)
 
