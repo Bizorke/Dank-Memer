@@ -29,7 +29,7 @@ async function isOpus (url) {
 }
 
 async function getFileSize (url) {
-  const res = await sf.get(url)
+  const res = await get(url)
   return res.headers['content-length'] || 0
 }
 
@@ -40,7 +40,7 @@ function exists (path) {
 }
 
 async function saveAudioData (url, dir, file) {
-  const res = await sf.get(url)
+  const res = await get(url)
   await writeBuffer(dir, file, res.body)
 }
 
