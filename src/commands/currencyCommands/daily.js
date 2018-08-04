@@ -17,8 +17,9 @@ module.exports = new GenericCommand(
     }
 
     let coinsEarned = 25
+    const streakBonus = Math.round((0.02 * coinsEarned) * streak)
     if (streak > 1) {
-      coinsEarned = coinsEarned + Math.round((0.02 * coinsEarned) * streak)
+      coinsEarned = coinsEarned + streakBonus
     }
     await Memer.db.addPocket(msg.author.id, coinsEarned)
     await addCD()
@@ -27,7 +28,7 @@ module.exports = new GenericCommand(
       title: `Here are your daily coins, ${msg.author.username}`,
       description: `**${coinsEarned} coins** were placed in your pocket.\n\nYou can get another 25 coins by voting! ([Click Here](https://discordbots.org/bot/memes/vote))`,
       thumbnail: {url: 'http://www.dank-memer-is-lots-of.fun/coin.png'},
-      footer: {text: `Streak: ${streak} days (+${Math.round((0.02 * coinsEarned) * streak)} coins)`}
+      footer: {text: `Streak: ${streak} days (+${streakBonus} coins)`}
     }
   },
   {
