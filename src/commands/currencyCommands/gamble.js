@@ -24,9 +24,6 @@ module.exports = new GenericCommand(
         return 'You have to bet actual coins, dont try to break me.'
       }
     }
-    if (!Number.isInteger(Number(bet))) {
-      return 'AHA! You cannot break me anymore! Must be a whole number, dumb butt.'
-    }
     if (coins === 0) {
       return 'You have no coins.'
     }
