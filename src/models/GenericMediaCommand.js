@@ -1,5 +1,3 @@
-const { get } = require('snekfetch')
-
 const { GenericCommand } = require('.')
 
 module.exports = class GenericMediaCommand {
@@ -13,7 +11,7 @@ module.exports = class GenericMediaCommand {
       return `**WOAH** you need to vote at https://discordbots.org/bot/memes/vote to use this command.\n${this.props.vMessage}`
     }
 
-    const data = await get(this.props.reqURL, this.props.tokenKey && {
+    const data = await Memer.http.get(this.props.reqURL, this.props.tokenKey && {
       headers: {
         Authorization: Memer.config[this.props.tokenKey],
         Key: Memer.config[this.props.tokenKey]

@@ -1,9 +1,9 @@
 const { GenericCommand } = require('../../models/')
-const snek = require('snekfetch')
 
 module.exports = new GenericCommand(
   async ({ Memer, msg, addCD }) => {
-    let data = await snek.get('https://opentdb.com/api.php?amount=1&type=multiple&encode=url3986')
+    let data = await Memer.http.get('https://opentdb.com/api.php')
+      .query({ amount: 1, type: 'multiple', encode: 'url3986' })
     let trivia = data.body.results[0]
 
     let answers = trivia.incorrect_answers

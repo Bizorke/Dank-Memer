@@ -1,6 +1,5 @@
 const { readdirSync } = require('fs')
 const { join } = require('path')
-const { get } = require('snekfetch')
 const { Base } = global.memeBase || require('eris-sharder')
 const { StatsD } = require('node-dogstatsd')
 
@@ -16,6 +15,7 @@ class Memer extends Base {
     this.config = require('./config.json')
     this.r = require('rethinkdbdash')()
     this.db = require('./utils/dbFunctions.js')(this)
+    this.http = require('./utils/http')
     this.ddog = new StatsD()
     this.cmds = []
     this.tags = {}
@@ -73,7 +73,7 @@ class Memer extends Base {
     this.ddog.increment('function.ready')
 
     this.mentionRX = new RegExp(`^<@!*${this.bot.user.id}>`)
-    this.mockIMG = await get('https://pbs.twimg.com/media/DAU-ZPHUIAATuNy.jpg').then(r => r.body)
+    this.mockIMG = await this.http.get('https://pbs.twimg.com/media/DAU-ZPHUIAATuNy.jpg').then(r => r.body)
   }
 
   createIPC () {

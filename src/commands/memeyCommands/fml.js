@@ -1,17 +1,16 @@
 const { GenericCommand } = require('../../models/')
-const { get } = require('snekfetch')
 const cheerio = require('cheerio')
 
 const indexes = {} // TODO: Move to a better place?
 
 module.exports = new GenericCommand(
-  async ({ msg, addCD }) => {
+  async ({ Memer, msg, addCD }) => {
     await addCD()
 
     if (!indexes[msg.channel.guild.id] || indexes[msg.channel.guild.id].length === 0) {
-      const data = await get('http://www.fmylife.com/random')
+      const data = await Memer.http.get('http://www.fmylife.com/random')
 
-      if (!data || data.status !== 200) {
+      if (!data || !data.ok) {
         return 'FML, couldn\'t find anything'
       }
 

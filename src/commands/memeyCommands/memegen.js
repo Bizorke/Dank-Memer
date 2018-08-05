@@ -1,5 +1,4 @@
 const { GenericCommand } = require('../../models/')
-const { get } = require('snekfetch')
 const memes = require('../../assets/arrays/memes.json')
 
 module.exports = new GenericCommand(
@@ -39,7 +38,8 @@ module.exports = new GenericCommand(
       return 'idk, whatever you say when someone sends an image/embed'
     }
 
-    const maymay = await get(`https://ronreiter-meme-generator.p.mashape.com/meme?bottom=${bottom.cleanContent}&font=Impact&font_size=35&meme=${meme}&top=${top.cleanContent}`)
+    const maymay = await Memer.http.get('https://ronreiter-meme-generator.p.mashape.com/meme')
+      .query({ bottom: encodeURIComponent(bottom.cleanContent), font: 'Impact', font_size: 35, meme, top: encodeURIComponent(top.cleanContent) })
       .set('X-Mashape-Key', Memer.config.mashape)
 
     await addCD()

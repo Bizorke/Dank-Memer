@@ -31,7 +31,6 @@
     "programmatic-repl": "^1.1.4",
     "redis": "^2.8.0",
     "rethinkdbdash": "^2.3.31",
-    "snekfetch": "^3.6.4",
     "standard": "^11.0.1",
     "tubesearch": "^1.0.4"
   }

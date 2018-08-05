@@ -1,9 +1,8 @@
 const { GenericCommand } = require('../../models/')
-const snek = require('snekfetch')
 
 module.exports = new GenericCommand(
-  async ({ Memer, msg, addCD }) => {
-    let data = await snek.get('https://www.carbonitex.net/discord/api/listedbots')
+  async ({ Memer }) => {
+    let data = await Memer.http.get('https://www.carbonitex.net/discord/api/listedbots')
     let list = data.body.sort(function (a, b) {
       return b.servercount - a.servercount
     })

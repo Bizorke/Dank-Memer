@@ -1,4 +1,3 @@
-const { get } = require('snekfetch')
 const { GenericCommand } = require('.')
 
 class GenericImageCommand {
@@ -14,7 +13,7 @@ class GenericImageCommand {
       return
     }
 
-    const data = await get(this.requestURL.replace('$ENDPOINT', this.cmdProps.triggers[0]))
+    const data = await Memer.http.get(this.requestURL.replace('$ENDPOINT', this.cmdProps.triggers[0]))
       .set('Authorization', Memer.config.imgenKey)
       .query(datasrc)
 
