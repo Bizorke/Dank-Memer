@@ -15,6 +15,6 @@ module.exports = new GenericCommand(
     donorCD: 2592e6,
     donorOnly: true,
     cooldownMessage: 'You have to wait ',
-    description: 'Redeem your monthly donator rewards'
+    description: 'redeem your cool donor reward monthly'
   }
 )
