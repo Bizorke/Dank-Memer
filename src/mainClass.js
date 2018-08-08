@@ -45,7 +45,7 @@ class Memer extends Base {
   }
 
   async launch () {
-    this.redis = await require('./utils/redisClient.js')()
+    this.redis = await require('./utils/redisClient.js')(this.config.redis)
 
     this.loadCommands()
     this.createIPC()
@@ -113,7 +113,7 @@ class Memer extends Base {
   async loadUtils () {
     this.log = require('./utils/logger.js')
     this.db = require('./utils/dbFunctions.js')(this)
-    this.redis = await require('./utils/redisClient.js')()
+    this.redis = await require('./utils/redisClient.js')(this.config.redis)
     Object.assign(this, require('./utils/misc.js'))
   }
 
