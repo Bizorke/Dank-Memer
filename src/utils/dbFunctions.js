@@ -178,9 +178,6 @@ module.exports = Bot => ({
     if (!guild) {
       return this.initPls(guildID)
     }
-    if (!user) {
-      return this.initUser(userID)
-    }
     guild.pls++
     user.pls++
 
@@ -227,10 +224,19 @@ module.exports = Bot => ({
       .run()
   },
 
-  initUser: function initUser (id) {
+  topUsers: function topUsers () {
     return Bot.r.table('users')
-      .insert({
-        id, // User id/rethink id
+      .orderBy({index: Bot.r.desc('pls')})
+      .limit(15) // TODO: Make 10 along with other (top) functions
+      .run()
+  },
+
+  getUser: async function getUser (userID) {
+    const user = await Bot.r.table('users').get(userID)
+
+    if (!user) {
+      await Bot.r.table('users').insert({
+        id: userID, // User id/rethink id
         pls: 1, // Total commands ran
         lastCmd: Date.now(), // Last command time
         lastRan: 'nothing', // Last command ran
@@ -260,33 +266,10 @@ module.exports = Bot => ({
         godMode: false, // No cooldowns, only for select few
         vip: false, // Same cooldowns as donors without paying
         upvoted: false // DBL voter status
-      }, { conflict: 'update', returnChanges: true })
-      .run()
-  },
-
-  topUsers: function topUsers () {
-    return Bot.r.table('users')
-      .orderBy({index: Bot.r.desc('pls')})
-      .limit(15) // TODO: Make 10 along with other (top) functions
-      .run()
-  },
-
-  getUser: async function getUser (userID) {
-    let res = await Bot.r.table('users')
-      .get(userID)
-      .run()
-    if (!res) {
-      res = await this.initUser(userID)
-      if (res.changes[0]) {
-        res = res.changes[0].new_val
-      }
-      return res
+      }).run()
     }
-    if (!res.lastCmd || !res.spam) {
-      res.spam = 0
-      res.lastCmd = Date.now()
-    }
-    return res
+
+    return await Bot.r.table('users').get(userID).run()
   },
 
   removeUser: function removeUser (userID) {
@@ -312,7 +295,7 @@ module.exports = Bot => ({
       .insert(res, { conflict: 'update' })
   },
 
-  addBank: async function addPocket (id, amount) {
+  addBank: async function addBank (id, amount) {
     let res = await this.getUser(id)
     res.bank += amount
 
@@ -395,12 +378,13 @@ module.exports = Bot => ({
       .run()
   },
 
-  resetStreak: function removeStreak (id) {
+  resetStreak: async function resetStreak (id) {
     const streak = {
       time: Date.now(),
       streak: 1
     }
-    return Bot.r.table('users')
+
+    await Bot.r.table('users')
       .insert({ id, streak }, { conflict: 'update' })
       .run()
   },
