@@ -43,7 +43,7 @@ const master = new Sharder(config.token, '/mainClass.js', {
   },
   shards: config.shardCount || 1,
   statsInterval: 1e4,
-  clusters: config.clusters || undefined
+  clusters: Number(process.env.DANK_CLUSTER_COUNT) || undefined
 })
 
 master.on('stats', res => {

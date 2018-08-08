@@ -25,8 +25,8 @@ module.exports = new GenericCommand(
     } else {
       let members = msg.channel.guild.members.map((m) => m.id)
       let topMembers = await Memer.r.table('users')
-        .filter((user) => Memer.r.expr(members).contains(user('id')))
         .orderBy(Memer.r.desc('pocket'))
+        .filter((user) => Memer.r.expr(members).contains(user('id')))
         .limit(10)
         .run()
       topMembers = await Promise.all(topMembers.map(async g => Object.assign(await Memer.ipc.fetchUser(g.id), { pocket: g.pocket })))

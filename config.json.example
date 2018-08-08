@@ -27,6 +27,5 @@
   },
   "featureRequestChannel": optional string,
   "spamReportChannel": optional string,
-  "errorChannel": optional string,
-  "clusters": 1 (use this in develop only!)
+  "errorChannel": optional string
 }
