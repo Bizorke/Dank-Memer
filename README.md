@@ -13,3 +13,22 @@ Redis:
 # pm2 start redis-server -- /etc/redis.conf
 # pm2 delete redis-server
 ```
+RethinkDB Tables:
+```
+automeme
+blocked
+cooldowns
+donors
+guildUsage
+   pls
+guilds
+stats
+tags
+   guild_id
+users
+   bank
+   donor
+   pls
+   pocket
+   spam
+```
