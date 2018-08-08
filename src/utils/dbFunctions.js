@@ -1,22 +1,7 @@
 module.exports = Bot => ({
-  createGuild: async function createGuild (guildID) {
-    await Bot.r.table('guilds')
-      .insert({
-        id: guildID,
-        prefix: Bot.config.defaultPrefix,
-        modlog: '',
-        disabledCategories: [],
-        disabledCommands: []
-      })
-      .run()
-    return this.getGuild(guildID)
-  },
-
   updateModlog: async function updateModlog (guildID, channelID) {
-    let res = await this.getGuild(guildID)
-    if (!res) {
-      res = await this.createGuild(guildID)
-    }
+    const res = await this.getGuild(guildID)
+
     if (channelID === 0) {
       res.modlog = 0
     }
@@ -27,10 +12,8 @@ module.exports = Bot => ({
   },
 
   updateDevUpdates: async function updateModlog (guildID, channelID) {
-    let res = await this.getGuild(guildID)
-    if (!res) {
-      res = await this.createGuild(guildID)
-    }
+    const res = await this.getGuild(guildID)
+
     if (channelID === 0) {
       res.updates = 0
     }
@@ -41,10 +24,8 @@ module.exports = Bot => ({
   },
 
   fetchDevUpdates: async function fetchModlog (guildID) {
-    let res = await this.getGuild(guildID)
-    if (!res) {
-      res = await this.createGuild(guildID)
-    }
+    const res = await this.getGuild(guildID)
+
     let updates
     if (!res.updates) {
       res.updates = 0
@@ -61,10 +42,8 @@ module.exports = Bot => ({
   },
 
   fetchModlog: async function fetchModlog (guildID) {
-    let res = await this.getGuild(guildID)
-    if (!res) {
-      res = await this.createGuild(guildID)
-    }
+    const res = await this.getGuild(guildID)
+
     let modlog
     if (!res.modlog) {
       res.modlog = 0
@@ -83,6 +62,13 @@ module.exports = Bot => ({
   getGuild: async function getGuild (guildID) {
     return Bot.r.table('guilds')
       .get(guildID)
+      .default({
+        id: guildID,
+        prefix: Bot.config.defaultPrefix,
+        modlog: '',
+        disabledCategories: [],
+        disabledCommands: []
+      })
       .run()
   },
 
