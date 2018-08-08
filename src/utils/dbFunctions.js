@@ -232,10 +232,10 @@ module.exports = Bot => ({
   },
 
   getUser: async function getUser (userID) {
-    const user = await Bot.r.table('users').get(userID)
+    let user = await Bot.r.table('users').get(userID)
 
     if (!user) {
-      await Bot.r.table('users').insert({
+      user = (await Bot.r.table('users').insert({
         id: userID, // User id/rethink id
         pls: 1, // Total commands ran
         lastCmd: Date.now(), // Last command time
@@ -266,10 +266,12 @@ module.exports = Bot => ({
         godMode: false, // No cooldowns, only for select few
         vip: false, // Same cooldowns as donors without paying
         upvoted: false // DBL voter status
-      }).run()
+      }, {
+        returnChanges: true
+      }).run()).changes[0].new_val
     }
 
-    return await Bot.r.table('users').get(userID).run()
+    return user
   },
 
   removeUser: function removeUser (userID) {

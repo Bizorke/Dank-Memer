@@ -71,7 +71,7 @@ exports.handleMeDaddy = async function (msg) {
   this.ddog.increment(`category.${command.category}`, 1, ['tag:one'])
   this.ddog.increment(`cmd.${command.cmdProps.triggers[0]}`, 1, ['tag:two'])
 
-  this.db.addPls(msg.channel.guild.id, msg.author.id)
+  await this.db.addPls(msg.channel.guild.id, msg.author.id)
   if (msg.member.roles.some(id => msg.channel.guild.roles.get(id).name === 'no memes for you')) {
     this.ddog.increment('role.blocked')
     return
