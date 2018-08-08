@@ -169,7 +169,7 @@ module.exports = Bot => ({
   },
 
   checkBlocked: function checkBlocked (guildID, authorID = 1) {
-    return Bot.r.table('blocked').filter(u => u('id').eq(guildID) || u('id').eq(authorID)).run()
+    return Bot.r.table('blocked').filter(u => u('id').eq(guildID) || u('id').eq(authorID)).count().gt(0).run()
   },
 
   addPls: async function addPls (guildID, userID) {
