@@ -230,7 +230,7 @@ module.exports = Bot => ({
   initUser: function initUser (id) {
     return Bot.r.table('users')
       .insert({
-        id: id, // User id/rethink id
+        id, // User id/rethink id
         pls: 1, // Total commands ran
         lastCmd: Date.now(), // Last command time
         lastRan: 'nothing', // Last command ran
