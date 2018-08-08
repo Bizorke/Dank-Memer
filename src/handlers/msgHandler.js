@@ -53,7 +53,7 @@ exports.handleMeDaddy = async function (msg) {
     return msg.channel.createMessage('This command is for donors only. You can find more information by using `pls donate` if you are interested.')
   }
 
-  let { spam, lastCmd } = await this.db.getSpam(msg.author.id)
+  let { spam, lastCmd } = await this.db.getUser(msg.author.id)
 
   if (spam > 1e4) {
     let reason = 'Blacklisted for spamming over 10,000 times.'
