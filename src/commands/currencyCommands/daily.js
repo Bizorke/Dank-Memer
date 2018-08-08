@@ -5,7 +5,7 @@ module.exports = new GenericCommand(
     const userStreak = await Memer.db.getStreak(msg.author.id)
     let streak = ~~userStreak.streak
 
-    if (Date.now() - streak.time > 172800000) { // 24 hours, 2 days because one-day cooldown
+    if (Date.now() - userStreak.time > 172800000) { // 24 hours, 2 days because one-day cooldown
       await Memer.db.resetStreak(msg.author.id)
       streak = 1
     } else {
