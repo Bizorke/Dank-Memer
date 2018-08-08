@@ -1,8 +1,8 @@
 const { promisify } = require('util')
 const redis = require('redis')
 
-module.exports = () => new Promise(resolve => {
-  const client = redis.createClient({ host: '127.0.0.1' })
+module.exports = (hostAddr) => new Promise(resolve => {
+  const client = redis.createClient({ host: hostAddr || '127.0.0.1' })
 
   for (const prop in client) {
     if (typeof client[prop] === 'function') {
