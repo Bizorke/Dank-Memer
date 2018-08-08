@@ -59,7 +59,7 @@ module.exports = Bot => ({
     return modlog
   },
 
-  getGuild: async function getGuild (guildID) {
+  getGuild: function getGuild (guildID) {
     return Bot.r.table('guilds')
       .get(guildID)
       .default({
@@ -72,13 +72,13 @@ module.exports = Bot => ({
       .run()
   },
 
-  updateGuild: async function updateGuild (guildEntry) {
+  updateGuild: function updateGuild (guildEntry) {
     return Bot.r.table('guilds')
       .insert(guildEntry, { conflict: 'update' })
       .run()
   },
 
-  deleteGuild: async function deleteGuild (guildID) {
+  deleteGuild: function deleteGuild (guildID) {
     return Bot.r.table('guilds')
       .get(guildID)
       .delete()
@@ -130,13 +130,13 @@ module.exports = Bot => ({
       .insert({ id: ownerID, cooldowns: [ { [command]: Date.now() + cooldown } ] })
   },
 
-  getCooldowns: async function getCooldowns (ownerID) {
+  getCooldowns: function getCooldowns (ownerID) {
     return Bot.r.table('cooldowns')
       .get(ownerID)
       .run()
   },
 
-  deleteCooldowns: async function deleteCooldowns (ownerID) {
+  deleteCooldowns: function deleteCooldowns (ownerID) {
     return Bot.r.table('cooldowns')
       .get(ownerID)
       .delete()
@@ -155,24 +155,21 @@ module.exports = Bot => ({
     return profile.cooldowns.find(item => item[command])[command]
   },
 
-  createBlock: async function createBlock (id) {
+  createBlock: function createBlock (id) {
     return Bot.r.table('blocked')
       .insert({ id })
       .run()
   },
 
-  removeBlock: async function removeBlock (id) {
+  removeBlock: function removeBlock (id) {
     return Bot.r.table('blocked')
       .get(id)
       .delete()
       .run()
   },
 
-  checkBlocked: async function checkBlocked (guildID, authorID = 1) {
-    const res = await Bot.r.table('blocked').get(guildID).run() ||
-                await Bot.r.table('blocked').get(authorID).run()
-
-    return Boolean(res)
+  checkBlocked: function checkBlocked (guildID, authorID = 1) {
+    return Bot.r.table('blocked').filter(u => u('id').eq(guildID) || u('id').eq(authorID)).run()
   },
 
   addPls: async function addPls (guildID, userID) {
@@ -196,7 +193,7 @@ module.exports = Bot => ({
       .run()
   },
 
-  initPls: async function initPls (guildID) {
+  initPls: function initPls (guildID) {
     return Bot.r.table('guildUsage')
       .insert({
         id: guildID,
@@ -205,7 +202,7 @@ module.exports = Bot => ({
       .run()
   },
 
-  deletePls: async function deletePls (guildID) {
+  deletePls: function deletePls (guildID) {
     return Bot.r.table('guildUsage')
       .get(guildID)
       .delete()
@@ -223,14 +220,14 @@ module.exports = Bot => ({
     return res
   },
 
-  topPls: async function topPls () {
+  topPls: function topPls () {
     return Bot.r.table('guildUsage')
       .orderBy({index: Bot.r.desc('pls')})
       .limit(10)
       .run()
   },
 
-  initUser: async function initUser (id) {
+  initUser: function initUser (id) {
     return Bot.r.table('users')
       .insert({
         id: id, // User id/rethink id
@@ -267,7 +264,7 @@ module.exports = Bot => ({
       .run()
   },
 
-  topUsers: async function topUsers () {
+  topUsers: function topUsers () {
     return Bot.r.table('users')
       .orderBy({index: Bot.r.desc('pls')})
       .limit(15) // TODO: Make 10 along with other (top) functions
@@ -292,16 +289,18 @@ module.exports = Bot => ({
     return res
   },
 
-  removeUser: async function removeUser (userID) {
+  removeUser: function removeUser (userID) {
     return Bot.r.table('users')
       .get(userID)
       .delete()
       .run()
   },
 
-  checkVoter: async function checkVoter (id) {
-    let res = await this.getUser(id)
-    return res.upvoted
+  checkVoter: function checkVoter (id) {
+    return Bot.r.table('users')
+      .get(id)('upvoted')
+      .default(false)
+      .run()
   },
 
   addPocket: async function addPocket (id, amount) {
@@ -321,7 +320,7 @@ module.exports = Bot => ({
       .insert(res, { conflict: 'update' })
   },
 
-  topPocket: async function topPocket () {
+  topPocket: function topPocket () {
     return Bot.r.table('users')
       .orderBy({index: Bot.r.desc('pocket')})
       .limit(10)
@@ -355,10 +354,7 @@ module.exports = Bot => ({
   },
 
   addStreak: async function addStreak (id) {
-    let { streak } = await this.getStreak(id)
-    if (!streak) {
-      streak = {}
-    }
+    const streak = await this.getStreak(id)
 
     streak.time = Date.now()
     streak.streak = ~~streak.streak + 1
@@ -367,64 +363,71 @@ module.exports = Bot => ({
   },
 
   addSpam: async function addSpam (id) {
-    let { spam } = await this.getSpam(id)
-    spam = ~~spam + 1
-
+    const spam = (await this.getSpam(id)) + 1
     await Bot.r.table('users').insert({ id, spam }, { conflict: 'update' }).run()
   },
 
-  topSpam: async function topSpam () {
+  topSpam: function topSpam () {
     return Bot.r.table('users')
       .orderBy({index: Bot.r.desc('spam')})
       .limit(10)
       .run()
   },
 
-  addCmd: async function addCmd (id) {
-    let lastCmd = Date.now()
-    await Bot.r.table('users').insert({ id, lastCmd }, { conflict: 'update' }).run()
+  addCmd: function addCmd (id) {
+    const lastCmd = Date.now()
+    return Bot.r.table('users')
+      .insert({ id, lastCmd }, { conflict: 'update' })
+      .run()
   },
 
-  getSpam: async function getSpam (id) {
-    return this.getUser(id)
+  getSpam: function getSpam (id) {
+    return Bot.r.table('users')
+      .get(id)('spam')
+      .default(0)
+      .run()
   },
 
-  getStreak: async function getStreak (id) {
-    return this.getUser(id)
+  getStreak: function getStreak (id) {
+    return Bot.r.table('users')
+      .get(id)('streak')
+      .default({})
+      .run()
   },
 
-  resetStreak: async function removeStreak (id) {
+  resetStreak: function removeStreak (id) {
     const streak = {
       time: Date.now(),
       streak: 1
     }
-    await Bot.r.table('users').insert({ id, streak }, { conflict: 'update' }).run()
+    return Bot.r.table('users')
+      .insert({ id, streak }, { conflict: 'update' })
+      .run()
   },
 
-  addDonor: async function addDonor (id, donorAmount) {
+  addDonor: function addDonor (id, donorAmount) {
     return Bot.r.table('donors')
       .insert({ id, donorAmount }, { conflict: 'update' })
       .run()
   },
 
-  removeDonor: async function removeDonor (id) {
+  removeDonor: function removeDonor (id) {
     return Bot.r.table('donors')
       .get(id)
       .delete()
       .run()
   },
 
-  checkDonor: async function checkDonor (id) {
-    const res = await Bot.r.table('donors')
-      .get(id)
+  checkDonor: function checkDonor (id) {
+    return Bot.r.table('donors')
+      .get(id)('donorAmount')
+      .default(false)
       .run()
-    return res ? res.donorAmount : false
   },
 
-  getStats: async function getStats () {
-    const res = await Bot.r.table('stats')
-      .get(1)
+  getStats: function getStats () {
+    return Bot.r.table('stats')
+      .get(1)('stats')
       .run()
-    return res.stats
   }
 })
