@@ -1,16 +1,8 @@
-const { GenericCommand } = require('../../models/')
+const { GenericModerationCommand } = require('../../models/')
 
-module.exports = new GenericCommand(
+module.exports = new GenericModerationCommand(
   async ({ Memer, msg, args, addCD }) => {
-    let perms = msg.channel.permissionsOf(msg.author.id)
     let reason
-    const permissions = msg.channel.permissionsOf(Memer.bot.user.id)
-    if (!permissions.has('banMembers')) {
-      return 'oi, shouldnt I have ban permissions before I try to ban someone?'
-    }
-    if (!perms.has('banMembers')) {
-      return 'lol you do not have ban members perms and you know it'
-    }
     let user = msg.args.resolveUser()
     if (!user) {
       return 'hey dumb, give me a user to ban via tagging them or id'
@@ -53,6 +45,6 @@ module.exports = new GenericCommand(
     triggers: ['ban', 'hackban'],
     usage: '{command}',
     description: 'Warning, this will ban your target if the bot has the correct permissions',
-    perms: []
+    modPerms: ['banMembers']
   }
 )

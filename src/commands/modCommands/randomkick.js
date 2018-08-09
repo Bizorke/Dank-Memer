@@ -1,6 +1,6 @@
-const { GenericCommand } = require('../../models/')
+const { GenericModerationCommand } = require('../../models/')
 
-module.exports = new GenericCommand(
+module.exports = new GenericModerationCommand(
   async ({ Memer, msg, args, addCD }) => {
     let perms = msg.channel.permissionsOf(msg.author.id)
     if (!perms.has('kickMembers')) {
@@ -34,7 +34,8 @@ module.exports = new GenericCommand(
     triggers: ['randomkick', 'kickroulette'],
     usage: '{command}',
     description: 'Warning, this will kick a random person.',
-    perms: ['kickMembers', 'embedLinks']
+    perms: ['kickMembers', 'embedLinks'],
+    modPerms: ['kickMembers']
   }
 )
 

@@ -1,16 +1,8 @@
-const { GenericCommand } = require('../../models/')
+const { GenericModerationCommand } = require('../../models/')
 
-module.exports = new GenericCommand(
+module.exports = new GenericModerationCommand(
   async ({ Memer, msg, args, addCD }) => {
-    let perms = msg.channel.permissionsOf(msg.author.id)
     let reason
-    const permissions = msg.channel.permissionsOf(Memer.bot.user.id)
-    if (!permissions.has('kickMembers')) {
-      return 'oi, shouldnt I have kick permissions before I can kick someone?'
-    }
-    if (!perms.has('kickMembers')) {
-      return 'lol you do not have kick members perms and you know it'
-    }
     let user = msg.args.resolveUser()
     if (!user) {
       return 'hey dumb, give me a user to kick via tagging them or id'
@@ -51,6 +43,6 @@ module.exports = new GenericCommand(
     triggers: ['kick', 'boot'],
     usage: '{command}',
     description: 'Warning, this will kick your target if the bot has the correct permissions',
-    perms: []
+    modPerms: ['kickMembers']
   }
 )

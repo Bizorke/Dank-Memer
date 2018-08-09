@@ -1,11 +1,7 @@
-const { GenericCommand } = require('../../models/')
+const { GenericModerationCommand } = require('../../models/')
 
-module.exports = new GenericCommand(
+module.exports = new GenericModerationCommand(
   async ({ Memer, msg, args, addCD }) => {
-    let perms = msg.channel.permissionsOf(msg.author.id)
-    if (!perms.has('banMembers')) {
-      return 'lol you do not have ban members perms and you know it'
-    }
     if (msg.channel.guild.memberCount < 3) {
       return 'hey this will not work with just the two of us'
     }
@@ -34,7 +30,8 @@ module.exports = new GenericCommand(
     triggers: ['randomban', 'banroulette'],
     usage: '{command}',
     description: 'Warning, this will ban a random person.',
-    perms: ['banMembers', 'embedLinks']
+    perms: ['banMembers', 'embedLinks'],
+    modPerms: ['banMembers']
   }
 )
 
