@@ -6,7 +6,7 @@ module.exports = new GenericCommand(
       return 'You are not authorized to use this command. You must have `Manage Server` to change the prefix.'
     }
 
-    const gConfig = await Memer.db.getGuild(msg.channel.guild.id) || await Memer.db.createGuild(msg.channel.guild.id)
+    const gConfig = await Memer.db.getGuild(msg.channel.guild.id)
 
     if (!args[0]) {
       return `What do you want your new prefix to be?\n\nExample: \`${gConfig.prefix} prefix pepe\`` // please think of a better example..

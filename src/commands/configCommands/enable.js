@@ -6,7 +6,7 @@ module.exports = new GenericCommand(
       return 'You are not authorized to use this command. You must have `Manage Server` to enable commands.'
     }
 
-    const gConfig = await Memer.db.getGuild(msg.channel.guild.id) || await Memer.db.createGuild(msg.channel.guild.id)
+    const gConfig = await Memer.db.getGuild(msg.channel.guild.id)
 
     args = Memer.removeDuplicates(args
       .map(cmd => {

@@ -60,7 +60,6 @@ class GenericImageCommand {
 
           user = parsedUser || msg.channel.guild.shard.client.user
           user = (!parsedUser2 && parsedUser) ? msg.author : user
-          user = parsedUser2 ? parsedUser : user
 
           user2 = parsedUser2 || parsedUser || msg.author
 

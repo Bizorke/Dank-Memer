@@ -53,7 +53,7 @@ exports.handleMeDaddy = async function (msg) {
     return msg.channel.createMessage('This command is for donors only. You can find more information by using `pls donate` if you are interested.')
   }
 
-  let { spam, lastCmd } = await this.db.getSpam(msg.author.id)
+  let { spam, lastCmd } = await this.db.getUser(msg.author.id)
 
   if (spam > 1e4) {
     let reason = 'Blacklisted for spamming over 10,000 times.'
@@ -71,7 +71,7 @@ exports.handleMeDaddy = async function (msg) {
   this.ddog.increment(`category.${command.category}`, 1, ['tag:one'])
   this.ddog.increment(`cmd.${command.cmdProps.triggers[0]}`, 1, ['tag:two'])
 
-  this.db.addPls(msg.channel.guild.id, msg.author.id)
+  await this.db.addPls(msg.channel.guild.id, msg.author.id)
   if (msg.member.roles.some(id => msg.channel.guild.roles.get(id).name === 'no memes for you')) {
     this.ddog.increment('role.blocked')
     return
