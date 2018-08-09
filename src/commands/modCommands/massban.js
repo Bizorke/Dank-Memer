@@ -3,22 +3,15 @@ const { GenericModerationCommand } = require('../../models/')
 module.exports = new GenericModerationCommand(
   async ({ Memer, msg, args, addCD }) => {
     let reason
-    let users = []
-    let ids = msg.args.args.match(/[0-9]{15,21}/g)
-    for (let userid of ids) {
-      if (userid === msg.channel.guild.ownerID) {
+    let users = msg.args.resolveUsers()
+    for (let user of users) {
+      if (user.id === msg.channel.guild.ownerID) {
         return 'do you really think I can ban the server owner? Learn how to discord, thanks'
       }
-      if (userid === Memer.bot.user.id) {
+      if (user.id === Memer.bot.user.id) {
         return 'not gonna ban myself, thanks'
       }
-      let user = msg.channel.guild.members.get(userid)
-      if (!user) {
-        continue
-      }
-      users.push(user.user)
     }
-
     if (!users) {
       return 'hey dumb, give me a user to ban via tagging them or id'
     }
@@ -36,29 +29,23 @@ module.exports = new GenericModerationCommand(
 
     await addCD()
     let bannedUsers = []
-    let failed = 0
-    banMember()
-    async function banMember () {
-      let modlog = await Memer.db.fetchModlog(msg.channel.guild.id)
-      let banned = users.shift()
+    let modlog = await Memer.db.fetchModlog(msg.channel.guild.id)
+    for (let banned in users) {
+      await Memer.sleep(1000)
       const hahayes = `${banned.username}#${banned.discriminator}`
       Memer.bot.banGuildMember(msg.channel.guild.id, banned.id, 1, `${reason} | banned by ${msg.author.username}`)
-        .then(async () => {
+        .then(() => {
+          bannedUsers.push(banned)
           if (modlog) {
             Memer.bot.createMessage(modlog, `**${hahayes}** was banned by **${msg.author.username}#${msg.author.discriminator}**\nReason: *${reason}*`)
           }
-          bannedUsers.push(banned)
-          if (users.length > 1) {
-            await Memer.sleep(2000)
-            return banMember()
-          }
         })
         .catch((err) => {
-          failed++
           throw err
         })
       msg.channel.createMessage(`\`${bannedUsers.map(m => `**${m.username}#${m.discriminator}**`).join(', ')}\` were banned, good fricken riddance`)
-      if (failed) {
+      if (bannedUsers < users) {
+        let failed = users.length - bannedUsers.length
         msg.channel.createMessage(`I was unable to ban **${failed}** other ${failed === 1 ? 'person' : 'people'}. Check that they don't have a higher role than me and try again.`)
       }
     }
