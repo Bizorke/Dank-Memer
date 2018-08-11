@@ -38,7 +38,7 @@ module.exports = new GenericModerationCommand(
     }
 
     await Promise.all(promises)
-    msg.channel.createMessage(`Finished renaming ${members.length - failed} people to ${!nickname ? 'their username' : `**${nickname}**`}.`)
+    msg.channel.createMessage(`Finished renaming ${members.length - failed} people to ${!nickname ? 'their stinky username' : `**${nickname}**`}.`)
     if (failed) {
       return `I failed to rename ${failed} people, possibly due to permissions.`
     }
