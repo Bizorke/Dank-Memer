@@ -41,7 +41,7 @@ module.exports = new GenericModerationCommand(
   },
   {
     triggers: ['kick', 'boot'],
-    usage: '{command}',
+    usage: '{command} [user] [reason]',
     description: 'Warning, this will kick your target if the bot has the correct permissions',
     modPerms: ['kickMembers']
   }

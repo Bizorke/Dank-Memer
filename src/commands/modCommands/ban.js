@@ -43,7 +43,7 @@ module.exports = new GenericModerationCommand(
   },
   {
     triggers: ['ban', 'hackban'],
-    usage: '{command}',
+    usage: '{command} [user] [reason]',
     description: 'Warning, this will ban your target if the bot has the correct permissions',
     modPerms: ['banMembers']
   }
