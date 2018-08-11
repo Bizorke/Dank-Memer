@@ -15,14 +15,14 @@ module.exports = new GenericModerationCommand(
       msg.channel.createMessage('what name do you want to give to everyone? You can type `reset` to remove everyone\'s nickname if they have one. (respond in 30s)')
       const prompt = await Memer.MessageCollector.awaitMessage(msg.channel.id, msg.author.id, 30e3)
       if (prompt) {
-        if (prompt.content.toLowerCase() === 'reset') {
-          nickname = ''
-        } else {
-          nickname = prompt.content
-        }
+        nickname = prompt.content
       } else {
         return 'Ok I guess we\'re not renaming anyone then'
       }
+    }
+
+    if (nickname.toLowerCase() === 'reset') {
+      nickname = ''
     }
 
     await addCD()
@@ -38,7 +38,7 @@ module.exports = new GenericModerationCommand(
     }
 
     await Promise.all(promises)
-    msg.channel.createMessage(`Finished renaming ${members.length - failed} people to "**${nickname}**".`)
+    msg.channel.createMessage(`Finished renaming ${members.length - failed} people to ${!nickname ? 'their username' : `**${nickname}**`}.`)
     if (failed) {
       return `I failed to rename ${failed} people, possibly due to permissions.`
     }
