@@ -31,7 +31,7 @@ module.exports = new GenericModerationCommand(
     let modlog = await Memer.db.fetchModlog(msg.channel.guild.id)
     Memer.bot.banGuildMember(msg.channel.guild.id, banned.id, 1, `${reason} | banned by ${msg.author.username}`)
       .then(() => {
-        Memer.bot.unbanGuildMember(msg.channel.guild.id, banned.id, 1, 'Automatic unban from softban')
+        Memer.bot.unbanGuildMember(msg.channel.guild.id, banned.id, 'Automatic unban from softban')
           .then(() => {
             if (modlog) {
               Memer.bot.createMessage(modlog, `**${hahayes}** was softbanned by **${msg.author.username}#${msg.author.discriminator}**\nReason: *${reason}*`)
