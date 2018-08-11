@@ -1,14 +1,15 @@
 const { GenericCommand } = require('.')
 
 module.exports = class GenericModerationCommand {
-  constructor (cmdProps) {
+  constructor (fn, cmdProps) {
+    this.fn = fn
     this.cmdProps = cmdProps
   }
 
-  async run ({ Memer, msg, addCD }) {
+  async run ({ Memer, msg, args, addCD, cleanArgs }) {
     // modPerms will be an array of permissions that are required by the user to run this command
     // If no permissions are passed, this code is never considered.
-    for (const requiredPermission of this.cmdProps.modPerms) {
+    for (const requiredPermission of this.cmdProps.modPerms || []) {
       if (!msg.channel.permissionsOf(msg.author.id).has(requiredPermission)) {
         return this.missingPermission('user', requiredPermission)
       } else if (!msg.channel.permissionsOf(Memer.bot.user.id).has(requiredPermission)) {
@@ -17,6 +18,7 @@ module.exports = class GenericModerationCommand {
     }
 
     await addCD()
+    return this.fn({ Memer, msg, args, addCD, cleanArgs })
   }
 
   missingPermission (type, permission) {
@@ -34,7 +36,7 @@ module.exports = class GenericModerationCommand {
 
   get props () {
     return new GenericCommand(
-      null,
+      this.fn,
       Object.assign({
         cooldown: 2000,
         donorCD: 500
