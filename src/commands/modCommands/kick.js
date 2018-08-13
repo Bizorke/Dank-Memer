@@ -21,6 +21,8 @@ module.exports = new GenericModerationCommand(
       } else {
         reason = 'No reason given'
       }
+    } else {
+      reason = msg.args.args.join(' ')
     }
 
     let kicked = user
