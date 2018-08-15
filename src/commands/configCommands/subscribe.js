@@ -8,7 +8,7 @@ module.exports = new GenericCommand(
     let channel = msg.args.resolveChannel(false, false)
     if (channel) {
       await Memer.db.updateDevSubscriber(msg.guild.id, channel.id)
-      return `ey, your update channel is now <#${channel.id}>, you will now get the best update world wide`
+      return `ey, your update channel is now <#${channel.id}>, you will now get the best updates world wide`
     } else {
       await Memer.db.deleteDevSubscriber(msg.guild.id)
       return 'Ok since I did not detect a channel mention in this command, I\'m gonna assume you wanted no update channel?'
