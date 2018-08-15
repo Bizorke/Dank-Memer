@@ -60,7 +60,7 @@ class Memer extends Base {
   }
 
   async ready () {
-    this.log(`Ready: ${process.memoryUsage().rss / 1024 / 1024}`)
+    this.log(`Ready: ${process.memoryUsage().rss / 1024 / 1024}MB`)
     this.bot.editStatus(null, {
       name: 'pls help',
       type: 0
