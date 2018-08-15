@@ -55,8 +55,8 @@ module.exports = Bot => ({
       .run()
   },
 
-  getDevSubscribers: function getSubscriber () {
-    const objects = Bot.r.table('updates')
+  getDevSubscribers: async function getSubscriber () {
+    const objects = await Bot.r.table('updates')
       .getAll()
       .run()
     const arr = []
