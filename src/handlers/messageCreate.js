@@ -1,7 +1,7 @@
 const gifs = require('../assets/arrays/permGifs.json')
 const ArgParser = require('../utils/ArgParser.js')
 
-exports.handleMeDaddy = async function (msg) {
+exports.handle = async function (msg) {
   this.ddog.increment('global.seen')
   if (
     !msg.channel.guild ||
