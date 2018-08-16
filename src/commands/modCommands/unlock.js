@@ -12,7 +12,7 @@ module.exports = new GenericModerationCommand(
     if (previousOverwrites.json.sendMessages === true || previousOverwrites.json.sendMessages === undefined) {
       return 'this channel is already unlocked ya doofus'
     }
-    channel.editPermission(msg.channel.guild.id, previousOverwrites.allow + 2048, previousOverwrites.deny, 'role')
+    channel.editPermission(msg.channel.guild.id, previousOverwrites.allow | 2048, previousOverwrites.deny, 'role')
       .then(() => {
         channel.createMessage(`**This channel has been unlocked!**`)
         return msg.channel.createMessage(`\`${channel.name}\` was succesfully unlocked, let's see how long you'll survive`)
