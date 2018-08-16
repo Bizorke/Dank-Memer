@@ -6,7 +6,7 @@ module.exports = new GenericCommand(
       return 'You are not authorized to use this command. You must have `Manage Server` to enable commands.'
     }
 
-    const gConfig = await Memer.db.getGuild(msg.channel.guild.id)
+    const gConfig = await Memer.db.getGuild(msg.channel.guild.id) || await Memer.db.createGuild(msg.channel.guild.id)
 
     args = Memer.removeDuplicates(args
       .map(cmd => {
@@ -21,7 +21,9 @@ module.exports = new GenericCommand(
     if (!args[0]) {
       return `Specify a command to enable, or multiple.\n\nExample: \`${gConfig.prefix} enable meme trigger shitsound\` or \`${gConfig.prefix} enable meme\``
     }
-    if (args.some(cmd => !Memer.cmds.find(c => c.props.triggers.includes(cmd)) && cmd !== 'nsfw')) {
+
+    const categories = Memer.cmds.map(c => c.category.split(' ')[1].toLowerCase())
+    if (args.some(cmd => !Memer.cmds.find(c => c.props.triggers.includes(cmd)) && !categories.includes(cmd))) {
       return `The following commands are invalid: \n\n${args.filter(cmd => !Memer.cmds.find(c => c.props.triggers.includes(cmd))).map(cmd => `\`${cmd.props.triggers[0]}\``).join(', ')}\n\nPlease make sure all of your commands are valid and try again.`
     }
 
