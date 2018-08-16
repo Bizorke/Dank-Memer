@@ -11,6 +11,6 @@ module.exports = new GenericCommand(
   },
   {
     triggers: ['penis', 'howbig', 'peepee', 'pickle'],
-    description: 'See how cool you are'
+    description: 'how big peepee'
   }
 )
