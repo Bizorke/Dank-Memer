@@ -1,19 +1,21 @@
 module.exports = {
   help: 'Announces an update to all subscribed servers.',
   fn: async ({ Memer, args, msg }) => {
-    const response = await Memer.db.getDevSubscribers()
+    const subscribers = await Memer.db.getDevSubscribers()
     let promises = []
-    for (const [channelID, guildID] of response) {
+    for (const subscriber of subscribers) {
       promises.push(
-        Memer.bot.createMessage(channelID, args.join())
-          .catch(() => Memer.ipc.fetchGuild(guildID)
-            .then(guild => Memer.bot.createMessage(guild.ownerID, `The Update Channel is deleted or i dont have permissions to talk in the update channel you idiot anyway here is the update info\n\n ${args.join()}`)
-              .catch(() => Memer.db.deleteDevSubscriber(guildID))
+        Memer.bot.createMessage(subscriber.channelID, args.join(' '))
+          .catch(() => Memer.ipc.fetchGuild(subscriber.id)
+            .then(guild => Memer.bot.getDMChannel(guild.ownerID)
+              .then(dm => dm.createMessage(`The Update Channel is deleted or i dont have permissions to talk in the update channel you idiot anyway here is the update info\n\n ${args.join()}`)
+                .catch(() => Memer.db.deleteDevSubscriber(subscriber.id))
+              )
             )
           )
       )
     }
     await Promise.all(promises)
-    return msg.channel.createMessage('Succesfully send update to all subscribers!')
+    return 'Succesfully sent update to all subscribers!'
   }
 }

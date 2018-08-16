@@ -56,14 +56,8 @@ module.exports = Bot => ({
   },
 
   getDevSubscribers: async function getSubscriber () {
-    const objects = await Bot.r.table('updates')
-      .getAll()
+    return Bot.r.table('updates')
       .run()
-    const arr = []
-    for (const object of objects) {
-      arr.push(object.channelID, object.id)
-    }
-    return arr
   },
 
   updateDevSubscriber: function updateDevSubscriber (guildID, channelID) {
