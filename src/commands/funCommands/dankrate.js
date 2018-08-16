@@ -7,7 +7,7 @@ const reaction = [
   '<a:monkas:429416313450921986>',
   '<:feelscringeman:397488381011165194>',
   '<:feelsdabman:397489529319194653>',
-  '<:feelsLMAOman:419494568103378944>',
+  '<:feelsLMAOman:429416311387586561>',
   '<:feelsgreatman:397488378548977671>',
   '<a:feelsSWEATman:429475850740826112>'
 ]

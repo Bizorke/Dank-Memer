@@ -39,11 +39,12 @@ const master = new Sharder(config.token, '/mainClass.js', {
       MESSAGE_UPDATE: true
     },
     disableEveryone: true,
-    messageLimit: 0
+    messageLimit: 0,
+    requestTimeout: 3e4
   },
   shards: config.shardCount || 1,
   statsInterval: 1e4,
-  clusters: Number(process.env.DANK_CLUSTER_COUNT) || undefined
+  clusters: config.clusters || undefined
 })
 
 master.on('stats', res => {

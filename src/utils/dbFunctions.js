@@ -11,36 +11,6 @@ module.exports = Bot => ({
       .insert(res, { conflict: 'update' })
   },
 
-  updateDevUpdates: async function updateModlog (guildID, channelID) {
-    const res = await this.getGuild(guildID)
-
-    if (channelID === 0) {
-      res.updates = 0
-    }
-    res.updates = channelID
-
-    return Bot.r.table('guilds')
-      .insert(res, { conflict: 'update' })
-  },
-
-  fetchDevUpdates: async function fetchModlog (guildID) {
-    const res = await this.getGuild(guildID)
-
-    let updates
-    if (!res.updates) {
-      res.updates = 0
-      await Bot.r.table('guilds')
-        .insert(res, { conflict: 'update' })
-    }
-    if (res.updates === 0) {
-      updates = false
-    } else {
-      updates = res.modlog
-    }
-
-    return updates
-  },
-
   fetchModlog: async function fetchModlog (guildID) {
     const res = await this.getGuild(guildID)
 
@@ -80,6 +50,27 @@ module.exports = Bot => ({
 
   deleteGuild: function deleteGuild (guildID) {
     return Bot.r.table('guilds')
+      .get(guildID)
+      .delete()
+      .run()
+  },
+
+  getDevSubscribers: async function getSubscriber () {
+    return Bot.r.table('updates')
+      .run()
+  },
+
+  updateDevSubscriber: function updateDevSubscriber (guildID, channelID) {
+    return Bot.r.table('updates')
+      .insert({
+        id: guildID,
+        channelID
+      }, { conflict: 'update' })
+      .run()
+  },
+
+  deleteDevSubscriber: function deleteSubscriber (guildID) {
+    return Bot.r.table('updates')
       .get(guildID)
       .delete()
       .run()
