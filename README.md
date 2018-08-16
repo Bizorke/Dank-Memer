@@ -15,6 +15,7 @@ Redis:
 ```
 RethinkDB Tables:
 ```
+updates
 automeme
 blocked
 cooldowns
