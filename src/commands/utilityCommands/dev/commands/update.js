@@ -8,7 +8,7 @@ module.exports = {
         Memer.bot.createMessage(subscriber.channelID, args.join(' '))
           .catch(() => Memer.ipc.fetchGuild(subscriber.id)
             .then(guild => Memer.bot.getDMChannel(guild.ownerID)
-              .then(dm => dm.createMessage(`The Update Channel is deleted or i dont have permissions to talk in the update channel you idiot anyway here is the update info\n\n ${args.join()}`)
+              .then(dm => dm.createMessage(`The Update Channel is deleted or i dont have permissions to talk in the update channel you idiot anyway here is the update info\n\n ${args.join(' ')}`)
                 .catch(() => Memer.db.deleteDevSubscriber(subscriber.id))
               )
             )
