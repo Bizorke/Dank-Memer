@@ -3,7 +3,6 @@ const { join } = require('path')
 const { Base } = global.memeBase || require('eris-sharder')
 const { StatsD } = require('node-dogstatsd')
 
-const msgHandler = require('./handlers/msgHandler.js')
 const MessageCollector = require('./utils/MessageCollector.js')
 const botPackage = require('../package.json')
 
@@ -53,19 +52,15 @@ class Memer extends Base {
     this.ddog.increment('function.launch')
     this.bot
       .on('ready', this.ready.bind(this))
-      .on('guildCreate', this.guildCreate.bind(this))
-      .on('guildDelete', this.guildDelete.bind(this))
-      .on('messageCreate', msgHandler.handleMeDaddy.bind(this))
-      .on('rawWS', this.rawWS.bind(this))
-      .on('error', (error) => {
-        this.log(error.stack, 'error')
-      })
-
+    const listeners = require(join(__dirname, 'handlers'))
+    for (const listener of listeners) {
+      this.bot.on(listener, require(join(__dirname, 'handlers', listener)).handle.bind(this))
+    }
     global.memeBase || this.ready()
   }
 
   async ready () {
-    this.log(`Ready: ${process.memoryUsage().rss / 1024 / 1024}`)
+    this.log(`Ready: ${process.memoryUsage().rss / 1024 / 1024}MB`)
     this.bot.editStatus(null, {
       name: 'pls help',
       type: 0
@@ -128,34 +123,6 @@ class Memer extends Base {
         command.description = category.description
         this.cmds.push(command)
       }
-    }
-  }
-
-  guildCreate (guild) {
-    this.ddog.increment('event.guildCreate')
-    this.ddog.increment('total.guildsGained')
-    const embed = {
-      color: 12054271,
-      description: this.intro,
-      fields: [
-        {name: 'Important Links', value: this.links}
-      ],
-      footer: { text: 'Join the support server if you have any questions!' }
-    }
-    guild.channels.get(guild.channels.filter(c => c.type === 0).map(c => c.id)[0]).createMessage({ embed })
-      .catch(() => {})
-  }
-
-  guildDelete (guild) {
-    this.ddog.increment('event.guildDelete')
-    this.ddog.decrement('total.guildsGained')
-    this.db.deleteGuild(guild.id)
-    this.db.deleteDevSubscriber(guild.id)
-  }
-
-  rawWS (packet) {
-    if (packet.guild_id) {
-      this.bot.voiceConnections.voiceServerUpdate(packet)
     }
   }
 
