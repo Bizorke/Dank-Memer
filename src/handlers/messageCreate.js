@@ -46,7 +46,7 @@ exports.handle = async function (msg) {
     !command ||
     (command.props.ownerOnly && !this.config.devs.includes(msg.author.id)) ||
     gConfig.disabledCommands.includes(command.props.triggers[0]) ||
-    (gConfig.disabledCommands.includes(command.category.split(' ')[1].toLowerCase()) && !gConfig.disabledCommands.includes(command.props.triggers[0]))
+    (gConfig.disabledCategories.includes(command.category.split(' ')[1].toLowerCase()) && !gConfig.enabledCommands.includes(command.props.triggers[0]))
   ) {
     return
   } else if (command.props.donorOnly && !isDonor) {
