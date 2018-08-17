@@ -37,7 +37,8 @@ module.exports = Bot => ({
         prefix: Bot.config.defaultPrefix,
         modlog: '',
         disabledCategories: [],
-        disabledCommands: []
+        disabledCommands: [],
+        enabledCommands: []
       })
       .run()
   },
