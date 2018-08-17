@@ -6,30 +6,36 @@ module.exports = new GenericCommand(
       return 'You are not authorized to use this command. You must have `Manage Server` to disable commands.'
     }
 
-    const gConfig = await Memer.db.getGuild(msg.channel.guild.id)
-
-    args = Memer.removeDuplicates(args
-      .map(cmd => {
-        return (Memer.cmds.find(c => c.props.triggers.includes(cmd)) || { props: { triggers: [cmd] } }).props.triggers[0]
-      }))
-
-    const alreadyDisabled = args.filter(cmd => gConfig.disabledCommands.includes(cmd))
-    if (alreadyDisabled[0]) {
-      return `These commands are already disabled:\n\n${alreadyDisabled.map(c => `\`${c}\``).join(', ')}\n\nHow tf do you plan to disable already disabled commands??`
-    }
+    const gConfig = await Memer.db.getGuild(msg.channel.guild.id) || await Memer.db.createGuild(msg.channel.guild.id)
 
     if (!args[0]) {
       return { content: `Specify a command to disable, or multiple.\n\nExample: \`${gConfig.prefix} disable meme trigger shitsound\` or \`${gConfig.prefix} disable meme\``, reply: true }
     }
 
     const categories = Memer.cmds.map(c => c.category.split(' ')[1].toLowerCase())
-    const invalid = args.filter(cmd => (!Memer.cmds.find(c => c.props.triggers.includes(cmd)) && !categories.includes(cmd)) || ['disable', 'enable'].includes(cmd))
-
-    if (invalid.length > 0) {
-      return { content: `The following commands are invalid: \n\n${invalid.map(cmd => `\`${cmd.toLowerCase()}\``).join(', ')}\n\nPlease make sure all of your commands are valid (case-sensitive!) and try again.`, reply: true }
+    if (args.some(cmd => !Memer.cmds.find(c => c.props.triggers.includes(cmd)) && !categories.includes(cmd))) {
+      return { content: `The following commands are invalid: \n\n${args.filter(cmd => !Memer.cmds.find(c => c.props.triggers.includes(cmd))).map(cmd => `\`${cmd}\``).join(', ')}\n\nPlease make sure all of your commands are valid (case-sensitive!) and try again.`, reply: true }
     }
 
-    gConfig.disabledCommands = gConfig.disabledCommands.concat(args)
+    args = Memer.removeDuplicates(args
+      .map(cmd => {
+        return (Memer.cmds.find(c => c.props.triggers.includes(cmd)) || { props: { triggers: [cmd] } }).props.triggers[0]
+      }))
+
+    const alreadyDisabled = args.filter(cmd => gConfig.disabledCommands.includes(cmd) || gConfig.disabledCategories.includes(cmd))
+    if (alreadyDisabled[0]) {
+      return `These commands are already disabled:\n\n${alreadyDisabled.map(c => `\`${c}\``).join(', ')}\n\nHow tf do you plan to disable already disabled commands??`
+    }
+
+    args.map(cmd => {
+      if (categories.includes(cmd)) {
+        gConfig.disabledCategories = gConfig.disabledCategories.concat(cmd)
+      } else {
+        gConfig.disabledCommands = gConfig.disabledCommands.concat(cmd)
+        gConfig.enabledCommands.splice(gConfig.enabledCommands.indexOf(cmd), 1)
+      }
+    })
+
     await Memer.db.updateGuild(gConfig)
 
     return `The following commands have been disabled successfully:\n\n${args.map(cmd => `\`${cmd}\``).join(', ')}`

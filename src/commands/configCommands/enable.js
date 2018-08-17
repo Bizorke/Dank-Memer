@@ -8,18 +8,8 @@ module.exports = new GenericCommand(
 
     const gConfig = await Memer.db.getGuild(msg.channel.guild.id) || await Memer.db.createGuild(msg.channel.guild.id)
 
-    args = Memer.removeDuplicates(args
-      .map(cmd => {
-        return (Memer.cmds.find(c => c.props.triggers.includes(cmd)) || { props: { triggers: [cmd] } }).props.triggers[0]
-      }))
-
-    const arentDisabled = args.filter(cmd => !gConfig.disabledCommands.includes(cmd))
-    if (arentDisabled[0]) {
-      return `These commands aren't disabled:\n\n${arentDisabled.map(c => `\`${c}\``).join(', ')}\n\nHow tf do you plan to enable already enabled commands??`
-    }
-
     if (!args[0]) {
-      return `Specify a command to enable, or multiple.\n\nExample: \`${gConfig.prefix} enable meme trigger shitsound\` or \`${gConfig.prefix} enable meme\``
+      return `Specify a command/category to enable, or multiple.\n\nExample: \`${gConfig.prefix} enable meme trigger shitsound\` or \`${gConfig.prefix} enable meme\``
     }
 
     const categories = Memer.cmds.map(c => c.category.split(' ')[1].toLowerCase())
@@ -27,8 +17,26 @@ module.exports = new GenericCommand(
       return `The following commands are invalid: \n\n${args.filter(cmd => !Memer.cmds.find(c => c.props.triggers.includes(cmd))).map(cmd => `\`${cmd.props.triggers[0]}\``).join(', ')}\n\nPlease make sure all of your commands are valid and try again.`
     }
 
+    args = Memer.removeDuplicates(args
+      .map(cmd => {
+        return (Memer.cmds.find(c => c.props.triggers.includes(cmd)) || { props: { triggers: [cmd] } }).props.triggers[0]
+      }))
+
+    const arentDisabled = args.filter(cmd => !gConfig.disabledCommands.includes(cmd) && !gConfig.disabledCategories.includes(cmd))
+    if (arentDisabled[0]) {
+      return `These commands aren't disabled:\n\n${arentDisabled.map(c => `\`${c}\``).join(', ')}\n\nHow tf do you plan to enable already enabled commands??`
+    }
+
+    if (!gConfig.enabledCommands) {
+      gConfig.enabledCommands = []
+    }
     args.map(cmd => {
-      gConfig.disabledCommands.splice(gConfig.disabledCommands.indexOf(cmd), 1)
+      if (categories.includes(cmd)) {
+        gConfig.disabledCategories.splice(gConfig.disabledCategories.indexOf(cmd), 1)
+      } else {
+        gConfig.enabledCommands = gConfig.enabledCommands.concat(cmd)
+        gConfig.disabledCommands.splice(gConfig.disabledCommands.indexOf(cmd), 1)
+      }
     })
 
     await Memer.db.updateGuild(gConfig)
@@ -36,6 +44,6 @@ module.exports = new GenericCommand(
     return `The following commands have been enabled successfully:\n\n${args.map(cmd => `\`${cmd}\``).join(', ')}`
   }, {
     triggers: ['enable'],
-    description: 'Use this command to enable disabled commands.'
+    description: 'Use this command to enable disabled commands or categories.'
   }
 )
