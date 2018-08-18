@@ -9,7 +9,9 @@ module.exports = new GenericCommand(
     const gConfig = await Memer.db.getGuild(msg.channel.guild.id) || await Memer.db.createGuild(msg.channel.guild.id)
 
     if (!args[0]) {
-      return { content: `Specify a command to disable, or multiple.\n\nExample: \`${gConfig.prefix} disable meme trigger shitsound\` or \`${gConfig.prefix} disable meme\``, reply: true }
+      return { content: `Specify a command to disable, or multiple.\n\nExample: \`${gConfig.prefix} disable meme trigger shitsound\` or \`${gConfig.prefix} disable meme\`
+      \nYou can also disable categories by specifying the category name, for example: \`${gConfig.prefix} disable nsfw\``,
+      reply: true }
     }
 
     const categories = Memer.cmds.map(c => c.category.split(' ')[1].toLowerCase())
