@@ -13,7 +13,9 @@ exports.handle = async function (msg) {
 
   const gConfig = await this.db.getGuild(msg.channel.guild.id) || {
     prefix: this.config.defaultPrefix,
-    disabledCommands: []
+    disabledCommands: [],
+    disabledCategories: [],
+    enabledCommands: []
   }
 
   let isDonor = await this.db.checkDonor(msg.author.id)
