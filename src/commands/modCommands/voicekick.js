@@ -28,7 +28,6 @@ module.exports = new GenericModerationCommand(
       })
       .catch((err) => {
         msg.channel.createMessage(`looks like I dont have perms to recreate this channel, I guess it's private or I'm missing the \`Manage Channels\` permission ¯\\_(ツ)_/¯`)
-        throw err
       })
   },
   {
