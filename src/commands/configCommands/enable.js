@@ -29,9 +29,7 @@ module.exports = new GenericCommand(
       return `These commands/categories aren't disabled:\n\n${arentDisabled.map(c => `\`${c}\``).join(', ')}\n\nHow tf do you plan to enable already enabled stuff??`
     }
 
-    if (!gConfig.enabledCommands) {
-      gConfig.enabledCommands = []
-    }
+    gConfig.enabledCommands = gConfig.enabledCommands || []
     args.map(cmd => {
       if (categories.includes(cmd)) {
         gConfig.disabledCategories.splice(gConfig.disabledCategories.indexOf(cmd), 1)
