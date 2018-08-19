@@ -171,11 +171,11 @@ class ArgParser {
     return args
   }
 
-  isEmpty () {
+  get isEmpty () {
     return !this.args[0]
   }
 
-  textLength () {
+  get textLength () {
     return this.args.join(' ').length
   }
 
