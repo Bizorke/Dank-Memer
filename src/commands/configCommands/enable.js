@@ -16,7 +16,7 @@ module.exports = new GenericCommand(
 
     const categories = Memer.cmds.map(c => c.category.split(' ')[1].toLowerCase())
     if (args.some(cmd => !Memer.cmds.find(c => c.props.triggers.includes(cmd)) && !categories.includes(cmd))) {
-      return `The following commands are invalid: \n\n${args.filter(cmd => !Memer.cmds.find(c => c.props.triggers.includes(cmd))).map(cmd => `\`${cmd.props.triggers[0]}\``).join(', ')}\n\nPlease make sure all of your commands are valid and try again.`
+      return `The following commands or categories are invalid: \n\n${args.filter(cmd => !Memer.cmds.find(c => c.props.triggers.includes(cmd))).map(cmd => `\`${cmd.props.triggers[0]}\``).join(', ')}\n\nPlease make sure all of your commands are valid and try again.`
     }
 
     args = Memer.removeDuplicates(args
@@ -26,7 +26,7 @@ module.exports = new GenericCommand(
 
     const arentDisabled = args.filter(cmd => gConfig.enabledCommands.includes(cmd))
     if (arentDisabled[0]) {
-      return `These commands aren't disabled:\n\n${arentDisabled.map(c => `\`${c}\``).join(', ')}\n\nHow tf do you plan to enable already enabled commands??`
+      return `These commands/categories aren't disabled:\n\n${arentDisabled.map(c => `\`${c}\``).join(', ')}\n\nHow tf do you plan to enable already enabled stuff??`
     }
 
     if (!gConfig.enabledCommands) {
@@ -37,13 +37,15 @@ module.exports = new GenericCommand(
         gConfig.disabledCategories.splice(gConfig.disabledCategories.indexOf(cmd), 1)
       } else {
         gConfig.enabledCommands = gConfig.enabledCommands.concat(cmd)
-        gConfig.disabledCommands.splice(gConfig.disabledCommands.indexOf(cmd), 1)
+        if (gConfig.disabledCommands.indexOf(cmd) > -1) {
+          gConfig.disabledCommands.splice(gConfig.disabledCommands.indexOf(cmd), 1)
+        }
       }
     })
 
     await Memer.db.updateGuild(gConfig)
 
-    return `The following commands have been enabled successfully:\n\n${args.map(cmd => `\`${cmd}\``).join(', ')}`
+    return `The following commands/categories have been enabled successfully:\n\n${args.map(cmd => `\`${cmd}\``).join(', ')}`
   }, {
     triggers: ['enable'],
     description: 'Use this command to enable disabled commands or categories.'

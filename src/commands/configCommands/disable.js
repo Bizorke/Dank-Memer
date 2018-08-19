@@ -17,7 +17,7 @@ module.exports = new GenericCommand(
     const categories = Memer.cmds.map(c => c.category.split(' ')[1].toLowerCase())
     const invalid = args.filter(cmd => (!Memer.cmds.find(c => c.props.triggers.includes(cmd)) && !categories.includes(cmd)) || ['disable', 'enable'].includes(cmd))
     if (invalid.length) {
-      return { content: `The following commands are invalid: \n\n${invalid.map(cmd => `\`${cmd.toLowerCase()}\``).join(', ')}\n\nPlease make sure all of your commands are valid (case-sensitive!) and try again.`, reply: true }
+      return { content: `The following commands or categories are invalid: \n\n${invalid.map(cmd => `\`${cmd.toLowerCase()}\``).join(', ')}\n\nPlease make sure all of your commands or categories are valid (case-sensitive!) and try again.`, reply: true }
     }
 
     args = Memer.removeDuplicates(args
@@ -27,7 +27,7 @@ module.exports = new GenericCommand(
 
     const alreadyDisabled = args.filter(cmd => gConfig.disabledCommands.includes(cmd) || gConfig.disabledCategories.includes(cmd))
     if (alreadyDisabled[0]) {
-      return `These commands are already disabled:\n\n${alreadyDisabled.map(c => `\`${c}\``).join(', ')}\n\nHow tf do you plan to disable already disabled commands??`
+      return `These commands/categories are already disabled:\n\n${alreadyDisabled.map(c => `\`${c}\``).join(', ')}\n\nHow tf do you plan to disable stuff that's already disabled??`
     }
 
     args.map(cmd => {
@@ -35,15 +35,17 @@ module.exports = new GenericCommand(
         gConfig.disabledCategories = gConfig.disabledCategories.concat(cmd)
       } else {
         gConfig.disabledCommands = gConfig.disabledCommands.concat(cmd)
-        gConfig.enabledCommands.splice(gConfig.enabledCommands.indexOf(cmd), 1)
+        if (gConfig.enabledCommands.indexOf(cmd) > -1) {
+          gConfig.enabledCommands.splice(gConfig.enabledCommands.indexOf(cmd), 1)
+        }
       }
     })
 
     await Memer.db.updateGuild(gConfig)
 
-    return `The following commands have been disabled successfully:\n\n${args.map(cmd => `\`${cmd}\``).join(', ')}`
+    return `The following commands/categories have been disabled successfully:\n\n${args.map(cmd => `\`${cmd}\``).join(', ')}`
   }, {
     triggers: ['disable'],
-    description: 'Use this command to disable commands you do not wish for your server to use'
+    description: 'Use this command to disable commands or categories you do not wish for your server to use'
   }
 )
