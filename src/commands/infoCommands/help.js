@@ -54,6 +54,7 @@ module.exports = new GenericCommand(
     } else if (categorySearch) {
       await addCD()
       let categories = {}
+      let donorCommands = []
       for (const command of Memer.cmds) {
         if (command.props.ownerOnly || command.props.hide) {
           continue
@@ -63,7 +64,11 @@ module.exports = new GenericCommand(
         if (!category) {
           category = categories[command.category] = []
         }
-        category.push(command.props.triggers[0])
+        if (!command.props.donorOnly) {
+          category.push(command.props.triggers[0])
+        } else {
+          donorCommands.push(command.props.triggers[0])
+        }
       }
       const categoryName = Object.keys(categories).find(c => c.split(' ')[1].toLowerCase() === args[0].toLowerCase())
       const commands = categories[categoryName]
@@ -75,7 +80,7 @@ module.exports = new GenericCommand(
       let footy = `use ${prefix} before each command!`
       return {
         title: categoryName,
-        description: commands.join(', '),
+        description: commands.join(', ') + (donorCommands ? `\n\n**[Premium Only](https://www.patreon.com/dankmemerbot)**\n${donorCommands.join(' ')}` : ''),
         footer: { text: footy }
       }
     }
