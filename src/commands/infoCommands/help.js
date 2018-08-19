@@ -31,18 +31,10 @@ module.exports = new GenericCommand(
           desc = description[command.category] = command.description
         }
       }
-      if (disabled.length === 0) {
-        return {
-          title: help.title,
-          description: help.message,
-          fields: Object.keys(categories).sort((a, b) => categories[b].length - categories[a].length).map(category => ({ name: `${category}`, value: `\`${prefix} help ${category.split(' ')[1].toLowerCase()}\`\n[Hover for info](https://gist.github.com/melmsie/e36d102e7871a0bf6d007198b0d0ae05 "${description[category]}\n${categories[category].length} total commands")`, inline: true })),
-          footer: { text: help.footer }
-        }
-      }
       return {
         title: help.title,
         description: help.message,
-        fields: Object.keys(categories).sort((a, b) => categories[b].length - categories[a].length).map(category => ({ name: category, value: `${categories[category].length} commands\n\`${prefix} help ${category.split(' ')[1].toLowerCase()}\``, inline: true })).concat({ name: 'Disabled Commands', value: disabled.join(', ') }),
+        fields: Object.keys(categories).sort((a, b) => categories[b].length - categories[a].length).map(category => ({ name: `${category}`, value: `\`${prefix} help ${category.split(' ')[1].toLowerCase()}\`\n[Hover for info](https://gist.github.com/melmsie/e36d102e7871a0bf6d007198b0d0ae05 "${description[category]}\n${categories[category].length} total commands")`, inline: true })),
         footer: { text: help.footer }
       }
     }
@@ -59,22 +51,12 @@ module.exports = new GenericCommand(
           { 'name': 'Aliases:', 'value': command.props.triggers.join(', ') }
         ]
       }
-    } else if (categorySearch || args[0].toLowerCase() === 'disabled') {
+    } else if (categorySearch) {
       await addCD()
       let categories = {}
       for (const command of Memer.cmds) {
         if (command.props.ownerOnly || command.props.hide) {
           continue
-        }
-        if (db) {
-          if (db.disabledCommands.includes(command.props.triggers[0])) {
-            let category = categories['❌ Disabled Commands']
-            if (!category) {
-              category = categories['❌ Disabled Commands'] = []
-            }
-            category.push(command.props.triggers[0])
-            continue
-          }
         }
 
         let category = categories[command.category]
@@ -90,7 +72,7 @@ module.exports = new GenericCommand(
         return 'that\'s not a valid category smh'
       }
 
-      let footy = categoryName === '❌ Disabled Commands' ? `use ${prefix} enable to add these back` : `use ${prefix} before each command!`
+      let footy = `use ${prefix} before each command!`
       return {
         title: categoryName,
         description: commands.join(', '),

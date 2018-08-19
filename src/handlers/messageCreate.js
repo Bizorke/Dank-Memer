@@ -13,7 +13,9 @@ exports.handle = async function (msg) {
 
   const gConfig = await this.db.getGuild(msg.channel.guild.id) || {
     prefix: this.config.defaultPrefix,
-    disabledCommands: []
+    disabledCommands: [],
+    disabledCategories: [],
+    enabledCommands: []
   }
 
   let isDonor = await this.db.checkDonor(msg.author.id)
@@ -46,7 +48,7 @@ exports.handle = async function (msg) {
     !command ||
     (command.props.ownerOnly && !this.config.devs.includes(msg.author.id)) ||
     gConfig.disabledCommands.includes(command.props.triggers[0]) ||
-    (gConfig.disabledCommands.includes('nsfw') && command.props.isNSFW)
+    (gConfig.disabledCategories.includes(command.category.split(' ')[1].toLowerCase()) && !['disable', 'enable'].includes(command.props.triggers[0]) && !gConfig.enabledCommands.includes(command.props.triggers[0]))
   ) {
     return
   } else if (command.props.donorOnly && !isDonor) {
