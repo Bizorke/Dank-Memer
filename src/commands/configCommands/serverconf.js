@@ -21,6 +21,11 @@ module.exports = new GenericCommand(
           inline: true
         },
         {
+          name: 'Dad Mode Enabled?',
+          value: gConfig.dadMode,
+          inline: true
+        },
+        {
           name: 'Disabled Commands',
           value: gConfig.disabledCommands.map(cmd => `\`${cmd}\``).join(', ') || 'No disabled commands',
           inline: true
