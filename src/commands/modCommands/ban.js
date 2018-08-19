@@ -38,7 +38,6 @@ module.exports = new GenericModerationCommand(
       })
       .catch((err) => {
         msg.channel.createMessage(`looks like I dont have perms to ban \`${banned.username}#${banned.discriminator}\`, I guess I have a lower role than them ¯\\_(ツ)_/¯`)
-        throw err
       })
   },
   {
