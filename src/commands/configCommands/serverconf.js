@@ -39,7 +39,7 @@ module.exports = new GenericCommand(
     }
   },
   {
-    triggers: ['serverconf', 'config', 'conf'],
+    triggers: ['serverconf', 'conf'],
     description: 'show your server configuration'
   }
 )
