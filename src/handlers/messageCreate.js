@@ -25,7 +25,9 @@ exports.handle = async function (msg) {
       let stuff = msg.content.split(' ')
       stuff.shift()
       stuff = stuff.join(' ')
-      msg.channel.createMessage(`Hi ${stuff}, I'm dad`)
+      if (stuff.length + 12 < 2000) {
+        msg.channel.createMessage(`Hi ${stuff}, I'm dad`)
+      }
     }
   }
 
