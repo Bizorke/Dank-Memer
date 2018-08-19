@@ -1,6 +1,6 @@
-const { GenericCommand } = require('../../models/')
+const { GenericModerationCommand } = require('../../models/')
 
-module.exports = new GenericCommand(
+module.exports = new GenericModerationCommand(
   async ({ Memer, msg, args, addCD }) => {
     let perms = msg.channel.permissionsOf(msg.author.id)
     if (!perms.has('kickMembers')) {
@@ -27,14 +27,14 @@ module.exports = new GenericCommand(
       .then(() => { return msg.channel.createMessage(`lmfao ${hahayes} was kicked`) })
       .catch((err) => {
         msg.channel.createMessage(`looks like I dont have perms to kick ${kicked.user.username}#${kicked.user.discriminator}, try putting my role above everyone else to make this real fun..`)
-        throw err
       })
   },
   {
     triggers: ['randomkick', 'kickroulette'],
     usage: '{command}',
     description: 'Warning, this will kick a random person.',
-    perms: ['kickMembers', 'embedLinks']
+    perms: ['kickMembers', 'embedLinks'],
+    modPerms: ['kickMembers']
   }
 )
 

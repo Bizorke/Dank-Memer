@@ -1,12 +1,7 @@
-const { GenericCommand } = require('../../models/')
+const { GenericModerationCommand } = require('../../models/')
 
-module.exports = new GenericCommand(
+module.exports = new GenericModerationCommand(
   async ({ Memer, msg, addCD }) => {
-    const perms = msg.channel.permissionsOf(msg.author.id)
-    if (!perms.has('manageMessages')) {
-      return 'lol you do not have manage messages perms and you know it'
-    }
-
     await addCD()
 
     const purgeAmount = Math.min(Math.max(msg.args.nextArgument() || 10, 1), 100)
@@ -47,6 +42,7 @@ module.exports = new GenericCommand(
     triggers: ['clean', 'purge', 'clear'],
     usage: '{command} [amount] [bots|users] [users...]',
     description: 'Will quickly clean the last 10 messages, or however many you specify.',
-    perms: ['manageMessages', 'readMessageHistory']
+    perms: ['manageMessages', 'readMessageHistory'],
+    modPerms: ['manageMessages']
   }
 )

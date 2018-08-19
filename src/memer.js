@@ -34,12 +34,11 @@ const master = new Sharder(config.token, '/mainClass.js', {
       GUILD_BAN_ADD: true,
       GUILD_BAN_REMOVE: true,
       TYPING_START: true,
-      MESSAGE_DELETE: true,
       MESSAGE_DELETE_BULK: true,
       MESSAGE_UPDATE: true
     },
     disableEveryone: true,
-    messageLimit: 0,
+    messageLimit: 1,
     requestTimeout: 3e4
   },
   shards: config.shardCount || 1,
