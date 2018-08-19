@@ -1,8 +1,8 @@
 const { GenericCommand } = require('../../models/')
 module.exports = new GenericCommand(
-  async ({ Memer, msg, args }) => {
-    let config = Memer.config
-    let target = msg.args.gather().toLowerCase() === 'me' ? msg.author : (msg.args.resolveUser(true) || msg.author)
+  async ({ Memer, msg }) => {
+    const { config } = Memer
+    const target = msg.args.gather().toLowerCase() === 'me' ? msg.author : (msg.args.resolveUser(true) || msg.author)
     const name = target.nick || target.username
     return {
       title: 'peepee size machine',
