@@ -8,7 +8,7 @@ module.exports = new GenericModerationCommand(
     }
 
     await addCD()
-    let previousOverwrites = channel.permissionOverwrites.filter(o => o.id === msg.channel.guild.id)[0]
+    let previousOverwrites = channel.permissionOverwrites.get(msg.channel.guild.id)
     if (previousOverwrites.json.sendMessages === true || previousOverwrites.json.sendMessages === undefined) {
       return 'this channel is already unlocked ya doofus'
     }
