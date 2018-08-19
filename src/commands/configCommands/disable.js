@@ -15,8 +15,9 @@ module.exports = new GenericCommand(
     }
 
     const categories = Memer.cmds.map(c => c.category.split(' ')[1].toLowerCase())
-    if (args.some(cmd => !Memer.cmds.find(c => c.props.triggers.includes(cmd)) && !categories.includes(cmd))) {
-      return { content: `The following commands are invalid: \n\n${args.filter(cmd => !Memer.cmds.find(c => c.props.triggers.includes(cmd))).map(cmd => `\`${cmd}\``).join(', ')}\n\nPlease make sure all of your commands are valid (case-sensitive!) and try again.`, reply: true }
+    const invalid = args.filter(cmd => (!Memer.cmds.find(c => c.props.triggers.includes(cmd)) && !categories.includes(cmd)) || ['disable', 'enable'].includes(cmd))
+    if (invalid.length) {
+      return { content: `The following commands are invalid: \n\n${invalid.map(cmd => `\`${cmd.toLowerCase()}\``).join(', ')}\n\nPlease make sure all of your commands are valid (case-sensitive!) and try again.`, reply: true }
     }
 
     args = Memer.removeDuplicates(args
