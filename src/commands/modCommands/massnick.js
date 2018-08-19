@@ -26,6 +26,7 @@ module.exports = new GenericModerationCommand(
     }
 
     await addCD()
+    msg.channel.createMessage(`Now starting to mass nickname everyone to **${nickname}**`)
     let members = !role ? msg.channel.guild.members.filter(m => m) : msg.channel.guild.members.filter(m => m.roles.includes(role.id))
     const promises = []
     let failed = 0

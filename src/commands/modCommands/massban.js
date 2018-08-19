@@ -8,7 +8,7 @@ module.exports = new GenericModerationCommand(
 
     let users = msg.args.resolveUsers()
     if (!users.length) {
-      return 'hey dumb, give me a user to ban via tagging them or id'
+      return 'hey dumb, give me a user (or multiple) to ban via tagging them or id'
     }
     for (let user of users) {
       if (user.id === msg.channel.guild.ownerID) {

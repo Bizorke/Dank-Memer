@@ -6,11 +6,15 @@ module.exports = new GenericModerationCommand(
     if (!channel) {
       return 'hey dumb, give me a voice channel to kick people from'
     }
+    if (channel.type !== 2) {
+      return 'listen buddy give me a VOICE channel to kick people from'
+    }
 
     await addCD()
     const hahayes = `Voicekick by ${msg.author.username}#${msg.author.discriminator}`
     msg.channel.guild.createChannel(channel.name, channel.type, hahayes, channel.parentID)
       .then(async (newchannel) => {
+        await Memer.sleep(100)
         await newchannel.editPosition(channel.position)
         await newchannel.edit({bitrate: channel.bitrate, userLimit: channel.userLimit})
         let promises = []

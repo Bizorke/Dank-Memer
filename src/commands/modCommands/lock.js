@@ -7,6 +7,9 @@ module.exports = new GenericModerationCommand(
     if (!channel) {
       return 'come on man give me a channel name or id'
     }
+    if (channel.type !== 0) {
+      return 'You need to provide a TEXT channel to me'
+    }
     if (msg.args.args.length === 0) {
       msg.channel.createMessage('for what reason (respond within 30s or bad mod)')
       const prompt = await Memer.MessageCollector.awaitMessage(msg.channel.id, msg.author.id, 30e3)
@@ -21,6 +24,9 @@ module.exports = new GenericModerationCommand(
 
     await addCD()
     let previousOverwrites = channel.permissionOverwrites.filter(o => o.id === msg.channel.guild.id)[0]
+    if (!previousOverwrites) {
+      return 'crap, looks like I don\'t have the correct permissions to lock down this channel. Make sure I have `Manage Channels` and try again.'
+    }
     if (previousOverwrites.json.sendMessages === false) {
       return 'this channel is already locked ya doofus'
     }

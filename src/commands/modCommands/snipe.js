@@ -22,9 +22,7 @@ module.exports = new GenericModerationCommand(
           icon_url: user.dynamicAvatarURL()
         },
       description: content.length > 1024 ? `${content.slice(0, 1020)}...` : content,
-      footer: {
-        text: `User ID: ${user.id}`
-      }
+      timestamp: new Date(Memer.snipe[msg.channel.guild.id][channel.id].timestamp)
     }
   },
   {
