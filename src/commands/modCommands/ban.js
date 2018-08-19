@@ -13,7 +13,7 @@ module.exports = new GenericModerationCommand(
     if (user.id === Memer.bot.user.id) {
       return 'not gonna ban myself, thanks'
     }
-    if (msg.args.args.length === 0) {
+    if (msg.args.isEmpty) {
       msg.channel.createMessage('for what reason (respond within 30s or bad mod)')
       const prompt = await Memer.MessageCollector.awaitMessage(msg.channel.id, msg.author.id, 30e3)
       if (prompt) {

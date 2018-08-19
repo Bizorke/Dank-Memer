@@ -10,7 +10,7 @@ module.exports = new GenericModerationCommand(
     if (channel.type !== 0) {
       return 'You need to provide a TEXT channel to me'
     }
-    if (msg.args.args.length === 0) {
+    if (msg.args.isEmpty) {
       msg.channel.createMessage('for what reason (respond within 30s or bad mod)')
       const prompt = await Memer.MessageCollector.awaitMessage(msg.channel.id, msg.author.id, 30e3)
       if (prompt) {
@@ -19,14 +19,11 @@ module.exports = new GenericModerationCommand(
         reason = 'No reason given'
       }
     } else {
-      reason = msg.args.args.join(' ')
+      reason = msg.args.gather()
     }
 
     await addCD()
-    let previousOverwrites = channel.permissionOverwrites.filter(o => o.id === msg.channel.guild.id)[0]
-    if (!previousOverwrites) {
-      return 'crap, looks like I don\'t have the correct permissions to lock down this channel. Make sure I have `Manage Channels` and try again.'
-    }
+    let previousOverwrites = channel.permissionOverwrites.get(msg.channel.guild.id)
     if (previousOverwrites.json.sendMessages === false) {
       return 'this channel is already locked ya doofus'
     }
@@ -35,9 +32,8 @@ module.exports = new GenericModerationCommand(
         channel.createMessage(`**This channel has been locked.**\n${reason}`)
         return msg.channel.createMessage(`\`${channel.name}\` has been locked down, no more normies`)
       })
-      .catch((err) => {
+      .catch(() => {
         msg.channel.createMessage(`looks like I dont have perms to lock \`${channel.name}\`, I guess I don't have the right permissions ¯\\_(ツ)_/¯`)
-        throw err
       })
   },
   {

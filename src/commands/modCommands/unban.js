@@ -7,9 +7,10 @@ module.exports = new GenericModerationCommand(
     if (!id) {
       return 'aye, ur gonna need to give me an id buddy'
     }
-    let user = Memer.bot.users.get(id)
+    let user = Memer.bot.users.get(id) || await Memer.ipc.fetchUser(id)
     msg.args.args.splice(0, 1)
-    if (msg.args.args.length === 0) {
+
+    if (msg.args.isEmpty) {
       msg.channel.createMessage('for what reason (respond within 30s or bad mod)')
       const prompt = await Memer.MessageCollector.awaitMessage(msg.channel.id, msg.author.id, 30e3)
       if (prompt) {
@@ -18,15 +19,17 @@ module.exports = new GenericModerationCommand(
         reason = 'No reason given'
       }
     } else {
-      reason = msg.args.args.join(' ')
+      reason = msg.args.gather()
     }
 
     let unbanned = user
     await addCD()
     const hahayes = `${unbanned.username}#${unbanned.discriminator}`
 
-    let banlist = await Memer.bot.getGuildBans(msg.channel.guild.id)
-    if (!banlist.some(b => b.user.id === unbanned.id)) {
+    let banlist = await Memer.bot.getGuildBan(msg.channel.guild.id, unbanned.id)
+      .catch(() => {
+      })
+    if (!banlist) {
       return 'that person isn\'t even banned lol'
     }
 
@@ -38,9 +41,8 @@ module.exports = new GenericModerationCommand(
         }
         return msg.channel.createMessage(`**${hahayes}** has been granted back into the server, for better or for worse`)
       })
-      .catch((err) => {
-        msg.channel.createMessage(`I wasn't able to unban that person for some reason, check that i've got the correct permissions and try again`)
-        throw err
+      .catch(() => {
+        msg.channel.createMessage('I wasn\'t able to unban that person for some reason, check that i\'ve got the correct permissions and try again')
       })
   },
   {

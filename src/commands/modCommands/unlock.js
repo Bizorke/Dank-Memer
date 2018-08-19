@@ -17,9 +17,8 @@ module.exports = new GenericModerationCommand(
         channel.createMessage(`**This channel has been unlocked!**`)
         return msg.channel.createMessage(`\`${channel.name}\` was succesfully unlocked, let's see how long you'll survive`)
       })
-      .catch((err) => {
+      .catch(() => {
         msg.channel.createMessage(`looks like I dont have perms to unlock \`${channel.name}\`, I guess I don't have the right permissions ¯\\_(ツ)_/¯`)
-        throw err
       })
   },
   {
