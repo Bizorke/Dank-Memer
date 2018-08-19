@@ -15,7 +15,18 @@ exports.handle = async function (msg) {
     prefix: this.config.defaultPrefix,
     disabledCommands: [],
     disabledCategories: [],
-    enabledCommands: []
+    enabledCommands: [],
+    dadMode: false
+  }
+
+  if (gConfig.dadMode) {
+    let re = RegExp(/^i('|a| )*m /i)
+    if (re.test(msg.content)) {
+      let stuff = msg.content.split(' ')
+      stuff.shift()
+      stuff = stuff.join(' ')
+      msg.channel.createMessage(`Hi ${stuff}, I'm dad`)
+    }
   }
 
   let isDonor = await this.db.checkDonor(msg.author.id)
