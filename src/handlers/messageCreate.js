@@ -15,7 +15,16 @@ exports.handle = async function (msg) {
     prefix: this.config.defaultPrefix,
     disabledCommands: [],
     disabledCategories: [],
-    enabledCommands: []
+    enabledCommands: [],
+    dadMode: false
+  }
+
+  if (gConfig.dadMode) {
+    let re = /^(im|i'm|i am)\s+(.+)/i
+    const match = re.exec(msg.content)
+    if (match && match[2].length < 1980) {
+      msg.channel.createMessage(`Hi ${match[2]}, I'm dad`)
+    }
   }
 
   let isDonor = await this.db.checkDonor(msg.author.id)
