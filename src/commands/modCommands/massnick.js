@@ -2,15 +2,8 @@ const { GenericModerationCommand } = require('../../models/')
 
 module.exports = new GenericModerationCommand(
   async ({ Memer, msg, args, addCD }) => {
-    const nicknameMatcher = /(["'])(.*?[^\\])\1/m.exec(msg.args.args.join(' ')) // quotation support
-    let nickname = nicknameMatcher ? nicknameMatcher[2] : msg.args.args[0]
-    if (nicknameMatcher) {
-      msg.args.args = msg.args.args.join(' ').replace(nicknameMatcher[0], '').trim().split(' ')
-    } else {
-      msg.args.args.splice(0, 1)
-    }
+    let nickname = msg.args.gather()
 
-    let role = msg.args.resolveRole(true)
     if (!nickname) {
       msg.channel.createMessage('what name do you want to give to everyone? You can type `reset` to remove everyone\'s nickname if they have one. (respond in 30s)')
       const prompt = await Memer.MessageCollector.awaitMessage(msg.channel.id, msg.author.id, 30e3)
@@ -26,8 +19,20 @@ module.exports = new GenericModerationCommand(
     }
 
     await addCD()
-    msg.channel.createMessage(`Now starting to mass nickname everyone to **${nickname}**`)
-    let members = !role ? msg.channel.guild.members.filter(m => m) : msg.channel.guild.members.filter(m => m.roles.includes(role.id))
+    let members = msg.channel.guild.members.filter(m => m.nick || m.user.username !== nickname)
+    const next = Number(1000 * members.length)
+    const hours = Math.floor(next / 3600000)
+    const minutes = Math.floor((next / 60000) - (hours * 60))
+    const seconds = Math.floor((next / 1000) - ((hours * 3600) + (minutes * 60)))
+    const timeArr = [ { type: {singular: 'hour', plural: 'hours'}, amount: hours }, { type: {singular: 'minute', plural: 'minutes'}, amount: minutes }, { type: {singular: 'second', plural: 'seconds'}, amount: seconds } ]
+    let properArr = []
+    for (let i in timeArr) {
+      if (timeArr[i].amount < 1) continue
+      properArr.push(`${timeArr[i].amount} ${timeArr[i].amount === 1 ? timeArr[i].type.singular : timeArr[i].type.plural}`)
+    }
+    const timeLeft = properArr.slice(0, -2).join(', ') + (properArr.slice(0, -2).length ? ', ' : '') + properArr.slice(-2).join(' and ')
+
+    msg.channel.createMessage(`Now starting to mass nickname all members to **${nickname || 'their username'}**\n**ETA**: ${timeLeft}`)
     const promises = []
     let failed = 0
     for (const member of members) {

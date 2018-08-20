@@ -27,9 +27,9 @@ module.exports = new GenericModerationCommand(
     if (previousOverwrites.json.sendMessages === false) {
       return 'this channel is already locked ya doofus'
     }
+    channel.createMessage(`**This channel has been locked.**\n${reason}`)
     channel.editPermission(msg.channel.guild.id, previousOverwrites.allow & ~2048, previousOverwrites.deny | 2048, 'role', reason)
       .then(() => {
-        channel.createMessage(`**This channel has been locked.**\n${reason}`)
         return msg.channel.createMessage(`\`${channel.name}\` has been locked down, no more normies`)
       })
       .catch(() => {
