@@ -20,14 +20,10 @@ exports.handle = async function (msg) {
   }
 
   if (gConfig.dadMode) {
-    let re = RegExp(/^i('|a| )*m /i)
-    if (re.test(msg.content)) {
-      let stuff = msg.content.split(' ')
-      stuff.shift()
-      stuff = stuff.join(' ')
-      if (stuff.length + 12 < 2000) {
-        msg.channel.createMessage(`Hi ${stuff}, I'm dad`)
-      }
+    let re = /^(im|i'm|i am)\s+(.+)/i
+    const match = re.exec(msg.content)
+    if (match && match[2].length < 1980) {
+      msg.channel.createMessage(`Hi ${match[2]}, I'm dad`)
     }
   }
 
