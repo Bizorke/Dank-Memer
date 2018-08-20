@@ -20,7 +20,7 @@ module.exports = new GenericModerationCommand(
 
     await addCD()
     let members = msg.channel.guild.members.filter(m => m.nick || m.user.username !== nickname)
-    const next = Number(1000 * members.length)
+    const next = Number(500 * members.length)
     const hours = Math.floor(next / 3600000)
     const minutes = Math.floor((next / 60000) - (hours * 60))
     const seconds = Math.floor((next / 1000) - ((hours * 3600) + (minutes * 60)))
@@ -51,7 +51,7 @@ module.exports = new GenericModerationCommand(
   },
   {
     triggers: ['massnick', 'massname'],
-    usage: '{command} [nickname] [role]',
+    usage: '{command} [nickname | reset]',
     description: 'Warning, this will rename everyone on the server (or everyone with a specific role when provided) if the bot has the correct permissions',
     modPerms: ['manageGuild']
   }

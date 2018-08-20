@@ -28,7 +28,7 @@ module.exports = new GenericModerationCommand(
       return `There's nobody with a cancerous name, what a great day!`
     }
 
-    const next = Number(1000 * members.length)
+    const next = Number(500 * members.length)
     const hours = Math.floor(next / 3600000)
     const minutes = Math.floor((next / 60000) - (hours * 60))
     const seconds = Math.floor((next / 1000) - ((hours * 3600) + (minutes * 60)))
