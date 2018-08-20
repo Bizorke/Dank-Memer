@@ -26,7 +26,7 @@ module.exports = new GenericModerationCommand(
           msg.channel.createMessage(`there goes all those smelly people in **${newchannel.name}**`)
         })
       })
-      .catch((err) => {
+      .catch(() => {
         msg.channel.createMessage(`looks like I dont have perms to recreate this channel, I guess it's private or I'm missing the \`Manage Channels\` permission ¯\\_(ツ)_/¯`)
       })
   },
