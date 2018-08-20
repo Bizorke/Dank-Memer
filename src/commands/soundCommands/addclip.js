@@ -1,11 +1,11 @@
 const { GenericCommand } = require('../../models/')
-const { exists, isOpus, getFiles, getFileSize, saveAudioData } = require('../../utils/audioUtils.js')
+const { convertAndSave, exists, isOpus, getFiles, saveAudioData } = require('../../utils/audioUtils.js')
 const basePath = `${process.cwd()}/assets/audio/custom`
 
 module.exports = new GenericCommand(
   async ({ Memer, msg }) => {
     if (!msg.attachments[0]) {
-      return 'Sure, let me just save silence... you need to attach a sound clip.'
+      return 'whaddya wanna add fam?'
     }
 
     const fileName = msg.args.nextArgument()
@@ -33,27 +33,38 @@ module.exports = new GenericCommand(
     }
 
     const opus = await isOpus(msg.attachments[0].url)
+    const requiresConversion = !opus
 
-    if (!opus) {
-      return 'Nah fam, clip\'s gotta be in opus format 😤 You can download youtube videos as opus from <https://ytdl.serux.pro>'
-    }
+    // if (requiresConversion && !isDonor) {
+    //   return 'soz dood, clip has to be opus format. Donors get their clips converted automatically'
+    // }
 
-    const fileSize = await getFileSize(msg.attachments[0].url)
+    const MAX_FILE_SIZE = 256000 // 256 KB
+    const fileSize = msg.attachments[0].size
 
     if (fileSize <= 0) {
-      return 'File is too small (!?) what kind of fuckery is this'
+      return 'you tryna fool me? this file is empty! BAMBOOZLED'
     }
 
-    if (fileSize > 131072) { // 128KiB
-      return 'woah i\'m not made of space! keep it under 128KB kthx'
+    if (fileSize > MAX_FILE_SIZE) {
+      return `do i look like a damn warehouse? keep ur files under ${MAX_FILE_SIZE / 1000}KB kthx`
     }
 
-    try {
-      await saveAudioData(msg.attachments[0].url, `${basePath}/${msg.author.id}`, `${fileName}.opus`)
-      return 'k ur clip is ready, use the `playclip` command to play it'
-    } catch (e) {
-      Memer.log(`[addclip] Failed to save clip!\n\t${e}`)
-      return `Something went wrong while saving your hecking clip\n\`\`\`\n${e.message}\`\`\`\n\nJoin here (https://discord.gg/ebUqc7F) if the issue doesn't stop being an ass`
+    if (requiresConversion) {
+      try {
+        await convertAndSave(msg.attachments[0].url, `${basePath}/${msg.author.id}`, `${fileName}.opus`)
+        return 'k ur clip is ready, use the `playclip` command to play it'
+      } catch (e) {
+        return `fucc, ${e}`
+      }
+    } else {
+      try {
+        await saveAudioData(msg.attachments[0].url, `${basePath}/${msg.author.id}`, `${fileName}.opus`)
+        return 'k ur clip is ready, use the `playclip` command to play it'
+      } catch (e) {
+        Memer.log(`[addclip] Failed to save clip!\n\t${e}`)
+        return `Something went wrong while saving your hecking clip\n\`\`\`\n${e.message}\`\`\`\n\nJoin here (https://discord.gg/ebUqc7F) if the issue doesn't stop being an ass`
+      }
     }
   },
   {

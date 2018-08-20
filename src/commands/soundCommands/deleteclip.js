@@ -18,7 +18,7 @@ module.exports = new GenericCommand(
     }
   },
   {
-    triggers: ['deleteclip'],
+    triggers: ['deleteclip', 'removeclip'],
     usage: '{command} <clipname>',
     description: 'Removes a custom sound clip'
   }
