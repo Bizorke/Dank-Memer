@@ -55,7 +55,7 @@ module.exports = new GenericCommand(
         await convertAndSave(msg.attachments[0].url, `${basePath}/${msg.author.id}`, `${fileName}.opus`)
         return 'k ur clip is ready, use the `playclip` command to play it'
       } catch (e) {
-        return `fucc, ${e}`
+        return `Something went wrong while saving your hecking clip\n\`\`\`\n${e}\`\`\`\n\nJoin here (https://discord.gg/ebUqc7F) if the issue doesn't stop being an ass`
       }
     } else {
       try {
