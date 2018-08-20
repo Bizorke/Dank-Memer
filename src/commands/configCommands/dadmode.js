@@ -15,6 +15,18 @@ module.exports = new GenericCommand(
       dadMode: false
     }
 
+    if (msg.args.args.length < 1) {
+      if (!gConfig.dadMode) {
+        gConfig.dadMode = true
+        await Memer.db.updateGuild(gConfig)
+        return 'Dad mode has been enabled on this server. Try it out by saying "I\'m stupid".'
+      } else {
+        gConfig.dadMode = false
+        await Memer.db.updateGuild(gConfig)
+        return 'Dad mode has been disabled on this server. Thanks for nothing, stupid.'
+      }
+    }
+
     switch (msg.args.args[0].toLowerCase()) {
       case 'enable':
         if (gConfig.dadMode) return 'Dad mode is already enabled on this server, stupid'
@@ -34,7 +46,6 @@ module.exports = new GenericCommand(
   }, {
     triggers: ['dadmode', 'dad'],
     usage: '{command} [enable/disable]',
-    missingArgs: 'You need to specify disable or enable',
     description: 'Decide whether to enable or disable "dad mode" on this server'
   }
 )
