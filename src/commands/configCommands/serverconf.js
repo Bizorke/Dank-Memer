@@ -12,7 +12,7 @@ module.exports = new GenericCommand(
       fields: [
         {
           name: 'Prefix',
-          value: gConfig.prefix,
+          value: gConfig.prefix || 'No custom prefix set (pls)',
           inline: true
         },
         {
@@ -22,7 +22,7 @@ module.exports = new GenericCommand(
         },
         {
           name: 'Dad Mode Enabled?',
-          value: gConfig.dadMode,
+          value: gConfig.dadMode || 'Dad mode disabled',
           inline: true
         },
         {
