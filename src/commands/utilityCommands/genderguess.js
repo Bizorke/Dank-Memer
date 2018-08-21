@@ -3,10 +3,13 @@ const { GenericCommand } = require('../../models/')
 module.exports = new GenericCommand(
   async ({ Memer, msg, args }) => {
     let content = msg.args.gather()
-    if (msg.attachments.length && msg.attachments[0].width) {
+    if (msg.attachments.length) {
+      if (!msg.attachments[0].width) {
+        return 'this isn\'t an image dumbo'
+      }
       content = msg.attachments[0].url
     }
-    if ((!msg.attachments.length && msg.attachments[0].width) && !content) {
+    if (!msg.attachments.length && !content) {
       return 'You need to provide a name (text) or an image (either by attachment or URL)'
     }
 
