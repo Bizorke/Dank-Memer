@@ -2,32 +2,27 @@ const { GenericModerationCommand } = require('../../models/')
 
 module.exports = new GenericModerationCommand(
   async ({ Memer, msg, args, addCD }) => {
-    let channel = msg.channel.guild.channels.filter(c => c.type === 2).find(c => c.name.toLowerCase() === msg.args.args[0].toLowerCase())
-    msg.args.args.splice(0, 1)
-    if (!channel) {
-      return 'hey dumb, give me a voice channel to kick people from'
-    }
-    let users = msg.args.gather().toLowerCase() === 'everyone' ? channel.voiceMembers : msg.args.resolveUsers()
-    users = users.filter(user => channel.voiceMembers.has(user.id))
+    let channel = msg.channel.guild.channels.filter(c => c.type === 2).find(c => c.name.toLowerCase() === msg.args.gather().toLowerCase() || c.id === msg.args.gather())
+    let users = msg.args.resolveUsers()
+    users = channel ? channel.voiceMembers.map(m => m) : users.map(user => msg.channel.guild.members.get(user.id)).filter(member => member.voiceState.channelID)
     if (!users.length) {
-      return 'oi mate, you\'ve gotta give me a user (or multiple) in the voice channel to kick!'
+      return channel ? `There's nobody in **${channel.name}** to kick dingus` : 'oi mate, you\'ve gotta give me a user (or multiple) in a voice channel to kick!'
     }
 
     await addCD()
     const hahayes = `Voicekick by ${msg.author.username}#${msg.author.discriminator}`
-    msg.channel.guild.createChannel(channel.name, channel.type, hahayes, channel.parentID)
+    msg.channel.guild.createChannel('Voicekick', 2, hahayes)
       .then(async (newchannel) => {
         let promises = []
         for (let user of users) {
-          const member = channel.voiceMembers.get(user.id)
           promises.push(
-            member.edit({ channelID: newchannel.id }).catch(() => {})
+            user.edit({ channelID: newchannel.id }).catch(() => {})
           )
         }
 
         await Promise.all(promises).then(async () => {
           await newchannel.delete(hahayes)
-          msg.channel.createMessage(`I successfully removed ${promises.length} ${promises.length === 1 ? 'person' : 'people'} from **${newchannel.name}**`)
+          msg.channel.createMessage(`I successfully kicked ${promises.length} ${promises.length === 1 ? 'person' : 'people'} from their voice channel`)
         })
       })
       .catch((err) => {
@@ -36,8 +31,8 @@ module.exports = new GenericModerationCommand(
   },
   {
     triggers: ['voicekick', 'vckick'],
-    usage: '{command} [channel] [user | everyone]',
-    description: 'Warning, this will recreate the target voice channel if the bot has the correct permissions',
+    usage: '{command} [user | channel name or id]',
+    description: 'Kicks a specified user from the voice channel they are in, or kicks all members in a voice channel when a channel is specified',
     modPerms: ['manageChannels']
   }
 )
