@@ -2,34 +2,18 @@ const { GenericCommand } = require('../../models')
 
 module.exports = new GenericCommand(
   async ({ Memer, msg, args, addCD }) => {
+    const commands = Memer.cmds.filter(cmd => !cmd.props.ownerOnly && !cmd.props.hide)
     const db = await Memer.db.getGuild(msg.channel.guild.id)
     const prefix = db ? db.prefix : Memer.config.defaultPrefix
     let help = Memer.config.help
-    if (!args[0]) {
+
+    if (msg.args.isEmpty) {
       let categories = {}
       let description = {}
-      let disabled = []
-      for (const command of Memer.cmds) {
-        if (command.props.ownerOnly || command.props.hide) {
-          continue
-        }
-        if (db) {
-          if (db.disabledCommands.includes(command.props.triggers[0])) {
-            disabled.push(command.props.triggers[0])
-            continue
-          }
-        }
-
-        let category = categories[command.category]
-        if (!category) {
-          category = categories[command.category] = []
-        }
+      for (const command of commands) {
+        let category = categories[command.category] = (categories[command.category] || [])
+        description[command.category] = description[command.category] || command.description
         category.push(command.props.triggers[0])
-
-        let desc = description[command.category]
-        if (!desc) {
-          desc = description[command.category] = command.description
-        }
       }
       return {
         title: help.title,
@@ -39,11 +23,11 @@ module.exports = new GenericCommand(
       }
     }
 
-    const command = Memer.cmds.find(c => c.props.triggers.includes(args[0]))
+    const command = Memer.cmds.find(c => c.props.triggers.includes(args[0].toLowerCase()))
     const categorySearch = Memer.cmds.find(c => c.category.split(' ')[1].toLowerCase() === args[0].toLowerCase())
 
+    await addCD()
     if (command) {
-      await addCD()
       return {
         fields: [
           { 'name': 'Description:', 'value': command.props.description },
@@ -52,18 +36,10 @@ module.exports = new GenericCommand(
         ]
       }
     } else if (categorySearch) {
-      await addCD()
       let categories = {}
       let donorCommands = []
-      for (const command of Memer.cmds) {
-        if (command.props.ownerOnly || command.props.hide) {
-          continue
-        }
-
-        let category = categories[command.category]
-        if (!category) {
-          category = categories[command.category] = []
-        }
+      for (const command of commands) {
+        let category = categories[command.category] = (categories[command.category] || [])
         if (!command.props.donorOnly) {
           category.push(command.props.triggers[0])
         } else {
@@ -71,17 +47,16 @@ module.exports = new GenericCommand(
         }
       }
       const categoryName = Object.keys(categories).find(c => c.split(' ')[1].toLowerCase() === args[0].toLowerCase())
-      const commands = categories[categoryName]
+      const categoryCommands = categories[categoryName]
 
-      if (!commands) {
+      if (!categoryCommands) {
         return 'that\'s not a valid category smh'
       }
 
-      let footy = `use ${prefix} before each command!`
       return {
         title: categoryName,
-        description: commands.join(', ') + (donorCommands ? `\n\n**[Premium Only](https://www.patreon.com/dankmemerbot)**\n${donorCommands.join(' ')}` : ''),
-        footer: { text: footy }
+        description: categoryCommands.join(', ') + (donorCommands ? `\n\n**[Premium Only](https://www.patreon.com/dankmemerbot)**\n${donorCommands.join(' ')}` : ''),
+        footer: { text: `use ${prefix} before each command!` }
       }
     }
   },
