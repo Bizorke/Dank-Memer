@@ -11,7 +11,7 @@ module.exports = new GenericModerationCommand(
 
     await addCD()
     const hahayes = `Voicekick by ${msg.author.username}#${msg.author.discriminator}`
-    msg.channel.guild.createChannel('Voicekick', 2, hahayes)
+    msg.channel.guild.createChannel('Voicekick', 2, hahayes, channel ? channel.parentID : null)
       .then(async (newchannel) => {
         let promises = []
         for (let user of users) {
