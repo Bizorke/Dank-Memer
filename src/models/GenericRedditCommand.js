@@ -22,7 +22,6 @@ module.exports = class GenericRedditCommand {
       res = await Memer.http.get(`https://www.reddit.com${this.cmdProps.endpoint}`)
         .then(res => res.body)
         .catch(() => null)
-
       Memer.redis.setAsync(this.cmdProps.endpoint, JSON.stringify(res), 'EX', 15 * 60)
     }
 
