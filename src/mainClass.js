@@ -38,7 +38,8 @@ class Memer extends Base {
       'antijoke': {},
       'antiantijoke': {},
       'sequel': {},
-      'owl': {}
+      'owl': {},
+      'animals': {}
     }
     Object.assign(this, require('./utils/misc.js'))
   }
