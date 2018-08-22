@@ -51,6 +51,7 @@ module.exports = new GenericModerationCommand(
   {
     triggers: ['decancer', 'uncancer', 'dehoist'],
     usage: '{command} [nickname] [role]',
+    cooldown: 1e4,
     description: 'Warning, this will rename any people with crappy/annoying special characters in their name if the bot has the correct permissions',
     modPerms: ['manageNicknames']
   }

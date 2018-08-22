@@ -24,6 +24,7 @@ module.exports = new GenericCommand(
   },
   {
     triggers: ['leaderboard', 'lb'],
-    description: 'this is in beta, pls no breaking it'
+    cooldown: 1e4,
+    description: 'See the top servers using dank memer'
   }
 )

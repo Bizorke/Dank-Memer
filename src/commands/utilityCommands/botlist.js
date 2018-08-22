@@ -12,6 +12,7 @@ module.exports = new GenericCommand(
   },
   {
     triggers: ['botlist', 'topbots', 'carbon'],
+    cooldown: 1e4,
     description: 'Top bots listed on carbonitex'
   }
 )
