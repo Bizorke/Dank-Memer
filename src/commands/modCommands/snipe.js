@@ -4,7 +4,7 @@ module.exports = new GenericModerationCommand(
   async ({ Memer, msg, args, addCD }) => {
     let channel = msg.args.resolveChannel() || msg.channel
 
-    const cachedEntry = await Memer.redis.getAsync(`${msg.channel.guild.id}-${channel.id}`)
+    const cachedEntry = await Memer.redis.getAsync(`deletedmsg-${msg.channel.guild.id}-${channel.id}`)
       .then(res => res ? JSON.parse(res) : undefined)
     if (!cachedEntry) {
       return 'There\'s nothing to snipe!'

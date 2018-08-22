@@ -11,6 +11,7 @@ exports.handle = async function (msg) {
     return
   }
 
+  cacheMessage.bind(this)(msg)
   const gConfig = await this.db.getGuild(msg.channel.guild.id) || {
     prefix: this.config.defaultPrefix,
     disabledCommands: [],
@@ -107,6 +108,13 @@ exports.handle = async function (msg) {
   } catch (e) {
     reportError.bind(this)(e, msg, command, cleanArgs)
   }
+}
+
+function cacheMessage (msg) {
+  if (!msg.content) { // Ignroe attachments without content
+    return
+  }
+  this.redis.setAsync(`msg-${msg.id}`, JSON.stringify({ userID: msg.author.id, content: msg.content, timestamp: msg.timestamp, guildID: msg.channel.guild.id, channelID: msg.channel.id }), 'EX', 20 * 60)
 }
 
 async function updateStats (msg, command, lastCmd) {
