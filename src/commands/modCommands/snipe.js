@@ -4,18 +4,14 @@ module.exports = new GenericModerationCommand(
   async ({ Memer, msg, args, addCD }) => {
     let channel = msg.args.resolveChannel() || msg.channel
 
-    if (!Memer.snipe) {
-      Memer.snipe = {}
-    }
-    if (!Memer.snipe[msg.channel.guild.id]) {
-      Memer.snipe[msg.channel.guild.id] = {}
-    }
-    if (!Memer.snipe[msg.channel.guild.id][channel.id]) {
+    const cachedEntry = await Memer.redis.getAsync(`${msg.channel.guild.id}-${channel.id}`)
+      .then(res => res ? JSON.parse(res) : undefined)
+    if (!cachedEntry) {
       return 'There\'s nothing to snipe!'
     }
     await addCD()
-    let { content } = Memer.snipe[msg.channel.guild.id][channel.id]
-    let user = Memer.bot.users.get(Memer.snipe[msg.channel.guild.id][channel.id].userID)
+    let { content } = cachedEntry
+    let user = Memer.bot.users.get(cachedEntry.userID)
     return {
       author:
         {
@@ -23,7 +19,7 @@ module.exports = new GenericModerationCommand(
           icon_url: user.dynamicAvatarURL()
         },
       description: content.length > 2048 ? `${content.slice(0, 2045)}...` : content,
-      timestamp: new Date(Memer.snipe[msg.channel.guild.id][channel.id].timestamp)
+      timestamp: new Date(cachedEntry.timestamp)
     }
   },
   {
