@@ -2,7 +2,6 @@ const { GenericCommand } = require('../../models/')
 
 module.exports = new GenericCommand(
   async ({ Memer, msg, args }) => {
-<<<<<<< HEAD
     const biggay = msg.channel.guild.roles.find(r => r.name === 'big gay')
     const reason = `\`biggay\` - ran by ${msg.author.username}#${msg.author.discriminator}`
     let member = Memer.randomInArray(msg.channel.guild.members.filter(member => member.id !== Memer.bot.user.id && member.id !== msg.channel.guild.ownerID && (biggay ? !member.roles.includes(biggay.id) : true)))
@@ -31,12 +30,5 @@ module.exports = new GenericCommand(
     description: 'melmsie stinks',
     perms: ['manageRoles'],
     modPerms: ['manageRoles']
-=======
-    // nothing at all
-  }, {
-    triggers: ['biggay', 'gayrole'],
-    usage: '{command} ???',
-    description: 'melmsie stinks'
->>>>>>> b73152b7b5c30e67960d96c47cd60873d7768630
   }
 )
