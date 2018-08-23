@@ -58,10 +58,10 @@ if (require('cluster').isMaster && !config.dev) {
         })
         .end()
     }
-  }, 5 * 60 * 1000)
+  }, 10 * 60 * 1000)
 }
 
-if (require('cluster').isMaster) setInterval(usage, 15000)
+if (require('cluster').isMaster) setInterval(usage, 15 * 1000)
 
 function usage () {
   console.log((process.memoryUsage()['rss'] / 1024 / 1024) + 'MB')
