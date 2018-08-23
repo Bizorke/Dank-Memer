@@ -22,27 +22,11 @@ let s = new StatsD()
 
 const master = new Sharder(config.token, '/mainClass.js', {
   stats: true,
-  name: 'Maymays',
+  name: config.name || 'Dank Memer',
   webhooks: config.webhooks,
-  clientOptions: {
-    disableEvents: {
-      CHANNEL_PINS_UPDATE: true,
-      USER_SETTINGS_UPDATE: true,
-      USER_NOTE_UPDATE: true,
-      RELATIONSHIP_ADD: true,
-      RELATIONSHIP_REMOVE: true,
-      GUILD_BAN_ADD: true,
-      GUILD_BAN_REMOVE: true,
-      TYPING_START: true,
-      MESSAGE_DELETE_BULK: true,
-      MESSAGE_UPDATE: true
-    },
-    disableEveryone: true,
-    messageLimit: 0,
-    requestTimeout: 3e4
-  },
+  clientOptions: config.clientOptions,
   shards: config.shardCount || 1,
-  statsInterval: 1e4,
+  statsInterval: config.statsInterval || 1e4,
   clusters: config.clusters || undefined
 })
 
