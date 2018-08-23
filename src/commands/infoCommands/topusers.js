@@ -17,7 +17,7 @@ module.exports = new GenericCommand(
       pls = await Promise.all(pls.map(async g => Object.assign(await bigmeme(g.id), { pls: g.pls })))
       return {
         title: 'Top 10 Users',
-        description: pls.map((g, i) => `${emojis[i] || '👏'} ${g.pls.toLocaleString()} - ${g.username ? g.username + '#' + g.discriminator : (Memer.db.removeUser(g.id) && 'LOL WHO DIS')}`).join('\n'),
+        description: pls.map((g, i) => `${emojis[i] || '👏'} ${g.pls.toLocaleString()} - ${g.username ? g.username + '#' + g.discriminator : 'LOL WHO DIS'}`).join('\n'),
         footer: { text: `Global Leaderboard` }
       }
     } else {
