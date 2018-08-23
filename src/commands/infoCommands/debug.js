@@ -42,8 +42,8 @@ module.exports = new GenericCommand(
     `  [Exclusive] ${stats.exclusiveGuilds}\n` +
     `[USERS] ${stats.users}\n` +
     `  [Average] ${(stats.users / stats.guilds).toFixed()}\n` +
-    `[MEMORY] ${(stats.totalRam / 1000).toFixed(1)}/${(os.totalmem() / 1073741824).toFixed()}gb (${(((stats.totalRam / 1000) / (os.totalmem() / 1073741824))).toFixed()}%)\n` +
-    `  [System] ${((os.totalmem() - os.freemem()) / 1073741824).toFixed()}/${(os.totalmem() / 1073741824).toFixed(1)}gb (${(((os.totalmem() - os.freemem()) / os.totalmem()) * 100).toFixed()}%)\n` +
+    `[MEMORY] ${(stats.totalRam / 1000).toFixed(1)}/${(os.totalmem() / 1073741824).toFixed(1)}gb (${((stats.totalRam / 1000) / (os.totalmem() / 1073741824)).toFixed(1)}%)\n` +
+    `  [System] ${((os.totalmem() - os.freemem()) / 1073741824).toFixed(1)}/${(os.totalmem() / 1073741824).toFixed(1)}gb (${(((os.totalmem() - os.freemem()) / os.totalmem()) * 100).toFixed(1)}%)\n` +
     `[UPTIME] ${Memer.parseTime(process.uptime())}\n` +
     `  [System] ${Memer.parseTime(os.uptime())}\n` +
     `[CPU] ${CPUUsage.toFixed(1)}%\n`
@@ -51,6 +51,7 @@ module.exports = new GenericCommand(
     return '```ini\n' + formatted + '\n```'
   }, {
     triggers: ['debug'],
+    cooldown: 1e4,
     description: 'Returns information and statistics about Dank Memer.',
     perms: ['embedLinks']
   }

@@ -58,7 +58,7 @@ module.exports = class GenericRedditCommand {
       title: postTitle,
       url: `https://www.reddit.com${post.data.permalink}`,
       image: { url: this.cmdProps.type === 'image' ? post.data.url : '' },
-      footer: { text: `👍 ${post.data.ups} | 💬 ${post.data.num_comments}` }
+      footer: { text: this.cmdProps.footer || `👍 ${post.data.ups} | 💬 ${post.data.num_comments}` }
     }
   }
 

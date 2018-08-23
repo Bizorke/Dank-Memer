@@ -32,6 +32,7 @@ module.exports = new GenericModerationCommand(
   {
     triggers: ['randomkick', 'kickroulette'],
     usage: '{command}',
+    cooldown: 1e4,
     description: 'Warning, this will kick a random person.',
     perms: ['kickMembers', 'embedLinks'],
     modPerms: ['kickMembers']
