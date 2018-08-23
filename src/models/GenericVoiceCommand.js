@@ -4,10 +4,19 @@ const audioAssets = `${process.cwd()}/assets/audio`
 module.exports = class GenericVoiceCommand {
   constructor (cmdProps) {
     this.cmdProps = cmdProps
-    this.files = fs.readdirSync(`${audioAssets}/${this.cmdProps.dir}`)
+    try {
+      this.files = fs.readdirSync(`${audioAssets}/${this.cmdProps.dir}`)
+    } catch (e) {
+      this.files = null
+    }
   }
 
   async run ({ Memer, msg, args, addCD }) {
+    if (this.files == null) {
+      console.log('Run `git submodule update --init` to pull down the audio files.')
+      return 'Seems like you forgot to pull the audio files ;p'
+    }
+
     let file = typeof this.cmdProps.files === 'string'
       ? this.cmdProps.files
       : Memer.randomInArray(this.files).replace(/(\.opus)|(\.ogg)/, '')
@@ -45,7 +54,7 @@ module.exports = class GenericVoiceCommand {
 
     if (this.cmdProps.np) {
       let np = file.replace(/_+/g, ' ')
-      msg.channel.createMessage({embed: {title: 'Now Playing...', description: np}})
+      msg.channel.createMessage({ embed: { title: 'Now Playing...', description: np } })
     } else if (this.cmdProps.message) {
       msg.channel.createMessage(this.cmdProps.message)
     } else {
