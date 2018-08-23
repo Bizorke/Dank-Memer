@@ -10,7 +10,7 @@ module.exports = {
         } catch (err) {
           return `We had a hecking error: \n\`\`\`${err.stack || err.message || err}\`\`\``
         }
-        break
+
       case 'commands':
         try {
           Memer.ipc.broadcast('reloadCommands', {})
@@ -18,7 +18,7 @@ module.exports = {
         } catch (err) {
           return `We had a hecking error: \n\`\`\`${err.stack || err.message || err}\`\`\``
         }
-        break
+
       case 'config':
         try {
           Memer.ipc.broadcast('reloadConfig', {})
@@ -26,7 +26,7 @@ module.exports = {
         } catch (err) {
           return `We had a hecking error: \n\`\`\`${err.stack || err.message || err}\`\`\``
         }
-        break
+
       default:
         return '[most | commands | config]'
     }

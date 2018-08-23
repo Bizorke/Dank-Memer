@@ -11,11 +11,21 @@ exports.handle = async function (msg) {
     return
   }
 
+  cacheMessage.bind(this)(msg)
   const gConfig = await this.db.getGuild(msg.channel.guild.id) || {
     prefix: this.config.defaultPrefix,
     disabledCommands: [],
     disabledCategories: [],
-    enabledCommands: []
+    enabledCommands: [],
+    dadMode: false
+  }
+
+  if (gConfig.dadMode) {
+    let re = /^(im|i'm|i am)\s+(.+)/i
+    const match = re.exec(msg.content)
+    if (match && match[2].length < 1980) {
+      msg.channel.createMessage(`Hi ${match[2]}, I'm dad`)
+    }
   }
 
   let isDonor = await this.db.checkDonor(msg.author.id)
@@ -77,7 +87,7 @@ exports.handle = async function (msg) {
   try {
     const permissions = msg.channel.permissionsOf(this.bot.user.id)
     if (command.props.perms.some(perm => !permissions.has(perm))) {
-      checkPerms(command, permissions, msg)
+      checkPerms.bind(this)(command, permissions, msg)
     } else if (command.props.isNSFW && !msg.channel.nsfw) {
       msg.channel.createMessage(
         {
@@ -98,6 +108,13 @@ exports.handle = async function (msg) {
   } catch (e) {
     reportError.bind(this)(e, msg, command, cleanArgs)
   }
+}
+
+function cacheMessage (msg) {
+  if (!msg.content) { // Ignroe attachments without content
+    return
+  }
+  this.redis.setAsync(`msg-${msg.id}`, JSON.stringify({ userID: msg.author.id, content: msg.content, timestamp: msg.timestamp, guildID: msg.channel.guild.id, channelID: msg.channel.id }), 'EX', 20 * 60)
 }
 
 async function updateStats (msg, command, lastCmd) {
@@ -211,9 +228,9 @@ async function runCommand (command, msg, args, cleanArgs, updateCooldowns) {
 
 async function reportError (e, msg, command, cleanArgs) {
   this.ddog.increment('error')
-  let date = new Date(Date.now())
+  let date = new Date()
   let message = await this.errorMessages(e)
-  const channel = this.config.errorChannel || '431692509895458833'
+  const channel = this.config.errorChannel || '470338254848262154'
   if (!message) {
     msg.channel.createMessage(`Something went wrong while executing this hecking command: \`${e.message}\` \nPlease join here (<https://discord.gg/ebUqc7F>) if the issue doesn't stop being an ass and tell staff that it's an \`unknown error\``)
     await this.bot.createMessage(channel, `**Error: ${e.message}**\nCommand Ran: ${command.props.triggers[0]}\nDate: ${date.toUTCString()}\nSupplied arguments: ${cleanArgs.join(' ')}\nServer ID: ${msg.channel.guild.id}\nCluster ${this.clusterID} | Shard ${msg.channel.guild.shard.id}\n\`\`\` ${e.stack} \`\`\``)

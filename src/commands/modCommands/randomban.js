@@ -21,13 +21,14 @@ module.exports = new GenericModerationCommand(
     await Memer.sleep(1500)
     banned.ban(0, `randomly banned by ${msg.author.username}`)
       .then(() => { return msg.channel.createMessage(`lmfao ${hahayes} was banned`) })
-      .catch((err) => {
+      .catch(() => {
         msg.channel.createMessage(`looks like I dont have perms to ban ${banned.user.username}#${banned.user.discriminator}, try putting my role above everyone else to make this real fun..`)
       })
   },
   {
     triggers: ['randomban', 'banroulette'],
     usage: '{command}',
+    cooldown: 1e4,
     description: 'Warning, this will ban a random person.',
     perms: ['banMembers', 'embedLinks'],
     modPerms: ['banMembers']

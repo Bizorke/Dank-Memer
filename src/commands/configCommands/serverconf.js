@@ -12,12 +12,17 @@ module.exports = new GenericCommand(
       fields: [
         {
           name: 'Prefix',
-          value: gConfig.prefix,
+          value: gConfig.prefix || 'No custom prefix set (pls)',
           inline: true
         },
         {
           name: 'Modlog Channel',
           value: gConfig.modlog || 'No modlog channel set',
+          inline: true
+        },
+        {
+          name: 'Dad Mode Enabled?',
+          value: gConfig.dadMode || 'Dad mode disabled',
           inline: true
         },
         {

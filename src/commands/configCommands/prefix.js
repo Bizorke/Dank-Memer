@@ -30,6 +30,6 @@ module.exports = new GenericCommand(
     usage: '{command} <prefix of your choice>',
     description: 'Change Dank Memer\'s prefix!',
     perms: ['embedLinks'],
-    cooldown: 5000
+    cooldown: 5e3
   }
 )

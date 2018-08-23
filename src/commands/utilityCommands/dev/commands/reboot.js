@@ -1,8 +1,17 @@
 const { exec } = require('child_process')
 
 module.exports = {
-  help: 'reboot <shard | all>',
+  help: 'reboot <cluster | all>',
   fn: async ({ Memer, msg, args }) => {
+    if (['cluster', 'all'].includes(args[0])) {
+      const m = await msg.channel.createMessage(`confirm reboot? \`y\`/\`n\``)
+
+      const choice = await Memer.MessageCollector.awaitMessage(msg.channel.id, msg.author.id, 5e4)
+      if (!choice || choice.content.toLowerCase() !== 'y') {
+        return m.edit('whew, dodged a bullet')
+      }
+    }
+
     if (args[0] === 'cluster') {
       if (args[1]) {
         await msg.channel.createMessage(`Rebooting cluster ${args[1]}`)

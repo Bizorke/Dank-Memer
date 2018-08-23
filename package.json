@@ -4,7 +4,7 @@
   "description": "A discord entertainment based bot, with an emphasis on memes.",
   "main": "memer.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "standard"
   },
   "repository": {
     "type": "git",
@@ -25,13 +25,13 @@
   "dependencies": {
     "asciiart-logo": "^0.1.7",
     "cheerio": "^1.0.0-rc.2",
-    "eris-sharder": "github:melmsie/eris-sharder#dev",
+    "eris-sharder": "github:Discord-Sharders/eris-sharder#dev",
     "eslint-config-standard": "^11.0.0",
     "node-dogstatsd": "0.0.7",
     "programmatic-repl": "^1.1.4",
     "redis": "^2.8.0",
     "rethinkdbdash": "^2.3.31",
     "standard": "^11.0.1",
-    "tubesearch": "^1.0.4"
+    "tubesearch": "^1.0.5"
   }
 }

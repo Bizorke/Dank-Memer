@@ -27,13 +27,13 @@ module.exports = new GenericModerationCommand(
     if (previousOverwrites.json.sendMessages === false) {
       return 'this channel is already locked ya doofus'
     }
+    channel.createMessage(`**This channel has been locked.**\n${reason}`)
     channel.editPermission(msg.channel.guild.id, previousOverwrites.allow & ~2048, previousOverwrites.deny | 2048, 'role', reason)
       .then(() => {
-        channel.createMessage(`**This channel has been locked.**\n${reason}`)
         return msg.channel.createMessage(`\`${channel.name}\` has been locked down, no more normies`)
       })
       .catch(() => {
-        msg.channel.createMessage(`looks like I dont have perms to lock \`${channel.name}\`, I guess I don't have the right permissions ¯\\_(ツ)_/¯`)
+        msg.channel.createMessage(`looks like I dont have perms to lock \`${channel.name}\`, this may be because I'm missing the \`Manage Channels\` or \`Manage Permissions\` permissions on the channel you're trying to lock.\n\nHere's how you can enable those permissions: https://i.imgur.com/5TINcdW.gif`)
       })
   },
   {
