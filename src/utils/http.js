@@ -31,6 +31,7 @@ module.exports = class HTTPRequest {
     if (options.data) {
       this.send(options.data)
     }
+    this.redirects = 0
     this.req = null
   }
 
@@ -102,8 +103,8 @@ module.exports = class HTTPRequest {
 
         response.on('data', chunk => { data += chunk })
         response.once('error', reject)
-        response.once('end', () => {
-          const result = {
+        response.once('end', async () => {
+          let result = {
             get body () {
               const type = res.headers['content-type']
               let parsed
@@ -123,6 +124,10 @@ module.exports = class HTTPRequest {
             statusCode: res.statusCode,
             statusText: res.statusMessage,
             headers: response.headers
+          }
+          if (res.statusCode === 301 && this.redirects < 2) {
+            this.redirects++
+            result = await new HTTPRequest('GET', res.headers.location).then(redirectRes => redirectRes)
           }
           if (result.ok) {
             return resolve(result)

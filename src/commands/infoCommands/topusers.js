@@ -39,6 +39,7 @@ module.exports = new GenericCommand(
   },
   {
     triggers: ['topusers', 'ulb'],
+    cooldown: 1e4,
     description: 'See who in your server (or globally) uses dank memer the most!'
   }
 )
