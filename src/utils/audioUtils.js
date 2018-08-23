@@ -1,6 +1,5 @@
 const { get } = require('../utils/http')
 const { constants, promises: fs } = require('fs')
-const { exec } = require('child_process')
 
 async function isOpus (url) {
   const res = await get(url)
@@ -40,24 +39,6 @@ function exists (path) {
     .catch(() => false)
 }
 
-function convertAndSave (url, dir, file) {
-  return new Promise(async (resolve, reject) => { // Opus is nice and efficient. This should sound like 96K MP3 while consuming less space
-    await makeDir(dir)
-
-    exec(`ffmpeg -loglevel error -i ${url} -acodec libopus -b:a 96k "${dir}/${file}"`, (err, _, stderr) => {
-      if (err) {
-        return reject(err.message)
-      }
-
-      if (stderr) {
-        return reject(stderr)
-      }
-
-      resolve()
-    })
-  })
-}
-
 async function saveAudioData (url, dir, file) {
   const res = await get(url)
   await writeBuffer(dir, file, res.body)
@@ -91,7 +72,6 @@ async function removeFile (path) {
 }
 
 module.exports = {
-  convertAndSave,
   exists,
   getFiles,
   getFileSize,

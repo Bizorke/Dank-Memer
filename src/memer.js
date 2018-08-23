@@ -38,7 +38,7 @@ const master = new Sharder(config.token, '/mainClass.js', {
       MESSAGE_UPDATE: true
     },
     disableEveryone: true,
-    messageLimit: 10,
+    messageLimit: 1,
     requestTimeout: 3e4
   },
   shards: config.shardCount || 1,

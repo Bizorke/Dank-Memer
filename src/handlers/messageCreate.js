@@ -15,16 +15,7 @@ exports.handle = async function (msg) {
     prefix: this.config.defaultPrefix,
     disabledCommands: [],
     disabledCategories: [],
-    enabledCommands: [],
-    dadMode: false
-  }
-
-  if (gConfig.dadMode) {
-    let re = /^(im|i'm|i am)\s+(.+)/i
-    const match = re.exec(msg.content)
-    if (match && match[2].length < 1980) {
-      msg.channel.createMessage(`Hi ${match[2]}, I'm dad`)
-    }
+    enabledCommands: []
   }
 
   let isDonor = await this.db.checkDonor(msg.author.id)
@@ -220,9 +211,9 @@ async function runCommand (command, msg, args, cleanArgs, updateCooldowns) {
 
 async function reportError (e, msg, command, cleanArgs) {
   this.ddog.increment('error')
-  let date = new Date()
+  let date = new Date(Date.now())
   let message = await this.errorMessages(e)
-  const channel = this.config.errorChannel || '470338254848262154'
+  const channel = this.config.errorChannel || '431692509895458833'
   if (!message) {
     msg.channel.createMessage(`Something went wrong while executing this hecking command: \`${e.message}\` \nPlease join here (<https://discord.gg/ebUqc7F>) if the issue doesn't stop being an ass and tell staff that it's an \`unknown error\``)
     await this.bot.createMessage(channel, `**Error: ${e.message}**\nCommand Ran: ${command.props.triggers[0]}\nDate: ${date.toUTCString()}\nSupplied arguments: ${cleanArgs.join(' ')}\nServer ID: ${msg.channel.guild.id}\nCluster ${this.clusterID} | Shard ${msg.channel.guild.shard.id}\n\`\`\` ${e.stack} \`\`\``)
