@@ -14,7 +14,7 @@ module.exports = new GenericCommand(
     }
 
     // If an image is provided
-    if (/\S*www\.|http\S+/.test(content)) {
+    if (/https?:\/\/(?:www\.)?(?:.+).(\+)?/.test(content)) {
       let req = await Memer.http.get(`https://watson-api-explorer.ng.bluemix.net/visual-recognition/api/v3/detect_faces?url=${content}&version=2016-05-20`)
       if (!req.body.images) {
         return 'I couldn\'t find a face in that image'
