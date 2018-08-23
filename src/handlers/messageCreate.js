@@ -86,7 +86,7 @@ exports.handle = async function (msg) {
   try {
     const permissions = msg.channel.permissionsOf(this.bot.user.id)
     if (command.props.perms.some(perm => !permissions.has(perm))) {
-      checkPerms(command, permissions, msg)
+      checkPerms.bind(this)(command, permissions, msg)
     } else if (command.props.isNSFW && !msg.channel.nsfw) {
       msg.channel.createMessage(
         {
