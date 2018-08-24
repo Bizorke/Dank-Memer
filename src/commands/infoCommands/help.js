@@ -37,25 +37,34 @@ module.exports = new GenericCommand(
       }
     } else if (categorySearch) {
       let categories = {}
-      let donorCommands = []
+      let donorCategories = {}
       for (const command of commands) {
         let category = categories[command.category] = (categories[command.category] || [])
+        let donorCategory = donorCategories[command.category] = (donorCategories[command.category] || [])
         if (!command.props.donorOnly) {
           category.push(command.props.triggers[0])
         } else {
-          donorCommands.push(command.props.triggers[0])
+          donorCategory.push(command.props.triggers[0])
         }
       }
       const categoryName = Object.keys(categories).find(c => c.split(' ')[1].toLowerCase() === args[0].toLowerCase())
       const categoryCommands = categories[categoryName]
+      const donorCommands = donorCategories[categoryName]
 
       if (!categoryCommands) {
         return 'that\'s not a valid category smh'
       }
+      let dComm
+      console.log(donorCommands)
+      if (!donorCommands || donorCommands.length < 1) {
+        dComm = ''
+      } else {
+        dComm = `\n\n**[Premium Only](https://www.patreon.com/dankmemerbot)**\n${donorCommands.join(' ')}`
+      }
 
       return {
-        title: categoryName,
-        description: categoryCommands.join(', ') + (donorCommands ? `\n\n**[Premium Only](https://www.patreon.com/dankmemerbot)**\n${donorCommands.join(' ')}` : ''),
+        title: categoryName + ' Commands',
+        description: categoryCommands.join(', ') + dComm,
         footer: { text: `use ${prefix} before each command!` }
       }
     }
