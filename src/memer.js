@@ -20,7 +20,7 @@ const r = require('rethinkdbdash')()
 
 // Initiate Eris-Sharder
 
-const master = new Sharder(config.token, '/mainClass.js', {
+const master = new Sharder(config.token, config.path, {
   stats: true,
   name: config.name || 'Dank Memer',
   webhooks: config.webhooks,

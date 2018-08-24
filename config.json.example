@@ -16,6 +16,7 @@
     "messageLimit": 0,
     "requestTimeout": 3e4
   },
+  "path": "/mainClass.js",
   "defaultPrefix": string,
   "devs": [string],
   "imgenKey": "",
