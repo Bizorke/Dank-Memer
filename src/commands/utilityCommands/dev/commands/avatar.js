@@ -1,6 +1,12 @@
 module.exports = {
   help: 'change bot avatar',
-  fn: async ({ Memer, args }) => {
+  fn: async ({ Memer, msg, args }) => {
+    const m = await msg.channel.createMessage(`confirm new avatar? \`y\`/\`n\`\n\n`)
+
+    const choice = await Memer.MessageCollector.awaitMessage(msg.channel.id, msg.author.id, 5e4)
+    if (!choice || choice.content.toLowerCase() !== 'y') {
+      return m.edit('whew, dodged a bullet')
+    }
     await setAvatar(Memer, args.join(' '))
     return `avatar was updated: ${args.join(' ')}`
   }
