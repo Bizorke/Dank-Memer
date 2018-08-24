@@ -18,6 +18,8 @@ const { Master: Sharder } = require('eris-sharder')
 const { post } = require('./utils/http')
 const r = require('rethinkdbdash')()
 
+// Initiate Eris-Sharder
+
 const master = new Sharder(config.token, '/mainClass.js', {
   stats: true,
   name: config.name || 'Dank Memer',
@@ -28,11 +30,15 @@ const master = new Sharder(config.token, '/mainClass.js', {
   clusters: config.clusters || undefined
 })
 
+// Record bot stats every x seconds/minutes to the database
+
 master.on('stats', res => {
   r.table('stats')
     .insert({ id: 1, stats: res }, { conflict: 'update' })
     .run()
 })
+
+// Delete stats data on SIGINT to help prevent problems with some commands
 
 process.on('SIGINT', async () => {
   await r.table('stats')
@@ -42,6 +48,8 @@ process.on('SIGINT', async () => {
 
   process.exit()
 })
+
+// Post guild count to each bot list api
 
 if (require('cluster').isMaster && !config.dev) {
   setInterval(async () => {
@@ -60,6 +68,8 @@ if (require('cluster').isMaster && !config.dev) {
     }
   }, 60 * 60 * 1000)
 }
+
+// Logging mem usage every 15s to confirm/deny the existance of a leak
 
 if (require('cluster').isMaster) setInterval(usage, 15 * 1000)
 
