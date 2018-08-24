@@ -36,11 +36,13 @@ master.on('stats', res => {
   r.table('stats')
     .insert({ id: 1, stats: res }, { conflict: 'update' })
     .run()
+
+  // TODO: Post stats to endpoint on the webserver
 })
 
 // Delete stats data on SIGINT to help prevent problems with some commands
 
-process.on('SIGINT', async () => {
+process.on('SIGINT', async () => { // TODO: See if this still needs to happen after disabling automatic db wipes on pls lb/rich/ulb
   await r.table('stats')
     .get(1)
     .delete()
@@ -61,7 +63,7 @@ if (require('cluster').isMaster && !config.dev) {
       post(botlist.url)
         .set('Authorization', botlist.token)
         .send({
-          [`server${botlist.url.includes('carbonitex') ? '' : '_'}count`]: guilds,
+          [`server${botlist.url.includes('carbonitex') ? '' : '_'}count`]: guilds, // TODO: Does carbon still not allow underscore?
           key: botlist.token
         })
         .end()
@@ -70,6 +72,7 @@ if (require('cluster').isMaster && !config.dev) {
 }
 
 // Logging mem usage every 15s to confirm/deny the existance of a leak
+// TODO: Remove this after confirming/denying that it has a leak
 
 if (require('cluster').isMaster) setInterval(usage, 15 * 1000)
 
