@@ -1,6 +1,6 @@
-const { GenericCommand } = require('../../models/')
+const { GenericModerationCommand } = require('../../models/')
 
-module.exports = new GenericCommand(
+module.exports = new GenericModerationCommand(
   async ({ Memer, msg, args }) => {
     let biggay = msg.channel.guild.roles.find(r => r.name === 'big gay')
     const reason = `\`biggay\` - ran by ${msg.author.username}#${msg.author.discriminator}`
