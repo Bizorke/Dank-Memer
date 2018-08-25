@@ -17,46 +17,32 @@ const config = require('./config.json')
 const { Master: Sharder } = require('eris-sharder')
 const { post } = require('./utils/http')
 const r = require('rethinkdbdash')()
-const StatsD = require('node-dogstatsd').StatsD
-let s = new StatsD()
 
-const master = new Sharder(config.token, '/mainClass.js', {
+// Initiate Eris-Sharder
+
+const master = new Sharder(config.token, config.path, {
   stats: true,
-  name: 'Maymays',
+  name: config.name || 'Dank Memer',
   webhooks: config.webhooks,
-  clientOptions: {
-    disableEvents: {
-      CHANNEL_PINS_UPDATE: true,
-      USER_SETTINGS_UPDATE: true,
-      USER_NOTE_UPDATE: true,
-      RELATIONSHIP_ADD: true,
-      RELATIONSHIP_REMOVE: true,
-      GUILD_BAN_ADD: true,
-      GUILD_BAN_REMOVE: true,
-      TYPING_START: true,
-      MESSAGE_DELETE_BULK: true,
-      MESSAGE_UPDATE: true
-    },
-    disableEveryone: true,
-    messageLimit: 0,
-    requestTimeout: 3e4
-  },
+  clientOptions: config.clientOptions,
   shards: config.shardCount || 1,
-  statsInterval: 1e4,
+  statsInterval: config.statsInterval || 1e4,
   clusters: config.clusters || undefined
 })
 
+// Record bot stats every x seconds/minutes to the database
+
 master.on('stats', res => {
-  s.gauge('bot.guilds', res.guilds)
-  s.gauge('bot.users', res.users)
-  s.gauge('bot.voice', res.voice)
-  s.gauge('bot.mem', res.mem)
   r.table('stats')
     .insert({ id: 1, stats: res }, { conflict: 'update' })
     .run()
+
+  // TODO: Post stats to endpoint on the webserver
 })
 
-process.on('SIGINT', async () => {
+// Delete stats data on SIGINT to help prevent problems with some commands
+
+process.on('SIGINT', async () => { // TODO: See if this still needs to happen after disabling automatic db wipes on pls lb/rich/ulb
   await r.table('stats')
     .get(1)
     .delete()
@@ -64,6 +50,8 @@ process.on('SIGINT', async () => {
 
   process.exit()
 })
+
+// Post guild count to each bot list api
 
 if (require('cluster').isMaster && !config.dev) {
   setInterval(async () => {
@@ -75,10 +63,19 @@ if (require('cluster').isMaster && !config.dev) {
       post(botlist.url)
         .set('Authorization', botlist.token)
         .send({
-          [`server${botlist.url.includes('carbonitex') ? '' : '_'}count`]: guilds,
+          [`server${botlist.url.includes('carbonitex') ? '' : '_'}count`]: guilds, // TODO: Does carbon still not allow underscore?
           key: botlist.token
         })
         .end()
     }
-  }, 5 * 60 * 1000)
+  }, 60 * 60 * 1000)
+}
+
+// Logging mem usage every 15s to confirm/deny the existance of a leak
+// TODO: Remove this after confirming/denying that it has a leak
+
+if (require('cluster').isMaster) setInterval(usage, 15 * 1000)
+
+function usage () {
+  console.log((process.memoryUsage()['rss'] / 1024 / 1024) + 'MB')
 }
