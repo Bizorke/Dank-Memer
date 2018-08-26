@@ -27,7 +27,7 @@ const programmers = [
   ['perryprog#9657', 'perryprog', 'zoop best meme 2018'],
   ['Yukine#8080 ', 'Dev-Yukine', 'i need a good german meme'],
   ['ParadoxOrigins#5451', 'ParadoxOrigins', 'baguette'],
-  ['Blake#0007', 'zBlakee', 'blake where\'s your blurb???']
+  ['Blake#0007', 'zBlakee', 'yahoo']
 ]
 
 module.exports = new GenericCommand(
