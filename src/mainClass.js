@@ -12,6 +12,7 @@ class Memer extends Base {
 
     this.log = require('./utils/logger.js')
     this.config = require('./config.json')
+    this.secrets = require('./secrets.json')
     this.r = require('rethinkdbdash')()
     this.db = require('./utils/dbFunctions.js')(this)
     this.http = require('./utils/http')

@@ -34,7 +34,7 @@ module.exports = Bot => ({
       .get(guildID)
       .default({
         id: guildID,
-        prefix: Bot.config.defaultPrefix,
+        prefix: Bot.config.options.prefix,
         modlog: '',
         disabledCategories: [],
         disabledCommands: [],

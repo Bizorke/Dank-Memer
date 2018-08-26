@@ -14,20 +14,21 @@
  */
 
 const config = require('./config.json')
+const secrets = require('./secrets.json')
 const { Master: Sharder } = require('eris-sharder')
 const { post } = require('./utils/http')
 const r = require('rethinkdbdash')()
 
 // Initiate Eris-Sharder
 
-const master = new Sharder(config.token, config.path, {
+const master = new Sharder(secrets.bot.token, config.sharder.path, {
   stats: true,
-  name: config.name || 'Dank Memer',
-  webhooks: config.webhooks,
-  clientOptions: config.clientOptions,
-  shards: config.shardCount || 1,
+  name: config.sharder.name || 'Dank Memer',
+  webhooks: config.sharder.webhooks,
+  clientOptions: config.eris.clientOptions,
+  shards: config.sharder.shardCount || 1,
   statsInterval: config.statsInterval || 1e4,
-  clusters: config.clusters || undefined
+  clusters: config.sharder.clusters || undefined
 })
 
 // Record bot stats every x seconds/minutes to the database
@@ -53,13 +54,13 @@ process.on('SIGINT', async () => { // TODO: See if this still needs to happen af
 
 // Post guild count to each bot list api
 
-if (require('cluster').isMaster && !config.dev) {
+if (require('cluster').isMaster && !config.options.dev) {
   setInterval(async () => {
     const { stats: { guilds } } = await r.table('stats')
       .get(1)
       .run()
 
-    for (const botlist of config.botlists) {
+    for (const botlist of secrets.botlists) {
       post(botlist.url)
         .set('Authorization', botlist.token)
         .send({

@@ -37,7 +37,7 @@ module.exports = new GenericCommand(
       }
     } else {
       const db = await Memer.db.getGuild(msg.channel.guild.id)
-      const prefix = db ? db.prefix : Memer.config.defaultPrefix
+      const prefix = db ? db.prefix : Memer.config.options.prefix
       return {
         title: `${msg.author.username}'s account:`,
         description: `**Current Balance**: ${bank}/${Math.round(250 + (upgrades.vault * 100) + ((pls / 100) * 20))}\nYou can deposit coins with \`${prefix} bank deposit #\`\nYou can withdraw coins with \`${prefix} bank withdraw #\``,

@@ -2,7 +2,7 @@ const { GenericCommand } = require('../../models')
 
 module.exports = new GenericCommand(
   async ({ Memer, msg, args, addCD }) => {
-    if (!msg.member.permission.has('manageGuild') && !Memer.config.devs.includes(msg.author.id)) {
+    if (!msg.member.permission.has('manageGuild') && !Memer.config.options.developers.includes(msg.author.id)) {
       return 'You are not authorized to use this command. You must have `Manage Server` to change the prefix.'
     }
 

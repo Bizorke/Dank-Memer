@@ -4,8 +4,12 @@ module.exports = new GenericCommand(
   async ({ Memer, msg, args, addCD }) => {
     const commands = Memer.cmds.filter(cmd => !cmd.props.ownerOnly && !cmd.props.hide)
     const db = await Memer.db.getGuild(msg.channel.guild.id)
-    const prefix = db ? db.prefix : Memer.config.defaultPrefix
-    let help = Memer.config.help
+    const prefix = db ? db.prefix : Memer.config.options.prefix
+    let help = Memer.config.options.helpCommand || {
+      'title': 'no title for you',
+      'message': 'no message for you',
+      'footer': 'no footer for you'
+    }
 
     if (msg.args.isEmpty) {
       let categories = {}
@@ -18,7 +22,7 @@ module.exports = new GenericCommand(
       return {
         title: help.title,
         description: help.message,
-        fields: Object.keys(categories).sort((a, b) => categories[b].length - categories[a].length).map(category => ({ name: `${category}`, value: `\`${prefix} help ${category.split(' ')[1].toLowerCase()}\`\n[Hover for info](https://gist.github.com/melmsie/e36d102e7871a0bf6d007198b0d0ae05 "${description[category]}\n${categories[category].length} total commands")`, inline: true })),
+        fields: Object.keys(categories).sort((a, b) => categories[b].length - categories[a].length).map(category => ({ name: `${category}`, value: `\`${prefix} help ${category.split(' ')[1].toLowerCase()}\`\n[Hover for info](https://gist.github.com/melmsie/e36d102e7871a0bf6d007198b0d0ae05 '${description[category]}\n${categories[category].length} total commands')`, inline: true })),
         footer: { text: help.footer }
       }
     }
