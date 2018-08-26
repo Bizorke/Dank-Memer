@@ -13,7 +13,7 @@ exports.handle = async function (msg) {
 
   cacheMessage.bind(this)(msg)
   const gConfig = await this.db.getGuild(msg.channel.guild.id) || {
-    prefix: this.config.defaultPrefix,
+    prefix: this.config.options.prefix,
     disabledCommands: [],
     disabledCategories: [],
     enabledCommands: [],
@@ -56,7 +56,7 @@ exports.handle = async function (msg) {
     return msg.channel.createMessage(`Hello, ${msg.author.username}. My prefix is \`${gConfig.prefix}\`. Example: \`${gConfig.prefix} meme\``)
   } else if (
     !command ||
-    (command.props.ownerOnly && !this.config.devs.includes(msg.author.id)) ||
+    (command.props.ownerOnly && !this.config.options.developers.includes(msg.author.id)) ||
     gConfig.disabledCommands.includes(command.props.triggers[0]) ||
     (gConfig.disabledCategories.includes(command.category.split(' ')[1].toLowerCase()) && !['disable', 'enable'].includes(command.props.triggers[0]) && !gConfig.enabledCommands.includes(command.props.triggers[0]))
   ) {
@@ -230,7 +230,7 @@ async function reportError (e, msg, command, cleanArgs) {
   this.ddog.increment('error')
   let date = new Date()
   let message = await this.errorMessages(e)
-  const channel = this.config.errorChannel || '470338254848262154'
+  const channel = this.config.options.errorChannel || '470338254848262154'
   if (!message) {
     msg.channel.createMessage(`Something went wrong while executing this hecking command: \`${e.message}\` \nPlease join here (<https://discord.gg/ebUqc7F>) if the issue doesn't stop being an ass and tell staff that it's an \`unknown error\``)
     await this.bot.createMessage(channel, `**Error: ${e.message}**\nCommand Ran: ${command.props.triggers[0]}\nDate: ${date.toUTCString()}\nSupplied arguments: ${cleanArgs.join(' ')}\nServer ID: ${msg.channel.guild.id}\nCluster ${this.clusterID} | Shard ${msg.channel.guild.shard.id}\n\`\`\` ${e.stack} \`\`\``)

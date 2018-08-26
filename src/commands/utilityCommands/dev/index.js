@@ -3,7 +3,7 @@ const commands = require('./commands')
 
 module.exports = new GenericCommand(
   async ({ Memer, msg, args }) => {
-    if (!Memer.config.devs.includes(msg.author.id)) {
+    if (!Memer.config.options.developers.includes(msg.author.id)) {
       return
     }
 

@@ -9,5 +9,5 @@ module.exports = new GenericMediaCommand({
   message: 'Free nudes from nekos.life',
   JSONKey: 'url',
   reqURL: 'https://boob.bot/api/v2/img/anal',
-  tokenKey: 'porn'
+  tokenKey: 'boobbot'
 })

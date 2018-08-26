@@ -14,7 +14,7 @@ class GenericImageCommand {
     }
 
     const data = await Memer.http.get(this.requestURL.replace('$ENDPOINT', this.cmdProps.triggers[0]))
-      .set('Authorization', Memer.config.imgenKey)
+      .set('Authorization', Memer.secrets.microservices.imgenKey)
       .query(datasrc)
 
     if (data.status === 200 && data.headers['content-type'].startsWith('image/')) {

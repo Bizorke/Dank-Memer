@@ -8,7 +8,7 @@ module.exports = new GenericCommand(
     }
 
     const gConfig = await Memer.db.getGuild(msg.channel.guild.id) || {
-      prefix: Memer.config.defaultPrefix,
+      prefix: Memer.config.options.prefix,
       disabledCommands: [],
       disabledCategories: [],
       enabledCommands: [],

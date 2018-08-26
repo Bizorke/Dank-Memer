@@ -8,5 +8,5 @@ module.exports = new GenericMediaCommand({
   message: 'powered by weeb shit (weeb.sh)',
   JSONKey: 'url',
   reqURL: 'https://api.weeb.sh/images/random?type=discord_memes',
-  tokenKey: 'weeb'
+  tokenKey: 'weebsh'
 })
