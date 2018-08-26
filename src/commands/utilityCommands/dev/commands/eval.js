@@ -17,7 +17,7 @@ module.exports = {
           depth: +!(inspect(result, { depth: 1 }).length > 1000) // Results in either 0 or 1
         })
       }
-      const tokenRegex = new RegExp(Memer.config.token, 'gi')
+      const tokenRegex = new RegExp(Memer.secrets.bot.token, 'gi')
       result = result.replace(tokenRegex, 'i think the fuck not, you trick ass bitch')
     } catch (err) {
       result = err.message
