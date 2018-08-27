@@ -404,9 +404,15 @@ module.exports = Bot => ({
       .run()
   },
 
+  findExpiredDonors: async function findExpiredDonors () {
+    return Bot.r.table('donors')
+      .filter(Bot.r.row('declinedSince').lt(Bot.r.now().sub(30 * 24 * 60 * 60)))
+      .run() // only 1 month after decline date
+  },
+
   wipeExpiredDonors: async function wipeExpiredDonors () {
     return Bot.r.table('donors')
-      .filter(Bot.r.row('declinedSince').lt(Bot.r.now().sub(60 * 24 * 60 * 60))).run()
+      .filter(Bot.r.row('declinedSince').lt(Bot.r.now().sub(60 * 24 * 60 * 60))).run() // 2 months after decline date
       .delete()
       .run()
   },
