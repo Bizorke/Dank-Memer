@@ -33,7 +33,7 @@ module.exports = new GenericCommand(
           Memer.db.addDonor(msg.author.id, patron.payment_data.amount_cents / 100, new Date(patron.payment_data.created_at), new Date(patron.payment_data.declined_since))
           const channel = await Memer.bot.getDMChannel(msg.author.id)
           await channel.createMessage({ embed: {
-            color: Memer.randomColor(),
+            color: 6732650,
             title: 'You now have donor perks',
             description: `Thanks for your donation!\nMost donor perks are automatic. If you want to redeem your coins, use \`pls redeem\`.\n`,
             fields: [
