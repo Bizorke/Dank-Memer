@@ -383,15 +383,30 @@ module.exports = Bot => ({
       .run()
   },
 
-  addDonor: function addDonor (id, donorAmount) {
+  addDonor: function addDonor (id, donorAmount, donationDate, declineDate) {
     return Bot.r.table('donors')
-      .insert({ id, donorAmount }, { conflict: 'update' })
+      .insert({
+        id,
+        donorAmount,
+        guilds: [],
+        guildRedeems: 0,
+        firstDonationDate: donationDate || Bot.r.now(),
+        declinedSince: declineDate || null,
+        totalPaid: donorAmount
+      }, { conflict: 'update' })
       .run()
   },
 
   removeDonor: function removeDonor (id) {
     return Bot.r.table('donors')
       .get(id)
+      .delete()
+      .run()
+  },
+
+  wipeExpiredDonors: async function wipeExpiredDonors () {
+    return Bot.r.table('donors')
+      .filter(Bot.r.row('declinedSince').lt(Bot.r.now().sub(60 * 24 * 60 * 60))).run()
       .delete()
       .run()
   },
