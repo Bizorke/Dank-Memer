@@ -411,10 +411,16 @@ module.exports = Bot => ({
   },
 
   wipeExpiredDonors: async function wipeExpiredDonors () {
-    return Bot.r.table('donors')
-      .filter(Bot.r.row('declinedSince').lt(Bot.r.now().sub(60 * 24 * 60 * 60))).run() // 2 months after decline date
+    const donors = await Bot.r.table('donors')
+      .filter(Bot.r.row('declinedSince').lt(Bot.r.now().sub(60 * 24 * 60 * 60))) // 2 months after decline date
+      .run()
+
+    await Bot.r.table('donors')
+      .filter(Bot.r.row('declinedSince').lt(Bot.r.now().sub(60 * 24 * 60 * 60))) // 2 months after decline date
       .delete()
       .run()
+
+    return donors
   },
 
   checkDonor: function checkDonor (id) {
