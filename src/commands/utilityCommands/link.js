@@ -30,7 +30,7 @@ module.exports = new GenericCommand(
       let discord = patron.attributes.social_connections.discord
       if (discord) {
         if (discord.user_id === msg.author.id) {
-          Memer.db.addDonor(msg.author.id, patron.payment_data.amount_cents / 100)
+          Memer.db.addDonor(msg.author.id, patron.payment_data.amount_cents / 100, new Date(patron.payment_data.created_at), new Date(patron.payment_data.declined_since))
           const channel = await Memer.bot.getDMChannel(msg.author.id)
           await channel.createMessage({ embed: {
             color: Memer.randomColor(),
