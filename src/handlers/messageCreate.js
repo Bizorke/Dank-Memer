@@ -118,7 +118,7 @@ function cacheMessage (msg) {
 }
 
 async function updateStats (msg, command, lastCmd) {
-  if (Date.now() - lastCmd < 1000) {
+  if (Date.now() - lastCmd < 500) {
     await this.db.addSpam(msg.author.id)
   }
 
