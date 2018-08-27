@@ -44,11 +44,10 @@ module.exports = new GenericCommand(
             ]
           }})
           return 'You\'ve successfully linked your Discord account with Patreon. Enjoy your perks!\nFor more assistance, you can visit our support server (https://discord.gg/ebUqc7F)'
-        } else {
-          return 'You don\'t have your Discord account linked to your Patreon! If you need help linking your Discord account to Patreon, try looking at this article\nhttps://patreon.zendesk.com/hc/en-us/articles/212052266-How-do-I-receive-my-Discord-role-'
         }
       }
     }
+    return 'You don\'t have your Discord account linked to your Patreon! If you need help linking your Discord account to Patreon, try looking at this article\nhttps://patreon.zendesk.com/hc/en-us/articles/212052266-How-do-I-receive-my-Discord-role-'
   }, {
     triggers: ['link'],
     usage: '{command}',
