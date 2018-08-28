@@ -1,6 +1,8 @@
 const { readdirSync } = require('fs')
 const { join } = require('path')
 const { Base } = global.memeBase || require('eris-sharder')
+const { Guild } = require('eris')
+const { Node } = require('lavalink')
 const { StatsD } = require('node-dogstatsd')
 
 const MessageCollector = require('./utils/MessageCollector.js')
@@ -64,6 +66,16 @@ class Memer extends Base {
   }
 
   async ready () {
+    const { ws } = this.bot.shards.get(0)
+    const lavalink = new Node({
+      userID: this.bot.user.id,
+      shardCount: this.config.shardCount,
+      send (guildID, pk) {
+        return ws.send(pk)
+      }
+    })
+    this.lavalink = lavalink
+    Object.defineProperty(Guild, 'player', { get: function (params) { return lavalink.players.get(this.id) } })
     this.log(`Ready: ${process.memoryUsage().rss / 1024 / 1024}MB`)
     this.bot.editStatus(null, {
       name: 'pls help',
