@@ -31,12 +31,12 @@ module.exports = new GenericCommand(
 
     switch (msg.args.args[0].toLowerCase()) {
       case 'dadmode':
-        if (!gConfig.autoResponse.dadMode) {
-          gConfig.autoResponse.dadMode = true
+        if (!gConfig.autoResponse.dad) {
+          gConfig.autoResponse.dad = true
           await Memer.db.updateGuild(gConfig)
           return 'Dad mode has been enabled on this server. Try it out by saying "I\'m stupid".'
         } else {
-          gConfig.autoResponse.dadMode = false
+          gConfig.autoResponse.dad = false
           await Memer.db.updateGuild(gConfig)
           return 'Dad mode has been disabled on this server. Thanks for nothing, stupid.'
         }

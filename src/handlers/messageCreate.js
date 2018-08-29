@@ -34,7 +34,7 @@ exports.handle = async function (msg) {
     }
   }
 
-  if (gConfig.autoResponse.dadMode) {
+  if (gConfig.autoResponse.dad) {
     let re = /^(im|i['’]m|i am)\s+(.+)/i
     const match = re.exec(msg.content)
     if (match && match[2].length < 1980) {
