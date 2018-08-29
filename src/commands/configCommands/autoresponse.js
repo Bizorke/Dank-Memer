@@ -80,7 +80,7 @@ module.exports = new GenericCommand(
   }, {
     triggers: ['autoresponse', 'ar'],
     usage: '{command} [autoreponse choice]',
-    missingArgs: 'You need to specify which autoresponse to turn off.\n`dadmode`, `ree`, `sec`, or `NoU`',
+    missingArgs: 'You need to specify which autoresponse to toggle.\n`dadmode`, `ree`, `sec`, or `NoU`',
     description: 'Decide whether to enable or disable certain autoresponses on this server'
   }
 )
