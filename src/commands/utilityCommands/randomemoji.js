@@ -18,7 +18,6 @@ module.exports = new GenericCommand(
 async function getEmoji (Memer) {
   let guild = Memer.bot.guilds.random()
   if (guild.emojis.length < 1) {
-    console.log('REROLLED')
     return getEmoji(Memer)
   }
   let chosen = Memer.randomInArray(guild.emojis)
