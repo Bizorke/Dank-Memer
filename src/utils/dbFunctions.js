@@ -434,5 +434,53 @@ module.exports = Bot => ({
     return Bot.r.table('stats')
       .get(1)('stats')
       .run()
+  },
+
+  getAutomemeChannel: async function getChannel (id) {
+    let channel = await Bot.r.table('automeme')
+      .get(id)
+      .run()
+    return channel || false
+  },
+
+  removeAutomemeChannel: async function getChannel (id) {
+    return Bot.r.table('automeme')
+      .get(id)
+      .delete()
+      .run()
+  },
+
+  allAutomemeChannels: async function allChannels () {
+    return Bot.r.table('automeme')
+      .run()
+  },
+
+  addAutomemeChannel: async function addChannel (id, channelID) { // id = guild ID
+    return Bot.r.table('automeme')
+      .insert({id: id, channel: channelID})
+  },
+
+  getAutonsfwChannel: async function getChannel (id) {
+    let channel = await Bot.r.table('autonsfw')
+      .get(id)
+      .run()
+    return channel || false
+  },
+
+  removeAutonsfwChannel: async function getChannel (id) {
+    return Bot.r.table('autonsfw')
+      .get(id)
+      .delete()
+      .run()
+  },
+
+  allAutonsfwChannels: async function allChannels () {
+    return Bot.r.table('autonsfw')
+      .run()
+  },
+
+  addAutonsfwChannel: async function addChannel (id, channelID, type) { // id = guild ID
+    return Bot.r.table('autonsfw')
+      .insert({id: id, channel: channelID, type: type})
   }
 })
