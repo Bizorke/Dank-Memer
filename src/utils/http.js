@@ -127,7 +127,7 @@ module.exports = class HTTPRequest {
             statusText: res.statusMessage,
             headers: response.headers
           }
-          if (res.statusCode === 301 && this.redirects < 2) {
+          if ([301, 302, 303, 307, 308].includes(res.statusCode) && this.redirects < 2) {
             this.redirects++
             result = await new HTTPRequest('GET', res.headers.location).then(redirectRes => redirectRes)
           } else if (this.redirects > 2) {
