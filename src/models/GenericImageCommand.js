@@ -1,4 +1,5 @@
 const { GenericCommand } = require('.')
+const { get } = require('snekfetch')
 
 class GenericImageCommand {
   constructor (commandProps, URLParseFN) {
@@ -13,7 +14,7 @@ class GenericImageCommand {
       return
     }
 
-    const data = await Memer.http.get(this.requestURL.replace('$ENDPOINT', this.cmdProps.triggers[0]))
+    const data = await get(this.requestURL.replace('$ENDPOINT', this.cmdProps.triggers[0]))
       .set('Authorization', Memer.secrets.microservices.imgenKey)
       .query(datasrc)
 
@@ -30,7 +31,7 @@ class GenericImageCommand {
 
   defaultURLParseFN (msg) {
     if (this.cmdProps.requiredArgs) {
-      if (msg.args.isEmpty()) {
+      if (msg.args.isEmpty) {
         msg.channel.createMessage(this.cmdProps.requiredArgs)
         return false
       }
