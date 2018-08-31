@@ -1,5 +1,6 @@
 const { get } = require('snekfetch')
 const { constants, promises: fs } = require('fs')
+const { exec } = require('child_process')
 
 async function isOpus (url) {
   const res = await get(url)
