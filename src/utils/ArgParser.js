@@ -65,11 +65,14 @@ class ArgParser {
 
     if (idMatch) {
       ret = this.bot.getChannel(idMatch[1])
+      if (ret.type === 4) {
+        ret = null // If the channel is a category, don't pick it up
+      }
     } else {
       if (!this.msg.channel.guild) {
         ret = null // Only allow name-lookup for channels locally due to the performance impact this would have for searching lots of guilds
       } else {
-        ret = this.msg.channel.guild.channels.find(channel => channel.name === args)
+        ret = this.msg.channel.guild.channels.find(channel => channel.name === args && channel.type !== 4)
       }
     }
 

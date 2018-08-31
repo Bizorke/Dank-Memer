@@ -17,14 +17,55 @@ exports.handle = async function (msg) {
     disabledCommands: [],
     disabledCategories: [],
     enabledCommands: [],
-    dadMode: false
+    autoResponse: {
+      dad: false,
+      ree: false,
+      sec: false,
+      nou: false
+    }
   }
 
-  if (gConfig.dadMode) {
-    let re = /^(im|i'm|i am)\s+(.+)/i
+  if (!gConfig.autoResponse) {
+    gConfig.autoResponse = {
+      dad: false,
+      ree: false,
+      sec: false,
+      nou: false
+    }
+  }
+
+  if (gConfig.autoResponse.dad) {
+    let re = /^(im|i['’]m|i am)\s+(.+)/i
     const match = re.exec(msg.content)
     if (match && match[2].length < 1980) {
       msg.channel.createMessage(`Hi ${match[2]}, I'm dad`)
+    }
+  }
+
+  if (gConfig.autoResponse.sec) {
+    let re = /^(one sec|one second|sec)/i
+    const match = re.exec(msg.content)
+    if (match) {
+      await this.sleep(1000)
+      msg.channel.createMessage(`It's been one second`)
+    }
+  }
+
+  if (gConfig.autoResponse.ree) {
+    let re = /^(ree)/i
+    const match = re.exec(msg.content)
+    let content = msg.content.split(/ +/g)
+    let e = content[0].length
+    if (match && e < 1997) {
+      msg.channel.createMessage(`R${'E'.repeat(e)}`)
+    }
+  }
+
+  if (gConfig.autoResponse.nou) {
+    let re = /^(no u)/i
+    const match = re.exec(msg.content)
+    if (match) {
+      msg.channel.createMessage(`no u`)
     }
   }
 
