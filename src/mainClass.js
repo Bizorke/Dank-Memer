@@ -1,7 +1,6 @@
 const { readdirSync } = require('fs')
 const { join } = require('path')
 const { Base } = global.memeBase || require('eris-sharder')
-const { StatsD } = require('node-dogstatsd')
 
 const MessageCollector = require('./utils/MessageCollector.js')
 const botPackage = require('../package.json')
@@ -16,7 +15,6 @@ class Memer extends Base {
     this.r = require('rethinkdbdash')()
     this.db = require('./utils/dbFunctions.js')(this)
     this.http = require('./utils/http')
-    this.ddog = new StatsD()
     this.cmds = []
     this.tags = {}
     this.indexes = {
@@ -53,7 +51,6 @@ class Memer extends Base {
     this.loadCommands()
     this.createIPC()
     this.MessageCollector = new MessageCollector(this.bot)
-    this.ddog.increment('function.launch')
     this.bot
       .on('ready', this.ready.bind(this))
     const listeners = require(join(__dirname, 'handlers'))
@@ -69,7 +66,6 @@ class Memer extends Base {
       name: 'pls help',
       type: 0
     })
-    this.ddog.increment('function.ready')
 
     this.mentionRX = new RegExp(`^<@!*${this.bot.user.id}>`)
     this.mockIMG = await this.http.get('https://pbs.twimg.com/media/DAU-ZPHUIAATuNy.jpg').then(r => r.body)
@@ -117,7 +113,6 @@ class Memer extends Base {
   }
 
   loadCommands () {
-    this.ddog.increment('function.loadCommands')
     const categories = readdirSync(join(__dirname, 'commands'))
 
     for (const categoryPath of categories) {

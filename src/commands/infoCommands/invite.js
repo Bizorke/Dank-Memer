@@ -3,7 +3,7 @@ const { GenericCommand } = require('../../models/')
 module.exports = new GenericCommand(
   async () => ({
     fields: [
-      { name: 'Add Dank Memer', value: '\n[Here](https://goo.gl/BPWvB9)', inline: true },
+      { name: 'Add Dank Memer', value: '\n[Here](https://goo.gl/HL3zBi)', inline: true },
       { name: 'Join a Dank Server', value: '\n[Here](https://discord.gg/ebUqc7F)', inline: true }
     ]
   }), {
