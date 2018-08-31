@@ -28,7 +28,8 @@
             {
                 "host": "",
                 "port": 0,
-                "region": ""
+                "region": "",
+                "portWS": 0
             }
         ]
     },
