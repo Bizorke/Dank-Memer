@@ -12,7 +12,7 @@ module.exports = new GenericCommand(
       }
       res = JSON.parse(res.body)
       for (let i in res.included) {
-        patrons.push({ attributes: res.included[i].attributes, payment_data: res.data[i].attributes })
+        patrons.push({ attributes: res.included[i].attributes, payment_data: res.data[i].attributes, id: res.included[i].id })
       }
       if (res.links.next) {
         await loopThroughPatrons()
@@ -30,7 +30,7 @@ module.exports = new GenericCommand(
       let discord = patron.attributes.social_connections.discord
       if (discord) {
         if (discord.user_id === msg.author.id) {
-          Memer.db.addDonor(msg.author.id, patron.payment_data.amount_cents / 100, new Date(patron.payment_data.created_at), new Date(patron.payment_data.declined_since))
+          Memer.db.addDonor(msg.author.id, patron.payment_data.amount_cents / 100, new Date(patron.payment_data.created_at), new Date(patron.payment_data.declined_since), patron.id)
           const channel = await Memer.bot.getDMChannel(msg.author.id)
           await channel.createMessage({ embed: {
             color: 6732650,

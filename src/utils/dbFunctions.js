@@ -383,7 +383,7 @@ module.exports = Bot => ({
       .run()
   },
 
-  addDonor: function addDonor (id, donorAmount, donationDate, declineDate) {
+  addDonor: function addDonor (id, donorAmount, donationDate, declineDate, patreonID) {
     return Bot.r.table('donors')
       .insert({
         id,
@@ -392,7 +392,8 @@ module.exports = Bot => ({
         guildRedeems: 0,
         firstDonationDate: donationDate || Bot.r.now(),
         declinedSince: declineDate || null,
-        totalPaid: donorAmount
+        totalPaid: donorAmount,
+        patreonID
       }, { conflict: 'update' })
       .run()
   },
