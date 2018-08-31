@@ -8,5 +8,6 @@ module.exports = new GenericMediaCommand({
   title: 'Here, take some lewd nekos.',
   message: 'Free nudes from nekos.life',
   JSONKey: 'url',
+  donorOnly: true,
   reqURL: 'https://nekos.life/api/v2/img/lewd'
 })

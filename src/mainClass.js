@@ -69,7 +69,7 @@ class Memer extends Base {
     this.lavalink = new Cluster({
       nodes: this.config.lavalink.nodes.map(node => ({
         hosts: { ws: `ws://${node.host}:${node.portWS}`, rest: `http://${node.host}:${node.port}` },
-        password: node.password,
+        password: this.secrets.memerServices.lavalink,
         shardCount: this.config.sharder.shardCount,
         userID: this.bot.user.id
       })),
