@@ -1,5 +1,4 @@
 const { GenericCommand } = require('.')
-const { get } = require('snekfetch')
 
 class GenericImageCommand {
   constructor (commandProps, URLParseFN) {
@@ -14,14 +13,14 @@ class GenericImageCommand {
       return
     }
 
-    const data = await get(this.requestURL.replace('$ENDPOINT', this.cmdProps.triggers[0]))
-      .set('Authorization', Memer.secrets.microservices.imgenKey)
+    const data = await Memer.http.get(this.requestURL.replace('$ENDPOINT', this.cmdProps.triggers[0]))
+      .set('Authorization', Memer.secrets.memerServices.imgenKey)
       .query(datasrc)
 
-    if (data.status === 200 && data.headers['content-type'].startsWith('image/')) {
+    if (data.ok && data.headers['content-type'].startsWith('image/')) {
       await addCD()
       msg.channel.createMessage('', {
-        file: data.body,
+        file: data.raw,
         name: `${this.cmdProps.triggers[0]}.${this.cmdProps.format || 'png'}`
       })
     } else {
