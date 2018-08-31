@@ -114,8 +114,6 @@ module.exports = class HTTPRequest {
                 } catch (_) {
                   parsed = String(result.raw)
                 }
-              } else if (/image\/png/.test(type)) {
-                parsed = result.raw.toString()
               } else {
                 parsed = result.raw
               }

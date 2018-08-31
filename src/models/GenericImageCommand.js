@@ -1,11 +1,10 @@
 const { GenericCommand } = require('.')
-const { get } = require('snekfetch')
 
 class GenericImageCommand {
   constructor (commandProps, URLParseFN) {
     this.cmdProps = commandProps
     this.URLParseFN = URLParseFN || this.defaultURLParseFN
-    this.requestURL = commandProps.reqURL || 'http://127.0.0.1:65535/api/$ENDPOINT'
+    this.requestURL = commandProps.reqURL || 'http://127.0.0.1:5000/api/$ENDPOINT'
   }
 
   async run ({ Memer, msg, addCD }) {
@@ -14,14 +13,14 @@ class GenericImageCommand {
       return
     }
 
-    const data = await get(this.requestURL.replace('$ENDPOINT', this.cmdProps.triggers[0]))
-      .set('Authorization', Memer.secrets.microservices.imgenKey)
+    const data = await Memer.http.get(this.requestURL.replace('$ENDPOINT', this.cmdProps.triggers[0]))
+      .set('Authorization', Memer.secrets.memerServices.imgenKey)
       .query(datasrc)
 
     if (data.ok && data.headers['content-type'].startsWith('image/')) {
       await addCD()
       msg.channel.createMessage('', {
-        file: data.body,
+        file: data.raw,
         name: `${this.cmdProps.triggers[0]}.${this.cmdProps.format || 'png'}`
       })
     } else {
