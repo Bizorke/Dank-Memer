@@ -2,7 +2,6 @@ const gifs = require('../assets/arrays/permGifs.json')
 const ArgParser = require('../utils/ArgParser.js')
 
 exports.handle = async function (msg) {
-  this.ddog.increment('global.seen')
   if (
     !msg.channel.guild ||
     msg.author.bot ||
@@ -115,10 +114,7 @@ exports.handle = async function (msg) {
   }
   updateStats.bind(this)(msg, command, lastCmd)
 
-  if (msg.member.roles.some(id => msg.channel.guild.roles.get(id).name === 'no memes for you')) {
-    this.ddog.increment('role.blocked')
-    return
-  }
+  if (msg.member.roles.some(id => msg.channel.guild.roles.get(id).name === 'no memes for you')) { return }
 
   const isInCooldown = await checkCooldowns.bind(this)(msg, command, isDonor)
   if (isInCooldown) { return }
@@ -165,10 +161,6 @@ async function updateStats (msg, command, lastCmd) {
 
   await this.db.addCmd(msg.author.id)
 
-  this.ddog.increment('total.commands')
-  this.ddog.increment(`category.${command.category}`, 1, ['tag:one'])
-  this.ddog.increment(`cmd.${command.cmdProps.triggers[0]}`, 1, ['tag:two'])
-
   this.db.addPls(msg.channel.guild.id, msg.author.id)
 }
 
@@ -191,7 +183,6 @@ async function checkCooldowns (msg, command, isDonor) {
         footer: { text: 'Thanks for your support!' }
       }
     }
-    this.ddog.increment('cooldown')
     msg.channel.createMessage(isDonor ? donorMessage : cooldownMessage)
     return true
   }
@@ -268,7 +259,6 @@ async function runCommand (command, msg, args, cleanArgs, updateCooldowns) {
 }
 
 async function reportError (e, msg, command, cleanArgs) {
-  this.ddog.increment('error')
   let date = new Date()
   let message = await this.errorMessages(e)
   const channel = this.config.options.errorChannel || '470338254848262154'

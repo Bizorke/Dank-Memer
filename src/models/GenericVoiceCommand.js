@@ -89,7 +89,6 @@ async function checkBorkVoice (Memer, channel) {
   if (voiceConnection) {
     if (!voiceConnection.playing && voiceConnection.ready) {
       await Memer.bot.leaveVoiceChannel(voiceConnection.channelID)
-      Memer.ddog.increment('leftVoice')
       return channel.createMessage('Hm, it seems that I am in the voice channel but not playing anything. I decided to leave')
     }
     return setTimeout(() => checkBorkVoice(Memer, channel), 10000)
