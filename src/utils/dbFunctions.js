@@ -481,6 +481,6 @@ module.exports = Bot => ({
 
   addAutonsfwChannel: async function addChannel (id, channelID, type) { // id = guild ID
     return Bot.r.table('autonsfw')
-      .insert({id: id, channel: channelID, type: type})
+      .insert({id, channel: channelID, type})
   }
 })

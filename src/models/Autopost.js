@@ -22,6 +22,7 @@ module.exports = class Autopost {
     const res = await this.client.http.get(sub)
     const posts = res.body.data.children.filter(post => post.data.post_hint === 'image')
     const post = posts[Math.floor(Math.random() * Number(limit) - 1)]
+
     let check = await this.client.db.allAutomemeChannels()
     for (const { channel } of check) {
       this.client.bot.createMessage(channel, { embed: {
