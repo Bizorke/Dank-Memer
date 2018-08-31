@@ -20,7 +20,7 @@ class GenericImageCommand {
     if (data.ok && data.headers['content-type'].startsWith('image/')) {
       await addCD()
       msg.channel.createMessage('', {
-        file: data.raw,
+        file: data.body,
         name: `${this.cmdProps.triggers[0]}.${this.cmdProps.format || 'png'}`
       })
     } else {
