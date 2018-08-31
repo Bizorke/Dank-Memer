@@ -11,24 +11,38 @@ const tables = [
   'updates',
   'users'
 ]
-const secondary = [
-  'pocket',
-  'pls',
-  'spam'
-]
+const secondary = [{
+  table: 'guildUsage',
+  index: 'pls'
+}, {
+  table: 'tags',
+  index: 'guild_id'
+}, {
+  table: 'donors',
+  index: 'patreonID'
+}, {
+  table: 'users',
+  indexes: ['bank', 'donor', 'pls', 'pocket', 'spam']
+}]
+const startTime = Date.now();
+(async function () {
+  await Promise.all([tables.map(t => r.tableCreate(t).run())])
+  console.log(`${tables.join(', ')} tables created, waiting for them to be ready`)
+  await sleep(10 * 1000)
+  for (const secondaryIndex of secondary) {
+    if (secondaryIndex.index) {
+      await r.table(secondaryIndex.table).indexCreate(secondaryIndex.index).run()
+      console.log(`${secondaryIndex.index} index created`)
+    } else {
+      await Promise.all(secondaryIndex.indexes.map(i => r.table(secondaryIndex.table).indexCreate(i).run()))
+      console.log(`${secondaryIndex.indexes.join(', ')} indexes created`)
+    }
+  }
+  console.log(`Setup done: ${Date.now() - startTime}ms`)
+})()
 
-async function byebye (r) {
-  tables.forEach(name => {
-    r.tableCreate(name).run()
-    console.log(`${name} table created`)
+async function sleep (ms) {
+  return new Promise(resolve => {
+    setTimeout(resolve, ms)
   })
-
-  setTimeout(() => {
-    secondary.forEach(name => {
-      r.table('users').indexCreate(name).run()
-      console.log(`${name} index created`)
-    })
-  }, 10 * 1000)
 }
-
-byebye(r)
