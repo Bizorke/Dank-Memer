@@ -18,7 +18,7 @@ class GenericImageCommand {
       .set('Authorization', Memer.secrets.microservices.imgenKey)
       .query(datasrc)
 
-    if (data.status === 200 && data.headers['content-type'].startsWith('image/')) {
+    if (data.ok && data.headers['content-type'].startsWith('image/')) {
       await addCD()
       msg.channel.createMessage('', {
         file: data.body,

@@ -95,13 +95,13 @@ module.exports = class HTTPRequest {
       const req = fetch(this.options, res => {
         const ce = res.headers['content-encoding']
 
-        let data = ''
+        let data = []
         let response = res
 
         if (ce === 'deflate') res.pipe(response = createDeflate())
         if (ce === 'gzip') res.pipe(response = createGunzip())
 
-        response.on('data', chunk => { data += chunk })
+        response.on('data', chunk => { data.push(chunk) })
         response.once('error', reject)
         response.once('end', async () => {
           let result = {
@@ -114,13 +114,15 @@ module.exports = class HTTPRequest {
                 } catch (_) {
                   parsed = String(result.raw)
                 }
+              } else if (/image\/png/.test(type)) {
+                parsed = result.raw.toString()
               } else {
                 parsed = result.raw
               }
               return parsed
             },
-            raw: data,
-            ok: res.statusCode >= 200 && res.statusCode < 400,
+            raw: Buffer.concat(data),
+            ok: res.statusCode >= 200 && res.statusCode < 300,
             statusCode: res.statusCode,
             statusText: res.statusMessage,
             headers: response.headers
@@ -128,6 +130,8 @@ module.exports = class HTTPRequest {
           if (res.statusCode === 301 && this.redirects < 2) {
             this.redirects++
             result = await new HTTPRequest('GET', res.headers.location).then(redirectRes => redirectRes)
+          } else if (this.redirects > 2) {
+            return reject(new HTTPError('Too many redirects', result))
           }
           if (result.ok) {
             return resolve(result)
@@ -138,6 +142,7 @@ module.exports = class HTTPRequest {
       })
 
       if (this.options.data) req.write(this.options.data)
+      req.on('error', reject)
       req.end()
     })
   }
@@ -153,6 +158,10 @@ module.exports = class HTTPRequest {
 
   catch (rejector) {
     return this.then(null, rejector)
+  }
+
+  end () {
+    return this.then(null, null)
   }
 
   static get (...args) {
