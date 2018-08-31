@@ -8,17 +8,17 @@ module.exports = new GenericCommand(
     }
     let channel = msg.args.resolveChannel()
     if (!channel) {
-      return 'come on man give me a channel name or id to autopost memes to'
+      return 'come on you gotta give me a channel name or id to autopost memes to'
     }
 
     let check = await Memer.db.getAutomemeChannel(msg.channel.guild.id)
-    if (check === channel.id) {
+    if (check.channel === channel.id) {
       return `<#${channel.id}> has already been set up to autopost memes.`
     }
     await Memer.db.addAutomemeChannel(msg.channel.guild.id, channel.id)
     await addCD()
 
-    return `<#${channel.id}> will now post memes every 5 minutes.`
+    return check ? `Changed automeme channel from <#${check.channel}> to **<#${channel.id}>**` : `<#${channel.id}> will now post memes every 5 minutes`
   },
   {
     triggers: ['automeme'],

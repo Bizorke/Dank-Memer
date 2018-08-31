@@ -8,21 +8,24 @@ module.exports = new GenericCommand(
     }
     let channel = msg.args.resolveChannel()
     if (!channel) {
-      return 'come on man give me a channel name or id to autopost NSFW content to'
+      return 'come on you gotta give me a channel name or id to autopost NSFW content to'
+    }
+    if (!channel.nsfw) {
+      return 'You can\'t post NSFW content in a non-NSFW marked channel!'
     }
     let type = msg.args.gather()
-    if (!['4k', 'boobs', 'butt', 'lesbian', 'gif'].includes(type.toLowerCase())) {
-      return `You need to provide a valid porn category for me to post to <#${channel.id}>.\nYou can pick from \`4k\`, \`boobs\`, \`butt\`, \`lesbian\` or \`gif\`\nFor example: \`pls autonsfw <#${channel.id}> butt`
+    if (!['4k', 'boobs', 'ass', 'lesbian', 'gif'].includes(type.toLowerCase())) {
+      return `You need to provide a valid porn category for me to post to <#${channel.id}>.\nYou can pick from \`4k\`, \`boobs\`, \`butt\`, \`lesbian\` or \`gif\`\nFor example: \`pls autonsfw #${channel.name} butt\``
     }
 
     let check = await Memer.db.getAutonsfwChannel(msg.channel.guild.id)
-    if (check === channel.id) {
+    if (check.channel === channel.id) {
       return `<#${channel.id}> has already been set up to autopost NSFW content.`
     }
     await Memer.db.addAutonsfwChannel(msg.channel.guild.id, channel.id, type)
     await addCD()
 
-    return check ? `<#${channel.id}> will now post NSFW content every 5 minutes.` : `Autonsfw posts will now appear in **<#${channel.id}>** instead of <#${check}>`
+    return check ? `Changed autonsfw channel from <#${check.channel}> to **<#${channel.id}>**` : `<#${channel.id}> will now post NSFW content every 5 minutes`
   },
   {
     triggers: ['autonsfw'],
