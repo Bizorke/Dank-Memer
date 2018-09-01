@@ -39,9 +39,20 @@ module.exports = new GenericCommand(
       if (!damage) {
         return
       }
-      msg.channel.createMessage(`**${turn.username}** lands an amazing hit on **${oppturn.username}** dealing **${damage}**!\n**${oppturn.username}** is left with just ${oppturn.health} health!`)
+      const adjective = Memer.randomInArray(['an incredible', 'a fantastic', 'a phenomenal', 'a game-ending', 'an amazing', 'a catastrophic', 'a devestating', 'a crazy'])
+      msg.channel.createMessage(`**${turn.username}** lands ${adjective} hit on **${oppturn.username}** dealing **${damage}**!\n**${oppturn.username}** is left with just ${oppturn.health} health!`)
       if (turn.health > 1 && oppturn.health > 1) {
         play()
+      } else {
+        const loser = turn.health > 1 ? oppturn : turn
+        const winner = loser === turn ? oppturn : turn
+
+        // Random words to SPICE up the winning message
+        const wowword = Memer.randomInArray(['Holy cow!', 'Wow!', 'I did not expect that!', 'God damn!', 'Oh my god!', 'No way!', 'Holy crap!', 'Dang!'])
+        const noun = Memer.randomInArray(['just', 'totally', 'kinda', '100%', 'absolutely', 'seriously', 'legitimately', 'completely'])
+        const verb = Memer.randomInArray(['annihilated', 'knocked out', 'memed', 'destroyed', 'crushed', 'ruined', 'eradicated', 'dismantled', 'wiped out',
+          'erased', 'squashed', 'shattered'])
+        msg.channel.createMessage(`${wowword}! **${winner.username} ${noun} ${verb} **${loser.username}**, winning with \`${winner.health} HP\` left!`)
       }
     }
     play()
