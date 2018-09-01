@@ -18,7 +18,7 @@ module.exports = new GenericCommand(
     let oppturn = enemy
 
     const performTurn = async (attacker, opponent, retry) => {
-      msg.channel.createMessage(`${turn.mention}, what do you want to do? \`punch\` or \`defend\`?\nType your choice out in chat as it's displayed!`)
+      msg.channel.createMessage(`${turn.mention}, what do you want to do? \`punch\`, \`defend\` or \`end\`?\nType your choice out in chat as it's displayed!`)
       let prompt = await Memer.MessageCollector.awaitMessage(msg.channel.id, attacker.id, 30e3)
       if (!prompt) {
         msg.channel.createMessage(`${attacker.username} didn't answer in time`)
@@ -38,10 +38,11 @@ module.exports = new GenericCommand(
         } else {
           msg.channel.createMessage('don\'t be greedy ur already at the max armor level')
         }
-
         return false
+      } else if (prompt.content.toLowerCase() === 'end') {
+        msg.channel.createMessage(`**${attacker.username}** has ended the game`)
       } else {
-        msg.channel.createMessage(`That's not a valid option! You must type \`punch\` or \`defend\` in chat!\n${retry ? 'The game has ended due to multiple invalid choices.' : ''}`)
+        msg.channel.createMessage(`That's not a valid option! You must type \`punch\`, \`defend\` or \`end\` in chat!\n${retry ? 'The game has ended due to multiple invalid choices.' : ''}`)
         if (!retry) {
           return performTurn(attacker, opponent, true)
         }
@@ -50,6 +51,9 @@ module.exports = new GenericCommand(
 
     const play = async () => {
       const damage = await performTurn(turn, oppturn)
+      if (damage === undefined) {
+        return
+      }
       if (!damage) {
         oppturn = [turn, turn = oppturn][0]
         return play()
