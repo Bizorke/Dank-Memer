@@ -71,7 +71,7 @@ exports.handle = async function (msg) {
   // Swear detection
   if (gConfig.swearFilter) {
     let swears = ['fuck', 'penis', 'cunt', 'faggot', 'wank', 'nigger', 'nigga', 'slut', 'bastard', 'bitch', 'asshole', 'dick', 'blowjob', 'cock',
-      'pussy', 'retard']
+      'pussy', 'retard', 'ligma', 'sugondese', 'sugandese', 'fricc', 'hecc', 'sugma', 'updog', 'bofa', 'fugma', 'snifma', 'bepis', 'da wae', 'despacito']
     let re = new RegExp(`.*(${swears.join('|')}).*`, 'i')
     const match = re.exec(msg.content)
     if (match) {
