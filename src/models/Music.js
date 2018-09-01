@@ -5,6 +5,7 @@ module.exports = class Music {
     this.loop = false
     this.preparing = false
     this.queue = []
+    this.player.on('event', this._handleEvent.bind(this))
     this._channelID = null
   }
 
@@ -60,10 +61,12 @@ module.exports = class Music {
   }
 
   _failed (event) {
+    // TODO add meme response
     return this._send(`\`[ERROR]\` ${event.error}\nSong was skipped due error.`)
   }
 
   _stuck () {
+    // TODO add meme response
     this._send(`\`[Track Got Stuck]\` Skipped to the next one.`)
     return this._play()
   }
@@ -122,7 +125,11 @@ module.exports = class Music {
   }
 
   get player () {
-    return this.guild.player
+    return this.client.lavalink.get(this.id)
+  }
+
+  get node () {
+    return this.player.node
   }
 
   get nowPlaying () {

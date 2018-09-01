@@ -10,7 +10,6 @@ const botPackage = require('../package.json')
 class Memer extends Base {
   constructor (bot) {
     super(bot)
-
     this.log = require('./utils/logger.js')
     this.config = require('./config.json')
     this.secrets = require('./secrets.json')
@@ -18,6 +17,7 @@ class Memer extends Base {
     this.db = require('./utils/dbFunctions.js')(this)
     this.http = require('./utils/http')
     this.ddog = new StatsD()
+    this.musicManager = require('./utils/MusicManager')(this)
     this.cmds = []
     this.tags = {}
     this.indexes = {
