@@ -67,7 +67,8 @@ module.exports = new GenericModerationCommand(
     cooldown: 72e5,
     usage: '{command} [nickname | reset]',
     description: 'Warning, this will rename everyone on the server (or everyone with a specific role when provided) if the bot has the correct permissions',
-    modPerms: ['manageNicknames']
+    modPerms: ['manageGuild'],
+    perms: ['manageNicknames']
   }
 )
 
