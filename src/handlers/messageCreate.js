@@ -68,6 +68,18 @@ exports.handle = async function (msg) {
     }
   }
 
+  // Swear detection
+  if (gConfig.swearFilter) {
+    let swears = ['fuck', 'penis', 'cunt', 'faggot', 'wank', 'nigger', 'nigga', 'slut', 'bastard', 'bitch', 'asshole', 'dick', 'blowjob', 'cock',
+      'pussy', 'retard']
+    let re = new RegExp('(\b|\s|^|.|\,|\ )' + swears.join('|') + '(\b|\s|$|.|\,|\ )', 'i') // eslint-disable-line no-useless-escape
+    const match = re.exec(msg.content)
+    if (match) {
+      msg.delete()
+      msg.channel.createMessage(`No swearing in this christian server :rage:`)
+    }
+  }
+
   let isDonor = await this.db.checkDonor(msg.author.id)
 
   const selfMember = msg.channel.guild.members.get(this.bot.user.id)
