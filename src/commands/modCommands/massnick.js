@@ -21,8 +21,8 @@ module.exports = new GenericModerationCommand(
 
     await addCD()
     let members = msg.channel.guild.members.filter(m => ((m.nick || m.user.username) !== nickname) &&
-    getHighestRolePos(msg.channel.guild.members.get(Memer.bot.user.id), msg.channel.guild) > getHighestRolePos(m, msg.channel.guild) &&
-    (m.nick ? m.nick !== oldNicknames[m.id] : true))
+      getHighestRolePos(msg.channel.guild.members.get(Memer.bot.user.id), msg.channel.guild) > getHighestRolePos(m, msg.channel.guild) &&
+      (m.nick ? m.nick !== oldNicknames[m.id] : true))
     const next = Number(500 * members.length)
     const hours = Math.floor(next / 3600000)
     const minutes = Math.floor((next / 60000) - (hours * 60))
