@@ -40,14 +40,14 @@ module.exports = new GenericCommand(
         return
       }
       msg.channel.createMessage(`**${turn.username}** lands an amazing hit on **${oppturn.username}** dealing **${damage}**!\n**${oppturn.username}** is left with just ${oppturn.health} health!`)
+      if (turn.health > 1 && oppturn.health > 1) {
+        play()
+      }
     }
-
-    if (turn.health > 1 && oppturn.health > 1) {
-      play()
-    }
+    play()
   },
   {
     triggers: ['fight', 'challenge'],
-    description: 'fight'
+    description: 'Fight to the death!'
   }
 )
