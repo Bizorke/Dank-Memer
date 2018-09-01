@@ -9,11 +9,18 @@ module.exports = class GenericModerationCommand {
   async run ({ Memer, msg, args, addCD, cleanArgs }) {
     // modPerms will be an array of permissions that are required by the user to run this command
     // If no permissions are passed, this code is never considered.
+    for (const requiredPermission of this.cmdProps.perms || []) {
+      if (!msg.channel.guild.members.get(Memer.bot.user.id).permission.has(requiredPermission) && !msg.channel.permissionsOf(Memer.bot.user.id).has(requiredPermission)) {
+        return this.missingPermission('bot', requiredPermission)
+      }
+    }
+    // modPerms will be an array of permissions that are required by the user to run this command
+    // If no permissions are passed, this code is never considered.
     for (const requiredPermission of this.cmdProps.modPerms || []) {
       // Check to see if the member has this permission guild-wide and channel-wide as well
       if (!msg.member.permission.has(requiredPermission) && !msg.channel.permissionsOf(msg.author.id).has(requiredPermission)) {
         return this.missingPermission('user', requiredPermission)
-      } else if (!msg.channel.guild.members.get(Memer.bot.user.id).permission.has(requiredPermission) && !msg.channel.permissionsOf(Memer.bot.user.id).has(requiredPermission)) {
+      } else if (!this.cmdProps.perms && !msg.channel.guild.members.get(Memer.bot.user.id).permission.has(requiredPermission) && !msg.channel.permissionsOf(Memer.bot.user.id).has(requiredPermission)) {
         return this.missingPermission('bot', requiredPermission)
       }
     }
