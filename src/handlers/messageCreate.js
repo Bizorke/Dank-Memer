@@ -193,34 +193,19 @@ function checkPerms (command, permissions, msg) {
   const neededPerms = command.props.perms.filter(perm => !permissions.has(perm))
   if (permissions.has('sendMessages')) {
     if (permissions.has('embedLinks')) {
-      if (neededPerms.length > 1) {
-        msg.channel.createMessage({
-          embed: {
-            'title': 'oh no!',
-            'description': `You need to add **${neededPerms.join(', ')}** to use this command!\nGo to **Server settings => Roles => Dank Memer** to change this!`,
-            'color': this.randomColor(),
-            'footer': {
-              'text': 'If it still doesn\'t work, check channel permissions too!'
-            }
+      msg.channel.createMessage({
+        embed: {
+          'title': 'oh no!',
+          'description': `You need to add **${neededPerms.length > 1 ? neededPerms.join(', ') : neededPerms}** to use this command!\nGo to **Server settings => Roles => Dank Memer** to change this!`,
+          'color': this.randomColor(),
+          'image': neededPerms.length === 1 ? {
+            'url': gifs[neededPerms[0]]
+          } : undefined,
+          'footer': {
+            'text': 'If it still doesn\'t work, check channel permissions too!'
           }
-        })
-      } else {
-        msg.channel.createMessage(
-          {
-            'embed': {
-              'title': 'oh no!',
-              'description': `You need to add **${neededPerms}** to use this command!\nGo to **Server settings => Roles => Dank Memer** to change this!`,
-              'color': this.randomColor(),
-              'image': {
-                'url': gifs[neededPerms[0]]
-              },
-              'footer': {
-                'text': 'If it still doesn\'t work, check channel permissions too!'
-              }
-            }
-          }
-        )
-      }
+        }
+      })
     } else {
       msg.channel.createMessage(
         `You need to add **${neededPerms.join(', ')}** to use this command!\n\nGo to **Server settings => Roles => Dank Memer** to change this!`
