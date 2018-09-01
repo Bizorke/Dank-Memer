@@ -11,7 +11,7 @@ module.exports = new GenericCommand(
       swearFilter: false
     }
 
-    if (gConfig.swearFilter === undefined) {
+    if (!gConfig.swearFilter) { // picks up undefined and null
       gConfig.swearFilter = false
     }
 
@@ -24,7 +24,7 @@ module.exports = new GenericCommand(
 
     await Memer.db.updateGuild(gConfig)
   }, {
-    triggers: ['noswears'],
+    triggers: ['noswears', 'noswear', 'swearfilter', 'toggleswear'],
     usage: '{command}',
     description: 'NO SWEARS IN THIS CHRISTIAN SERVER'
   }
