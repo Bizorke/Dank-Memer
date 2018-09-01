@@ -6,6 +6,12 @@ module.exports = new GenericCommand(
     if (!enemy) {
       return 'you need to provide a valid user ID or name to fight against'
     }
+    if (enemy.id === author.id) {
+      return 'You can\'t fight urself dumbo'
+    }
+    if (enemy.bot) {
+      return 'You can\'t fight against bots, you\'ll never heard back from them'
+    }
     enemy.health = author.health = 100
     enemy.armor = author.armor = 0
     let turn = author
