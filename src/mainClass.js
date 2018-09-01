@@ -87,7 +87,7 @@ class Memer extends Base {
     this.mentionRX = new RegExp(`^<@!*${this.bot.user.id}>`)
     this.mockIMG = await this.http.get('https://pbs.twimg.com/media/DAU-ZPHUIAATuNy.jpg').then(r => r.body)
     this.autopost = new (require('./utils/Autopost.js'))(this)
-    setInterval(this.autopost.post, 3e5) // 5 minutes
+    setInterval(() => { this.autopost.post() }, 3e5) // 5 minutes
   }
 
   createIPC () {
