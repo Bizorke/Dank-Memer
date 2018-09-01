@@ -13,15 +13,16 @@ module.exports = new GenericModerationCommand(
         return 'Ok I guess we\'re not renaming anyone then'
       }
     }
-    let oldNicknames
+    let oldNicknames = {}
     if (nickname.toLowerCase() === 'reset') {
       nickname = ''
       oldNicknames = await Memer.redis.getAsync(`massnick-${msg.channel.guild.id}`).then(res => res ? JSON.parse(res) : {})
     }
 
     await addCD()
-    let members = msg.channel.guild.members.filter(m => (m.nick || m.user.username !== nickname) &&
-    getHighestRolePos(msg.channel.guild.members.get(Memer.bot.user.id), msg.channel.guild) > getHighestRolePos(m, msg.channel.guild))
+    let members = msg.channel.guild.members.filter(m => ((m.nick || m.user.username) !== nickname) &&
+    getHighestRolePos(msg.channel.guild.members.get(Memer.bot.user.id), msg.channel.guild) > getHighestRolePos(m, msg.channel.guild) &&
+    (m.nick ? m.nick !== oldNicknames[m.id] : true))
     const next = Number(500 * members.length)
     const hours = Math.floor(next / 3600000)
     const minutes = Math.floor((next / 60000) - (hours * 60))
@@ -33,22 +34,32 @@ module.exports = new GenericModerationCommand(
       properArr.push(`${timeArr[i].amount} ${timeArr[i].amount === 1 ? timeArr[i].type.singular : timeArr[i].type.plural}`)
     }
     const timeLeft = properArr.slice(0, -2).join(', ') + (properArr.slice(0, -2).length ? ', ' : '') + properArr.slice(-2).join(' and ')
-
-    msg.channel.createMessage(`Now starting to mass nickname all members to **${nickname || 'their username'}**\n**ETA**: ${timeLeft}`)
+    let action = !nickname
+      ? 'Now starting to reset the nickname of all members. Any members who previously had a nickname set and was mass-nicked within the last 6 hours will have their name reset back to their old nickname.'
+      : `Now starting to mass nickname all members to **${nickname}**`
+    msg.channel.createMessage(`${action}\n**ETA**: ${timeLeft}`)
     const promises = []
     let failed = 0
     let nicknames = {}
+    // Cache the members who had the given nickname already as well so they won't be reset to their username on massnick reset
+    if (nickname) {
+      for (const member of msg.channel.guild.members.filter(m => m.nick === nickname)) {
+        nicknames[member.id] = member.nick
+      }
+    }
     for (const member of members) {
       if (nickname && member.nick) {
         nicknames[member.id] = member.nick
       }
       if (getHighestRolePos(msg.channel.guild.members.get(Memer.bot.user.id), msg.channel.guild) > getHighestRolePos(member, msg.channel.guild)) {
         promises.push(
-          member.edit({ nick: nickname ? nickname : (oldNicknames[member.id] || nickname) }).catch(() => { // eslint-disable-line no-unneeded-ternary
+          member.edit({ nick: nickname || (oldNicknames[member.id] || nickname) }).catch(() => {
             failed++
           })
         )
-      } else failed++
+      } else {
+        failed++
+      }
     }
 
     await Promise.all(promises)
