@@ -14,15 +14,21 @@ module.exports = new GenericModerationCommand(
     msg.channel.guild.createChannel('Voicekick', 2, hahayes, channel ? channel.parentID : null)
       .then(async (newchannel) => {
         let promises = []
+        let failed = 0
         for (let user of users) {
           promises.push(
-            user.edit({ channelID: newchannel.id }).catch(() => {})
+            user.edit({ channelID: newchannel.id }).catch(() => {
+              failed++
+            })
           )
         }
 
         await Promise.all(promises).then(async () => {
           await newchannel.delete(hahayes)
           msg.channel.createMessage(`I successfully kicked ${promises.length} ${promises.length === 1 ? 'person' : 'people'} from their voice channel`)
+          if (failed) {
+            msg.channel.createMessage(`I failed to remove ${failed} ${failed === 1 ? 'person' : 'people'} from their voice channel. Check that I have the correct permission to move people in voice channels as well as creating new channels and try again.`)
+          }
         })
       })
       .catch((err) => {
