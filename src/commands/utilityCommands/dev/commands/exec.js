@@ -3,6 +3,9 @@ const { exec } = require('child_process')
 module.exports = {
   help: 'exec <script>',
   fn: async ({ Memer, msg, args }) => {
+    if (!Memer.config.owners.includes(msg.author.id)) {
+      return 'Woah now, only my "Owners" can do this'
+    }
     msg.channel.createMessage(`**Input**\n${Memer.codeblock(args.join(' '), 'sh')}`)
     exec(args.join(' '), async (e, stdout, stderr) => {
       if (stdout.length + stderr.length > 994) {
