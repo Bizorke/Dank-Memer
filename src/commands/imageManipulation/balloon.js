@@ -2,8 +2,9 @@ const { GenericImageCommand } = require('../../models/')
 
 module.exports = new GenericImageCommand({
   triggers: ['balloon'],
-  description: 'You can\'t pop this balloon.',
+  description: 'You can\'t pop this balloon',
 
-  textLimit: 125,
+  requiredArgs: 'You need to provide text to put on the balloon meme separated by a comma (,)',
+  textLimit: 10,
   textOnly: true
 })

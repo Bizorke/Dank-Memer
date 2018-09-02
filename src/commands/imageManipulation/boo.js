@@ -4,6 +4,7 @@ module.exports = new GenericImageCommand({
   triggers: ['boo'],
   description: 'AAHHHH',
 
-  textLimit: 125,
+  requiredArgs: 'You need to provide text for the ghost to say separated by a comma (,)',
+  textLimit: 32,
   textOnly: true
 })
