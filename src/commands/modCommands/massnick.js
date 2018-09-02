@@ -23,7 +23,10 @@ module.exports = new GenericModerationCommand(
     let members = msg.channel.guild.members.filter(m => ((m.nick || m.user.username) !== nickname) &&
       getHighestRolePos(msg.channel.guild.members.get(Memer.bot.user.id), msg.channel.guild) > getHighestRolePos(m, msg.channel.guild) &&
       (m.nick ? m.nick !== oldNicknames[m.id] : true))
-    const next = Number(500 * members.length)
+    let next = Number(500 * members.length)
+    if (next < 1) {
+      next = 1
+    }
     const hours = Math.floor(next / 3600000)
     const minutes = Math.floor((next / 60000) - (hours * 60))
     const seconds = Math.floor((next / 1000) - ((hours * 3600) + (minutes * 60)))
@@ -67,6 +70,10 @@ module.exports = new GenericModerationCommand(
       await Memer.redis.setAsync(`massnick-${msg.channel.guild.id}`, JSON.stringify(nicknames), 'EX', 60 * 60 * 6)
     } else {
       await Memer.redis.delAsync(`massnick-${msg.channel.guild.id}`)
+    }
+    let modlog = await Memer.db.fetchModlog(msg.channel.guild.id)
+    if (modlog) {
+      Memer.bot.createMessage(modlog, `**${msg.author.username}#${msg.author.discriminator}** massnicknamed ${members.length - failed} ${members.length - failed === 1 ? 'user' : 'users'} to ${!nickname ? 'their stinky username' : `**${nickname}**`}.`)
     }
     msg.channel.createMessage(`Finished renaming ${members.length - failed} people to ${!nickname ? 'their stinky username' : `**${nickname}**`}.`)
     if (failed) {

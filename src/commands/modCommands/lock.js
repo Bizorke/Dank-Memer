@@ -27,9 +27,13 @@ module.exports = new GenericModerationCommand(
     if (previousOverwrites.json.sendMessages === false) {
       return 'this channel is already locked ya doofus'
     }
+    let modlog = await Memer.db.fetchModlog(msg.channel.guild.id)
     channel.createMessage(`**This channel has been locked.**\n${reason}`)
     channel.editPermission(msg.channel.guild.id, previousOverwrites.allow & ~2048, previousOverwrites.deny | 2048, 'role', reason)
       .then(() => {
+        if (modlog) {
+          Memer.bot.createMessage(modlog, `**${msg.author.username}#${msg.author.discriminator}** locked ${channel.name}`)
+        }
         return msg.channel.createMessage(`\`${channel.name}\` has been locked down, no more normies`)
       })
       .catch(() => {
