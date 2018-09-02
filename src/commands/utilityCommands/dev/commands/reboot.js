@@ -3,7 +3,7 @@ const { exec } = require('child_process')
 module.exports = {
   help: 'reboot <cluster | all>',
   fn: async ({ Memer, msg, args }) => {
-    if (!Memer.config.owners.includes(msg.author.id)) {
+    if (!Memer.config.options.owners.includes(msg.author.id)) {
       return 'Woah now, only my "Owners" can do this'
     }
     if (['cluster', 'all'].includes(args[0])) {

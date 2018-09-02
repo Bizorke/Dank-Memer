@@ -1,7 +1,7 @@
 module.exports = {
   help: 'Announces an update to all subscribed servers.',
   fn: async ({ Memer, args, msg }) => {
-    if (!Memer.config.owners.includes(msg.author.id)) {
+    if (!Memer.config.options.owners.includes(msg.author.id)) {
       return 'Woah now, only my "Owners" can do this'
     }
     const m = await msg.channel.createMessage(`confirm new update message? \`y\`/\`n\`\n\n\`(${args.join(' ')})\``)

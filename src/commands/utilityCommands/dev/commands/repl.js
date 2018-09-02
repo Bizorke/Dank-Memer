@@ -4,7 +4,7 @@ const ProgrammaticREPL = require('programmatic-repl')
 module.exports = {
   help: 'repl',
   fn: async ({ Memer, msg }) => {
-    if (!Memer.config.owners.includes(msg.author.id)) {
+    if (!Memer.config.options.owners.includes(msg.author.id)) {
       return 'Woah now, only my "Owners" can do this'
     }
     const REPL = new ProgrammaticREPL({
