@@ -1,5 +1,5 @@
 const { GenericCommand } = require('../../models/')
-let min = 100
+let min = 500
 
 const dmStolenUser = async (Memer, user, msg, worth) => {
   if (!user.bot) {
@@ -48,8 +48,8 @@ module.exports = new GenericCommand(
 
     if (stealingOdds <= 60) { // fail section
       let punish
-      if ((perpCoins * 0.05) < 100) {
-        punish = 100
+      if ((perpCoins * 0.05) < 500) {
+        punish = 500
       } else {
         punish = perpCoins * 0.05
       }
@@ -68,7 +68,7 @@ module.exports = new GenericCommand(
       await Memer.db.removePocket(user.id, worth)
       await dmStolenUser(Memer, user, msg, worth)
       return `You managed to steal a large amount before leaving! 💰\nYour payout was **${worth.toLocaleString()}** coins.`
-    } else { // full theft up to 1 trillion
+    } else { // full theft
       let worth = Math.round(victimCoins)
       await Memer.db.addPocket(msg.author.id, worth)
       await Memer.db.removePocket(user.id, worth)
@@ -78,8 +78,8 @@ module.exports = new GenericCommand(
   },
   {
     triggers: ['steal', 'rob', 'ripoff'],
-    cooldown: 4e5,
-    donorCD: 3e5,
+    cooldown: 5 * 60 * 1000,
+    donorCD: 3 * 60 * 1000,
     perms: ['embedLinks'],
     description: 'Take your chances at stealing from users. Warning, you will lose money if you get caught!',
     cooldownMessage: 'Woahhh there, you need some time to plan your next hit. Wait ',

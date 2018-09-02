@@ -38,8 +38,8 @@ module.exports = new GenericCommand(
   },
   {
     triggers: ['flip', 'coinflip'],
-    cooldown: 3e5,
-    donorCD: 2e5,
+    cooldown: 30 * 1000,
+    donorCD: 20 * 1000,
     description: 'Flip a coin, and if you call it you win it!'
   }
 )

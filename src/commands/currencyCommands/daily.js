@@ -13,7 +13,7 @@ module.exports = new GenericCommand(
       streak += 1
     }
 
-    let coinsEarned = 25
+    let coinsEarned = 250
     const streakBonus = Math.round((0.02 * coinsEarned) * streak)
     if (streak > 1) {
       coinsEarned = coinsEarned + streakBonus
@@ -23,7 +23,7 @@ module.exports = new GenericCommand(
 
     return {
       title: `Here are your daily coins, ${msg.author.username}`,
-      description: `**${coinsEarned} coins** were placed in your pocket.\n\nYou can get another 25 coins by voting! ([Click Here](https://discordbots.org/bot/memes/vote))`,
+      description: `**${coinsEarned} coins** were placed in your pocket.\n\nYou can get another 250 coins by voting! ([Click Here](https://discordbots.org/bot/memes/vote))`,
       thumbnail: {url: 'http://www.dank-memer-is-lots-of.fun/coin.png'},
       footer: {text: `Streak: ${streak} days (+${streakBonus} coins)`}
     }
