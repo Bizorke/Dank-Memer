@@ -5,7 +5,7 @@ exports.handle = function (guild) {
     fields: [
       {name: 'Important Links', value: this.links}
     ],
-    footer: { text: 'Join the support server if you have any questions!' }
+    footer: { text: 'Enjoy the 200+ commands!' }
   }
   guild.channels.get(guild.channels.filter(c => c.type === 0).map(c => c.id)[0]).createMessage({ embed })
     .catch(() => {})
