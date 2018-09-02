@@ -23,7 +23,7 @@ module.exports = new GenericModerationCommand(
     let members = msg.channel.guild.members.filter(m => ((m.nick || m.user.username) !== nickname) &&
       getHighestRolePos(msg.channel.guild.members.get(Memer.bot.user.id), msg.channel.guild) > getHighestRolePos(m, msg.channel.guild) &&
       (m.nick ? m.nick !== oldNicknames[m.id] : true))
-    let next = Number(500 * members.length)
+    let next = Number(800 * members.length)
     if (next < 1) {
       next = 1
     }

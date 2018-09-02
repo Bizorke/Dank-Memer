@@ -28,7 +28,7 @@ module.exports = new GenericModerationCommand(
       return `There's nobody with a cancerous name, what a great day!`
     }
 
-    let next = Number(500 * members.length)
+    let next = Number(800 * members.length)
     if (next < 1) {
       next = 1
     }
