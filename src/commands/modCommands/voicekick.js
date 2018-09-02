@@ -25,7 +25,9 @@ module.exports = new GenericModerationCommand(
 
         await Promise.all(promises).then(async () => {
           await newchannel.delete(hahayes)
-          msg.channel.createMessage(`I successfully kicked ${promises.length} ${promises.length === 1 ? 'person' : 'people'} from their voice channel`)
+          if (failed !== promises.length) { // do not post success message if all promises failed
+            msg.channel.createMessage(`I successfully kicked ${promises.length} ${promises.length === 1 ? 'person' : 'people'} from their voice channel`)
+          }
           if (failed) {
             msg.channel.createMessage(`I failed to remove ${failed} ${failed === 1 ? 'person' : 'people'} from their voice channel. Check that I have the correct permission to move people in voice channels as well as creating new channels and try again.`)
           }
