@@ -1,6 +1,9 @@
 module.exports = {
   help: 'change bot avatar',
   fn: async ({ Memer, msg, args }) => {
+    if (!Memer.config.owners.includes(msg.author.id)) {
+      return 'Woah now, only my "Owners" can do this'
+    }
     const m = await msg.channel.createMessage(`confirm new avatar? \`y\`/\`n\`\n\n`)
 
     const choice = await Memer.MessageCollector.awaitMessage(msg.channel.id, msg.author.id, 5e4)
