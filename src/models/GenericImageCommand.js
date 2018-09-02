@@ -35,8 +35,8 @@ class GenericImageCommand {
         return false
       }
 
-      if (msg.args.textLength() > this.cmdProps.textLimit) {
-        msg.channel.createMessage(`Too long. You're ${msg.args.textLength() - this.cmdProps.textLimit} characters over the limit!`)
+      if (msg.args.textLength > this.cmdProps.textLimit) {
+        msg.channel.createMessage(`Too long. You're ${msg.args.textLength - this.cmdProps.textLimit} characters over the limit!`)
         return false
       }
     }

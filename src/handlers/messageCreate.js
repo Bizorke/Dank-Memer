@@ -68,6 +68,22 @@ exports.handle = async function (msg) {
     }
   }
 
+  // Swear detection
+  if (gConfig.swearFilter) {
+    let swears = ['fuck', 'penis', 'cunt', 'faggot', 'wank', 'nigger', 'nigga', 'slut', 'bastard', 'bitch', 'asshole', 'dick', 'blowjob', 'cock',
+      'pussy', 'retard', 'ligma', 'sugondese', 'sugandese', 'fricc', 'hecc', 'sugma', 'updog', 'bofa', 'fugma', 'snifma', 'bepis', 'da wae', 'despacito']
+    let re = new RegExp(`.*(${swears.join('|')}).*`, 'i')
+    const match = re.exec(msg.content)
+    if (match) {
+      let failed = ''
+      await msg.delete()
+        .catch(() => {
+          failed = 'I couldn\'t remove the offending message because I don\'t have `Manage Messages` :('
+        })
+      msg.channel.createMessage(`No swearing in this christian server :rage:\n${failed}`)
+    }
+  }
+
   let isDonor = await this.db.checkDonor(msg.author.id)
 
   const selfMember = msg.channel.guild.members.get(this.bot.user.id)
@@ -193,34 +209,19 @@ function checkPerms (command, permissions, msg) {
   const neededPerms = command.props.perms.filter(perm => !permissions.has(perm))
   if (permissions.has('sendMessages')) {
     if (permissions.has('embedLinks')) {
-      if (neededPerms.length > 1) {
-        msg.channel.createMessage({
-          embed: {
-            'title': 'oh no!',
-            'description': `You need to add **${neededPerms.join(', ')}** to use this command!\nGo to **Server settings => Roles => Dank Memer** to change this!`,
-            'color': this.randomColor(),
-            'footer': {
-              'text': 'If it still doesn\'t work, check channel permissions too!'
-            }
+      msg.channel.createMessage({
+        embed: {
+          'title': 'oh no!',
+          'description': `You need to add **${neededPerms.length > 1 ? neededPerms.join(', ') : neededPerms}** to use this command!\nGo to **Server settings => Roles => Dank Memer** to change this!`,
+          'color': this.randomColor(),
+          'image': neededPerms.length === 1 ? {
+            'url': gifs[neededPerms[0]]
+          } : undefined,
+          'footer': {
+            'text': 'If it still doesn\'t work, check channel permissions too!'
           }
-        })
-      } else {
-        msg.channel.createMessage(
-          {
-            'embed': {
-              'title': 'oh no!',
-              'description': `You need to add **${neededPerms}** to use this command!\nGo to **Server settings => Roles => Dank Memer** to change this!`,
-              'color': this.randomColor(),
-              'image': {
-                'url': gifs[neededPerms[0]]
-              },
-              'footer': {
-                'text': 'If it still doesn\'t work, check channel permissions too!'
-              }
-            }
-          }
-        )
-      }
+        }
+      })
     } else {
       msg.channel.createMessage(
         `You need to add **${neededPerms.join(', ')}** to use this command!\n\nGo to **Server settings => Roles => Dank Memer** to change this!`

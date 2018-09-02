@@ -19,7 +19,6 @@ module.exports = new GenericCommand(
     triggers: ['dev', 'stupid-bot', 'd'],
     usage: '{command} you really don\'t need docs for this',
     description: 'henlo, u stinky birb',
-
     ownerOnly: true
   }
 )
