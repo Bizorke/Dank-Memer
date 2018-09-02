@@ -9,9 +9,9 @@ module.exports = new GenericCommand(
     if (!tagName) {
       return 'You need to give a name for this new tag smh'
     }
-    if (!tagText) {
-      return 'You have the wrong syntax for this command.\nExample: `pls addtag henlo u stink`\nYou: pls tag henlo\nDank Memer: u stink'
-    } 
+    if (!tagText[0]) {
+      return 'You have the wrong syntax for this command.\nExample: `pls addtag henlo u stink`\nYou: `pls tag henlo`\nDank Memer: u stink'
+    }
     let allTags = await Memer.db.getAllTags(msg.channel.guild.id)
     let two = allTags.filter(tag => tag.name === tagName)
     if (two[0]) {
