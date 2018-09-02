@@ -20,7 +20,8 @@ module.exports = new GenericCommand(
 
     let check = await Memer.db.getAutonsfwChannel(msg.channel.guild.id)
     if (check.channel === channel.id) {
-      return `<#${channel.id}> has already been set up to autopost NSFW content.`
+      await Memer.db.removeAutomemeChannel(msg.channel.guild.id)
+      return `I'll no longer autopost NSFW content in <#${channel.id}>.`
     }
     await Memer.db.addAutonsfwChannel(msg.channel.guild.id, channel.id, type)
     await addCD()

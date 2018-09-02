@@ -13,7 +13,8 @@ module.exports = new GenericCommand(
 
     let check = await Memer.db.getAutomemeChannel(msg.channel.guild.id)
     if (check.channel === channel.id) {
-      return `<#${channel.id}> has already been set up to autopost memes.`
+      await Memer.db.removeAutomemeChannel(msg.channel.guild.id)
+      return `I'll no longer autopost memes in <#${channel.id}>.`
     }
     await Memer.db.addAutomemeChannel(msg.channel.guild.id, channel.id)
     await addCD()
