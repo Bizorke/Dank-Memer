@@ -407,5 +407,30 @@ module.exports = Bot => ({
     return Bot.r.table('stats')
       .get(1)('stats')
       .run()
+  },
+
+  addTag: async function addTag (id, name, text) {
+    return Bot.r.table('tags')
+      .insert({guild_id: id, name: name, text: text})
+  },
+
+  getAllTags: async function getAllTags (id) {
+    let tags = await Bot.r.table('tags')
+      .getAll(id, {index: 'guild_id'})
+    return tags
+  },
+
+  getTag: async function getTag (id, name) {
+    let tags = await Bot.r.table('tags')
+      .filter({name: name, guild_id: id})
+      .run()
+    return tags[0] || false
+  },
+
+  removeTag: async function getTag (id, name) {
+    return Bot.r.table('tags')
+      .filter({name: name, guild_id: id})
+      .delete()
+      .run()
   }
 })
