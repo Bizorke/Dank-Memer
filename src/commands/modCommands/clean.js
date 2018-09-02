@@ -33,6 +33,10 @@ module.exports = new GenericModerationCommand(
     if (typeof (deleted) === 'string') {
       return `Something went wrong while deleting the messages\n\`\`\`\n${deleted}\`\`\``
     } else {
+      let modlog = await Memer.db.fetchModlog(msg.channel.guild.id)
+      if (modlog) {
+        Memer.bot.createMessage(modlog, `**${msg.author.username}#${msg.author.discriminator}** Deleted ${deleted} messages in ${msg.channel.name}.`)
+      }
       const success = await msg.channel.createMessage(`Deleted ${deleted} messages. Are ya happy now?`)
       await Memer.sleep(1500)
       return success.delete()
