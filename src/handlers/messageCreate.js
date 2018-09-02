@@ -117,7 +117,7 @@ exports.handle = async function (msg) {
     (gConfig.disabledCategories.includes(command.category.split(' ')[1].toLowerCase()) && !['disable', 'enable'].includes(command.props.triggers[0]) && !gConfig.enabledCommands.includes(command.props.triggers[0]))
   ) {
     return
-  } else if (command.props.donorOnly && !isDonor) {
+  } else if (command.props.donorOnly && !isDonor && !this.config.options.developers.includes(msg.author.id)) {
     return msg.channel.createMessage('This command is for donors only. You can find more information by using `pls donate` if you are interested.')
   }
 
