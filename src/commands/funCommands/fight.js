@@ -4,13 +4,13 @@ module.exports = new GenericCommand(
     let author = msg.author
     let enemy = msg.args.resolveUser()
     if (!enemy) {
-      return 'you need to provide a valid user ID or name to fight against'
+      return 'you need to provide a valid user ID or name to fight against lol'
     }
     if (enemy.id === author.id) {
       return 'You can\'t fight urself dumbo'
     }
     if (enemy.bot) {
-      return 'You can\'t fight against bots, you\'ll never heard back from them'
+      return 'You can\'t fight against bots, you\'ll never hear back from them u dummy'
     }
     enemy.health = author.health = 100
     enemy.armor = author.armor = 0
@@ -21,7 +21,7 @@ module.exports = new GenericCommand(
       msg.channel.createMessage(`${turn.mention}, what do you want to do? \`punch\`, \`defend\` or \`end\`?\nType your choice out in chat as it's displayed!`)
       let prompt = await Memer.MessageCollector.awaitMessage(msg.channel.id, attacker.id, 30e3)
       if (!prompt) {
-        msg.channel.createMessage(`${attacker.username} didn't answer in time`)
+        msg.channel.createMessage(`${attacker.username} didn't answer in time, what a noob. ${opponent} wins`)
       } else if (prompt.content.toLowerCase() === 'punch') {
         let critChance = Math.random() >= 0.75 // 25% chance
         let damage = Math.floor((Math.random() * 100) * (critChance ? 2 : 1))
@@ -34,15 +34,15 @@ module.exports = new GenericCommand(
 
         if (attacker.armor < 50) {
           attacker.armor += defense
-          msg.channel.createMessage(`**${attacker.username}** increased their armor by **${defense}**!`)
+          msg.channel.createMessage(`**${attacker.username}** increased their protec level by **${defense}**! THEY PROTEC`)
         } else {
           msg.channel.createMessage('don\'t be greedy ur already at the max armor level')
         }
         return false
       } else if (prompt.content.toLowerCase() === 'end') {
-        msg.channel.createMessage(`**${attacker.username}** has ended the game`)
+        msg.channel.createMessage(`**${attacker.username}** has ended the game what a wimp`)
       } else {
-        msg.channel.createMessage(`That's not a valid option! You must type \`punch\`, \`defend\` or \`end\` in chat!\n${retry ? 'The game has ended due to multiple invalid choices.' : ''}`)
+        msg.channel.createMessage(`That's not a valid option lmao! You must type \`punch\`, \`defend\` or \`end\` in chat!\n${retry ? 'The game has ended due to multiple invalid choices, god ur dumb' : ''}`)
         if (!retry) {
           return performTurn(attacker, opponent, true)
         }
@@ -60,7 +60,7 @@ module.exports = new GenericCommand(
       }
       const adjective = Memer.randomInArray(['an incredible', 'a dank', 'a l33t', 'a game-ending', 'an amazing', 'a dangerous', 'a painful', 'a CrAzY'])
       msg.channel.createMessage(`**${turn.username}** lands ${adjective} hit on **${oppturn.username}** dealing **${damage}**!\n**${oppturn.username}** is left with ${oppturn.health < 0 ? 0 : oppturn.health} health!`)
-      if (turn.health > 1 && oppturn.health > 1) {
+      if (turn.health > 0 && oppturn.health > 0) {
         oppturn = [turn, turn = oppturn][0]
         return play()
       } else {
