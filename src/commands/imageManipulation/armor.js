@@ -4,6 +4,6 @@ module.exports = new GenericImageCommand({
   triggers: ['armor', 'armour'],
   description: 'Nothing can get through this armor!',
 
-  textLimit: 125,
+  textLimit: 21,
   textOnly: true
 })

@@ -4,6 +4,6 @@ module.exports = new GenericImageCommand({
   triggers: ['humansgood'],
   description: 'Humans are good',
 
-  textLimit: 125,
+  textLimit: 71,
   textOnly: true
 })
