@@ -48,6 +48,16 @@ module.exports = {
     return Math.floor(Math.random() * 0xFFFFFF)
   },
 
+  inviteRemoval (args) {
+    let re = /discord(?:app\.com\/invite|\.gg)\/([a-z0-9]{1,16})/g
+    const match = re.exec(args)
+    if (match) {
+      return args.replace(match[0], '`invite`')
+    } else {
+      return args
+    }
+  },
+
   calcMultiplier: (Memer, user, userDB, donor, msg) => {
     // calculates total multiplier based on multiple variables
     let guildMember = msg.channel.guild.members.get(msg.author.id)
