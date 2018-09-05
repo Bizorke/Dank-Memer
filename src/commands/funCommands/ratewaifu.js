@@ -13,7 +13,7 @@ const reaction = [
 ]
 
 module.exports = new GenericCommand(
-  async ({ msg, args }) => {
+  async ({ Memer, msg, args }) => {
     let target = !args[0] || args[0].toLowerCase() === 'me'
       ? 'You are'
       : (
@@ -21,7 +21,7 @@ module.exports = new GenericCommand(
           ? `${msg.mentions[0].nick || msg.mentions[0].username} is a`
           : `${args.join(' ')} is a`
       )
-    const rating = Math.floor(Math.random() * 100) + 1
+    const rating = Memer.randomNumber(1, 100)
     const emoji = Math.ceil(rating / reaction.length) - 1
     return {
       title: 'waifu r8 machine',
