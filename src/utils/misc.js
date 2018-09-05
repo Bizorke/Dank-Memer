@@ -200,6 +200,15 @@ module.exports = {
     return array[Math.floor(Math.random() * array.length)]
   },
 
+  randomNumber: (min, max) => {
+    if (!min || !max) {
+      // Default 0-100 if no args passed
+      min = 0
+      max = 100
+    }
+    return Math.floor(Math.random() * max) + min
+  },
+
   sleep: (ms) => new Promise(resolve => setTimeout(resolve, ms)),
 
   removeDuplicates: (array) => {
