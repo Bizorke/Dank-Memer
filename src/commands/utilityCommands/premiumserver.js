@@ -4,21 +4,28 @@ const { GenericCommand } = require('../../models/')
 module.exports = new GenericCommand(
   async ({ Memer, msg, addCD }) => {
     const argument = msg.args.gather()
-    if (!argument) {
-      return 'You need to provide either `add` to add this server as a premium server, `remove` to remove this server\'s premium status or `list` to list the current premium servers you have redeemed.'
+    const redeemValues = {
+      3: 1,
+      10: 3,
+      20: 5
     }
 
     await addCD()
     const donor = await Memer.db.getDonor(msg.author.id)
     let guilds = donor.guilds
+    let guildRedeems = donor.guildRedeems
     if (argument === 'add') {
       if (donor.guilds.includes(msg.channel.guild.id)) {
         return 'This server is already a premium server!'
       }
+      for (let [dollar, value] in redeemValues) {
+        if (value > guildRedeems && donor.donorAmount < dollar) {
+          return 'You have reached the maximum amount of premium guilds for your paid tier!\nTo get more redeemable guilds, visit our Patreon (https://www.patreon.com/dankmemerbot)'
+        }
+      }
 
       guilds.push(msg.channel.guild.id)
-      let guildRedeems = donor.guildRedeems++
-      await Memer.db.updateDonorGuild(msg.author.id, guilds, guildRedeems)
+      await Memer.db.updateDonorGuild(msg.author.id, guilds, guildRedeems++)
       return `Successfully added **${msg.channel.guild.name}** as a premium server!`
     } else if (argument === 'remove' || argument === 'delete') {
       if (!donor.guilds.includes(msg.channel.guild.id)) {
@@ -26,8 +33,7 @@ module.exports = new GenericCommand(
       }
 
       guilds.splice(guilds.indexOf(msg.channel.guild.id), 1)
-      let guildRedeems = donor.guildRedeems--
-      await Memer.db.updateDonorGuild(msg.author.id, guilds, guildRedeems)
+      await Memer.db.updateDonorGuild(msg.author.id, guilds, guildRedeems--)
       return `**${msg.channel.guild.name}** is no longer a premium server.`
     } else {
       return {
