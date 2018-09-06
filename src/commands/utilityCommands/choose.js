@@ -18,7 +18,7 @@ module.exports = new GenericCommand(
       choices = argsJ.split(' ')
       final = await Memer.randomInArray(choices)
     }
-    return `\`${final.replace(/`/g, '')}\``
+    return `${msg.author.username}, I choose \`${final.replace(/`/g, '')}\``
   }, {
     triggers: ['choose'],
     usage: '{command} item 1, item 2, item 3, etc',

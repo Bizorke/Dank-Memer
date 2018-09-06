@@ -24,13 +24,13 @@ module.exports = new GenericCommand(
         msg.channel.createMessage(`${attacker.username} didn't answer in time, what a noob. ${opponent} wins`)
       } else if (prompt.content.toLowerCase() === 'punch') {
         let critChance = Math.random() >= 0.75 // 25% chance
-        let damage = Math.floor((Math.random() * 100) * (critChance ? 2 : 1))
+        let damage = Memer.randomNumber((critChance ? 2 : 1), 100)
 
         opponent.health -= (damage - opponent.armor) < 0 ? 0 : (damage - opponent.armor)
         return damage
       } else if (prompt.content.toLowerCase() === 'defend') {
         let critChance = Math.random() >= 0.75 // 25% chance
-        let defense = Math.floor((Math.random() * 25) * (critChance ? 2 : 1))
+        let defense = Memer.randomNumber((critChance ? 2 : 1), 25)
 
         if (attacker.armor < 50) {
           attacker.armor += defense
