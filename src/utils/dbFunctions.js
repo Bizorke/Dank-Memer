@@ -398,6 +398,23 @@ module.exports = Bot => ({
       .run()
   },
 
+  getDonor: function getDonor (id) {
+    return Bot.r.table('donors')
+      .get(id)
+      .default(false)
+      .run()
+  },
+
+  updateDonorGuild: function updateDonorGuild (id, guilds, guildRedeems) {
+    return Bot.r.table('donors')
+      .insert({
+        id,
+        guilds,
+        guildRedeems
+      }, { conflict: 'update' })
+      .run()
+  },
+
   removeDonor: function removeDonor (id) {
     return Bot.r.table('donors')
       .get(id)
@@ -437,50 +454,50 @@ module.exports = Bot => ({
       .run()
   },
 
-  getAutomemeChannel: async function getChannel (id) {
+  getAutomemeChannel: async function getAutomemeChannel (id) {
     let channel = await Bot.r.table('automeme')
       .get(id)
       .run()
     return channel || false
   },
 
-  removeAutomemeChannel: async function getChannel (id) {
+  removeAutomemeChannel: async function removeAutomemeChannel (id) {
     return Bot.r.table('automeme')
       .get(id)
       .delete()
       .run()
   },
 
-  allAutomemeChannels: async function allChannels () {
+  allAutomemeChannels: async function allAutomemeChannels () {
     return Bot.r.table('automeme')
       .run()
   },
 
-  addAutomemeChannel: async function addChannel (id, channelID) { // id = guild ID
+  addAutomemeChannel: async function addAutomemeChannel (id, channelID) { // id = guild ID
     return Bot.r.table('automeme')
       .insert({id: id, channel: channelID})
   },
 
-  getAutonsfwChannel: async function getChannel (id) {
+  getAutonsfwChannel: async function getAutonsfwChannel (id) {
     let channel = await Bot.r.table('autonsfw')
       .get(id)
       .run()
     return channel || false
   },
 
-  removeAutonsfwChannel: async function getChannel (id) {
+  removeAutonsfwChannel: async function removeAutonsfwChannel (id) {
     return Bot.r.table('autonsfw')
       .get(id)
       .delete()
       .run()
   },
 
-  allAutonsfwChannels: async function allChannels () {
+  allAutonsfwChannels: async function allAutonsfwChannels () {
     return Bot.r.table('autonsfw')
       .run()
   },
 
-  addAutonsfwChannel: async function addChannel (id, channelID, type) { // id = guild ID
+  addAutonsfwChannel: async function addAutonsfwChannel (id, channelID, type) { // id = guild ID
     return Bot.r.table('autonsfw')
       .insert({id, channel: channelID, type}, { conflict: 'update' })
       .run()
