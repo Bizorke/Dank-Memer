@@ -8,7 +8,6 @@ module.exports = new GenericCommand(
 
     if (!Memer.bot.voiceConnections.has(msg.channel.guild.id)) {
       await Memer.bot.leaveVoiceChannel(msg.channel.guild.members.get(Memer.bot.user.id).voiceState.channelID)
-      Memer.ddog.increment('vc.five')
       return 'hm, ok I\'ll stop.'
     }
 

@@ -13,7 +13,7 @@ const reaction = [
 ]
 
 module.exports = new GenericCommand(
-  async ({ msg }) => {
+  async ({ Memer, msg }) => {
     let args = msg.args.args
     let target = !args[0] || args[0].toLowerCase() === 'me'
       ? 'You are'
@@ -22,7 +22,7 @@ module.exports = new GenericCommand(
           ? `${msg.mentions[0].nick || msg.mentions[0].username} is`
           : `${args.join(' ')} is`
       )
-    const rating = Math.floor(Math.random() * 100) + 1
+    const rating = Memer.randomNumber(1, 100)
     return {
       title: 'dank r8 machine',
       description: `${target} ${rating}% dank ${reaction[Math.ceil(rating / 10) - 1]}`

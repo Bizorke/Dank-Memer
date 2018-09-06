@@ -36,6 +36,7 @@
     "options": {
         "dev": true,
         "developers": [],
+        "owners": [],
         "prefix": "",
         "helpCommand": {
             "title": "",

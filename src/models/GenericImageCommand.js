@@ -14,10 +14,10 @@ class GenericImageCommand {
     }
 
     const data = await Memer.http.get(this.requestURL.replace('$ENDPOINT', this.cmdProps.triggers[0]))
-      .set('Authorization', Memer.secrets.microservices.imgenKey)
+      .set('Authorization', Memer.secrets.memerServices.imgenKey)
       .query(datasrc)
 
-    if (data.status === 200 && data.headers['content-type'].startsWith('image/')) {
+    if (data.ok && data.headers['content-type'].startsWith('image/')) {
       await addCD()
       msg.channel.createMessage('', {
         file: data.body,
@@ -30,13 +30,13 @@ class GenericImageCommand {
 
   defaultURLParseFN (msg) {
     if (this.cmdProps.requiredArgs) {
-      if (msg.args.isEmpty()) {
+      if (msg.args.isEmpty) {
         msg.channel.createMessage(this.cmdProps.requiredArgs)
         return false
       }
 
-      if (msg.args.textLength() > this.cmdProps.textLimit) {
-        msg.channel.createMessage(`Too long. You're ${msg.args.textLength() - this.cmdProps.textLimit} characters over the limit!`)
+      if (msg.args.textLength > this.cmdProps.textLimit) {
+        msg.channel.createMessage(`Too long. You're ${msg.args.textLength - this.cmdProps.textLimit} characters over the limit!`)
         return false
       }
     }

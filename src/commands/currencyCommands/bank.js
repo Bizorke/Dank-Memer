@@ -2,13 +2,13 @@ const { GenericCommand } = require('../../models/')
 
 module.exports = new GenericCommand(
   async ({ Memer, msg, addCD }) => {
-    let { bank, pocket, pls, upgrades } = await Memer.db.getUser(msg.author.id)
+    let { bank, pocket, pls } = await Memer.db.getUser(msg.author.id)
     if (msg.args.args[0]) {
       switch (msg.args.args[0].toLowerCase()) {
         case 'deposit':
           if (Number(msg.args.args[1]) && Number(msg.args.args[1]) <= pocket) {
-            if (Number(msg.args.args[1]) + bank > 250 + (upgrades.vault * 100) + ((pls / 100) * 20)) {
-              return `You can only hold ${Math.round(250 + (upgrades.vault * 100) + ((pls / 100) * 20))} coins in your bank right now. To hold more, use the bot more.`
+            if (Number(msg.args.args[1]) + bank > 500 + ((pls / 100) * 150)) {
+              return `You can only hold ${Math.round(500 + ((pls / 100) * 150))} coins in your bank right now. To hold more, use the bot more.`
             }
             if (Number(msg.args.args[1]) < 1 || !Number.isInteger(Number(Number(msg.args.args[1])))) {
               return 'Needs to be a whole number greater than 0'
@@ -40,7 +40,7 @@ module.exports = new GenericCommand(
       const prefix = db ? db.prefix : Memer.config.options.prefix
       return {
         title: `${msg.author.username}'s account:`,
-        description: `**Current Balance**: ${bank}/${Math.round(250 + (upgrades.vault * 100) + ((pls / 100) * 20))}\nYou can deposit coins with \`${prefix} bank deposit #\`\nYou can withdraw coins with \`${prefix} bank withdraw #\``,
+        description: `**Current Balance**: ${bank}/${Math.round(500 + ((pls / 100) * 150))}\nYou can deposit coins with \`${prefix} bank deposit #\`\nYou can withdraw coins with \`${prefix} bank withdraw #\``,
         footer: { text: 'You can earn more vault space by using the bot more often' }
       }
     }

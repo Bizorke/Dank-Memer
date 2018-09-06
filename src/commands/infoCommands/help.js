@@ -63,7 +63,7 @@ module.exports = new GenericCommand(
       if (!donorCommands || donorCommands.length < 1) {
         dComm = ''
       } else {
-        dComm = `\n\n**[Premium Only](https://www.patreon.com/dankmemerbot)**\n${donorCommands.join(' ')}`
+        dComm = `\n\n**[Premium Only](https://www.patreon.com/dankmemerbot)**\n${donorCommands.join(', ')}`
       }
 
       return {

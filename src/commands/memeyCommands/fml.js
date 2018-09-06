@@ -25,9 +25,7 @@ module.exports = new GenericCommand(
 
     const story = indexes[msg.channel.guild.id].shift()
 
-    return {
-      description: story
-    }
+    return story
   }, {
     triggers: ['fml', 'fuckmylife'],
     description: 'Think you\'re having a bad day?',

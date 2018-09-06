@@ -19,7 +19,7 @@ module.exports = new GenericCommand(
       default:
         return 'Not a valid type of decoding, please use `base64`, `url`, or `hex`'
     }
-    return decoded
+    return Memer.inviteRemoval(decoded)
   }, {
     triggers: ['decode'],
     usage: '{command}',

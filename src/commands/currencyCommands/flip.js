@@ -6,7 +6,7 @@ module.exports = new GenericCommand(
     if (pocket.coin === 0) {
       return { title: 'You have no coins.' }
     }
-    let coinFlip = Math.floor(Math.random() * 2) + 1
+    let coinFlip = Memer.randomNumber(1, 2)
     const heads = 1
     const tails = 2
 
@@ -38,8 +38,8 @@ module.exports = new GenericCommand(
   },
   {
     triggers: ['flip', 'coinflip'],
-    cooldown: 3e5,
-    donorCD: 2e5,
+    cooldown: 30 * 1000,
+    donorCD: 20 * 1000,
     description: 'Flip a coin, and if you call it you win it!'
   }
 )

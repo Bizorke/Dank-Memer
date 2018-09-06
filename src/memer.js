@@ -71,12 +71,3 @@ if (require('cluster').isMaster && !config.options.dev) {
     }
   }, 60 * 60 * 1000)
 }
-
-// Logging mem usage every 15s to confirm/deny the existance of a leak
-// TODO: Remove this after confirming/denying that it has a leak
-
-if (require('cluster').isMaster) setInterval(usage, 15 * 1000)
-
-function usage () {
-  console.log((process.memoryUsage()['rss'] / 1024 / 1024) + 'MB')
-}
