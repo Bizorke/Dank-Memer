@@ -6,7 +6,7 @@ module.exports = new GenericCommand(
     if (pocket.coin === 0) {
       return { title: 'You have no coins.' }
     }
-    let coinFlip = Math.floor(Math.random() * 2) + 1
+    let coinFlip = Memer.randomNumber(1, 2)
     const heads = 1
     const tails = 2
 

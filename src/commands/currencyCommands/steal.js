@@ -44,7 +44,7 @@ module.exports = new GenericCommand(
       victimCoins = victimCoins - (victimCoins * 0.95)
     }
     await addCD()
-    let stealingOdds = Math.floor(Math.random() * 100) + 1
+    let stealingOdds = Memer.randomNumber(1, 100)
 
     if (stealingOdds <= 60) { // fail section
       let punish
