@@ -405,6 +405,12 @@ module.exports = Bot => ({
       .run()
   },
 
+  checkPremiumGuild: async function checkPremiumGuild (id) {
+    return !!await Bot.r.table('donors')
+      .filter(Bot.r.row('guilds').contains(id))
+      .count()
+  },
+
   updateDonorGuild: function updateDonorGuild (id, guilds, guildRedeems) {
     return Bot.r.table('donors')
       .insert({
