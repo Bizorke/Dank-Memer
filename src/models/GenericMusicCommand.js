@@ -14,7 +14,12 @@ module.exports = class GenericMusicCommand {
     }
 
     await addCD()
-    return this.fn({ Memer, msg, args, addCD, cleanArgs, music: Memer.musicManager.get(msg.channel.guild.id) })
+
+    const music = Memer.musicManager.get(msg.channel.guild.id)
+
+    music.channel = msg.channel.id
+
+    return this.fn({ Memer, msg, args, addCD, cleanArgs, music })
   }
 
   get props () {
