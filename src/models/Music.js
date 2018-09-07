@@ -65,6 +65,7 @@ module.exports = class Music {
 
   _finished (event, shifted) {
     if (this.loop && shifted) this.queue.push(shifted)
+    if (this.queue.length === 0) return this.player.leave()
     return this._play()
   }
 
