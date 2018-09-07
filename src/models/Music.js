@@ -17,7 +17,7 @@ module.exports = class Music {
   reset () {
     if (this.queue.length) this.clear()
     if (this.loop) this.loop = false
-    if (this.playing) return this._stop()
+    if (this.playing) return this.stop()
   }
 
   pause (boolean = true) {
@@ -32,8 +32,16 @@ module.exports = class Music {
     return this.queue.splice(index, 1)
   }
 
-  _stop () {
+  clear () {
+    this.queue.length = 1
+  }
+
+  stop () {
     return this.player.stop()
+  }
+
+  volume (volume) {
+    return this.player.setVolume(volume)
   }
 
   async _play (options) {
