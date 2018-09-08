@@ -7,10 +7,15 @@ module.exports = new GenericMusicCommand(async ({ Memer, music, args, msg }) => 
     return msg.reply('join a voice channel fam')
   }
 
-  if (!msg.channel.guild.members.get(Memer.bot.user.id).voiceState.channelID) await music.player.join(msg.member.voiceState.channelID)
+  if (!music.voiceState) {
+    await music.player.join(msg.member.voiceState.channelID)
+  }
   let response
   const queryString = msg.args.gather()
-  if (!queryString) {
+  if (!queryString && music.queue[0]) {
+    await music._play()
+    return `Loaded \`${music.queue[0].info.title}\` from last session`
+  } else if (!queryString) {
     return 'look mate this isn\'t rocket science, enter a search query or link to play'
   }
   if (linkRegEx.test(queryString)) {
