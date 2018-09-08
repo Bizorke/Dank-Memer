@@ -11,7 +11,7 @@ module.exports = new GenericMusicCommand(async ({ Memer, music, msg }) => {
   }
   if (music.queue.length > pageLength) {
     if (isNaN(page) || page < 1) return 'that\'s not a valid page you assbutt'
-    if (Math.ceil(music.queue.length / pageLength) < page) return `That page doesn't exist, there's only ${Math.ceil(music.queue.length / pageLength)} pages`
+    if (Math.ceil(music.queue.length / pageLength) < page) return `are you insane there's only ${Math.ceil(music.queue.length / pageLength)} pages`
     embed = `Page ${page} of ${Math.ceil(music.queue.length / pageLength)}`
     data = data.slice(pageLength * (page - 1), (pageLength * (page - 1)) + pageLength)
   }

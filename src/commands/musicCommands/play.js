@@ -9,7 +9,10 @@ module.exports = new GenericMusicCommand(async ({ Memer, music, args, msg }) => 
 
   if (!msg.channel.guild.members.get(Memer.bot.user.id).voiceState.channelID) await music.player.join(msg.member.voiceState.channelID)
   let response
-  const queryString = args.join(' ')
+  const queryString = msg.args.gather()
+  if (!queryString) {
+    return 'look mate this isn\'t rocket science, enter a search query or link to play'
+  }
   if (linkRegEx.test(queryString)) {
     response = await music.node.load(queryString)
   } else {
@@ -25,14 +28,14 @@ module.exports = new GenericMusicCommand(async ({ Memer, music, args, msg }) => 
       const promises = []
       for (const song of tracks) promises.push(music.addSong(song))
       await Promise.all(promises)
-      return `Queued **${tracks.length}** songs from **${playlistInfo.name}**`
+      return `Queued **${tracks.length}** songs from **${playlistInfo.name}**, happy now? jeez`
     case SEARCH_RESULT:
       await music.addSong(tracks[0])
       return `Queued \`${tracks[0].info.title}\``
     case NO_MATCHES:
-      return 'I\'ve found no match for the input you provided.'
+      return 'Unable to find any videos by that query, what are the odds. Pretty high if you are dumb I guess'
     case LOAD_FAILED:
-      return 'I couldn\'t load that song. This may be because the song has been claimed or it\'s private.'
+      return 'I couldn\'t load that song. This may be because the song has been claimed or it\'s private. How unlucky'
   }
 }, {
   triggers: ['play', 'add'],

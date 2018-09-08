@@ -8,7 +8,7 @@ module.exports = new GenericMusicCommand(async ({ music, args, msg }) => {
   const volume = args[0]
 
   if (Number.isNaN(volume) || volume <= 0 || volume > 100) {
-    return 'Volume must be a number between 1 and 100'
+    return 'the volume must be a valid number between **1 and 100**, not that hard smh'
   }
 
   await music.volume(Number(args))
