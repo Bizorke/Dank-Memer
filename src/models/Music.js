@@ -104,15 +104,15 @@ module.exports = class Music {
   }
 
   get guild () {
-    return this.client.guilds.get(this.id)
+    return this.client.bot.guilds.get(this.id)
   }
 
   get channel () {
-    return this.client.channels.get(this.channelID)
+    return this.client.bot.guilds.get(this.id).channels.get(this._channelID)
   }
 
   set channel (id) {
-    this.channelID = id
+    this._channelID = id
   }
 
   get busy () {
