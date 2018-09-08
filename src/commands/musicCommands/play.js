@@ -24,19 +24,19 @@ module.exports = new GenericMusicCommand(async ({ Memer, music, args, msg }) => 
   switch (loadType) {
     case TRACK_LOADED:
       await music.addSong(tracks[0])
-      return `Queued ${tracks[0].info.title}`
+      return `Queued \`${tracks[0].info.title}\``
     case PLAYLIST_LOADED:
       const promises = []
       for (const song of tracks) promises.push(music.addSong(song))
       await Promise.all(promises)
-      return `Queued ${tracks.length} songs from ${playlistInfo.name}`
+      return `Queued **${tracks.length}** songs from **${playlistInfo.name}**`
     case SEARCH_RESULT:
       await music.addSong(tracks[0])
-      return `Queued ${tracks[0].info.title}`
+      return `Queued \`${tracks[0].info.title}\``
     case NO_MATCHES:
       return 'I\'ve found no match for the input you provided.'
     case LOAD_FAILED:
-      return 'The Song failed loading, this might be related to the Song being claimed or private.'
+      return 'I couldn\'t load that song. This may be because the song has been claimed or it\'s private.'
   }
 }, {
   triggers: ['add', 'play'],

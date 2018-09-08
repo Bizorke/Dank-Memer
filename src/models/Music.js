@@ -70,13 +70,11 @@ module.exports = class Music {
   }
 
   _failed (event) {
-    // TODO add meme response
-    return this._send(`\`[ERROR]\` ${event.error}\nSong was skipped due error.`)
+    return this._send(`:rage: Something went wrong whilst playing the hecking song: \`${event.error}\`\nAutomatically skipped to the next song in the queue.`)
   }
 
   _stuck () {
-    // TODO add meme response
-    this._send(`\`[Track Got Stuck]\` Skipped to the next one.`)
+    this._send('heck, something went wrong when playing the current track, sorry bout that\nAutomatically skipped to the next song in the queue.')
     return this._play()
   }
 

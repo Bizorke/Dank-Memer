@@ -2,7 +2,7 @@ const { GenericMusicCommand } = require('../../models')
 
 module.exports = new GenericMusicCommand(async ({ music, msg }) => {
   if (!music.player.playing) {
-    return msg.reply('Im not playing music rn dude')
+    return msg.reply('what are you thinking i\'m not playing any music lmao')
   }
 
   await music.pause()

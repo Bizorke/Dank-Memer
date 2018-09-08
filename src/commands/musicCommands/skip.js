@@ -3,8 +3,8 @@ const { GenericMusicCommand } = require('../../models')
 module.exports = new GenericMusicCommand(async ({ music }) => {
   await music.stop()
 
-  return 'okay i skipped the playing song'
+  return 'alright, skipped the current song'
 }, {
   triggers: ['skip', 'next'],
-  description: 'skips the current song'
+  description: 'Skips the current song'
 })

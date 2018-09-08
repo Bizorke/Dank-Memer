@@ -2,13 +2,13 @@ const { GenericMusicCommand } = require('../../models')
 
 module.exports = new GenericMusicCommand(async ({ music, msg }) => {
   if (music.player.playing) {
-    return msg.reply('music is not paused rn dude')
+    return msg.reply('music is not paused rn smh')
   }
 
   await music.pause(false)
 
-  return 'okay i resumed the music boi'
+  return 'there you go, music resumed'
 }, {
   triggers: ['resume'],
-  description: 'resume the current music'
+  description: 'Resume any paused song'
 })

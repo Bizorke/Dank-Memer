@@ -3,7 +3,7 @@ const { format } = require('../../utils/misc')
 
 module.exports = new GenericMusicCommand(async ({ music, msg }) => {
   if (!music.player.playing) {
-    return msg.reply('Im not playing music rn dude')
+    return msg.reply('what are you thinking i\'m not playing any music lmao')
   }
 
   const { nowPlaying } = music
@@ -18,5 +18,5 @@ module.exports = new GenericMusicCommand(async ({ music, msg }) => {
   }
 }, {
   triggers: ['nowplaying', 'np'],
-  description: 'shows information about the current playing track'
+  description: 'Shows information about the current playing track'
 })
