@@ -15,7 +15,7 @@ module.exports = new GenericMusicCommand(
       return 'You\'re not even in a voice channel, why should I listen to you'
     }
 
-    if (msg.member.voiceState.channelID !== music.channel.id) {
+    if (msg.member.voiceState.channelID !== music.player.channelID) {
       return 'You\'re not even in my voice channel, why should I listen to you'
     }
 
