@@ -16,7 +16,6 @@ module.exports = class GenericMusicCommand {
     await addCD()
 
     const music = Memer.musicManager.get(msg.channel.guild.id)
-
     music.channel = msg.channel.id
 
     return this.fn({ Memer, msg, args, addCD, cleanArgs, music })

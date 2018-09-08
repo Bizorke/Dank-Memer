@@ -33,9 +33,10 @@ module.exports = class GenericSoundboardCommand {
       if (!music.playing) {
         await music.reset()
       }
-      if (this.cmdProps.skipIfPlaying && music.player) {
+      if (this.cmdProps.skipIfPlaying && music.playing) {
         await music.reset()
-      } else {
+      }
+      if (music.playing && !this.cmdProps.skipIfPlaying) {
         return this.cmdProps.existingConn
       }
     }

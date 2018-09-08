@@ -43,11 +43,11 @@ module.exports = class GenericVoiceCommand {
     if (music.player) {
       if (!music.playing) {
         await music.reset()
+      } else {
+        return this.cmdProps.existingConn
       }
       if (this.cmdProps.skipIfPlaying && music.player) {
         await music.reset()
-      } else {
-        return this.cmdProps.existingConn
       }
     }
 

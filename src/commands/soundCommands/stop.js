@@ -1,13 +1,13 @@
-const { GenericCommand } = require('../../models/')
+const { GenericMusicCommand } = require('../../models/')
 
-module.exports = new GenericCommand(
-  async ({ Memer, msg }) => {
+module.exports = new GenericMusicCommand(
+  async ({ Memer, music, args, msg }) => {
     if (!msg.channel.guild.members.get(Memer.bot.user.id).voiceState.channelID) {
       return 'I\'m not even in a voice channel?'
     }
 
-    if (!Memer.bot.voiceConnections.has(msg.channel.guild.id)) {
-      await Memer.bot.leaveVoiceChannel(msg.channel.guild.members.get(Memer.bot.user.id).voiceState.channelID)
+    if (!music.player) {
+      await music.reset()
       return 'hm, ok I\'ll stop.'
     }
 
@@ -15,15 +15,11 @@ module.exports = new GenericCommand(
       return 'You\'re not even in a voice channel, why should I listen to you'
     }
 
-    if (msg.member.voiceState.channelID !== Memer.bot.voiceConnections.get(msg.channel.guild.id).channelID) {
+    if (msg.member.voiceState.channelID !== music.channel.id) {
       return 'You\'re not even in my voice channel, why should I listen to you'
     }
 
-    if (!Memer.bot.voiceConnections.get(msg.channel.guild.id).ready) {
-      return 'Smh you can\'t stop when I\'m not connected. Give me a chance to connect before you are rude and make me stop. 😠'
-    }
-    await Memer.bot.voiceConnections.get(msg.channel.guild.id).stopPlaying()
-    await Memer.bot.leaveVoiceChannel(msg.channel.guild.members.get(Memer.bot.user.id).voiceState.channelID)
+    await music.stop()
     await msg.channel.createMessage('okokok im leaving now, no need to be rude')
   }, {
     triggers: ['stop'],

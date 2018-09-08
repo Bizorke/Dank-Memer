@@ -7,7 +7,6 @@ module.exports = new GenericMusicCommand(async ({ music, msg }) => {
   if (music.paused) {
     return msg.channel.createMessage('The current song is already paused you FRICKEN BUTT')
   }
-  
 
   await music.pause()
   return 'okay i paused the music boi'
