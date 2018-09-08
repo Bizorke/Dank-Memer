@@ -6,9 +6,6 @@ module.exports = new GenericMusicCommand(async ({ Memer, music, msg }) => {
   let embed = ''
   let data = music.queue.slice(1)
 
-  if (!music.player.playing) {
-    return msg.reply('what are you thinking i\'m not playing any music lmao')
-  }
   if (music.queue.length < 2) {
     return 'There are no songs in the queue. Add more or get out'
   }
