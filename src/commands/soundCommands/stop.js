@@ -2,7 +2,7 @@ const { GenericMusicCommand } = require('../../models/')
 
 module.exports = new GenericMusicCommand(
   async ({ Memer, music, args, msg }) => {
-    if (!msg.channel.guild.members.get(Memer.bot.user.id).voiceState.channelID) {
+    if (!music.voiceChannel) {
       return 'I\'m not even in a voice channel?'
     }
 
@@ -15,11 +15,11 @@ module.exports = new GenericMusicCommand(
       return 'You\'re not even in a voice channel, why should I listen to you'
     }
 
-    if (msg.member.voiceState.channelID !== music.player.channelID) {
+    if (msg.member.voiceState.channelID !== music.voiceChannel.id) {
       return 'You\'re not even in my voice channel, why should I listen to you'
     }
 
-    await music.stop()
+    await music.endSession()
     await msg.channel.createMessage('okokok im leaving now, no need to be rude')
   }, {
     triggers: ['stop'],
