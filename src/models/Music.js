@@ -7,6 +7,7 @@ module.exports = class Music {
     this.queue = []
     this.player.on('event', this._handleEvent.bind(this))
     this._channelID = null
+    this.ready = this._loadQueue()
   }
 
   addSong (song) {
@@ -15,9 +16,15 @@ module.exports = class Music {
   }
 
   reset () {
-    if (this.queue.length) this.clear()
-    if (this.loop) this.loop = false
-    if (this.playing) return this.stop()
+    if (this.queue.length) {
+      this.clear()
+    }
+    if (this.loop) {
+      this.loop = false
+    }
+    if (this.playing) {
+      return this.stop()
+    }
   }
 
   pause (boolean = true) {
@@ -40,16 +47,44 @@ module.exports = class Music {
     return this.player.stop()
   }
 
+  endSession () {
+    this._saveQueue()
+    this.client.musicManager._map.delete(this.id)
+    this.player.leave()
+    return this.player.destroy()
+  }
+
   volume (volume) {
     return this.player.setVolume(volume)
   }
 
   async _play (options) {
-    if (this.busy || !this.queue.length) return
+    if (this.busy || !this.queue.length) {
+      return
+    }
     this.preparing = true
     const { track } = this.nowPlaying
     await this.player.play(track, options)
     this.preparing = false
+  }
+
+  _saveQueue () {
+    if (this.queue[1]) {
+      this.client.redis.setAsync(`queue-${this.id}`, JSON.stringify(this.queue.slice(1), 'EX', 60 * 60 * 24))
+        .catch(() => {})
+    } else {
+      this.client.redis.delAsync(`queue-${this.id}`)
+        .catch(() => {})
+    }
+  }
+
+  async _loadQueue () {
+    const queue = await this.client.redis.getAsync(`queue-${this.id}`)
+      .catch(() => null)
+    if (queue) {
+      this.queue = JSON.parse(queue)
+    }
+    return true
   }
 
   _handleEvent (event) {
@@ -64,8 +99,12 @@ module.exports = class Music {
   }
 
   _finished (event, shifted) {
-    if (this.loop && shifted) this.queue.push(shifted)
-    if (this.queue.length === 0) return this.player.leave()
+    if (this.loop && shifted) {
+      this.queue.push(shifted)
+    }
+    if (this.queue.length === 0) {
+      return this.player.leave()
+    }
     return this._play()
   }
 
@@ -109,6 +148,11 @@ module.exports = class Music {
 
   get channel () {
     return this.client.bot.guilds.get(this.id).channels.get(this._channelID)
+  }
+
+  get voiceChannel () {
+    const guild = this.client.bot.guilds.get(this.id)
+    return guild.channels.get(guild.members.get(this.client.bot.user.id).voiceState.channelID)
   }
 
   set channel (id) {
