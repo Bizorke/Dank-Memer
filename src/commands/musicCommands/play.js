@@ -7,10 +7,6 @@ module.exports = new GenericMusicCommand(async ({ Memer, music, args, msg }) => 
     return msg.reply('join a voice channel fam')
   }
 
-  if (Memer.bot.voiceConnections.has(msg.channel.guild.id)) {
-    return 'chill until the sound from the soundboard is done dude'
-  }
-
   if (!msg.channel.guild.members.get(Memer.bot.user.id).voiceState.channelID) await music.player.join(msg.member.voiceState.channelID)
   let response
   const queryString = args.join(' ')
