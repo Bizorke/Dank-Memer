@@ -8,11 +8,25 @@ module.exports = class Music {
     this.player.on('event', this._handleEvent.bind(this))
     this._channelID = null
     this.ready = this._loadQueue()
+    this.vote = null
   }
 
   addSong (song) {
     this.queue.push(song)
     return this._play()
+  }
+
+  startVote (voter) {
+    this.vote = {
+      voted: [voter],
+      timeout: setTimeout(this._handleVoteTimeout.bind(this), 6e4)
+    }
+    return this.vote
+  }
+
+  resetVote () {
+    clearTimeout(this.vote.timeout)
+    this.vote = null
   }
 
   reset () {
@@ -78,6 +92,11 @@ module.exports = class Music {
     }
   }
 
+  _handleVoteTimeout () {
+    this.vote = null
+    return this._send(`The vote to skip the current song ended because not enough users voted in time`)
+  }
+
   async _loadQueue () {
     const queue = await this.client.redis.getAsync(`queue-${this.id}`)
       .catch(() => null)
@@ -99,6 +118,10 @@ module.exports = class Music {
   }
 
   _finished (event, shifted) {
+    if (this.vote) {
+      this.resetVote()
+      this._send(`The vote to skip the song \`${shifted.info.title}\` has been cancelled because the song just ended`)
+    }
     if (this.loop && shifted) {
       this.queue.push(shifted)
     }
