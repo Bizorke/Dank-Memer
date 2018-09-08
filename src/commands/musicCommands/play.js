@@ -39,6 +39,6 @@ module.exports = new GenericMusicCommand(async ({ Memer, music, args, msg }) => 
       return 'I couldn\'t load that song. This may be because the song has been claimed or it\'s private.'
   }
 }, {
-  triggers: ['add', 'play'],
+  triggers: ['play', 'add'],
   description: 'add a song to queue'
 })
