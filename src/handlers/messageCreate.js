@@ -43,7 +43,7 @@ exports.handle = async function (msg) {
   }
 
   if (gConfig.autoResponse.sec) {
-    let re = /^(one sec|one second|sec)/i
+    let re = /^(one sec$|one second|sec$)/i
     const match = re.exec(msg.content)
     if (match) {
       await this.sleep(1000)
