@@ -25,7 +25,7 @@ module.exports = new GenericModerationCommand(
     await Memer.sleep(1500)
     kicked.kick(`randomly kicked by ${msg.author.username}`)
       .then(() => { return msg.channel.createMessage(`lmfao ${hahayes} was kicked`) })
-      .catch(() => {
+      .catch((err) => {
         msg.channel.createMessage(`looks like I dont have perms to kick ${kicked.user.username}#${kicked.user.discriminator}, try putting my role above everyone else to make this real fun..`)
       })
   },

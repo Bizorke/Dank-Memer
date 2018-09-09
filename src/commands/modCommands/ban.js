@@ -36,7 +36,7 @@ module.exports = new GenericModerationCommand(
         }
         return msg.channel.createMessage(`\`${hahayes}\` was banned, good fricken riddance`)
       })
-      .catch(() => {
+      .catch((err) => {
         msg.channel.createMessage(`looks like I dont have perms to ban \`${banned.username}#${banned.discriminator}\`, I guess I have a lower role than them ¯\\_(ツ)_/¯`)
       })
   },

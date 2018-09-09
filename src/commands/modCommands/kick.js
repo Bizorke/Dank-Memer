@@ -36,7 +36,7 @@ module.exports = new GenericModerationCommand(
         }
         return msg.channel.createMessage(`\`${hahayes}\` was kicked, rekt af`)
       })
-      .catch(() => {
+      .catch((err) => {
         msg.channel.createMessage(`looks like I dont have perms to kick \`${kicked.username}#${kicked.discriminator}\`, I guess I have a lower role than them ¯\\_(ツ)_/¯`)
       })
   },

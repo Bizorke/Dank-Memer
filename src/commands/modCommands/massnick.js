@@ -2,8 +2,15 @@ const { GenericModerationCommand } = require('../../models/')
 
 module.exports = new GenericModerationCommand(
   async ({ Memer, msg, args, addCD }) => {
-    let nickname = msg.args.gather()
+    const nicknameMatcher = /(["'])(.*?[^\\])\1/m.exec(msg.args.args.join(' ')) // quotation support
+    let nickname = nicknameMatcher ? nicknameMatcher[2] : msg.args.args[0]
+    if (nicknameMatcher) {
+      msg.args.args = msg.args.args.join(' ').replace(nicknameMatcher[0], '').trim().split(' ')
+    } else {
+      msg.args.args.splice(0, 1)
+    }
 
+    let role = msg.args.resolveRole(true)
     if (!nickname) {
       msg.channel.createMessage('what name do you want to give to everyone? You can type `reset` to remove everyone\'s nickname if they have one. (respond in 30s)')
       const prompt = await Memer.MessageCollector.awaitMessage(msg.channel.id, msg.author.id, 30e3)
