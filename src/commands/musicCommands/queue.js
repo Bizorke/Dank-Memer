@@ -4,22 +4,23 @@ module.exports = new GenericMusicCommand(async ({ Memer, music, msg }) => {
   const page = Number(msg.args.gather()) || 1
   const pageLength = 10
   let embed = ''
-  let data = music.queue.slice(1)
+  let data = music.queue
 
-  if (music.queue.length < 2) {
+  if (data.length < 2) {
     return 'There are no songs in the queue. Add more or get out'
   }
+  if (isNaN(page) || page < 1) return 'that\'s not a valid page you assbutt'
+  if (Math.ceil(data.length / pageLength) < page) return `are you insane there's only ${Math.ceil(data.length / pageLength)} pages`
   if (data.length > pageLength) {
-    if (isNaN(page) || page < 1) return 'that\'s not a valid page you assbutt'
-    if (Math.ceil(data.length / pageLength) < page) return `are you insane there's only ${Math.ceil(data.length / pageLength)} pages`
     embed = `Page ${page} of ${Math.ceil(data.length / pageLength)}`
     data = data.slice(pageLength * (page - 1), (pageLength * (page - 1)) + pageLength)
   }
+
   msg.channel.createMessage({
     embed: {
       title: 'Queue',
       color: Memer.randomColor(),
-      description: data.map((song, index) => `\`${index + pageLength * (page - 1) + 1}.\` ${song.info.title}`).join('\n'),
+      description: data.slice(1).map((song, index) => `\`${index + (music.queue.length > pageLength ? pageLength * (page - 1) : 0) + 1}.\` ${song.info.title}`).join('\n'),
       footer: {
         text: embed
       }
