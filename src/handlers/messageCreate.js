@@ -10,6 +10,7 @@ exports.handle = async function (msg) {
     return
   }
 
+  this.stats.messages++
   cacheMessage.bind(this)(msg)
   const gConfig = await this.db.getGuild(msg.channel.guild.id) || {
     prefix: this.config.options.prefix,
@@ -42,7 +43,7 @@ exports.handle = async function (msg) {
   }
 
   if (gConfig.autoResponse.sec) {
-    let re = /^(one sec|one second|sec)/i
+    let re = /^(one sec$|one second|sec$)/i
     const match = re.exec(msg.content)
     if (match) {
       await this.sleep(1000)
@@ -233,6 +234,7 @@ function checkPerms (command, permissions, msg) {
 }
 
 async function runCommand (command, msg, args, cleanArgs, updateCooldowns) {
+  this.stats.commands++
   let res = await command.run({
     msg,
     args,

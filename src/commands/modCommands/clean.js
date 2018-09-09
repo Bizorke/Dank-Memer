@@ -23,8 +23,9 @@ module.exports = new GenericModerationCommand(
         }
         break
 
-      default: // No arguments/matches, default to cleaning Memer's messages
+      case 'memer':
         filter = (m) => m.author.id === Memer.bot.user.id
+        break
     }
 
     const deleted = await msg.channel.purge(purgeAmount, filter)
@@ -44,7 +45,7 @@ module.exports = new GenericModerationCommand(
   },
   {
     triggers: ['clean', 'purge', 'clear'],
-    usage: '{command} [amount] [bots|users] [users...]',
+    usage: '{command} [amount] [bots|users|memer] [users...]',
     description: 'Will quickly clean the last 10 messages, or however many you specify.',
     perms: ['manageMessages', 'readMessageHistory'],
     modPerms: ['manageMessages']

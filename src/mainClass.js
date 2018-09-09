@@ -84,6 +84,10 @@ class Memer extends Base {
     this.mockIMG = await this.http.get('https://pbs.twimg.com/media/DAU-ZPHUIAATuNy.jpg').then(r => r.body)
     this.autopost = new (require('./utils/Autopost.js'))(this)
     setInterval(() => { this.autopost.post() }, 3e5) // 5 minutes
+    this.stats = {
+      messages: 0,
+      commands: 0
+    }
   }
 
   createIPC () {
