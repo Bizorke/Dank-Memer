@@ -3,6 +3,9 @@ const { GenericCommand } = require('../../models/')
 
 module.exports = new GenericCommand(
   async ({ Memer, msg, addCD }) => {
+    if (!await Memer.db.checkPremiumGuild(msg.channel.guild.id)) {
+      return 'This feature is only available on **Premium** guilds.\nTo learn more about how to redeem a premium guild, visit our Patreon https://www.patreon.com/dankmemerbot'
+    }
     if (!msg.member.permission.has('manageGuild') && !Memer.config.options.developers.includes(msg.author.id)) {
       return 'You are not authorized to use this command. You must have `Manage Server` permissions.'
     }

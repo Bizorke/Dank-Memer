@@ -10,7 +10,7 @@ module.exports = new GenericCommand(
       return 'you need to give me a tag to post smh'
     }
     let allTags = await Memer.db.getAllTags(msg.channel.guild.id)
-    let retrievedTag = allTags.filter(found => found.name === tag.toLowerCase())
+    let retrievedTag = allTags.filter(found => found.name.toLowerCase() === tag.toLowerCase())
     if (!retrievedTag[0]) {
       return 'There\'s no tag that exists under that name'
     }

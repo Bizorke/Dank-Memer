@@ -16,5 +16,6 @@ module.exports = new GenericMusicCommand(async ({ music, args, msg }) => {
   return `Volume changed to **${volume}**`
 }, {
   triggers: ['volume'],
+  requiresPremium: false,
   description: 'changes the volume of the music'
 })

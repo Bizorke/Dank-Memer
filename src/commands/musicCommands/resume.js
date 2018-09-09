@@ -12,5 +12,6 @@ module.exports = new GenericMusicCommand(async ({ music, msg }) => {
   return 'there you go, music resumed'
 }, {
   triggers: ['resume'],
+  requiresPremium: true,
   description: 'Resume any paused song'
 })

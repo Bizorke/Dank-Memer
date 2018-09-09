@@ -29,5 +29,6 @@ module.exports = new GenericMusicCommand(async ({ Memer, music, msg }) => {
 }, {
   triggers: ['queue', 'songs'],
   usage: '{command} [page]',
+  requiresPremium: true,
   description: 'Lists all of the songs currently in the queue'
 })

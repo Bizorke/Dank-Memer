@@ -44,5 +44,6 @@ module.exports = new GenericMusicCommand(async ({ Memer, music, args, msg }) => 
   }
 }, {
   triggers: ['play', 'add'],
+  requiresPremium: true,
   description: 'add a song to queue'
 })
