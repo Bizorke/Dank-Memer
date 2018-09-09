@@ -4,7 +4,7 @@ module.exports = new GenericMusicCommand(async ({ Memer, music, msg }) => {
   const page = Number(msg.args.gather()) || 1
   const pageLength = 10
   let embed = ''
-  let data = music.queue
+  let data = music.queue.slice(1)
 
   if (data.length < 2) {
     return 'There are no songs in the queue. Add more or get out'
@@ -20,7 +20,7 @@ module.exports = new GenericMusicCommand(async ({ Memer, music, msg }) => {
     embed: {
       title: 'Queue',
       color: Memer.randomColor(),
-      description: data.slice(1).map((song, index) => `\`${index + (music.queue.length > pageLength ? pageLength * (page - 1) : 0) + 1}.\` ${song.info.title}`).join('\n'),
+      description: data.map((song, index) => `\`${index + (music.queue.length > pageLength ? pageLength * (page - 1) : 0) + 1}.\` ${song.info.title}`).join('\n'),
       footer: {
         text: embed
       }

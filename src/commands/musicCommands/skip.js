@@ -9,7 +9,7 @@ module.exports = new GenericMusicCommand(async ({ Memer, music, msg }) => {
   } else {
     if (!music.vote) {
       music.startVote(msg.author.id)
-      return `this is so sad we only need ${requiredVotes - music.vote.voted.length} more`
+      return `**${msg.author.username}** has voted to skip this song, can we get \`${requiredVotes - music.vote.voted.length}\` more votes`
     } else {
       if (music.vote.voted.includes(msg.author.id)) {
         return 'you already voted dummy'
@@ -19,7 +19,7 @@ module.exports = new GenericMusicCommand(async ({ Memer, music, msg }) => {
         await music.stop()
       } else {
         music.vote.voted.push(msg.author.id)
-        return `this is so sad we only need ${requiredVotes - music.vote.voted.length} more`
+        return `**${msg.author.username}** has voted to skip this song, can we get \`${requiredVotes - music.vote.voted.length}\` more votes`
       }
     }
   }
