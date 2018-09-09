@@ -6,6 +6,9 @@ module.exports = new GenericMusicCommand(async ({ Memer, music, msg }) => {
   const isDJ = msg.member.roles && msg.channel.guild.roles ? msg.member.roles.some(id => msg.channel.guild.roles.get(id).name.toLowerCase() === 'dj') : false
   if (isDJ || music.voiceChannel.voiceMembers.size <= 2) { // check if less than or equal to 2, including current user and bot
     await music.stop()
+    if (music.vote) {
+      music.resetVote()
+    }
   } else {
     if (!music.vote) {
       music.startVote(msg.author.id)
