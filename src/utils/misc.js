@@ -308,5 +308,17 @@ module.exports = {
     }
 
     return pages
+  },
+
+  format: seconds => {
+    function pad (seconds) {
+      return (seconds < 10 ? '0' : '') + seconds
+    }
+
+    let hours = Math.floor(seconds / (60 * 60))
+    let minutes = Math.floor(seconds % (60 * 60) / 60)
+    let seconds2 = Math.floor(seconds % 60)
+
+    return `${pad(hours)}:${pad(minutes)}:${pad(seconds2)}`
   }
 }
