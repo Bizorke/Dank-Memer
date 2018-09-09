@@ -1,7 +1,7 @@
 const { GenericMusicCommand } = require('../../models')
 
 module.exports = new GenericMusicCommand(async ({ Memer, music, msg }) => {
-  if (!music.channel || !music.queue[0]) {
+  if (!music.voiceChannel || !music.queue[0]) {
     return msg.reply('what are you thinking i\'m not playing any music lmao')
   } else if (msg.member.voiceState.channelID !== music.voiceChannel.id) {
     return msg.reply('you\'re not even in my voice channel, why should i listen to you')
