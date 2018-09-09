@@ -11,8 +11,12 @@ module.exports = class Music {
     this.vote = null
   }
 
-  addSong (song) {
-    this.queue.push(song)
+  addSong (song, unshift) {
+    if (unshift) {
+      this.queue.unshift(song)
+    } else {
+      this.queue.push(song)
+    }
     return this._play()
   }
 
@@ -83,8 +87,8 @@ module.exports = class Music {
   }
 
   _saveQueue () {
-    if (this.queue[1]) {
-      this.client.redis.setAsync(`queue-${this.id}`, JSON.stringify(this.queue.slice(1), 'EX', 60 * 60 * 24))
+    if (this.queue[0]) {
+      this.client.redis.setAsync(`queue-${this.id}`, JSON.stringify(this.queue, 'EX', 60 * 60 * 24))
         .catch(() => {})
     } else {
       this.client.redis.delAsync(`queue-${this.id}`)
