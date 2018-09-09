@@ -7,7 +7,7 @@ module.exports = new GenericMusicCommand(async ({ Memer, music, args, msg }) => 
     return msg.reply('join a voice channel fam')
   }
 
-  if (!music.voiceState) {
+  if (!music.voiceChannel) {
     await music.player.join(msg.member.voiceState.channelID)
   }
   let response
