@@ -6,13 +6,13 @@ module.exports = new GenericMusicCommand(async ({ Memer, music, args, msg }) => 
   if (!msg.member.voiceState.channelID) {
     return msg.reply('join a voice channel fam')
   }
-
+  const newSession = !music.voiceChannel || false
   if (!music.voiceChannel) {
     await music.player.join(msg.member.voiceState.channelID)
   }
   let response
   const queryString = msg.args.gather()
-  if (!queryString && music.queue[0]) {
+  if (!queryString && music.queue[0] && newSession) {
     await music._play()
     return `Loaded \`${music.queue[0].info.title}\` from last session`
   } else if (!queryString) {
@@ -27,15 +27,15 @@ module.exports = new GenericMusicCommand(async ({ Memer, music, args, msg }) => 
   const { loadType, playlistInfo, tracks } = response
   switch (loadType) {
     case TRACK_LOADED:
-      await music.addSong(tracks[0])
+      await music.addSong(tracks[0], music.queue[0] && newSession)
       return `Queued \`${tracks[0].info.title}\``
     case PLAYLIST_LOADED:
       const promises = []
-      for (const song of tracks) promises.push(music.addSong(song))
+      for (const song of tracks) promises.push(music.addSong(song, music.queue[0] && newSession))
       await Promise.all(promises)
       return `Queued **${tracks.length}** songs from **${playlistInfo.name}**, happy now? jeez`
     case SEARCH_RESULT:
-      await music.addSong(tracks[0])
+      await music.addSong(tracks[0], music.queue[0] && newSession)
       return `Queued \`${tracks[0].info.title}\``
     case NO_MATCHES:
       return 'Unable to find any videos by that query, what are the odds. Pretty high if you are dumb I guess'
