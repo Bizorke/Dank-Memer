@@ -8,6 +8,7 @@ module.exports = new GenericMediaCommand({
   title: 'yesss please',
   message: 'Free nudes thanks to boobbot & tom <3',
   JSONKey: 'url',
+  donorOnly: true,
   reqURL: 'https://boob.bot/api/v2/img/black',
   tokenKey: 'boobbot'
 })

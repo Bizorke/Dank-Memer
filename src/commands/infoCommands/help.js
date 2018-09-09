@@ -59,7 +59,6 @@ module.exports = new GenericCommand(
         return 'that\'s not a valid category smh'
       }
       let dComm
-      console.log(donorCommands)
       if (!donorCommands || donorCommands.length < 1) {
         dComm = ''
       } else {
