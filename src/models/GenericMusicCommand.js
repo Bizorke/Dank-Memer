@@ -7,7 +7,7 @@ module.exports = class GenericMusicCommand {
   }
 
   async run ({ Memer, msg, addCD, args, cleanArgs }) {
-    if (!msg.member.voiceState.channelID) {
+    if (msg.member.voiceState.channelID) {
       const perms = Memer.bot.getChannel(msg.member.voiceState.channelID).permissionsOf(Memer.bot.user.id)
 
       if (!perms.has('voiceConnect') || !perms.has('voiceSpeak') || !perms.has('voiceUseVAD')) {
