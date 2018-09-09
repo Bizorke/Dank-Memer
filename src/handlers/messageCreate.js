@@ -115,7 +115,7 @@ exports.handle = async function (msg) {
     !command ||
     (command.props.ownerOnly && !this.config.options.developers.includes(msg.author.id)) ||
     gConfig.disabledCommands.includes(command.props.triggers[0]) ||
-    (gConfig.disabledCategories.includes(command.category.split(' ')[1].toLowerCase()) && !['disable', 'enable'].includes(command.props.triggers[0]) && !gConfig.enabledCommands.includes(command.props.triggers[0]))
+    ((gConfig.disabledCategories || []).includes(command.category.split(' ')[1].toLowerCase()) && !['disable', 'enable'].includes(command.props.triggers[0]) && !gConfig.enabledCommands.includes(command.props.triggers[0]))
   ) {
     return
   } else if (command.props.donorOnly && !isDonor && !this.config.options.developers.includes(msg.author.id)) {

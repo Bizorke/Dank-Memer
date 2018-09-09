@@ -19,6 +19,9 @@ module.exports = class GenericMediaCommand {
     })
       .then(res => this.props.JSONKey ? res.body[this.props.JSONKey] : res.text)
 
+    if (!data) {
+      return `Oops, i think a bad happened`
+    }
     if (data.endsWith('.mp4')) {
       return this.run({ Memer, msg, addCD })
     }
