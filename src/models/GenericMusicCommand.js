@@ -1,6 +1,15 @@
+/** @typedef {Object} FunctionParams
+ * @prop {import("../utils/ArgParser")} args
+ */
+
 const { GenericCommand } = require('.')
 
 module.exports = class GenericMusicCommand {
+  /**
+   * Creates a new instance of GenericMusicCommand
+   * @param {commandCallback} fn The function
+   * @param {Object} cmdProps - The props
+   */
   constructor (fn, cmdProps) {
     this.fn = fn
     this.cmdProps = cmdProps
@@ -33,3 +42,8 @@ module.exports = class GenericMusicCommand {
     ).props
   }
 }
+
+/**
+ * @callback commandCallback
+ * @param {FunctionParams} params
+ */
