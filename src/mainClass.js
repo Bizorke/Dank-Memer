@@ -42,6 +42,10 @@ class Memer extends Base {
       'foodporn': {},
       'snek': {}
     }
+    this.stats = {
+      messages: 0,
+      commands: 0
+    }
     Object.assign(this, require('./utils/misc.js'))
   }
 
@@ -69,10 +73,6 @@ class Memer extends Base {
 
     this.mentionRX = new RegExp(`^<@!*${this.bot.user.id}>`)
     this.mockIMG = await this.http.get('https://pbs.twimg.com/media/DAU-ZPHUIAATuNy.jpg').then(r => r.body)
-    this.stats = {
-      messages: 0,
-      commands: 0
-    }
   }
 
   createIPC () {
