@@ -5,6 +5,6 @@ module.exports = new GenericImageCommand({
   description: 'Dank Memer would like to know your location',
 
   requiredArgs: 'You need to text for the search bar and the thing requesting location, try again',
-  textLimit: 100,
+  textLimit: [44, 119],
   textOnly: true
 })

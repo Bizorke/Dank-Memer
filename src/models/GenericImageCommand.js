@@ -4,7 +4,7 @@ class GenericImageCommand {
   constructor (commandProps, URLParseFN) {
     this.cmdProps = commandProps
     this.URLParseFN = URLParseFN || this.defaultURLParseFN
-    this.requestURL = commandProps.reqURL || 'http://127.0.0.1:65535/api/$ENDPOINT'
+    this.requestURL = commandProps.reqURL || 'http://127.0.0.1:5000/api/$ENDPOINT'
   }
 
   async run ({ Memer, msg, addCD }) {
@@ -35,9 +35,27 @@ class GenericImageCommand {
         return false
       }
 
-      if (msg.args.textLength > this.cmdProps.textLimit) {
-        msg.channel.createMessage(`Too long. You're ${msg.args.textLength - this.cmdProps.textLimit} characters over the limit!`)
-        return false
+      if (typeof this.cmdProps.textLimit === 'number') {
+        if (msg.args.textLength > this.cmdProps.textLimit) {
+          msg.channel.createMessage(`Too long. You're ${msg.args.textLength - this.cmdProps.textLimit} characters over the limit!`)
+          return false
+        }
+      } else {
+        const sections = msg.content.split(', ')
+        const limits = this.cmdProps.textLimit
+        if (sections.length !== limits.length) {
+          msg.channel.createMessage(`You need to supply ${limits.length} arguments separated by \`, \u200b\`! You gave ${sections.length}.`)
+          return false
+        }
+
+        const maybeError = sections
+          .map((section, i) => (section.length <= limits[i]) || `Argument number ${i + 1} is ${section.length - limits[i]} characters over the limit!`)
+          .find((result) => typeof result === 'string')
+
+        if (maybeError) {
+          msg.channel.createMessage(maybeError)
+          return false
+        }
       }
     }
 

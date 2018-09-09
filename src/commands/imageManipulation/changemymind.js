@@ -5,6 +5,6 @@ module.exports = new GenericImageCommand({
   description: 'well come on change my mind',
 
   requiredArgs: 'You have to actually put some text in to change someone\'s mind',
-  textLimit: 160,
+  textLimit: 149,
   textOnly: true
 })

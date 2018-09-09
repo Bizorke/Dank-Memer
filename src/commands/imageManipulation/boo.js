@@ -5,6 +5,6 @@ module.exports = new GenericImageCommand({
   description: 'AAHHHH',
 
   requiredArgs: 'You need to provide text for the ghost to say separated by a comma (,)',
-  textLimit: 32,
+  textLimit: [59, 59],
   textOnly: true
 })
