@@ -28,6 +28,7 @@ module.exports = new GenericModerationCommand(
   {
     triggers: ['randomban', 'banroulette'],
     usage: '{command}',
+    cooldown: 1e4,
     description: 'Warning, this will ban a random person.',
     perms: ['banMembers', 'embedLinks'],
     modPerms: ['banMembers']

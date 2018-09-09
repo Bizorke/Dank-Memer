@@ -3,12 +3,10 @@ const { GenericCommand } = require('../../models/')
 module.exports = new GenericCommand(
   async ({ Memer, msg, addCD }) => {
     let { pocket } = await Memer.db.getUser(msg.author.id)
-    let coins = pocket
-    if (coins.coin === 0) {
+    if (pocket.coin === 0) {
       return { title: 'You have no coins.' }
     }
-    await addCD()
-    let coinFlip = Math.floor(Math.random() * 2) + 1
+    let coinFlip = Memer.randomNumber(1, 2)
     const heads = 1
     const tails = 2
 
@@ -19,6 +17,7 @@ module.exports = new GenericCommand(
     if (!choice) {
       return 'I flipped the coin, but you didn\'t call it in time!'
     } else if (choice.content.toLowerCase().includes('heads')) {
+      await addCD()
       if (coinFlip === heads) {
         await Memer.db.addPocket(msg.author.id, 1)
         return 'It was heads! You have been awarded one coin!'
@@ -26,6 +25,7 @@ module.exports = new GenericCommand(
         return 'aw it was tails and you suck, sad day for you'
       }
     } else if (choice.content.toLowerCase().includes('tails')) {
+      await addCD()
       if (coinFlip === tails) {
         await Memer.db.addPocket(msg.author.id, 1)
         return 'It was tails! You have been awarded one coin!'
@@ -38,8 +38,8 @@ module.exports = new GenericCommand(
   },
   {
     triggers: ['flip', 'coinflip'],
-    cooldown: 3e5,
-    donorCD: 2e5,
+    cooldown: 30 * 1000,
+    donorCD: 20 * 1000,
     description: 'Flip a coin, and if you call it you win it!'
   }
 )

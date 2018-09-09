@@ -23,8 +23,9 @@ module.exports = new GenericModerationCommand(
         }
         break
 
-      default: // No arguments/matches, default to cleaning Memer's messages
+      case 'memer':
         filter = (m) => m.author.id === Memer.bot.user.id
+        break
     }
 
     const deleted = await msg.channel.purge(purgeAmount, filter)
@@ -33,6 +34,10 @@ module.exports = new GenericModerationCommand(
     if (typeof (deleted) === 'string') {
       return `Something went wrong while deleting the messages\n\`\`\`\n${deleted}\`\`\``
     } else {
+      let modlog = await Memer.db.fetchModlog(msg.channel.guild.id)
+      if (modlog) {
+        Memer.bot.createMessage(modlog, `**${msg.author.username}#${msg.author.discriminator}** Deleted ${deleted} messages in ${msg.channel.name}.`)
+      }
       const success = await msg.channel.createMessage(`Deleted ${deleted} messages. Are ya happy now?`)
       await Memer.sleep(1500)
       return success.delete()
@@ -40,7 +45,7 @@ module.exports = new GenericModerationCommand(
   },
   {
     triggers: ['clean', 'purge', 'clear'],
-    usage: '{command} [amount] [bots|users] [users...]',
+    usage: '{command} [amount] [bots|users|memer] [users...]',
     description: 'Will quickly clean the last 10 messages, or however many you specify.',
     perms: ['manageMessages', 'readMessageHistory'],
     modPerms: ['manageMessages']

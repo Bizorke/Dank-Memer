@@ -14,49 +14,36 @@
  */
 
 const config = require('./config.json')
+const secrets = require('./secrets.json')
 const { Master: Sharder } = require('eris-sharder')
 const { post } = require('./utils/http')
 const r = require('rethinkdbdash')()
-const StatsD = require('node-dogstatsd').StatsD
-let s = new StatsD()
 
-const master = new Sharder(config.token, '/mainClass.js', {
+// Initiate Eris-Sharder
+
+const master = new Sharder(secrets.bot.token, config.sharder.path, {
   stats: true,
-  name: 'Maymays',
-  webhooks: config.webhooks,
-  clientOptions: {
-    disableEvents: {
-      CHANNEL_PINS_UPDATE: true,
-      USER_SETTINGS_UPDATE: true,
-      USER_NOTE_UPDATE: true,
-      RELATIONSHIP_ADD: true,
-      RELATIONSHIP_REMOVE: true,
-      GUILD_BAN_ADD: true,
-      GUILD_BAN_REMOVE: true,
-      TYPING_START: true,
-      MESSAGE_DELETE_BULK: true,
-      MESSAGE_UPDATE: true
-    },
-    disableEveryone: true,
-    messageLimit: 1,
-    requestTimeout: 3e4
-  },
-  shards: config.shardCount || 1,
-  statsInterval: 1e4,
-  clusters: config.clusters || undefined
+  name: config.sharder.name || 'Dank Memer',
+  webhooks: config.sharder.webhooks,
+  clientOptions: config.eris.clientOptions,
+  shards: config.sharder.shardCount || 1,
+  statsInterval: config.statsInterval || 1e4,
+  clusters: config.sharder.clusters || undefined
 })
 
+// Record bot stats every x seconds/minutes to the database
+
 master.on('stats', res => {
-  s.gauge('bot.guilds', res.guilds)
-  s.gauge('bot.users', res.users)
-  s.gauge('bot.voice', res.voice)
-  s.gauge('bot.mem', res.mem)
   r.table('stats')
     .insert({ id: 1, stats: res }, { conflict: 'update' })
     .run()
+
+  // TODO: Post stats to endpoint on the webserver
 })
 
-process.on('SIGINT', async () => {
+// Delete stats data on SIGINT to help prevent problems with some commands
+
+process.on('SIGINT', async () => { // TODO: See if this still needs to happen after disabling automatic db wipes on pls lb/rich/ulb
   await r.table('stats')
     .get(1)
     .delete()
@@ -65,20 +52,22 @@ process.on('SIGINT', async () => {
   process.exit()
 })
 
-if (require('cluster').isMaster && !config.dev) {
+// Post guild count to each bot list api
+
+if (require('cluster').isMaster && !config.options.dev) {
   setInterval(async () => {
     const { stats: { guilds } } = await r.table('stats')
       .get(1)
       .run()
 
-    for (const botlist of config.botlists) {
+    for (const botlist of secrets.botlists) {
       post(botlist.url)
         .set('Authorization', botlist.token)
         .send({
-          [`server${botlist.url.includes('carbonitex') ? '' : '_'}count`]: guilds,
+          [`server${botlist.url.includes('carbonitex') ? '' : '_'}count`]: guilds, // TODO: Does carbon still not allow underscore?
           key: botlist.token
         })
         .end()
     }
-  }, 5 * 60 * 1000)
+  }, 60 * 60 * 1000)
 }

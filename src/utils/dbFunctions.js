@@ -34,7 +34,7 @@ module.exports = Bot => ({
       .get(guildID)
       .default({
         id: guildID,
-        prefix: Bot.config.defaultPrefix,
+        prefix: Bot.config.options.prefix,
         modlog: '',
         disabledCategories: [],
         disabledCommands: [],
@@ -383,9 +383,41 @@ module.exports = Bot => ({
       .run()
   },
 
-  addDonor: function addDonor (id, donorAmount) {
+  addDonor: function addDonor (id, donorAmount, donationDate, declineDate, patreonID) {
     return Bot.r.table('donors')
-      .insert({ id, donorAmount }, { conflict: 'update' })
+      .insert({
+        id,
+        donorAmount,
+        guilds: [],
+        guildRedeems: 0,
+        firstDonationDate: donationDate || Bot.r.now(),
+        declinedSince: declineDate || null,
+        totalPaid: donorAmount,
+        patreonID
+      }, { conflict: 'update' })
+      .run()
+  },
+
+  getDonor: function getDonor (id) {
+    return Bot.r.table('donors')
+      .get(id)
+      .default(false)
+      .run()
+  },
+
+  checkPremiumGuild: async function checkPremiumGuild (id) {
+    return !!await Bot.r.table('donors')
+      .filter(Bot.r.row('guilds').contains(id))
+      .count()
+  },
+
+  updateDonorGuild: function updateDonorGuild (id, guilds, guildRedeems) {
+    return Bot.r.table('donors')
+      .insert({
+        id,
+        guilds,
+        guildRedeems
+      }, { conflict: 'update' })
       .run()
   },
 
@@ -394,6 +426,25 @@ module.exports = Bot => ({
       .get(id)
       .delete()
       .run()
+  },
+
+  findExpiredDonors: async function findExpiredDonors () {
+    return Bot.r.table('donors')
+      .filter(Bot.r.row('declinedSince').lt(Bot.r.now().sub(30 * 24 * 60 * 60)))
+      .run() // only 1 month after decline date
+  },
+
+  wipeExpiredDonors: async function wipeExpiredDonors () {
+    const donors = await Bot.r.table('donors')
+      .filter(Bot.r.row('declinedSince').lt(Bot.r.now().sub(60 * 24 * 60 * 60))) // 2 months after decline date
+      .run()
+
+    await Bot.r.table('donors')
+      .filter(Bot.r.row('declinedSince').lt(Bot.r.now().sub(60 * 24 * 60 * 60))) // 2 months after decline date
+      .delete()
+      .run()
+
+    return donors
   },
 
   checkDonor: function checkDonor (id) {
@@ -406,6 +457,80 @@ module.exports = Bot => ({
   getStats: function getStats () {
     return Bot.r.table('stats')
       .get(1)('stats')
+      .run()
+  },
+
+  addTag: async function addTag (id, name, text) {
+    return Bot.r.table('tags')
+      .insert({guild_id: id, name: name, text: text})
+  },
+
+  getAllTags: async function getAllTags (id) {
+    let tags = await Bot.r.table('tags')
+      .getAll(id, {index: 'guild_id'})
+    return tags
+  },
+
+  getTag: async function getTag (id, name) {
+    let tags = await Bot.r.table('tags')
+      .filter({name: name, guild_id: id})
+      .run()
+    return tags[0] || false
+  },
+
+  removeTag: async function getTag (id, name) {
+    return Bot.r.table('tags')
+      .filter({name: name, guild_id: id})
+      .delete()
+      .run()
+  },
+
+  getAutomemeChannel: async function getAutomemeChannel (id) {
+    let channel = await Bot.r.table('automeme')
+      .get(id)
+      .run()
+    return channel || false
+  },
+
+  removeAutomemeChannel: async function removeAutomemeChannel (id) {
+    return Bot.r.table('automeme')
+      .get(id)
+      .delete()
+      .run()
+  },
+
+  allAutomemeChannels: async function allAutomemeChannels () {
+    return Bot.r.table('automeme')
+      .run()
+  },
+
+  addAutomemeChannel: async function addAutomemeChannel (id, channelID) { // id = guild ID
+    return Bot.r.table('automeme')
+      .insert({id: id, channel: channelID})
+  },
+
+  getAutonsfwChannel: async function getAutonsfwChannel (id) {
+    let channel = await Bot.r.table('autonsfw')
+      .get(id)
+      .run()
+    return channel || false
+  },
+
+  removeAutonsfwChannel: async function removeAutonsfwChannel (id) {
+    return Bot.r.table('autonsfw')
+      .get(id)
+      .delete()
+      .run()
+  },
+
+  allAutonsfwChannels: async function allAutonsfwChannels () {
+    return Bot.r.table('autonsfw')
+      .run()
+  },
+
+  addAutonsfwChannel: async function addAutonsfwChannel (id, channelID, type) { // id = guild ID
+    return Bot.r.table('autonsfw')
+      .insert({id, channel: channelID, type}, { conflict: 'update' })
       .run()
   }
 })

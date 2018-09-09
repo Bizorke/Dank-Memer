@@ -4,6 +4,9 @@ const ProgrammaticREPL = require('programmatic-repl')
 module.exports = {
   help: 'repl',
   fn: async ({ Memer, msg }) => {
+    if (!Memer.config.options.owners.includes(msg.author.id)) {
+      return 'Woah now, only my "Owners" can do this'
+    }
     const REPL = new ProgrammaticREPL({
       includeNative: true,
       includeBuiltinLibs: true,
@@ -54,7 +57,7 @@ module.exports = {
         })
       }
 
-      result = result.replace(new RegExp(Memer.config.token, 'gi'), 'i think the fuck not, you trick ass bitch')
+      result = result.replace(new RegExp(Memer.secrets.bot.token, 'gi'), 'i think the fuck not, you trick ass bitch')
 
       if (result.length > 1950) {
         // If it's over the 2k char limit, we break off the result, pop the last line and close off

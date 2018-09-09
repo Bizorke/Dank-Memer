@@ -1,6 +1,6 @@
 exports.handle = function (guild) {
-  this.ddog.increment('event.guildDelete')
-  this.ddog.decrement('total.guildsGained')
+  if (guild.unavailable) return
+
   this.db.deleteGuild(guild.id)
   this.db.deleteDevSubscriber(guild.id)
 }

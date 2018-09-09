@@ -18,12 +18,13 @@ module.exports = new GenericCommand(
     pls = await Promise.all(pls.map(async g => Object.assign(await bigmeme(g.id), { pls: g.pls })))
     return {
       title: 'Top 15 servers (Commands Ran)',
-      description: pls.map((g, i) => `${emojis[i] || '👏'} ${g.pls.toLocaleString()} - ${g.name || (Memer.db.deletePls(g.id) && 'LOL WHO DIS')}`).join('\n'),
+      description: pls.map((g, i) => `${emojis[i] || '👏'} ${g.pls.toLocaleString()} - ${g.name || 'LOL WHO DIS'}`).join('\n'),
       footer: { text: `Your server has ran ${you.pls} commands` }
     }
   },
   {
     triggers: ['leaderboard', 'lb'],
-    description: 'this is in beta, pls no breaking it'
+    cooldown: 1e4,
+    description: 'See the top servers using dank memer'
   }
 )

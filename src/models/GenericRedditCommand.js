@@ -22,7 +22,6 @@ module.exports = class GenericRedditCommand {
       res = await Memer.http.get(`https://www.reddit.com${this.cmdProps.endpoint}`)
         .then(res => res.body)
         .catch(() => null)
-
       Memer.redis.setAsync(this.cmdProps.endpoint, JSON.stringify(res), 'EX', 15 * 60)
     }
 
@@ -59,7 +58,7 @@ module.exports = class GenericRedditCommand {
       title: postTitle,
       url: `https://www.reddit.com${post.data.permalink}`,
       image: { url: this.cmdProps.type === 'image' ? post.data.url : '' },
-      footer: { text: `👍 ${post.data.ups} | 💬 ${post.data.num_comments}` }
+      footer: { text: this.cmdProps.footer || `👍 ${post.data.ups} | 💬 ${post.data.num_comments}` }
     }
   }
 

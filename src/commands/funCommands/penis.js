@@ -6,7 +6,7 @@ module.exports = new GenericCommand(
     const name = target.nick || target.username
     return {
       title: 'peepee size machine',
-      description: `${name}'s penis\n8${'='.repeat((Math.floor(Math.random() * 10) + 1) * ~~!config.devs.includes(target.id))}D`
+      description: `${name}'s penis\n8${'='.repeat(Memer.randomNumber(1, 10) * ~~!config.options.contribs.includes(target.id))}D`
     }
   },
   {

@@ -1,7 +1,7 @@
 const { readdirSync } = require('fs')
 const { join } = require('path')
 const { Base } = global.memeBase || require('eris-sharder')
-const { StatsD } = require('node-dogstatsd')
+const { Cluster } = require('lavalink')
 
 const MessageCollector = require('./utils/MessageCollector.js')
 const botPackage = require('../package.json')
@@ -9,13 +9,12 @@ const botPackage = require('../package.json')
 class Memer extends Base {
   constructor (bot) {
     super(bot)
-
     this.log = require('./utils/logger.js')
     this.config = require('./config.json')
+    this.secrets = require('./secrets.json')
     this.r = require('rethinkdbdash')()
     this.db = require('./utils/dbFunctions.js')(this)
     this.http = require('./utils/http')
-    this.ddog = new StatsD()
     this.cmds = []
     this.tags = {}
     this.indexes = {
@@ -38,7 +37,14 @@ class Memer extends Base {
       'antijoke': {},
       'antiantijoke': {},
       'sequel': {},
-      'owl': {}
+      'owl': {},
+      'animals': {},
+      'foodporn': {},
+      'snek': {}
+    }
+    this.stats = {
+      messages: 0,
+      commands: 0
     }
     Object.assign(this, require('./utils/misc.js'))
   }
@@ -49,7 +55,6 @@ class Memer extends Base {
     this.loadCommands()
     this.createIPC()
     this.MessageCollector = new MessageCollector(this.bot)
-    this.ddog.increment('function.launch')
     this.bot
       .on('ready', this.ready.bind(this))
     const listeners = require(join(__dirname, 'handlers'))
@@ -60,15 +65,29 @@ class Memer extends Base {
   }
 
   async ready () {
+    const { ws } = this.bot.shards.get(0)
+    this.lavalink = new Cluster({
+      nodes: this.config.lavalink.nodes.map(node => ({
+        hosts: { ws: `ws://${node.host}:${node.portWS}`, rest: `http://${node.host}:${node.port}` },
+        password: this.secrets.memerServices.lavalink,
+        shardCount: this.config.sharder.shardCount,
+        userID: this.bot.user.id
+      })),
+      send (guildID, pk) {
+        return ws.send(JSON.stringify(pk))
+      }
+    })
+    this.musicManager = require('./utils/MusicManager')(this)
     this.log(`Ready: ${process.memoryUsage().rss / 1024 / 1024}MB`)
     this.bot.editStatus(null, {
       name: 'pls help',
       type: 0
     })
-    this.ddog.increment('function.ready')
 
     this.mentionRX = new RegExp(`^<@!*${this.bot.user.id}>`)
     this.mockIMG = await this.http.get('https://pbs.twimg.com/media/DAU-ZPHUIAATuNy.jpg').then(r => r.body)
+    this.autopost = new (require('./utils/Autopost.js'))(this)
+    setInterval(() => { this.autopost.post() }, 3e5) // 5 minutes
   }
 
   createIPC () {
@@ -113,7 +132,6 @@ class Memer extends Base {
   }
 
   loadCommands () {
-    this.ddog.increment('function.loadCommands')
     const categories = readdirSync(join(__dirname, 'commands'))
 
     for (const categoryPath of categories) {

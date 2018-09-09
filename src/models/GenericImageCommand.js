@@ -14,10 +14,10 @@ class GenericImageCommand {
     }
 
     const data = await Memer.http.get(this.requestURL.replace('$ENDPOINT', this.cmdProps.triggers[0]))
-      .set('Authorization', Memer.config.imgenKey)
+      .set('Authorization', Memer.secrets.memerServices.imgenKey)
       .query(datasrc)
 
-    if (data.status === 200 && data.headers['content-type'].startsWith('image/')) {
+    if (data.ok && data.headers['content-type'].startsWith('image/')) {
       await addCD()
       msg.channel.createMessage('', {
         file: data.body,
@@ -30,14 +30,32 @@ class GenericImageCommand {
 
   defaultURLParseFN (msg) {
     if (this.cmdProps.requiredArgs) {
-      if (msg.args.isEmpty()) {
+      if (msg.args.isEmpty) {
         msg.channel.createMessage(this.cmdProps.requiredArgs)
         return false
       }
 
-      if (msg.args.textLength() > this.cmdProps.textLimit) {
-        msg.channel.createMessage(`Too long. You're ${msg.args.textLength() - this.cmdProps.textLimit} characters over the limit!`)
-        return false
+      if (typeof this.cmdProps.textLimit === 'number') {
+        if (msg.args.textLength > this.cmdProps.textLimit) {
+          msg.channel.createMessage(`Too long. You're ${msg.args.textLength - this.cmdProps.textLimit} characters over the limit!`)
+          return false
+        }
+      } else {
+        const sections = msg.content.split(', ')
+        const limits = this.cmdProps.textLimit
+        if (sections.length !== limits.length) {
+          msg.channel.createMessage(`You need to supply ${limits.length} arguments separated by \`, \u200b\`! You gave ${sections.length}.`)
+          return false
+        }
+
+        const maybeError = sections
+          .map((section, i) => (section.length <= limits[i]) || `Argument number ${i + 1} is ${section.length - limits[i]} characters over the limit!`)
+          .find((result) => typeof result === 'string')
+
+        if (maybeError) {
+          msg.channel.createMessage(maybeError)
+          return false
+        }
       }
     }
 

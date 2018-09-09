@@ -9,6 +9,7 @@ module.exports = class GenericSoundboardCommand {
 
   async run ({ Memer, msg, addCD }) {
     const sfx = msg.args.nextArgument()
+    const music = Memer.musicManager.get(msg.channel.guild.id)
 
     if (!sfx) {
       return 'idk what you want me to play, try giving me a clip name?'
@@ -28,13 +29,14 @@ module.exports = class GenericSoundboardCommand {
       return msg.reply('Make sure I have `connect`, `speak`, and `use voice activity` permissions in the channel settings so I can do this command!\n\nHow to do that: https://i.imgur.com/ugplJJO.gif')
     }
 
-    if (Memer.bot.voiceConnections.has(msg.channel.guild.id)) {
-      if (!Memer.bot.voiceConnections.get(msg.channel.guild.id).playing) {
-        Memer.bot.voiceConnections.remove(Memer.bot.voiceConnections.get(msg.channel.guild.id))
+    if (music.player) {
+      if (!music.playing) {
+        await music.reset()
       }
-      if (this.cmdProps.skipIfPlaying && Memer.bot.voiceConnections.get(msg.channel.guild.id)) {
-        Memer.bot.voiceConnections.get(msg.channel.guild.id).stopPlaying()
-      } else {
+      if (this.cmdProps.skipIfPlaying && music.playing) {
+        await music.reset()
+      }
+      if (music.playing && !this.cmdProps.skipIfPlaying) {
         return this.cmdProps.existingConn
       }
     }
@@ -43,14 +45,10 @@ module.exports = class GenericSoundboardCommand {
 
     msg.channel.createMessage({embed: {title: 'Now Playing...', description: sfx}})
 
-    const conn = await Memer.bot.joinVoiceChannel(msg.member.voiceState.channelID)
-    conn.play(`${audioAssets}/${msg.author.id}/${sfx}.opus`, { format: 'ogg' })
-
-    setTimeout(() => checkBorkVoice(Memer, msg.channel), 5000)
-
-    conn.once('end', async () => {
-      await Memer.bot.leaveVoiceChannel(conn.channelID) // TODO: Don't run this if it's being skipped
-    })
+    await music.player.join(msg.member.voiceState.channelID)
+    let response = await music.node.load(encodeURIComponent(`${audioAssets}/${msg.author.id}/${sfx}.opus`), { format: 'ogg' })
+    const { tracks } = response
+    await music.addSong(tracks[0])
   }
 
   get props () {
@@ -62,18 +60,5 @@ module.exports = class GenericSoundboardCommand {
         perms: ['addReactions']
       }, this.cmdProps)
     ).props
-  }
-}
-
-async function checkBorkVoice (Memer, channel) {
-  const voiceConnection = Memer.bot.voiceConnections.get(channel.guild.id)
-
-  if (voiceConnection) {
-    if (!voiceConnection.playing && voiceConnection.ready) {
-      await Memer.bot.leaveVoiceChannel(voiceConnection.channelID)
-      Memer.ddog.increment('leftVoice')
-      return channel.createMessage('Hm, it seems that I am in the voice channel but not playing anything. I decided to leave')
-    }
-    return setTimeout(() => checkBorkVoice(Memer, channel), 10000)
   }
 }

@@ -3,7 +3,7 @@ const commands = require('./commands')
 
 module.exports = new GenericCommand(
   async ({ Memer, msg, args }) => {
-    if (!Memer.config.devs.includes(msg.author.id)) {
+    if (!Memer.config.options.developers.includes(msg.author.id)) {
       return
     }
 
@@ -19,7 +19,6 @@ module.exports = new GenericCommand(
     triggers: ['dev', 'stupid-bot', 'd'],
     usage: '{command} you really don\'t need docs for this',
     description: 'henlo, u stinky birb',
-
     ownerOnly: true
   }
 )

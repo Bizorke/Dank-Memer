@@ -40,7 +40,7 @@ module.exports = new GenericCommand(
 
     const maymay = await Memer.http.get('https://ronreiter-meme-generator.p.mashape.com/meme')
       .query({ bottom: encodeURIComponent(bottom.cleanContent), font: 'Impact', font_size: 35, meme, top: encodeURIComponent(top.cleanContent) })
-      .set('X-Mashape-Key', Memer.config.mashape)
+      .set('X-Mashape-Key', Memer.secrets.services.mashape)
 
     await addCD()
     return { content: '', file: { file: maymay.body, name: 'mymeme.png' } }

@@ -2,7 +2,19 @@ const { GenericCommand } = require('../../models/')
 
 module.exports = new GenericCommand(
   async ({Memer, msg}) => {
-    const gConfig = await Memer.db.getGuild(msg.channel.guild.id) || await Memer.db.createGuild(msg.channel.guild.id)
+    const gConfig = await Memer.db.getGuild(msg.channel.guild.id) || Memer.db.updateGuild({
+      prefix: Memer.config.options.prefix,
+      disabledCommands: [],
+      disabledCategories: [],
+      enabledCommands: [],
+      autoResponse: {
+        dad: false,
+        ree: false,
+        sec: false,
+        nou: false
+      }
+    })
+
     const enabledCommands = gConfig.enabledCommands.filter(cmd => gConfig.disabledCategories.includes(Memer.cmds.find(c => c.props.triggers.includes(cmd)).category.split(' ')[1].toLowerCase()))
     return {
       author:

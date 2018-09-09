@@ -2,7 +2,6 @@ const gifs = require('../assets/arrays/permGifs.json')
 const ArgParser = require('../utils/ArgParser.js')
 
 exports.handle = async function (msg) {
-  this.ddog.increment('global.seen')
   if (
     !msg.channel.guild ||
     msg.author.bot ||
@@ -11,11 +10,79 @@ exports.handle = async function (msg) {
     return
   }
 
+  this.stats.messages++
+  cacheMessage.bind(this)(msg)
   const gConfig = await this.db.getGuild(msg.channel.guild.id) || {
-    prefix: this.config.defaultPrefix,
+    prefix: this.config.options.prefix,
     disabledCommands: [],
     disabledCategories: [],
-    enabledCommands: []
+    enabledCommands: [],
+    autoResponse: {
+      dad: false,
+      ree: false,
+      sec: false,
+      nou: false
+    }
+  }
+
+  if (!gConfig.autoResponse) {
+    gConfig.autoResponse = {
+      dad: false,
+      ree: false,
+      sec: false,
+      nou: false
+    }
+  }
+
+  if (gConfig.autoResponse.dad) {
+    let re = /^(im|i['’]m|i am)\s+(.+)/i
+    const match = re.exec(msg.content)
+    if (match && match[2].length < 1980) {
+      msg.channel.createMessage(`Hi ${match[2]}, I'm dad`)
+    }
+  }
+
+  if (gConfig.autoResponse.sec) {
+    let re = /^(one sec$|one second|sec$)/i
+    const match = re.exec(msg.content)
+    if (match) {
+      await this.sleep(1000)
+      msg.channel.createMessage(`It's been one second`)
+    }
+  }
+
+  if (gConfig.autoResponse.ree) {
+    let re = /^(ree)/i
+    const match = re.exec(msg.content)
+    let content = msg.content.split(/ +/g)
+    let e = content[0].length
+    if (match && e < 1997) {
+      msg.channel.createMessage(`R${'E'.repeat(e)}`)
+    }
+  }
+
+  if (gConfig.autoResponse.nou) {
+    let re = /^(no u)/i
+    const match = re.exec(msg.content)
+    if (match) {
+      msg.channel.createMessage(`no u`)
+    }
+  }
+
+  // Swear detection
+  if (gConfig.swearFilter) {
+    let swears = ['fuck', 'penis', 'cunt', 'faggot', 'wank', 'nigger', 'nigga', 'slut', 'bastard', 'bitch', 'asshole', 'dick', 'blowjob', 'cock',
+      'pussy', 'retard', 'ligma', 'sugondese', 'sugandese', 'fricc', 'hecc', 'sugma', 'updog', 'bofa', 'fugma', 'snifma', 'bepis', 'da wae', 'despacito']
+    let re = new RegExp(`.*(${swears.join('|')}).*`, 'i')
+    const match = re.exec(msg.content)
+    if (match) {
+      let failed = ''
+      await msg.delete()
+        .catch(() => {
+          failed = 'I couldn\'t remove the offending message because I don\'t have `Manage Messages` :('
+        })
+      msg.channel.createMessage(`No swearing in this christian server :rage:\n${failed}`)
+    }
   }
 
   let isDonor = await this.db.checkDonor(msg.author.id)
@@ -46,12 +113,12 @@ exports.handle = async function (msg) {
     return msg.channel.createMessage(`Hello, ${msg.author.username}. My prefix is \`${gConfig.prefix}\`. Example: \`${gConfig.prefix} meme\``)
   } else if (
     !command ||
-    (command.props.ownerOnly && !this.config.devs.includes(msg.author.id)) ||
+    (command.props.ownerOnly && !this.config.options.developers.includes(msg.author.id)) ||
     gConfig.disabledCommands.includes(command.props.triggers[0]) ||
     (gConfig.disabledCategories.includes(command.category.split(' ')[1].toLowerCase()) && !['disable', 'enable'].includes(command.props.triggers[0]) && !gConfig.enabledCommands.includes(command.props.triggers[0]))
   ) {
     return
-  } else if (command.props.donorOnly && !isDonor) {
+  } else if (command.props.donorOnly && !isDonor && !this.config.options.developers.includes(msg.author.id)) {
     return msg.channel.createMessage('This command is for donors only. You can find more information by using `pls donate` if you are interested.')
   }
 
@@ -64,10 +131,7 @@ exports.handle = async function (msg) {
   }
   updateStats.bind(this)(msg, command, lastCmd)
 
-  if (msg.member.roles.some(id => msg.channel.guild.roles.get(id).name === 'no memes for you')) {
-    this.ddog.increment('role.blocked')
-    return
-  }
+  if (msg.member.roles.some(id => msg.channel.guild.roles.get(id).name === 'no memes for you')) { return }
 
   const isInCooldown = await checkCooldowns.bind(this)(msg, command, isDonor)
   if (isInCooldown) { return }
@@ -77,7 +141,7 @@ exports.handle = async function (msg) {
   try {
     const permissions = msg.channel.permissionsOf(this.bot.user.id)
     if (command.props.perms.some(perm => !permissions.has(perm))) {
-      checkPerms(command, permissions, msg)
+      checkPerms.bind(this)(command, permissions, msg)
     } else if (command.props.isNSFW && !msg.channel.nsfw) {
       msg.channel.createMessage(
         {
@@ -100,16 +164,19 @@ exports.handle = async function (msg) {
   }
 }
 
+function cacheMessage (msg) {
+  if (!msg.content) { // Ignroe attachments without content
+    return
+  }
+  this.redis.setAsync(`msg-${msg.id}`, JSON.stringify({ userID: msg.author.id, content: msg.content, timestamp: msg.timestamp, guildID: msg.channel.guild.id, channelID: msg.channel.id }), 'EX', 20 * 60)
+}
+
 async function updateStats (msg, command, lastCmd) {
-  if (Date.now() - lastCmd < 1000) {
+  if (Date.now() - lastCmd < 500) {
     await this.db.addSpam(msg.author.id)
   }
 
   await this.db.addCmd(msg.author.id)
-
-  this.ddog.increment('total.commands')
-  this.ddog.increment(`category.${command.category}`, 1, ['tag:one'])
-  this.ddog.increment(`cmd.${command.cmdProps.triggers[0]}`, 1, ['tag:two'])
 
   this.db.addPls(msg.channel.guild.id, msg.author.id)
 }
@@ -122,18 +189,19 @@ async function checkCooldowns (msg, command, isDonor) {
 
     const cooldownMessage = {
       embed: {
-        title: 'You are being ratelimited!!!!!!!',
-        description: cooldownWarning + (waitTime > 60 ? `${this.parseTime(waitTime)}` : `${waitTime.toFixed()} seconds`) + `\n\nDefault Cooldown: ${this.parseTime(command.props.cooldown / 1000)}\n[Donor](https://www.patreon.com/dankmemerbot) Cooldown: ${command.props.donorBlocked ? this.parseTime(command.props.cooldown / 1000) : this.parseTime(command.props.donorCD / 1000)}`
+        color: this.randomColor(),
+        title: 'Slow it down, cmon',
+        description: cooldownWarning + (waitTime > 60 ? `**${this.parseTime(waitTime)}**` : `**${waitTime.toFixed()} seconds**`) + `\n\n__Default Cooldown__: ${this.parseTime(command.props.cooldown / 1000)}\n__[Donor](https://www.patreon.com/dankmemerbot) Cooldown__: ${command.props.donorBlocked ? this.parseTime(command.props.cooldown / 1000) : this.parseTime(command.props.donorCD / 1000)}\n\nWhile you wait, go check our our [Twitter](https://twitter.com/dankmemerbot), [Subreddit](https://www.reddit.com/r/dankmemer/), and [Discord Server](https://www.discord.gg/ebUqc7F)`
       }
     }
     const donorMessage = {
       embed: {
-        title: 'You are being ratelimited......',
-        description: cooldownWarning + (waitTime > 60 ? `${this.parseTime(waitTime)}` : `${waitTime.toFixed()} seconds`) + `\n[Donor](https://www.patreon.com/dankmemerbot) Cooldown: ${command.props.donorBlocked ? this.parseTime(command.props.cooldown / 1000) : this.parseTime(command.props.donorCD / 1000)}`,
+        color: this.randomColor(),
+        title: 'Woah now, slow it down',
+        description: cooldownWarning + (waitTime > 60 ? `**${this.parseTime(waitTime)}**` : `**${waitTime.toFixed()} seconds**`) + `\n__[Donor](https://www.patreon.com/dankmemerbot) Cooldown__: ${command.props.donorBlocked ? this.parseTime(command.props.cooldown / 1000) : this.parseTime(command.props.donorCD / 1000)}`,
         footer: { text: 'Thanks for your support!' }
       }
     }
-    this.ddog.increment('cooldown')
     msg.channel.createMessage(isDonor ? donorMessage : cooldownMessage)
     return true
   }
@@ -144,34 +212,19 @@ function checkPerms (command, permissions, msg) {
   const neededPerms = command.props.perms.filter(perm => !permissions.has(perm))
   if (permissions.has('sendMessages')) {
     if (permissions.has('embedLinks')) {
-      if (neededPerms.length > 1) {
-        msg.channel.createMessage({
-          embed: {
-            'title': 'oh no!',
-            'description': `You need to add **${neededPerms.join(', ')}** to use this command!\nGo to **Server settings => Roles => Dank Memer** to change this!`,
-            'color': this.randomColor(),
-            'footer': {
-              'text': 'If it still doesn\'t work, check channel permissions too!'
-            }
+      msg.channel.createMessage({
+        embed: {
+          'title': 'oh no!',
+          'description': `You need to add **${neededPerms.length > 1 ? neededPerms.join(', ') : neededPerms}** to use this command!\nGo to **Server settings => Roles => Dank Memer** to change this!`,
+          'color': this.randomColor(),
+          'image': neededPerms.length === 1 ? {
+            'url': gifs[neededPerms[0]]
+          } : undefined,
+          'footer': {
+            'text': 'If it still doesn\'t work, check channel permissions too!'
           }
-        })
-      } else {
-        msg.channel.createMessage(
-          {
-            'embed': {
-              'title': 'oh no!',
-              'description': `You need to add **${neededPerms}** to use this command!\nGo to **Server settings => Roles => Dank Memer** to change this!`,
-              'color': this.randomColor(),
-              'image': {
-                'url': gifs[neededPerms[0]]
-              },
-              'footer': {
-                'text': 'If it still doesn\'t work, check channel permissions too!'
-              }
-            }
-          }
-        )
-      }
+        }
+      })
     } else {
       msg.channel.createMessage(
         `You need to add **${neededPerms.join(', ')}** to use this command!\n\nGo to **Server settings => Roles => Dank Memer** to change this!`
@@ -181,6 +234,7 @@ function checkPerms (command, permissions, msg) {
 }
 
 async function runCommand (command, msg, args, cleanArgs, updateCooldowns) {
+  this.stats.commands++
   let res = await command.run({
     msg,
     args,
@@ -210,10 +264,9 @@ async function runCommand (command, msg, args, cleanArgs, updateCooldowns) {
 }
 
 async function reportError (e, msg, command, cleanArgs) {
-  this.ddog.increment('error')
-  let date = new Date(Date.now())
+  let date = new Date()
   let message = await this.errorMessages(e)
-  const channel = this.config.errorChannel || '431692509895458833'
+  const channel = this.config.options.errorChannel || '470338254848262154'
   if (!message) {
     msg.channel.createMessage(`Something went wrong while executing this hecking command: \`${e.message}\` \nPlease join here (<https://discord.gg/ebUqc7F>) if the issue doesn't stop being an ass and tell staff that it's an \`unknown error\``)
     await this.bot.createMessage(channel, `**Error: ${e.message}**\nCommand Ran: ${command.props.triggers[0]}\nDate: ${date.toUTCString()}\nSupplied arguments: ${cleanArgs.join(' ')}\nServer ID: ${msg.channel.guild.id}\nCluster ${this.clusterID} | Shard ${msg.channel.guild.shard.id}\n\`\`\` ${e.stack} \`\`\``)

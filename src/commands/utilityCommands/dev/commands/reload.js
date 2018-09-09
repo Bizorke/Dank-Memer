@@ -1,7 +1,15 @@
 module.exports = {
   help: 'reload [most | commands | config]',
-  fn: async ({ Memer, args }) => {
-    Memer.log(args[0])
+  fn: async ({ Memer, msg, args }) => {
+    if (['most', 'commands', 'config'].includes(args[0])) {
+      const m = await msg.channel.createMessage(`confirm spicy reload? \`y\`/\`n\``)
+
+      const choice = await Memer.MessageCollector.awaitMessage(msg.channel.id, msg.author.id, 5e4)
+      if (!choice || choice.content.toLowerCase() !== 'y') {
+        return m.edit('whew, dodged a bullet')
+      }
+    }
+
     switch (args[0]) {
       case 'most':
         try {

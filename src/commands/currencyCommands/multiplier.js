@@ -10,7 +10,7 @@ module.exports = new GenericCommand(
     await addCD()
     return {
       title: `Here is some info about your Multipliers, ${user.username}`,
-      description: `**Current Total Multiplier**: ${total}%\n**Multiplier Upgrades Bought**: ${show.bought} (+${show.bought * 0.005}%)\n**Secret Multipliers**: *See below*`,
+      description: `**Current Total Multiplier**: ${total}%\n**Secret Multipliers**: *See below*`,
       fields: [
         { name: `${show.unlocked.total} Unlocked`, value: show.unlocked.list.join('\n') || 'No multipliers', inline: true },
         { name: `${show.locked} Locked`, value: show.locked < 8 ? 'UNKNOWN\n'.repeat(show.locked) : `UNKNOWN x${show.locked}`, inline: true }

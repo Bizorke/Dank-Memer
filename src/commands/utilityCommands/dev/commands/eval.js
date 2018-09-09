@@ -3,6 +3,9 @@ const { inspect } = require('util')
 module.exports = {
   help: 'eval <script>',
   fn: async ({ Memer, msg, args }) => {
+    if (!Memer.config.options.owners.includes(msg.author.id)) {
+      return 'Woah now, only my "Owners" can do this'
+    }
     let input = args.join(' ')
     const asynchr = input.includes('return') || input.includes('await')
 
@@ -17,7 +20,7 @@ module.exports = {
           depth: +!(inspect(result, { depth: 1 }).length > 1000) // Results in either 0 or 1
         })
       }
-      const tokenRegex = new RegExp(Memer.config.token, 'gi')
+      const tokenRegex = new RegExp(Memer.secrets.bot.token, 'gi')
       result = result.replace(tokenRegex, 'i think the fuck not, you trick ass bitch')
     } catch (err) {
       result = err.message

@@ -8,6 +8,7 @@ module.exports = new GenericMediaCommand({
   title: 'Does this mean ass > tits?',
   message: 'Free nudes from nekos.life',
   JSONKey: 'url',
+  donorOnly: true,
   reqURL: 'https://boob.bot/api/v2/img/anal',
-  tokenKey: 'porn'
+  tokenKey: 'boobbot'
 })

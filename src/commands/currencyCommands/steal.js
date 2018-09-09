@@ -1,5 +1,5 @@
 const { GenericCommand } = require('../../models/')
-let min = 100
+let min = 500
 
 const dmStolenUser = async (Memer, user, msg, worth) => {
   if (!user.bot) {
@@ -44,46 +44,42 @@ module.exports = new GenericCommand(
       victimCoins = victimCoins - (victimCoins * 0.95)
     }
     await addCD()
-    let stealingOdds = Math.floor(Math.random() * 100) + 1
+    let stealingOdds = Memer.randomNumber(1, 100)
 
     if (stealingOdds <= 60) { // fail section
       let punish
-      if ((perpCoins * 0.05) < 100) {
-        punish = 100
+      if ((perpCoins * 0.05) < 500) {
+        punish = 500
       } else {
         punish = perpCoins * 0.05
       }
       await Memer.db.removePocket(msg.author.id, Math.round(punish))
       await Memer.db.addPocket(user.id, Math.round(punish))
-      Memer.ddog.increment('stealFail')
       return `You were caught! You paid the person you stole from **${Math.round(punish)}** coins.`
     } else if (stealingOdds > 60 && stealingOdds <= 80) { // 30% payout
       let worth = Math.round(victimCoins * 0.3)
       await Memer.db.addPocket(msg.author.id, worth)
       await Memer.db.removePocket(user.id, worth)
-      Memer.ddog.increment('stealSmall')
       await dmStolenUser(Memer, user, msg, worth)
       return `You managed to steal a small amount before leaving! 💸\nYour payout was **${worth.toLocaleString()}** coins.`
     } else if (stealingOdds > 80 && stealingOdds <= 90) { // 50% payout
       let worth = Math.round(victimCoins * 0.5)
       await Memer.db.addPocket(msg.author.id, worth)
       await Memer.db.removePocket(user.id, worth)
-      Memer.ddog.increment('stealLarge')
       await dmStolenUser(Memer, user, msg, worth)
       return `You managed to steal a large amount before leaving! 💰\nYour payout was **${worth.toLocaleString()}** coins.`
-    } else { // full theft up to 1 trillion
+    } else { // full theft
       let worth = Math.round(victimCoins)
       await Memer.db.addPocket(msg.author.id, worth)
       await Memer.db.removePocket(user.id, worth)
-      Memer.ddog.increment('stealMAX')
       await dmStolenUser(Memer, user, msg, worth)
       return `You managed to steal a TON before leaving! 🤑\nYour payout was **${worth.toLocaleString()}** coins.`
     }
   },
   {
     triggers: ['steal', 'rob', 'ripoff'],
-    cooldown: 4e5,
-    donorCD: 3e5,
+    cooldown: 5 * 60 * 1000,
+    donorCD: 3 * 60 * 1000,
     perms: ['embedLinks'],
     description: 'Take your chances at stealing from users. Warning, you will lose money if you get caught!',
     cooldownMessage: 'Woahhh there, you need some time to plan your next hit. Wait ',

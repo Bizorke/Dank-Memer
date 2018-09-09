@@ -2,7 +2,7 @@ const { GenericCommand } = require('../../models/')
 
 module.exports = new GenericCommand(
   async ({ Memer, msg, args, addCD }) => {
-    const channel = Memer.config.featureRequestChannel || '430835458000420864'
+    const channel = Memer.config.options.featureRequestChannel || '430835458000420864'
 
     await Memer.bot.createMessage(channel, { embed: {
       title: 'New request:',
