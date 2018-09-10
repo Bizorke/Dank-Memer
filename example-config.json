@@ -44,6 +44,7 @@
             "message": "",
             "footer": ""
         },
+        "patreonCampaignID": "",
         "featureRequestChannel": "",
         "spamReportChannel": "",
         "errorChannel": ""
