@@ -38,7 +38,7 @@ module.exports = new GenericCommand(
     } else {
       return {
         title: `Premium servers redeemed by ${msg.author.username}`,
-        description: guilds.map((id, index) => `\`${index + 1}.\` **${Memer.bot.guilds.find(g => g.id === id).name}** (${id})\n`).join(', ') || 'You have redeemed no premium servers'
+        description: guilds ? guilds.map((id, index) => `\`${index + 1}.\` **${Memer.bot.guilds.find(g => g.id === id).name}** (${id})\n`).join('') : 'You have redeemed no premium servers'
       }
     }
   },
@@ -46,6 +46,7 @@ module.exports = new GenericCommand(
     triggers: ['premiumserver', 'pserver', 'premium', 'donorserver'],
     usage: '{command} [add | remove]',
     donorBlocked: true,
+    donorOnly: true,
     description: 'Add or remove the current guild as a premium server, or leave the arguments blank to list all of your premium servers'
   }
 )

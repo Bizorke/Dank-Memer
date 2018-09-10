@@ -25,6 +25,9 @@ exports.handle = async function (msg) {
     }
   }
 
+  gConfig.disabledCategories = gConfig.disabledCategories || []
+  gConfig.enabledCommands = gConfig.enabledCommands || []
+
   if (!gConfig.autoResponse) {
     gConfig.autoResponse = {
       dad: false,
@@ -122,15 +125,6 @@ exports.handle = async function (msg) {
     return msg.channel.createMessage('This command is for donors only. You can find more information by using `pls donate` if you are interested.')
   }
 
-  let { spam, lastCmd } = await this.db.getUser(msg.author.id)
-
-  if (spam > 1e4) {
-    let reason = 'Blacklisted for spamming over 10,000 times.'
-    await this.punish(this, msg.author.id, 'user', reason)
-    return
-  }
-  updateStats.bind(this)(msg, command, lastCmd)
-
   if (msg.member.roles.some(id => msg.channel.guild.roles.get(id).name === 'no memes for you')) { return }
 
   const isInCooldown = await checkCooldowns.bind(this)(msg, command, isDonor)
@@ -169,16 +163,6 @@ function cacheMessage (msg) {
     return
   }
   this.redis.setAsync(`msg-${msg.id}`, JSON.stringify({ userID: msg.author.id, content: msg.content, timestamp: msg.timestamp, guildID: msg.channel.guild.id, channelID: msg.channel.id }), 'EX', 20 * 60)
-}
-
-async function updateStats (msg, command, lastCmd) {
-  if (Date.now() - lastCmd < 500) {
-    await this.db.addSpam(msg.author.id)
-  }
-
-  await this.db.addCmd(msg.author.id)
-
-  this.db.addPls(msg.channel.guild.id, msg.author.id)
 }
 
 async function checkCooldowns (msg, command, isDonor) {
@@ -266,14 +250,15 @@ async function runCommand (command, msg, args, cleanArgs, updateCooldowns) {
 async function reportError (e, msg, command, cleanArgs) {
   let date = new Date()
   let message = await this.errorMessages(e)
+  let randNum = Math.floor(Math.random() * Math.floor(99999))
   const channel = this.config.options.errorChannel || '470338254848262154'
   if (!message) {
-    msg.channel.createMessage(`Something went wrong while executing this hecking command: \`${e.message}\` \nPlease join here (<https://discord.gg/ebUqc7F>) if the issue doesn't stop being an ass and tell staff that it's an \`unknown error\``)
-    await this.bot.createMessage(channel, `**Error: ${e.message}**\nCommand Ran: ${command.props.triggers[0]}\nDate: ${date.toUTCString()}\nSupplied arguments: ${cleanArgs.join(' ')}\nServer ID: ${msg.channel.guild.id}\nCluster ${this.clusterID} | Shard ${msg.channel.guild.shard.id}\n\`\`\` ${e.stack} \`\`\``)
+    msg.channel.createMessage(`Something went wrong lol\nError: \`${command.props.triggers[0]}.${this.clusterID}.${msg.channel.guild.shard.id}.${date.getHours()}:${date.getMinutes()}.err${randNum}\``)
+    await this.bot.createMessage(channel, `**Error: ${e.message}**\nCode: \`err${randNum}\`\nCommand Ran: ${command.props.triggers[0]}\nDate: ${date.toLocaleTimeString('en-US')}\nSupplied arguments: ${cleanArgs.join(' ')}\nServer ID: ${msg.channel.guild.id}\nCluster ${this.clusterID} | Shard ${msg.channel.guild.shard.id}\n\`\`\` ${e.stack} \`\`\``)
     this.log(`Command error:\n\tCommand: ${command.props.triggers[0]}\n\tSupplied arguments: ${cleanArgs.join(' ')}\n\tServer ID: ${msg.channel.guild.id}\n\tError: ${e.stack}`, 'error')
   } else {
     msg.channel.createMessage(message)
-    await this.bot.createMessage(channel, `**Error: ${e.message}**\nCommand Ran: ${command.props.triggers[0]}\nDate: ${date.toUTCString()}\nSupplied arguments: ${cleanArgs.join(' ')}\nServer ID: ${msg.channel.guild.id}\nCluster ${this.clusterID} | Shard ${msg.channel.guild.shard.id}\n\`\`\` ${e.stack} \`\`\``)
+    await this.bot.createMessage(channel, `**Error: ${e.message}**\nCommand Ran: ${command.props.triggers[0]}\nDate: ${date.toLocaleTimeString('en-US')}\nSupplied arguments: ${cleanArgs.join(' ')}\nServer ID: ${msg.channel.guild.id}\nCluster ${this.clusterID} | Shard ${msg.channel.guild.shard.id}\n\`\`\` ${e.stack} \`\`\``)
     this.log(`Command error:\n\tCommand: ${command.props.triggers[0]}\n\tSupplied arguments: ${cleanArgs.join(' ')}\n\tServer ID: ${msg.channel.guild.id}\n\tError: ${e.stack}`, 'error')
   }
 }

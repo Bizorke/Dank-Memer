@@ -28,7 +28,7 @@ module.exports = new GenericCommand(
         .orderBy(Memer.r.desc('pocket'))
         .filter((user) => Memer.r.expr(members).contains(user('id')))
         .limit(10)
-        .run()
+        .run({ arrayLimit: 1e6 })
       topMembers = await Promise.all(topMembers.map(async g => Object.assign(await Memer.ipc.fetchUser(g.id), { pocket: g.pocket })))
       return {
         title: `richest users in this server`,

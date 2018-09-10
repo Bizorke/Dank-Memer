@@ -10,7 +10,6 @@ module.exports = new GenericModerationCommand(
       msg.args.args.splice(0, 1)
     }
 
-    let role = msg.args.resolveRole(true)
     if (!nickname) {
       msg.channel.createMessage('what name do you want to give to everyone? You can type `reset` to remove everyone\'s nickname if they have one. (respond in 30s)')
       const prompt = await Memer.MessageCollector.awaitMessage(msg.channel.id, msg.author.id, 30e3)
@@ -91,7 +90,7 @@ module.exports = new GenericModerationCommand(
     triggers: ['massnick', 'massname'],
     cooldown: 72e5,
     usage: '{command} [nickname | reset]',
-    description: 'Warning, this will rename everyone on the server (or everyone with a specific role when provided) if the bot has the correct permissions',
+    description: 'Warning, this will rename everyone on the server if the bot has the correct permissions',
     modPerms: ['manageGuild'],
     perms: ['manageNicknames']
   }

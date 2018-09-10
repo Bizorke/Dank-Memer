@@ -29,7 +29,7 @@ module.exports = class GenericSoundboardCommand {
       return msg.reply('Make sure I have `connect`, `speak`, and `use voice activity` permissions in the channel settings so I can do this command!\n\nHow to do that: https://i.imgur.com/ugplJJO.gif')
     }
 
-    if (music.player) {
+    if (music.voiceChannel) {
       if (!music.playing) {
         await music.reset()
       }
@@ -46,8 +46,15 @@ module.exports = class GenericSoundboardCommand {
     msg.channel.createMessage({embed: {title: 'Now Playing...', description: sfx}})
 
     await music.player.join(msg.member.voiceState.channelID)
+    await music.ready
+    if (music.queue[0]) {
+      music.queue = []
+    }
     let response = await music.node.load(encodeURIComponent(`${audioAssets}/${msg.author.id}/${sfx}.opus`), { format: 'ogg' })
     const { tracks } = response
+    if (!tracks[0]) {
+      return 'Seems like this didn\'t work, sad.'
+    }
     await music.addSong(tracks[0])
   }
 
