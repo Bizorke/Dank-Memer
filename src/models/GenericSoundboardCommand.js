@@ -47,7 +47,6 @@ module.exports = class GenericSoundboardCommand {
 
     await music.player.join(msg.member.voiceState.channelID)
     await music.ready
-    Memer.log(music.queue)
     if (music.queue[0]) {
       music.queue = []
     }
