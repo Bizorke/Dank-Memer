@@ -52,6 +52,9 @@ module.exports = class GenericSoundboardCommand {
     }
     let response = await music.node.load(encodeURIComponent(`${audioAssets}/${msg.author.id}/${sfx}.opus`), { format: 'ogg' })
     const { tracks } = response
+    if (!tracks[0]) {
+      return 'Seems like this didn\'t work, sad.'
+    }
     await music.addSong(tracks[0])
   }
 
