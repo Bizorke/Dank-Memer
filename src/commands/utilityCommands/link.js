@@ -2,11 +2,10 @@ const { GenericCommand } = require('../../models/')
 
 module.exports = new GenericCommand(
   async ({ Memer, msg, args }) => {
-    const campaignID = '' // replace this with Dank Memer's campaign ID
     let patrons = []
 
     const loopThroughPatrons = async () => {
-      let res = await Memer.http.get(`https://www.patreon.com/api/oauth2/api/campaigns/${campaignID}/pledges?include=patron.null`, {headers: {'Authorization': `Bearer ${Memer.secrets.extServices.patreon}`}})
+      let res = await Memer.http.get(`https://www.patreon.com/api/oauth2/api/campaigns/${Memer.config.options.patreonCampaignID}/pledges?include=patron.null`, {headers: {'Authorization': `Bearer ${Memer.secrets.extServices.patreon}`}})
       if (!res.body) {
         return
       }
