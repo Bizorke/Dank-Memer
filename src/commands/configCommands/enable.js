@@ -24,12 +24,12 @@ module.exports = new GenericCommand(
         return (Memer.cmds.find(c => c.props.triggers.includes(cmd)) || { props: { triggers: [cmd] } }).props.triggers[0]
       }))
 
+    gConfig.enabledCommands = gConfig.enabledCommands || []
+    gConfig.disabledCategories = gConfig.disabledCategories || []
     const arentDisabled = args.filter(cmd => gConfig.enabledCommands.includes(cmd))
     if (arentDisabled[0]) {
       return `These commands/categories aren't disabled:\n\n${arentDisabled.map(c => `\`${c}\``).join(', ')}\n\nHow tf do you plan to enable already enabled stuff??`
     }
-
-    gConfig.enabledCommands = gConfig.enabledCommands || []
     args.map(cmd => {
       if (categories.includes(cmd)) {
         gConfig.disabledCategories.splice(gConfig.disabledCategories.indexOf(cmd), 1)

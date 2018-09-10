@@ -25,6 +25,9 @@ exports.handle = async function (msg) {
     }
   }
 
+  gConfig.disabledCategories = gConfig.disabledCategories || []
+  gConfig.enabledCommands = gConfig.enabledCommands || []
+
   if (!gConfig.autoResponse) {
     gConfig.autoResponse = {
       dad: false,
