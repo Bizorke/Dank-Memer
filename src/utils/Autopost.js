@@ -25,7 +25,7 @@ module.exports = class Autopost {
   }
 
   async automeme () {
-    const post = this.getRedditPost()
+    const post = await this.getRedditPost()
     let check = await this.client.db.allAutomemeChannels()
     if (!post) {
       return this.automeme()
@@ -56,7 +56,7 @@ module.exports = class Autopost {
           Key: this.client.secrets.extServices.boobbot
         }
       })
-        .then(res => res.body.url ? res.body.url : res.text)
+        .then(res => res.body.url)
       if (!this.client.bot.getChannel(channel).nsfw) {
         return
       }
