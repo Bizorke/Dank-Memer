@@ -41,7 +41,6 @@ module.exports = new GenericCommand(
     console.log(sfxSize)
     const stats = await Memer.db.getStats()
     const CPUUsage = await getCPUUsage()
-    const gateway = await Memer.bot.getBotGateway()
     const scan = async () => {
       let cachedMessages = 0
       let cursor = '0'
@@ -74,8 +73,6 @@ module.exports = new GenericCommand(
     `[UPTIME] ${Memer.parseTime(process.uptime())}\n` +
     `  [System] ${Memer.parseTime(os.uptime())}\n` +
     `[CPU] ${CPUUsage.toFixed(1)}%\n` +
-    `[CONNECTIONS REMAINING] ${gateway.session_start_limit.remaining}\n` +
-    `  [TIME UNTIL RESET] ${Memer.parseTime(gateway.session_start_limit.reset_after / 1000)}\n` +
     `[SFX] ${sfxCount}\n` +
     `  [Disk Space] ${sfxSize}`
 
