@@ -65,6 +65,12 @@ module.exports = class Autopost {
         image: { url: data },
         footer: { text: 'Free nudes thanks to boobbot & tom <3' }
       }})
+        .catch((err) => {
+          if (err.message.toString() === 'DiscordRESTError [10003]: Unknown Channel') {
+          // Remove this channel from the database if it's not valid/not found
+            this.client.db.removeAutonsfwChannel(channel)
+          }
+        })
     }
   }
 
