@@ -4,8 +4,8 @@ module.exports = new GenericCommand(
   async ({ Memer, msg, args }) => {
     let patrons = []
 
-    const loopThroughPatrons = async () => {
-      let res = await Memer.http.get(`https://www.patreon.com/api/oauth2/api/campaigns/${Memer.config.options.patreonCampaignID}/pledges?include=patron.null`, {headers: {'Authorization': `Bearer ${Memer.secrets.extServices.patreon}`}})
+    const loopThroughPatrons = async (url) => {
+      let res = await Memer.http.get(url || `https://www.patreon.com/api/oauth2/api/campaigns/${Memer.config.options.patreonCampaignID}/pledges?include=patron.null&page%5Bcount%5D=100`, {headers: {'Authorization': `Bearer ${Memer.secrets.extServices.patreon}`}})
       if (!res.body) {
         return
       }
@@ -14,7 +14,7 @@ module.exports = new GenericCommand(
         patrons.push({ attributes: res.included[i].attributes, payment_data: res.data[i].attributes, id: res.included[i].id })
       }
       if (res.links.next) {
-        await loopThroughPatrons()
+        await loopThroughPatrons(res.links.next)
       } else {
         return patrons
       }
