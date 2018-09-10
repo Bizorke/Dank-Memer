@@ -65,7 +65,7 @@ class Memer extends Base {
   }
 
   async ready () {
-    const { ws } = this.bot.shards.map(s => s)[0]
+    const { ws } = [...this.bot.shards.values()][0]
     this.lavalink = new Cluster({
       nodes: this.config.lavalink.nodes.map(node => ({
         hosts: { ws: `ws://${node.host}:${node.portWS}`, rest: `http://${node.host}:${node.port}` },
