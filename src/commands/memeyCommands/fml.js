@@ -15,7 +15,7 @@ module.exports = new GenericCommand(
       }
 
       const foundStories = []
-      const parser = await cheerio.load(data.text)
+      const parser = await cheerio.load(data.body)
       parser('p.block a')
         .filter((i, story) => story.children.length > 0 && story.children[0].data.trim().length > 1)
         .map((i, story) => foundStories.push(story.children[0].data.trim()))
