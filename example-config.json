@@ -29,10 +29,13 @@
                 "host": "",
                 "port": 0,
                 "region": "",
-                "portWS": 0,
-                "main": true
+                "portWS": 0
             }
         ]
+    },
+    "webhookServer": {
+        "host": "",
+        "port": 0
     },
     "options": {
         "dev": true,
