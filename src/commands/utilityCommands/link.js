@@ -10,9 +10,17 @@ module.exports = new GenericCommand(
         return
       }
       res = JSON.parse(res.body)
-      for (let i in res.included) {
-        patrons.push({ attributes: res.included[i].attributes, payment_data: res.data[i].attributes, id: res.included[i].id })
-      }
+      res.data
+        .map((patron) => {
+          if (patron) {
+            Memer.log(patron.id)
+            const included = res.included.filter(x => x.id === patron.id)[0]
+            if (included) {
+              patrons.push({ attributes: included.attributes, payment_data: patron.attributes, id: patron.id })
+            }
+          }
+        })
+
       if (res.links.next) {
         await loopThroughPatrons(res.links.next)
       } else {
@@ -20,7 +28,7 @@ module.exports = new GenericCommand(
       }
     }
     await loopThroughPatrons()
-
+    
     if (!patrons) {
       return 'There was an error whilst trying to obtain patron data. Please try again later.'
     }
