@@ -29,7 +29,8 @@
                 "host": "",
                 "port": 0,
                 "region": "",
-                "portWS": 0
+                "portWS": 0,
+                "main": true
             }
         ]
     },

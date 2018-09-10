@@ -65,6 +65,10 @@ module.exports = class GenericVoiceCommand {
 
     await music.player.join(msg.member.voiceState.channelID)
     let response = await music.node.load(encodeURIComponent(`${audioAssets}/${this.cmdProps.dir}/${file}.opus`), { format: 'ogg' })
+    await music.ready
+    if (music.queue[0]) {
+      music.queue = []
+    }
     const { tracks } = response
     await music.addSong(tracks[0])
   }
