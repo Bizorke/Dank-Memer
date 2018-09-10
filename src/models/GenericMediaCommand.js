@@ -17,11 +17,7 @@ module.exports = class GenericMediaCommand {
         Key: Memer.secrets.extServices[this.props.tokenKey]
       }
     })
-      .then(res => this.props.JSONKey ? res.body[this.props.JSONKey] : res.text)
-
-    if (data.endsWith('.mp4')) {
-      return this.run({ Memer, msg, addCD })
-    }
+      .then(res => this.props.JSONKey ? res.body[this.props.JSONKey] : res.body)
 
     await addCD()
     return {
