@@ -13,8 +13,8 @@ module.exports = class GenericMediaCommand {
 
     const data = await Memer.http.get(this.props.reqURL, this.props.tokenKey && {
       headers: {
-        Authorization: Memer.secrets.services[this.props.tokenKey],
-        Key: Memer.secrets.services[this.props.tokenKey]
+        Authorization: Memer.secrets.extServices[this.props.tokenKey],
+        Key: Memer.secrets.extServices[this.props.tokenKey]
       }
     })
       .then(res => this.props.JSONKey ? res.body[this.props.JSONKey] : res.text)
