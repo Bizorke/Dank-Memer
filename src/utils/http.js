@@ -85,10 +85,10 @@ module.exports = class HTTPRequest {
     return new Promise((resolve, reject) => {
       const fetch = this.options.url.startsWith('https') ? https.request : http.request
       if (this.options.query) {
-        let index = 0
-        for (const key of Object.keys(this.options.query)) {
-          this.options.url += `${!index ? '?' : '&'}${key}=${this.options.query[key]}`
-          index++
+        const stringifiedQuery = querystring.stringify(this.options.query)
+
+        if (stringifiedQuery) {
+          this.options.url += `?${stringifiedQuery}`
         }
       }
       this.options = Object.assign(this.options, url.parse(this.options.url))
