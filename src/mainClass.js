@@ -67,7 +67,7 @@ class Memer extends Base {
   }
 
   async ready () {
-    const { ws } = [...this.bot.shards.values()][0]
+    const { bot } = this
     this.lavalink = new Cluster({
       nodes: this.config.lavalink.nodes.map(node => ({
         hosts: { ws: `ws://${node.host}:${node.portWS}`, rest: `http://${node.host}:${node.port}` },
@@ -76,6 +76,10 @@ class Memer extends Base {
         userID: this.bot.user.id
       })),
       send (guildID, pk) {
+        const shardID = bot.guildShardMap[guildID]
+        const shard = bot.shards.get(shardID)
+        if (!shard) return
+        const { ws } = shard
         return ws.send(JSON.stringify(pk))
       }
     })
