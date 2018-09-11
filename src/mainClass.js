@@ -37,7 +37,7 @@ class Memer extends Base {
       'antijoke': {},
       'antiantijoke': {},
       'sequel': {},
-      'owl': {},
+      'hootyboi': {},
       'animals': {},
       'foodporn': {},
       'snek': {}
