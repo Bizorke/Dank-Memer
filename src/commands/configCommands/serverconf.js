@@ -15,6 +15,9 @@ module.exports = new GenericCommand(
       }
     })
 
+    gConfig.enabledCommands = gConfig.enabledCommands || []
+    gConfig.disabledCategories = gConfig.disabledCategories || []
+
     const enabledCommands = gConfig.enabledCommands.filter(cmd => gConfig.disabledCategories.includes(Memer.cmds.find(c => c.props.triggers.includes(cmd)).category.split(' ')[1].toLowerCase()))
     return {
       author:

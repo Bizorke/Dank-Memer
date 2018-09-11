@@ -20,10 +20,16 @@ module.exports = new GenericCommand(
         return 'I couldn\'t find a face in that image'
       }
       let image = req.body.images[0]
+      if (!image.faces[0]) {
+        return 'Woops, couldn\'t guess anything'
+      }
       return `I think that this face belongs to a **${image.faces[0].gender.gender.toLowerCase()}** who is **${image.faces[0].age.min} to ${image.faces[0].age.max}** years old.`
     } else {
       let req = await Memer.http.get(`https://api.genderize.io/?name=${content}`)
-      return `I am ${Number(req.body.probability) * 100}% sure that the name **${content}** belongs to a ${req.body.gender}`
+      if (!req.body.gender) {
+        return 'Ok i couldn\'t guess a gender, that\'s probably not even a real name smh'
+      }
+      return `I am ${req.body.probability * 100}% sure that the name **${content}** belongs to a ${req.body.gender}`
     }
   }, {
     triggers: ['genderguess', 'genderg'],

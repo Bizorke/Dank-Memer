@@ -16,7 +16,7 @@ module.exports = new GenericCommand(
       fields: [
         { name: 'Created at', value: creation.toDateString(), inline: true },
         { name: 'Joined at', value: join.toDateString(), inline: true },
-        { name: 'Commands run', value: db.pls, inline: true },
+        { name: 'Commands run', value: db.pls || 0, inline: true },
         { name: 'Avatar URL', value: `[Click Here](${user.avatarURL})`, inline: true },
         { name: 'Nickname', value: member.nick ? member.nick : 'No Nickname here', inline: true }
       ]
