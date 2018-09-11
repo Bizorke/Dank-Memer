@@ -30,7 +30,7 @@ class Memer extends Base {
       'showerthoughts': {},
       'comics': {},
       'meirl': {},
-      'hootyboi': {},
+      'hoppyboi': {},
       'surreal': {},
       'memeeconomy': {},
       'blacktwitter': {},
