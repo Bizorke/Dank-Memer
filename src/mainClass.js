@@ -62,6 +62,8 @@ class Memer extends Base {
       this.bot.on(listener, require(join(__dirname, 'handlers', listener)).handle.bind(this))
     }
     global.memeBase || this.ready()
+    this.autopost = new (require('./utils/Autopost.js'))(this)
+    this._autopostInterval = setInterval(() => { this.autopost.post() }, 3e5) // 5 minutes
   }
 
   async ready () {
@@ -86,8 +88,6 @@ class Memer extends Base {
 
     this.mentionRX = new RegExp(`^<@!*${this.bot.user.id}>`)
     this.mockIMG = await this.http.get('https://pbs.twimg.com/media/DAU-ZPHUIAATuNy.jpg').then(r => r.body)
-    this.autopost = new (require('./utils/Autopost.js'))(this)
-    setInterval(() => { this.autopost.post() }, 3e5) // 5 minutes
   }
 
   createIPC () {
