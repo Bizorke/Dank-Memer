@@ -32,8 +32,7 @@ module.exports = class GenericMusicCommand {
       this.fn,
       Object.assign({
         cooldown: 2000,
-        donorCD: 500,
-        donorOnly: true
+        donorCD: 500
       }, this.cmdProps)
     ).props
   }
