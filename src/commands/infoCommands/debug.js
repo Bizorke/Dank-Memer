@@ -2,7 +2,6 @@ const os = require('os')
 const { GenericCommand } = require('../../models/')
 const { promisify } = require('util')
 const exec = promisify(require('child_process').exec)
-
 const getCPUUsage = async () => {
   const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms))
 
@@ -36,26 +35,12 @@ const getCPUUsage = async () => {
 
 module.exports = new GenericCommand(
   async ({ Memer, msg }) => {
-    const sfxCount = await exec('$(find /home/memer/Dank-Memer/src/assets/audio/custom/ -type f | wc -l)').catch(() => 0)
-    const sfxSize = await exec('$(du -sh /home/memer/Dank-Memer/src/assets/audio/custom/ | cut -f1)').catch(() => 0)
-    console.log(sfxSize)
+    // const sfxCount = await exec('$(find /home/memer/Dank-Memer/src/assets/audio/custom/ -type f | wc -l)').catch(() => 0)
+    // const sfxSize = await exec('$(du -sh /home/memer/Dank-Memer/src/assets/audio/custom/ | cut -f1)').catch(() => 0)
     const stats = await Memer.db.getStats()
     const CPUUsage = await getCPUUsage()
-    const scan = async () => {
-      let cachedMessages = 0
-      let cursor = '0'
-      const keys = await Memer.redis.scanAsync(cursor, 'MATCH', 'msg-*', 'COUNT', '50')
-      if (!keys) {
-        throw keys
-      }
-      cursor = keys[0]
-      cachedMessages += keys[1].length
-      if (cursor === '0') {
-        return cachedMessages
-      } else {
-        return scan()
-      }
-    }
+    let cached = await Memer.redis.keysAsync('msg-*')
+    cached = cached.length
 
     const formatted =
     `[GUILDS] ${stats.guilds}\n` +
@@ -64,7 +49,7 @@ module.exports = new GenericCommand(
     `[USERS] ${stats.users}\n` +
     `  [Average] ${(stats.users / stats.guilds).toFixed()}\n` +
     `[MESSAGES] ${Memer.stats.messages}\n` +
-    `  [Cached] ${await scan()}\n` +
+    `  [Cached] ${cached}\n` +
     `[COMMANDS RAN] ${Memer.stats.commands}\n` +
     `  [Average] ${Memer.stats.commands / stats.guilds}\n` +
     `[MEMORY] ${(stats.totalRam / 1000).toFixed(1)}/${(os.totalmem() / 1073741824).toFixed(1)}gb (${((stats.totalRam / 1000) / (os.totalmem() / 1073741824)).toFixed(1)}%)\n` +
@@ -72,14 +57,14 @@ module.exports = new GenericCommand(
     `  [Cluster] ${(stats.totalRam / 1000).toFixed(1) / Memer.config.sharder.clusters}gb\n` +
     `[UPTIME] ${Memer.parseTime(process.uptime())}\n` +
     `  [System] ${Memer.parseTime(os.uptime())}\n` +
-    `[CPU] ${CPUUsage.toFixed(1)}%\n` +
-    `[SFX] ${sfxCount}\n` +
-    `  [Disk Space] ${sfxSize}`
+    `[CPU] ${CPUUsage.toFixed(1)}%\n`
 
+    console.log('before return')
     return '```ini\n' + formatted + '\n```'
   }, {
     triggers: ['debug'],
     cooldown: 1e4,
+    ownerOnly: true,
     description: 'Returns information and statistics about Dank Memer.',
     perms: ['embedLinks']
   }
