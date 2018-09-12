@@ -41,7 +41,7 @@ module.exports = new GenericCommand(
           fields: patron.payment_data.amount_cents > 300 ? [
             {
               name: 'You have access to Premium Memer!',
-              value: 'Since you have donated above $3, you have the option to set a server as premium for extra commands, including command tags, autoposting memes, music, and much more!'
+              value: 'Since you have donated above $3, you have the option to set a server as premium for extra commands, including command tags, autoposting memes, music, and much more!\nTo do this, run `pls pserver add` in the server you want to activate premium perks for!'
             }
           ] : null
         }})
