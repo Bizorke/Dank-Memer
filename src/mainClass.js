@@ -2,6 +2,7 @@ const { readdirSync } = require('fs')
 const { join } = require('path')
 const { Base } = global.memeBase || require('eris-sharder')
 const { Cluster } = require('lavalink')
+const { isMaster } = require('cluster')
 
 const MessageCollector = require('./utils/MessageCollector.js')
 const botPackage = require('../package.json')
@@ -63,7 +64,9 @@ class Memer extends Base {
     }
     global.memeBase || this.ready()
     this.autopost = new (require('./utils/Autopost.js'))(this)
-    this._autopostInterval = setInterval(() => { this.autopost.post() }, 3e5) // 5 minutes
+    if (isMaster) {
+      this._autopostInterval = setInterval(() => { this.autopost.post() }, 3e5) // 5 minutes
+    }
   }
 
   async ready () {
