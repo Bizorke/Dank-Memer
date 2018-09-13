@@ -49,7 +49,7 @@ module.exports = {
   },
 
   inviteRemoval (args) {
-    let re = /discord(?:app\.com\/invite|\.gg)\/([a-z0-9]{1,16})/g
+    let re = /discord(?:app\.com\/invite|\.gg)\/([a-z0-9]{1,16})/gi
     const match = re.exec(args)
     if (match) {
       return args.replace(match[0], '`invite`')
