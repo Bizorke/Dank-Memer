@@ -71,3 +71,17 @@ if (require('cluster').isMaster && !config.options.dev) {
     }
   }, 60 * 60 * 1000)
 }
+
+(async () => {
+  const redis = await require('./utils/redisClient.js')(config.redis)
+  const changesStream = await r.table('users').changes({ squash: true, includeInitial: true, includeTypes: true }).run()
+  changesStream.on('data', data => {
+    if (data.type === 'remove') {
+      redis.zremAsync('pocket-leaderboard', data.new_val.id)
+        .catch(console.error)
+    } else {
+      redis.zaddAsync('pocket-leaderboard', data.new_val.pocket, data.new_val.id)
+        .catch(console.error)
+    }
+  })
+})()
