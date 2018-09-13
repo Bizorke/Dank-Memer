@@ -1,7 +1,7 @@
 const { GenericCommand } = require('../../models/')
 
 module.exports = new GenericCommand(
-  async ({ Memer, msg, args }) => {
+  async ({ Memer, msg, args, addCD }) => {
     let content = msg.args.gather()
     if (msg.attachments.length) {
       if (!msg.attachments[0].width) {
@@ -13,9 +13,10 @@ module.exports = new GenericCommand(
       return 'You need to provide a name (text) or an image (either by attachment or URL)'
     }
 
+    await addCD()
     // If an image is provided
-    if (/https?:\/\/(?:www\.)?(?:.+).(\+)?/.test(content)) {
-      let req = await Memer.http.get(`https://watson-api-explorer.ng.bluemix.net/visual-recognition/api/v3/detect_faces?url=${content}&version=2016-05-20`)
+    if (/^(https?):\/\/[^\s/$.?#].[^\s]*$/i.test(content)) {
+      let req = await Memer.http.get(`https://watson-api-explorer.ng.bluemix.net/visual-recognition/api/v3/detect_faces?url=${encodeURIComponent(content)}&version=2016-05-20`)
       if (!req.body.images) {
         return 'I couldn\'t find a face in that image'
       }
@@ -23,9 +24,9 @@ module.exports = new GenericCommand(
       if (!image.faces[0]) {
         return 'Woops, couldn\'t guess anything'
       }
-      return `I think that this face belongs to a **${image.faces[0].gender.gender.toLowerCase()}** who is **${image.faces[0].age.min} to ${image.faces[0].age.max}** years old.`
+      return `I think that this face belongs to a **${image.faces[0].gender.gender.toLowerCase()}** who is **${image.faces[0].age.min} to ${image.faces[0].age.max}** years old`
     } else {
-      let req = await Memer.http.get(`https://api.genderize.io/?name=${content}`)
+      let req = await Memer.http.get(`https://api.genderize.io/?name=${encodeURIComponent(content)}`)
       if (!req.body.gender) {
         return 'Ok i couldn\'t guess a gender, that\'s probably not even a real name smh'
       }
@@ -34,6 +35,8 @@ module.exports = new GenericCommand(
   }, {
     triggers: ['genderguess', 'genderg'],
     usage: '{command} [name or image]',
+    cooldown: 5e3,
+    donorCD: 2e3,
     description: 'Guesses gender based on name or an image when provided'
   }
 )
