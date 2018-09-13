@@ -23,7 +23,7 @@ module.exports = new GenericModerationCommand(
     }
 
     await addCD()
-    let previousOverwrites = channel.permissionOverwrites.get(msg.channel.guild.id)
+    let previousOverwrites = channel.permissionOverwrites.has(msg.channel.guild.id) ? channel.permissionOverwrites.get(msg.channel.guild.id) : { json: {}, allow: 0, deny: 0 }
     if (previousOverwrites.json.sendMessages === false) {
       return 'this channel is already locked ya doofus'
     }
