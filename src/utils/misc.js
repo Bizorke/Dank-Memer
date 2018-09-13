@@ -310,6 +310,16 @@ module.exports = {
     return pages
   },
 
+  paginateArray: (array, size) => {
+    let result = []
+    let j = 0
+    for (let i = 0; i < Math.ceil(array.length / (size || 10)); i++) {
+      result.push(array.slice(j, j + (size || 10)))
+      j = j + (size || 10)
+    }
+    return result
+  },
+
   format: seconds => {
     function pad (seconds) {
       return (seconds < 10 ? '0' : '') + seconds
