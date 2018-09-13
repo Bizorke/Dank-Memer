@@ -15,7 +15,14 @@ module.exports = new GenericCommand(
         Memer.ipc.fetchUser(id)
           .then(resolve) // this is intentional and also stupid but still intentional
       })
-      let pls = await Memer.db.topPocket()
+
+      let pls = await Memer.redis.zrevrangeAsync(`pocket-leaderboard`, 0, 9, 'WITHSCORES')
+      pls = Memer.paginateArray(pls, 2).map(entry => {
+        return {
+          id: entry[0],
+          pocket: entry[1]
+        }
+      })
       pls = await Promise.all(pls.map(async g => Object.assign(await bigmeme(g.id), { pocket: g.pocket })))
       return {
         title: 'Top 15 Global Richest Users',
@@ -24,19 +31,31 @@ module.exports = new GenericCommand(
       }
     } else {
       let pls = []
-      let members = msg.channel.guild.members
+      const members = msg.channel.guild.members
+      const pipeline = Memer.redis.multi()
       for (const ok of members) {
-        let ding = await Memer.db.getUser(ok[0])
-        pls.push(ding)
+        pipeline.zscore('pocket-leaderboard', ok[0])
+        pls.push(ok[0])
       }
-      pls = pls.filter(u => u.pocket > 0)
-      pls = pls.sort((a, b) => b.pocket - a.pocket).slice(0, 5)
-      pls = await Promise.all(pls.map(async g => Object.assign(await Memer.ipc.fetchUser(g.id), { pocket: g.pocket })))
-      return {
-        title: `richest users in this server`,
-        description: pls.map((u, i) => `${emojis[i] || '👏'} ${u.pocket.toLocaleString()} - ${u.username}#${u.discriminator}`).join('\n'),
-        footer: { text: `${msg.channel.guild.name} | add -all to see global` }
-      }
+      pipeline.exec(async (err, membersScore) => {
+        if (err) {
+          throw new Error(err)
+        }
+        for (let i = 0; i < membersScore.length; i++) {
+          pls[i] = {
+            id: pls[i],
+            pocket: membersScore[i]
+          }
+        }
+        pls = pls.filter(u => u.pocket > 0)
+        pls = pls.sort((a, b) => b.pocket - a.pocket).slice(0, 5)
+        pls = await Promise.all(pls.map(async g => Object.assign(await Memer.ipc.fetchUser(g.id), { pocket: g.pocket })))
+        return msg.channel.createMessage({ embed: {
+          title: `richest users in this server`,
+          description: pls.map((u, i) => `${emojis[i] || '👏'} ${u.pocket.toLocaleString()} - ${u.username}#${u.discriminator}`).join('\n'),
+          footer: { text: `${msg.channel.guild.name} | add -all to see global` }
+        }})
+      })
     }
   },
   {
