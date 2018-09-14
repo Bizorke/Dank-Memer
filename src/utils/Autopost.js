@@ -58,10 +58,8 @@ module.exports = class Autopost {
       })
         .then(res => res.body.url)
       const grabbedChannel = this.client.bot.getChannel(channel)
-      if (grabbedChannel) {
-        if (!grabbedChannel.nsfw) {
-          return
-        }
+      if (!grabbedChannel || !grabbedChannel.nsfw) {
+        return
       }
       this.client.bot.createMessage(channel, { embed: {
         title: type.charAt(0).toUpperCase() + type.slice(1),
