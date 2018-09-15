@@ -14,6 +14,11 @@ module.exports = new GenericCommand(
     const donor = await Memer.db.getDonor(msg.author.id)
     let guilds = donor.guilds
     let guildRedeems = donor.guildRedeems
+
+    if (donor.donorAmount < 3) {
+      return 'Only people who have donated $3 or more a month have access to add premium servers.'
+    }
+
     if (argument === 'add') {
       if (donor.guilds.includes(msg.channel.guild.id)) {
         return 'This server is already a premium server!'
