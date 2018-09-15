@@ -1,7 +1,7 @@
 const { GenericCommand } = require('../../models/')
 
 module.exports = new GenericCommand(
-  async ({ Memer, msg, args }) => {
+  async ({ Memer, msg, args, addCD }) => {
     let patrons = []
 
     const loopThroughPatrons = async (url) => {
@@ -27,6 +27,7 @@ module.exports = new GenericCommand(
     if (!patrons) {
       return 'There was an error whilst trying to obtain patron data. Please try again later.'
     }
+    await addCD()
 
     for (let patron of patrons) {
       let discord = patron.attributes.social_connections.discord
@@ -40,17 +41,20 @@ module.exports = new GenericCommand(
           fields: patron.payment_data.amount_cents > 300 ? [
             {
               name: 'You have access to Premium Memer!',
-              value: 'Since you have donated above $3, you have access to premium features throughout the bot, including command tags, autoposting memes, and bonus coins!'
+              value: 'Since you have donated $3 or above, you have access to premium features throughout the bot, including command tags, autoposting memes, and music commands!\n\nYou also have the ability to add premium servers using `pls premiumserver add`. Premium servers allow all users on a guild to have access to certain donor perks.'
             }
-          ] : null
+          ] : null,
+          footer: 'ur a cool person'
         }})
         return 'You\'ve successfully linked your Discord account with Patreon. Enjoy your perks!\nFor more assistance, you can visit our support server (https://discord.gg/ebUqc7F)'
       }
     }
-    return 'You don\'t have your Discord account linked to your Patreon! If you need help linking your Discord account to Patreon, try looking at this article\nhttps://patreon.zendesk.com/hc/en-us/articles/212052266-How-do-I-receive-my-Discord-role-'
+    return 'We weren\'t able to link your Discord account with your Patreon account.\nPlease ensure that you have donated and the payment was successful, and that Patreon has access to your Discord account. If you need help linking your Discord account to Patreon, try looking at this article\n<https://patreon.zendesk.com/hc/en-us/articles/212052266-How-do-I-receive-my-Discord-role->'
   }, {
     triggers: ['link'],
     usage: '{command}',
+    cooldown: 15e3,
+    donorBlocked: true,
     description: 'Link your Discord account with Patreon'
   }
 )
