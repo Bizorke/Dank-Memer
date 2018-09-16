@@ -16,7 +16,6 @@ module.exports = new GenericCommand(
             }
             await addCD()
             await Memer.db.addBank(msg.author.id, amount)
-            await Memer.db.removePocket(msg.author.id, amount)
             return `${amount} coin${amount === 1 ? '' : 's'} deposited.`
           } else {
             return `Your second argument should be a number and no more than what you have in your pocket (${pocket})`
@@ -27,7 +26,6 @@ module.exports = new GenericCommand(
               return 'Needs to be a whole number greater than 0'
             }
             await addCD()
-            await Memer.db.addPocket(msg.author.id, amount)
             await Memer.db.removeBank(msg.author.id, amount)
             return `${amount} coin${amount === 1 ? '' : 's'} withdrawn.`
           } else {
