@@ -30,7 +30,8 @@ module.exports = new GenericCommand(
       if (!req.body.gender) {
         return 'Ok i couldn\'t guess a gender, that\'s probably not even a real name smh'
       }
-      return `I am ${req.body.probability * 100}% sure that the name **${content}** belongs to a ${req.body.gender}`
+      const probability = req.body.probability * 100
+      return `I am ${probability % 1 !== 0 ? probability.toFixed(2) : probability}% sure that the name **${content}** belongs to a ${req.body.gender}`
     }
   }, {
     triggers: ['genderguess', 'genderg'],
