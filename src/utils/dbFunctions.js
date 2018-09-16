@@ -311,7 +311,7 @@ module.exports = Bot => ({
     return Bot.r.table('users')
       .get(id)
       .update({
-        bank: Bot.r.row('pocket').sub(amount),
+        pocket: Bot.r.row('pocket').sub(amount),
         lost: Bot.r.row('pocket').sub(amount)
       })
       .run()
@@ -321,7 +321,8 @@ module.exports = Bot => ({
     return Bot.r.table('users')
       .get(id)
       .update({
-        bank: Bot.r.row('bank').sub(amount)
+        bank: Bot.r.row('bank').sub(amount),
+        pocket: Bot.r.row('pocket').add(amount)
       })
       .run()
   },
