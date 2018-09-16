@@ -127,6 +127,16 @@ exports.handle = async function (msg) {
 
   if (msg.member.roles.some(id => msg.channel.guild.roles.get(id).name === 'no memes for you')) { return }
 
+  let { spam, lastCmd } = await this.db.getUser(msg.author.id)
+
+  if (spam > 1e4) {
+    let reason = 'Blacklisted for spamming over 10,000 times.'
+    await this.punish(this, msg.author.id, 'user', reason)
+    return
+  }
+
+  updateStats.bind(this)(msg, command, lastCmd)
+
   const isInCooldown = await checkCooldowns.bind(this)(msg, command, isDonor)
   if (isInCooldown) { return }
 
@@ -163,6 +173,16 @@ function cacheMessage (msg) {
     return
   }
   this.redis.setAsync(`msg-${msg.id}`, JSON.stringify({ userID: msg.author.id, content: msg.content, timestamp: msg.timestamp, guildID: msg.channel.guild.id, channelID: msg.channel.id }), 'EX', 20 * 60)
+}
+
+async function updateStats (msg, command, lastCmd) {
+  if (Date.now() - lastCmd < 500) {
+    await this.db.addSpam(msg.author.id)
+  }
+
+  await this.db.addCmd(msg.author.id)
+
+  this.db.addPls(msg.channel.guild.id, msg.author.id)
 }
 
 async function checkCooldowns (msg, command, isDonor) {
