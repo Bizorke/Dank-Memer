@@ -281,20 +281,23 @@ module.exports = Bot => ({
   },
 
   addPocket: async function addPocket (id, amount) {
-    let res = await this.getUser(id)
-    res.pocket += amount
-    res.won += amount
-
     return Bot.r.table('users')
-      .insert(res, { conflict: 'update' })
+      .get(id)
+      .update({
+        pocket: Bot.r.row('pocket').add(amount),
+        won: Bot.r.row('won').add(amount)
+      })
+      .run()
   },
 
   addBank: async function addBank (id, amount) {
-    let res = await this.getUser(id)
-    res.bank += amount
-
     return Bot.r.table('users')
-      .insert(res, { conflict: 'update' })
+      .get(id)
+      .update({
+        pocket: Bot.r.row('pocket').sub(amount),
+        bank: Bot.r.row('bank').add(amount)
+      })
+      .run()
   },
 
   topPocket: function topPocket () {
@@ -304,30 +307,23 @@ module.exports = Bot => ({
       .run()
   },
 
-  roundPocket: async function roundPocket (id) {
-    let res = await this.getUser(id)
-    res.pocket = Math.round(res.pocket)
-
-    Bot.r.table('users')
-      .insert(res, { conflict: 'update' })
-    return res
-  },
-
   removePocket: async function removePocket (id, amount) {
-    let res = await this.getUser(id)
-
-    res.pocket = Math.max(0, res.pocket - amount)
-    res.lost -= amount
     return Bot.r.table('users')
-      .insert(res, { conflict: 'update' })
+      .get(id)
+      .update({
+        bank: Bot.r.row('pocket').sub(amount),
+        lost: Bot.r.row('pocket').sub(amount)
+      })
+      .run()
   },
 
   removeBank: async function removePocket (id, amount) {
-    let res = await this.getUser(id)
-
-    res.bank = Math.max(0, res.bank - amount)
     return Bot.r.table('users')
-      .insert(res, { conflict: 'update' })
+      .get(id)
+      .update({
+        bank: Bot.r.row('bank').sub(amount)
+      })
+      .run()
   },
 
   addStreak: async function addStreak (id) {
