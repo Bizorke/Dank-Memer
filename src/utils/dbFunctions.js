@@ -166,19 +166,20 @@ module.exports = Bot => ({
 
   addPls: async function addPls (guildID, userID) {
     let guild = await this.getPls(guildID)
-    let user = await this.getUser(userID)
     if (!guild) {
       return this.initPls(guildID)
     }
     guild.pls++
-    user.pls++
 
     Bot.r.table('guildUsage')
       .insert(guild, { conflict: 'update' })
       .run()
 
     return Bot.r.table('users')
-      .insert(user, {conflict: 'update'})
+      .get(userID)
+      .update({
+        pls: Bot.r.row('pls').add(1)
+      })
       .run()
   },
 
@@ -337,8 +338,11 @@ module.exports = Bot => ({
   },
 
   addSpam: async function addSpam (id) {
-    const spam = (await this.getSpam(id)) + 1
-    await Bot.r.table('users').insert({ id, spam }, { conflict: 'update' }).run()
+    await Bot.r.table('users')
+      .get(id)
+      .update({
+        spam: Bot.r.row('spam').add(1)
+      }).run()
   },
 
   topSpam: function topSpam () {
@@ -351,7 +355,10 @@ module.exports = Bot => ({
   addCmd: function addCmd (id) {
     const lastCmd = Date.now()
     return Bot.r.table('users')
-      .insert({ id, lastCmd }, { conflict: 'update' })
+      .get(id)
+      .update({
+        lastCmd
+      })
       .run()
   },
 
