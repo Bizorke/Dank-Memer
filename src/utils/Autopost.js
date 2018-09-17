@@ -57,7 +57,7 @@ module.exports = class Autopost {
         }
       })
         .then(res => res.body.url)
-      const grabbedChannel = this.client.bot.getChannel(channel)
+      const grabbedChannel = await this.client.ipc.fetchChannel(channel)
       if (!grabbedChannel || !grabbedChannel.nsfw) {
         return
       }
