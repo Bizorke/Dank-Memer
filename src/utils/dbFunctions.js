@@ -284,8 +284,8 @@ module.exports = Bot => ({
     return Bot.r.table('users')
       .get(id)
       .update({
-        pocket: Bot.r.row('pocket').add(amount),
-        won: Bot.r.row('won').add(amount)
+        pocket: Bot.r.row('pocket').add(Number(amount)),
+        won: Bot.r.row('won').add(Number(amount))
       })
       .run()
   },
@@ -294,8 +294,8 @@ module.exports = Bot => ({
     return Bot.r.table('users')
       .get(id)
       .update({
-        pocket: Bot.r.row('pocket').sub(amount),
-        bank: Bot.r.row('bank').add(amount)
+        pocket: Bot.r.row('pocket').sub(Number(amount)),
+        bank: Bot.r.row('bank').add(Number(amount))
       })
       .run()
   },
@@ -311,8 +311,8 @@ module.exports = Bot => ({
     return Bot.r.table('users')
       .get(id)
       .update({
-        pocket: Bot.r.row('pocket').sub(amount),
-        lost: Bot.r.row('pocket').sub(amount)
+        pocket: Bot.r.row('pocket').sub(Number(amount)),
+        lost: Bot.r.row('pocket').sub(Number(amount))
       })
       .run()
   },
@@ -321,8 +321,8 @@ module.exports = Bot => ({
     return Bot.r.table('users')
       .get(id)
       .update({
-        bank: Bot.r.row('bank').sub(amount),
-        pocket: Bot.r.row('pocket').add(amount)
+        bank: Bot.r.row('bank').sub(Number(amount)),
+        pocket: Bot.r.row('pocket').add(Number(amount))
       })
       .run()
   },
