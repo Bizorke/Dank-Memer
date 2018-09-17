@@ -49,7 +49,7 @@ module.exports = {
   },
 
   inviteRemoval (args) {
-    let re = /discord(?:app\.com\/invite|\.gg)\/([a-z0-9]{1,16})/g
+    let re = /discord(?:app\.com\/invite|\.gg)\/([a-z0-9]{1,16})/gi
     const match = re.exec(args)
     if (match) {
       return args.replace(match[0], '`invite`')
@@ -65,7 +65,7 @@ module.exports = {
     let day
     let time
     let total
-    total = userDB.upgrades.multi
+    total = userDB.upgrades ? userDB.upgrades.multi : 0
     if (Memer.config.options.developers.includes(user.id)) {
       total += 5
     }
@@ -126,11 +126,11 @@ module.exports = {
     let end = {
       locked: 0,
       unlocked: { total: 0, list: [] },
-      bought: userDB.upgrades.multi
+      bought: userDB.upgrades ? userDB.upgrades.multi : 0
     }
     if (Memer.config.options.developers.includes(user.id)) {
       end.unlocked.total += 1
-      end.unlocked.list.push('Developer')
+      end.unlocked.list.push('[Developer](https://github.com/Dank-Memer/Dank-Memer)')
     }
     if (guildMember.game && guildMember.game.name.toLowerCase().includes('dank memer')) {
       end.unlocked.total += 1

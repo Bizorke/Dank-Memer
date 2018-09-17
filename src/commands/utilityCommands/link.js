@@ -1,7 +1,7 @@
 const { GenericCommand } = require('../../models/')
 
 module.exports = new GenericCommand(
-  async ({ Memer, msg, args }) => {
+  async ({ Memer, msg, args, addCD }) => {
     let patrons = []
 
     const loopThroughPatrons = async (url) => {
@@ -27,6 +27,7 @@ module.exports = new GenericCommand(
     if (!patrons) {
       return 'There was an error whilst trying to obtain patron data. Please try again later.'
     }
+    await addCD()
 
     for (let patron of patrons) {
       let discord = patron.attributes.social_connections.discord
@@ -43,14 +44,17 @@ module.exports = new GenericCommand(
               name: 'You have access to Premium Memer!',
               value: 'Since you have donated above $3, you have the option to set a server as premium for extra commands, including command tags, autoposting memes, music, and much more!\nTo do this, run `pls pserver add` in the server you want to activate premium perks for!'
             }
-          ] : null
+          ] : null,
+          footer: 'ur a cool person'
         }})
       }
     }
-    return 'You don\'t have your Discord account linked to your Patreon! If you need help linking your Discord account to Patreon, try looking at this article\nhttps://patreon.zendesk.com/hc/en-us/articles/212052266-How-do-I-receive-my-Discord-role-'
+    return 'We weren\'t able to link your Discord account with your Patreon account.\nPlease ensure that you have donated and the payment was successful, and that Patreon has access to your Discord account. If you need help linking your Discord account to Patreon, try looking at this article\n<https://patreon.zendesk.com/hc/en-us/articles/212052266-How-do-I-receive-my-Discord-role->'
   }, {
     triggers: ['link'],
     usage: '{command}',
+    cooldown: 15e3,
+    donorBlocked: true,
     description: 'Link your Discord account with Patreon'
   }
 )

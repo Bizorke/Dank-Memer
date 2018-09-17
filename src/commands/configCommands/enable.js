@@ -16,7 +16,7 @@ module.exports = new GenericCommand(
 
     const categories = Memer.cmds.map(c => c.category.split(' ')[1].toLowerCase())
     if (args.some(cmd => !Memer.cmds.find(c => c.props.triggers.includes(cmd)) && !categories.includes(cmd))) {
-      return `The following commands or categories are invalid: \n\n${args.filter(cmd => !Memer.cmds.find(c => c.props.triggers.includes(cmd))).map(cmd => `\`${cmd.props.triggers[0]}\``).join(', ')}\n\nPlease make sure all of your commands are valid and try again.`
+      return `The following commands or categories are invalid: \n\n${args.filter(cmd => !Memer.cmds.find(c => c.props.triggers.includes(cmd)) && !categories.includes(cmd)).map(cmd => `\`${cmd}\``).join(', ')}\n\nPlease make sure all of your commands are valid and try again.`
     }
 
     args = Memer.removeDuplicates(args
@@ -26,7 +26,8 @@ module.exports = new GenericCommand(
 
     gConfig.enabledCommands = gConfig.enabledCommands || []
     gConfig.disabledCategories = gConfig.disabledCategories || []
-    const arentDisabled = args.filter(cmd => gConfig.enabledCommands.includes(cmd))
+    gConfig.enabledCategories = gConfig.enabledCategories || []
+    const arentDisabled = args.filter(cmd => gConfig.enabledCommands.includes(cmd) || gConfig.enabledCategories.includes(cmd))
     if (arentDisabled[0]) {
       return `These commands/categories aren't disabled:\n\n${arentDisabled.map(c => `\`${c}\``).join(', ')}\n\nHow tf do you plan to enable already enabled stuff??`
     }

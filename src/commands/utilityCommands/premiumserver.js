@@ -14,6 +14,11 @@ module.exports = new GenericCommand(
     const donor = await Memer.db.getDonor(msg.author.id)
     let guilds = donor.guilds
     let guildRedeems = donor.guildRedeems
+
+    if (donor.donorAmount < 3) {
+      return 'Only people who have donated $3 or more a month have access to add premium servers.'
+    }
+
     if (argument === 'add') {
       if (donor.guilds.includes(msg.channel.guild.id)) {
         return 'This server is already a premium server!'
@@ -32,6 +37,8 @@ module.exports = new GenericCommand(
         return 'This server hasn\'t been added as a premium server'
       }
 
+      await Memer.db.removeAutonsfwChannel(msg.channel.guild.id)
+      await Memer.db.removeAutomemeChannel(msg.channel.guild.id)
       guilds.splice(guilds.indexOf(msg.channel.guild.id), 1)
       await Memer.db.updateDonorGuild(msg.author.id, guilds, guildRedeems--)
       return `**${msg.channel.guild.name}** is no longer a premium server.`

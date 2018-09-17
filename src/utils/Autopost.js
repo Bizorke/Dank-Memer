@@ -57,7 +57,8 @@ module.exports = class Autopost {
         }
       })
         .then(res => res.body.url)
-      if (!this.client.bot.getChannel(channel).nsfw) {
+      const grabbedChannel = this.client.bot.getChannel(channel)
+      if (!grabbedChannel || !grabbedChannel.nsfw) {
         return
       }
       this.client.bot.createMessage(channel, { embed: {
