@@ -33,7 +33,7 @@ module.exports = new GenericCommand(
       let discord = patron.attributes.social_connections.discord
       if (discord && patron.payment_data && (discord.user_id === msg.author.id)) {
         await Memer.db.addDonor(msg.author.id, patron.payment_data.amount_cents / 100, new Date(patron.payment_data.created_at), new Date(patron.payment_data.declined_since), patron.id)
-        return 'You\'ve successfully linked your Discord account with Patreon. Enjoy your perks!\nFor more assistance, you can visit our support server (https://discord.gg/ebUqc7F)'
+        return 'You\'ve successfully linked your Discord account with Patreon. Enjoy your perks!\nFor more assistance, you can visit our support server (https://discord.gg/Wejhbd4)'
         const channel = await Memer.bot.getDMChannel(msg.author.id)
         return channel.createMessage({ embed: {
           color: 6732650,

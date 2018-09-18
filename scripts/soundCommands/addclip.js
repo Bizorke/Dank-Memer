@@ -53,7 +53,7 @@ module.exports = new GenericCommand(
       return 'k ur clip is ready, use the `playclip` command to play it'
     } catch (e) {
       Memer.log(`[addclip] Failed to save clip!\n\t${e}`)
-      return `Something went wrong while saving your hecking clip\n\`\`\`\n${e.message}\`\`\`\n\nJoin here (https://discord.gg/ebUqc7F) if the issue doesn't stop being an ass`
+      return `Something went wrong while saving your hecking clip\n\`\`\`\n${e.message}\`\`\`\n\nJoin here (https://discord.gg/Wejhbd4) if the issue doesn't stop being an ass`
     }
   },
   {

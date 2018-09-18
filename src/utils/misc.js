@@ -3,38 +3,38 @@ const config = require('../config.json')
 const errors = {
 
   // Voice related errors
-  'Disconnected': `Discord fucked something up. 😠\n\nTo fix this, you have to got to server settings and change the voice region.\nIf it still doesn't work after that, join (<https://discord.gg/ebUqc7F>) and tell support it is error \`vc1\`.`,
+  'Disconnected': `Discord fucked something up. 😠\n\nTo fix this, you have to got to server settings and change the voice region.\nIf it still doesn't work after that, join (<https://discord.gg/Wejhbd4>) and tell support it is error \`vc1\`.`,
 
-  'Voice connection timeout': `Discord fucked something up. 😠\n\nTo fix this, first try running \`pls stop\`.\nIf that doesn't work, you have to kick me and reinvite me back. I know, it is stupid. 🙄\nIf it still doesn't work after that, join (<https://discord.gg/ebUqc7F>) and tell support it is error \`vc2\`.`,
+  'Voice connection timeout': `Discord fucked something up. 😠\n\nTo fix this, first try running \`pls stop\`.\nIf that doesn't work, you have to kick me and reinvite me back. I know, it is stupid. 🙄\nIf it still doesn't work after that, join (<https://discord.gg/Wejhbd4>) and tell support it is error \`vc2\`.`,
 
-  'Already encoding': `Something fucked up. 😠\n\nWe're pretty sure this error happens when you're running voice commands too quickly. So slow down 🙄\nIf it's still happening after a while, (<https://discord.gg/ebUqc7F>) and tell support it is error \`vc3\`.`,
+  'Already encoding': `Something fucked up. 😠\n\nWe're pretty sure this error happens when you're running voice commands too quickly. So slow down 🙄\nIf it's still happening after a while, (<https://discord.gg/Wejhbd4>) and tell support it is error \`vc3\`.`,
 
   // Currency Errors
-  'new_val': `Oopsy doopsy, we made a fucky wucky! 😊\n\nThis shouldn't happen to you again, and we are working semi-hard on fixing it. \nIf it DOES happen again, join (<https://discord.gg/ebUqc7F>) and tell support it is error \`econ1\`.`,
+  'new_val': `Oopsy doopsy, we made a fucky wucky! 😊\n\nThis shouldn't happen to you again, and we are working semi-hard on fixing it. \nIf it DOES happen again, join (<https://discord.gg/Wejhbd4>) and tell support it is error \`econ1\`.`,
 
   // Image Errors
-  'Invalid character in header content': `Well heck, I didn't like some character you used for this command! 😠\n\nIf you used any "not normal" characters for this command, remove those and try again. \nIf it is still happening, join (<https://discord.gg/ebUqc7F>) and tell support it is error \`img1\`.`,
+  'Invalid character in header content': `Well heck, I didn't like some character you used for this command! 😠\n\nIf you used any "not normal" characters for this command, remove those and try again. \nIf it is still happening, join (<https://discord.gg/Wejhbd4>) and tell support it is error \`img1\`.`,
 
-  'socket hang up': `Looks like we just restarted our image server\n\nOnce it is done rebooting, this command will work again. Give it just a few seconds!\nIf it is still happening after multiple minutes, join (<https://discord.gg/ebUqc7F>) and tell support it is error \`img2\`.`,
+  'socket hang up': `Looks like we just restarted our image server\n\nOnce it is done rebooting, this command will work again. Give it just a few seconds!\nIf it is still happening after multiple minutes, join (<https://discord.gg/Wejhbd4>) and tell support it is error \`img2\`.`,
 
   // Discord Errors
-  'DiscordRESTError [50001]: Missing Access': `Hey! For some reason I don't have permission to run that command. 😠\n\nMake sure you have given me the correct channel perms to run this command. \nIf it is still happening after messing with permissions, join (<https://discord.gg/ebUqc7F>) and tell support it is error \`dis1\`.`,
+  'DiscordRESTError [50001]: Missing Access': `Hey! For some reason I don't have permission to run that command. 😠\n\nMake sure you have given me the correct channel perms to run this command. \nIf it is still happening after messing with permissions, join (<https://discord.gg/Wejhbd4>) and tell support it is error \`dis1\`.`,
 
-  'Request timed out (>15000ms) on POST': `aggggghhhhhhhh discord is having connection issues 😠\n\nAll we can do is wait until they're better. Sorryyyyyy.\nIf it is still happening after a few hours, join (<https://discord.gg/ebUqc7F>) and tell support it is error \`dis2\`.`,
+  'Request timed out (>15000ms) on POST': `aggggghhhhhhhh discord is having connection issues 😠\n\nAll we can do is wait until they're better. Sorryyyyyy.\nIf it is still happening after a few hours, join (<https://discord.gg/Wejhbd4>) and tell support it is error \`dis2\`.`,
 
-  'DiscordRESTError [50013]: Missing Permissions': `Hey! For some reason I don't have permission to run that command. 😠\n\nMake sure you have given me the correct channel perms to run this command. \nIf it is still happening after messing with permissions, join (<https://discord.gg/ebUqc7F>) and tell support it is error \`dis3\`.`,
+  'DiscordRESTError [50013]: Missing Permissions': `Hey! For some reason I don't have permission to run that command. 😠\n\nMake sure you have given me the correct channel perms to run this command. \nIf it is still happening after messing with permissions, join (<https://discord.gg/Wejhbd4>) and tell support it is error \`dis3\`.`,
 
-  'Must be 2000 or fewer in length': `You included too many characters in that.\n\nI am only able to send 2k characters in one message, so please try again with less characters.\nIf it is still happening, join (<https://discord.gg/ebUqc7F>) and tell support it is error \`dis4\`.`,
+  'Must be 2000 or fewer in length': `You included too many characters in that.\n\nI am only able to send 2k characters in one message, so please try again with less characters.\nIf it is still happening, join (<https://discord.gg/Wejhbd4>) and tell support it is error \`dis4\`.`,
 
-  'DiscordHTTPError: 500 INTERNAL SERVER ERROR on POST': `aggggghhhhhhhh discord is having connection issues 😠\n\nAll we can do is wait until they're better. Sorryyyyyy.\nIf it is still happening after a few hours, join (<https://discord.gg/ebUqc7F>) and tell support it is error \`dis5\`.`,
+  'DiscordHTTPError: 500 INTERNAL SERVER ERROR on POST': `aggggghhhhhhhh discord is having connection issues 😠\n\nAll we can do is wait until they're better. Sorryyyyyy.\nIf it is still happening after a few hours, join (<https://discord.gg/Wejhbd4>) and tell support it is error \`dis5\`.`,
 
   // Known Errors
-  'Cannot read property \'triggers\' of undefined': `This command is currently under maintance, sorry :(\n\nIt will work if you are spelling the command you are enabling/disabling correctly.\nIf it is still happening, join (<https://discord.gg/ebUqc7F>) and tell support it is error \`bug1\`.`,
+  'Cannot read property \'triggers\' of undefined': `This command is currently under maintance, sorry :(\n\nIt will work if you are spelling the command you are enabling/disabling correctly.\nIf it is still happening, join (<https://discord.gg/Wejhbd4>) and tell support it is error \`bug1\`.`,
 
-  '504 Gateway Timeout': `Look like the service we use for this command is giving us problems :(\n\nAll we can currently do is wait, sadly\nIf it is still happening after a few hours, join (<https://discord.gg/ebUqc7F>) and tell support it is error \`bug2\`.`,
+  '504 Gateway Timeout': `Look like the service we use for this command is giving us problems :(\n\nAll we can currently do is wait, sadly\nIf it is still happening after a few hours, join (<https://discord.gg/Wejhbd4>) and tell support it is error \`bug2\`.`,
 
   // Bug Hunting errors
-  'DiscordRESTError [10003]: Unknown Channel': `Something broke!\n\nI am currently not sure why this bug is happening, but if you report this bug in the support server, you will get paid for it in meme coins.\nJoin (<https://discord.gg/ebUqc7F>) and tell support it is error \`hunt1\`.`
+  'DiscordRESTError [10003]: Unknown Channel': `Something broke!\n\nI am currently not sure why this bug is happening, but if you report this bug in the support server, you will get paid for it in meme coins.\nJoin (<https://discord.gg/Wejhbd4>) and tell support it is error \`hunt1\`.`
 }
 
 module.exports = {
@@ -42,7 +42,7 @@ module.exports = {
 
   intro: `Sup nerds. My name is **Dank Memer**.\n\nTo get started, send \`${config.options.prefix} help\`. All commands are run this way, for example, pls meme.\n`,
 
-  links: '<:technicalsupport:471490462968971264> [Support Server](https://discord.gg/ebUqc7F) - Get help for the bot and meme around\n<:twitter:471490461454827530> [Official Twitter](https://twitter.com/dankmemerbot) - Sometimes win free stuff and meme around\n<:coininhand:471490461467410463> [Patreon Page](https://www.patreon.com/dankmemerbot) - Help support the bot development, and get some sweet perks!\n<:discordlogo:471490461396369409> [Invite Link](https://goo.gl/BPWvB9) - Add the bot to another server and meme around',
+  links: '<:technicalsupport:471490462968971264> [Support Server](https://discord.gg/Wejhbd4) - Get help for the bot and meme around\n<:twitter:471490461454827530> [Official Twitter](https://twitter.com/dankmemerbot) - Sometimes win free stuff and meme around\n<:coininhand:471490461467410463> [Patreon Page](https://www.patreon.com/dankmemerbot) - Help support the bot development, and get some sweet perks!\n<:discordlogo:471490461396369409> [Invite Link](https://goo.gl/BPWvB9) - Add the bot to another server and meme around',
 
   randomColor: () => {
     return Math.floor(Math.random() * 0xFFFFFF)

@@ -24,7 +24,7 @@ class GenericImageCommand {
         name: `${this.cmdProps.triggers[0]}.${this.cmdProps.format || 'png'}`
       })
     } else {
-      msg.channel.createMessage(`Something went wrong while executing this hecking command!\n\nJoin here (<https://discord.gg/ebUqc7F>) if the issue doesn't stop being an ass`)
+      msg.channel.createMessage(`Something went wrong while executing this hecking command!\n\nJoin here (<https://discord.gg/Wejhbd4>) if the issue doesn't stop being an ass`)
     }
   }
 
