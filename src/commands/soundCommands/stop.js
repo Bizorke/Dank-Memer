@@ -1,4 +1,4 @@
-const { GenericMusicCommand } = require('../../models/')
+const GenericMusicCommand = require('../../models/GenericModerationCommand')
 
 module.exports = new GenericMusicCommand(
   async ({ Memer, music, args, msg }) => {

@@ -6,7 +6,6 @@ module.exports = new GenericMusicCommand(async ({ Memer, music, args, msg }) => 
   if (!msg.member.voiceState.channelID) {
     return msg.reply('join a voice channel fam')
   }
-  args.resolveUser(true).getDMChannel().then(c => c.createMessage('hi.'))
 
   const newSession = !music.voiceChannel || false
   if (!music.voiceChannel) {
