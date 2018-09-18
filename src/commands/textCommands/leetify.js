@@ -1,4 +1,4 @@
-const { GenericCommand } = require('../../models/')
+const GenericCommand = require('../../models/GenericCommand')
 const leet = require('../../utils/leetGenerator')
 
 module.exports = new GenericCommand(

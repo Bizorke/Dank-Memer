@@ -1,4 +1,4 @@
-const { GenericCommand } = require('../../models/')
+const GenericCommand = require('../../models/GenericCommand')
 const { redpandas } = require('../../assets/arrays/animals.json')
 
 module.exports = new GenericCommand(

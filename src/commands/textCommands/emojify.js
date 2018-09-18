@@ -1,4 +1,4 @@
-const { GenericCommand } = require('../../models/')
+const GenericCommand = require('../../models/GenericCommand')
 const specialCodes = {
   '0': ':zero:',
   '1': ':one:',

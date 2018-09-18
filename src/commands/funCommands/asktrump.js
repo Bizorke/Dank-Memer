@@ -1,4 +1,4 @@
-const { GenericCommand } = require('../../models/')
+const GenericCommand = require('../../models/GenericCommand')
 const { trumpPhotos, trumpResponses } = require('../../assets/arrays/trump.json')
 
 const questionRegex = /\?/g
