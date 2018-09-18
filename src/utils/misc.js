@@ -219,6 +219,10 @@ module.exports = {
     return `${'```'}${lang || ''}\n${str}\n${'```'}`
   },
 
+  getHighestRolePos: (member) => {
+    return member.roles[0] ? member.guild.roles.filter(r => member.roles.includes(r.id)).sort((a, b) => b.position - a.position)[0].position : 0
+  },
+
   parseTime: (time) => {
     const methods = [
       { name: 'd', count: 86400 },
