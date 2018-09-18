@@ -21,7 +21,7 @@ module.exports = new GenericCommand(
       msg.channel.createMessage(`${turn.mention}, what do you want to do? \`punch\`, \`defend\` or \`end\`?\nType your choice out in chat as it's displayed!`)
       let prompt = await Memer.MessageCollector.awaitMessage(msg.channel.id, attacker.id, 30e3)
       if (!prompt) {
-        msg.channel.createMessage(`${attacker.username} didn't answer in time, what a noob. ${opponent} wins`)
+        msg.channel.createMessage(`**${attacker.username}** didn't answer in time, what a noob. **${opponent.username}** wins`)
       } else if (prompt.content.toLowerCase() === 'punch') {
         let critChance = Math.random() >= 0.75 // 25% chance
         let damage = Memer.randomNumber((critChance ? 2 : 1), 100)
@@ -42,7 +42,7 @@ module.exports = new GenericCommand(
       } else if (prompt.content.toLowerCase() === 'end') {
         msg.channel.createMessage(`**${attacker.username}** has ended the game what a wimp`)
       } else {
-        msg.channel.createMessage(`That's not a valid option lmao! You must type \`punch\`, \`defend\` or \`end\` in chat!\n${retry ? 'The game has ended due to multiple invalid choices, god ur dumb' : ''}`)
+        msg.channel.createMessage(`That's not a valid option lmao, you gotta type \`punch\`, \`defend\` or \`end\` in chat!\n${retry ? 'The game has ended due to multiple invalid choices, god ur dumb' : ''}`)
         if (!retry) {
           return performTurn(attacker, opponent, true)
         }
