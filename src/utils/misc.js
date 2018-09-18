@@ -1,3 +1,8 @@
+/** @typedef {import('../models/GenericCommand').Memer} Memer
+ * @typedef {import('eris').User} User
+ * @typedef {import('eris').Message} Message
+ */
+
 const config = require('../config.json')
 
 const errors = {
@@ -29,7 +34,7 @@ const errors = {
   'DiscordHTTPError: 500 INTERNAL SERVER ERROR on POST': `aggggghhhhhhhh discord is having connection issues 😠\n\nAll we can do is wait until they're better. Sorryyyyyy.\nIf it is still happening after a few hours, join (<https://discord.gg/ebUqc7F>) and tell support it is error \`dis5\`.`,
 
   // Known Errors
-  'Cannot read property \'triggers\' of undefined': `This command is currently under maintance, sorry :(\n\nIt will work if you are spelling the command you are enabling/disabling correctly.\nIf it is still happening, join (<https://discord.gg/ebUqc7F>) and tell support it is error \`bug1\`.`,
+  'Cannot read property \'triggers\' of undefined': `This command is currently under maintenance, sorry :(\n\nIt will work if you are spelling the command you are enabling/disabling correctly.\nIf it is still happening, join (<https://discord.gg/ebUqc7F>) and tell support it is error \`bug1\`.`,
 
   '504 Gateway Timeout': `Look like the service we use for this command is giving us problems :(\n\nAll we can currently do is wait, sadly\nIf it is still happening after a few hours, join (<https://discord.gg/ebUqc7F>) and tell support it is error \`bug2\`.`,
 
@@ -44,10 +49,19 @@ module.exports = {
 
   links: '<:technicalsupport:471490462968971264> [Support Server](https://discord.gg/ebUqc7F) - Get help for the bot and meme around\n<:twitter:471490461454827530> [Official Twitter](https://twitter.com/dankmemerbot) - Sometimes win free stuff and meme around\n<:coininhand:471490461467410463> [Patreon Page](https://www.patreon.com/dankmemerbot) - Help support the bot development, and get some sweet perks!\n<:discordlogo:471490461396369409> [Invite Link](https://goo.gl/BPWvB9) - Add the bot to another server and meme around',
 
-  randomColor: () => {
+  /**
+   * @function randomColor
+   * @returns {Number} A random color code
+   */
+  randomColor () {
     return Math.floor(Math.random() * 0xFFFFFF)
   },
 
+  /**
+   * @function inviteRemoval
+   * @param {String} args The string to remove invites from
+   * @returns {String} The given string, with invites replaced by `invite`
+   */
   inviteRemoval (args) {
     let re = /discord(?:app\.com\/invite|\.gg)\/([a-z0-9]{1,16})/g
     const match = re.exec(args)
@@ -58,7 +72,16 @@ module.exports = {
     }
   },
 
-  calcMultiplier: (Memer, user, userDB, donor, msg) => {
+  /**
+   * @function calcMultiplier
+   * @param {Memer} Memer The string to remove invites from
+   * @param {User} user The user
+   * @param {Object} userDB The user database entry
+   * @param {Object} [donor] The donor object, if any
+   * @param {Message} msg The message
+   * @returns {Number} The total multiplier for this user
+   */
+  calcMultiplier (Memer, user, userDB, donor, msg) {
     // calculates total multiplier based on multiple variables
     let guildMember = msg.channel.guild.members.get(msg.author.id)
     let date = new Date(msg.timestamp)
@@ -116,7 +139,16 @@ module.exports = {
     return total
   },
 
-  showMultiplier: (Memer, user, userDB, donor, msg) => {
+  /**
+   * @function showMultiplier
+   * @param {Memer} Memer The string to remove invites from
+   * @param {User} user The user
+   * @param {Object} userDB The user database entry
+   * @param {Object} [donor] The donor object, if any
+   * @param {Message} msg The message
+   * @returns {String} A list of all the active multipliers for this user
+   */
+  showMultiplier (Memer, user, userDB, donor, msg) {
     // calculates total multiplier based on multiple variables
     let guildMember = msg.channel.guild.members.get(msg.author.id)
     let date = new Date(msg.timestamp)
@@ -190,17 +222,34 @@ module.exports = {
     return end
   },
 
-  decodeHtmlEntity: (str) => { // Found here: https://gist.github.com/CatTail/4174511
+  /**
+   * @function decodeHtmlEntity
+   * @param {String} str The string to decode html entities from
+   * @returns {String} The given string, with html entities decoded
+   */
+  decodeHtmlEntity (str) { // Found here: https://gist.github.com/CatTail/4174511
     return str.replace(/&#(\d+);/g, function (match, dec) {
       return String.fromCharCode(dec)
     })
   },
 
-  randomInArray: (array) => {
+  /**
+   * @function randomInArray
+   * @param {Array} array The array to get a random element from
+   * @returns {any} A random element that was in the given array
+   */
+  randomInArray (array) {
     return array[Math.floor(Math.random() * array.length)]
   },
 
-  randomNumber: (min, max) => {
+  /**
+   * If no minimum and maximum is passed, the range defaults to 0-100
+   * @function randomNumber
+   * @param {Number} [min] The minimum
+   * @param {Number} [max] The maximum
+   * @returns {Number} A random number between the given range
+   */
+  randomNumber (min, max) {
     if (!min || !max) {
       // Default 0-100 if no args passed
       min = 0
@@ -209,17 +258,39 @@ module.exports = {
     return Math.floor(Math.random() * max) + min
   },
 
-  sleep: (ms) => new Promise(resolve => setTimeout(resolve, ms)),
+  /**
+   * @function sleep
+   * @param {Number} ms The amount of milliseconds to wait
+   * @returns {Promise<void>} An empty promise that will be resolved when the given ms are elapsed
+   */
+  sleep (ms) { return new Promise(resolve => setTimeout(resolve, ms)) },
 
-  removeDuplicates: (array) => {
+  /**
+   * @function removeDuplicates
+   * @param {Array} array The array to remove duplicates from
+   * @returns {Array} The given array, with all (exact) duplicates removed
+   */
+  removeDuplicates (array) {
     return Array.from(new Set(array).values())
   },
 
-  codeblock: (str, lang) => {
+  /**
+   * Creates a codeblock from the given string and language
+   * @function codeblock
+   * @param {String} str The text to put in the codeblock
+   * @param {String} lang The language to use for this codeblock
+   * @returns {String} A codeblock
+   */
+  codeblock (str, lang) {
     return `${'```'}${lang || ''}\n${str}\n${'```'}`
   },
 
-  parseTime: (time) => {
+  /**
+   * @function parseTime
+   * @param {Number} time The time in seconds to parse
+   * @returns {String} A string representing the given time
+   */
+  parseTime (time) {
     const methods = [
       { name: 'd', count: 86400 },
       { name: 'h', count: 3600 },
@@ -235,7 +306,7 @@ module.exports = {
     return timeStr.filter(g => !g.startsWith('0')).join(', ')
   },
 
-  punish: async (Memer, id, type, reason, optionalBlock = true, optionalWipe = true) => {
+  async punish (Memer, id, type, reason, optionalBlock = true, optionalWipe = true) {
     if (!reason) {
       reason = 'No reason given.'
     }
@@ -278,7 +349,13 @@ module.exports = {
     await Memer.bot.createMessage(channel, `The ${type} **${name}** (*${id}*) was blacklisted.\n**Reason**: ${reason}`)
   },
 
-  paginate: (text, limit = 2000) => {
+  /**
+   * @function paginate
+   * @param {String} text The text to create an array of "pages" from
+   * @param {Number} [limit=2000] The limit of characters for a page, defaults to `2000`
+   * @returns {Array} The given text, paginated into an array according to the specified limit
+   */
+  paginate (text, limit = 2000) {
     const lines = text.split('\n')
     const pages = []
 
@@ -310,7 +387,13 @@ module.exports = {
     return pages
   },
 
-  format: seconds => {
+  /**
+   * Format the given seconds into a hours:minutes:seconds string format
+   * @function format
+   * @param {Number} seconds The seconds to format
+   * @returns {String} A hours:minutes:seconds string format
+   */
+  format (seconds) {
     function pad (seconds) {
       return (seconds < 10 ? '0' : '') + seconds
     }

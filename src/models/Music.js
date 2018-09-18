@@ -1,16 +1,37 @@
+/** @typedef {import('lavalink').Player} Player
+ * @typedef {import('lavalink').ClusterNode} Node
+ * @typedef {import('eris').Guild} Guild
+ * @typedef {import('eris').TextChannel} TextChannel
+ * @typedef {import('eris').VoiceChannel} VoiceChannel
+ * @typedef {import('lavalink').Status} PlayerStatus
+ */
+
 module.exports = class Music {
   constructor (client, guildID) {
+    /** @type {import('../models/GenericCommand').Memer} */
     this.client = client
+    /** @type {String} The ID of the guild this player belongs to */
     this.id = guildID
+    /** @type {Boolean} Whether repeat is enabled on this player */
     this.loop = false
+    /** @type {Boolean} */
     this.preparing = false
+    /** @type {Array<Object>} The queue */
     this.queue = []
     this.player.on('event', this._handleEvent.bind(this))
+    /** @type {String} */
     this._channelID = null
+    /** @type {Promise|Boolean} Whether the player is ready */
     this.ready = this._loadQueue()
     this.vote = null
   }
 
+  /**
+   * Add a song to the queue
+   * @param {Object} song The track resolved by lavalink
+   * @param {Boolean} [unshift=false] Whether to push the song at the front of the queue, defaults to `false`
+   * @returns {Promise<void>}
+   */
   addSong (song, unshift) {
     if (unshift) {
       this.queue.unshift(song)
@@ -20,6 +41,11 @@ module.exports = class Music {
     return this._play()
   }
 
+  /**
+   * Start a vote to skip the current track
+   * @param {String} voter The ID of the user who started the vote
+   * @returns {Object}
+   */
   startVote (voter) {
     this.vote = {
       voted: [voter],
@@ -28,11 +54,19 @@ module.exports = class Music {
     return this.vote
   }
 
+  /**
+   * Reset the ongoing vote
+   * @returns {void}
+   */
   resetVote () {
     clearTimeout(this.vote.timeout)
     this.vote = null
   }
 
+  /**
+   * Reset the session, as in, stop playing, clear the queue and disable repeat
+   * @returns {Promise<void>}
+   */
   reset () {
     if (this.queue.length) {
       this.clear()
@@ -45,26 +79,51 @@ module.exports = class Music {
     }
   }
 
+  /**
+   * Pause/resume the player
+   * @param {Boolean} [boolean] Whether to pause, `false` is resuming. Defaults to `true`
+   * @returns {Promise<void>}
+   */
   pause (boolean = true) {
     return this.player.pause(boolean)
   }
 
+  /**
+   * Shuffle the queue
+   * @returns {Array<Object>} The shuffled queue
+   */
   shuffle () {
     return this._shuffle(this.queue)
   }
 
+  /**
+   * Removes the track at the given index from the queue
+   * @returns {Array<Object>} An array containing the removed track
+   */
   remove (index) {
     return this.queue.splice(index, 1)
   }
 
+  /**
+   * Clears the queue, except the now playing track
+   * @returns {void}
+   */
   clear () {
     this.queue.length = 1
   }
 
+  /**
+   * Stops the playback
+   * @returns {Promise<void>}
+   */
   stop () {
     return this.player.stop()
   }
 
+  /**
+   * End the current session, makes memer leave the voice channel and save the queue
+   * @returns {Promise<void>}
+   */
   endSession () {
     this._saveQueue()
     this.client.musicManager._map.delete(this.id)
@@ -72,10 +131,20 @@ module.exports = class Music {
     return this.player.destroy()
   }
 
+  /**
+   *
+   * @param {Number} volume The volume to change to
+   * @returns {Promise<void>}
+   */
   volume (volume) {
     return this.player.setVolume(volume)
   }
 
+  /**
+   * Start playing
+   * @param {{start: Number, end: Number}} [options] Optional options
+   * @returns {Promise<void>}
+   */
   async _play (options) {
     if (this.busy || !this.queue.length) {
       return
@@ -169,14 +238,17 @@ module.exports = class Music {
     return channel.createMessage(content).catch(() => null)
   }
 
+  /** @type {Guild} The guild this player belongs to */
   get guild () {
     return this.client.bot.guilds.get(this.id)
   }
 
+  /** @type {TextChannel} The channel on which the last command was ran */
   get channel () {
     return this.client.bot.guilds.get(this.id).channels.get(this._channelID)
   }
 
+  /** @type {VoiceChannel} The voice channel memer is playing in */
   get voiceChannel () {
     const guild = this.client.bot.guilds.get(this.id)
     return guild.channels.get(guild.members.get(this.client.bot.user.id).voiceState.channelID)
@@ -186,30 +258,37 @@ module.exports = class Music {
     this._channelID = id
   }
 
+  /** @type {Boolean} Whether the player is busy */
   get busy () {
     return this.playing || this.paused || this.preparing
   }
 
+  /** @type {PlayerStatus} */
   get status () {
     return this.player.status
   }
 
+  /** @type {Boolean} */
   get playing () {
     return this.player.playing
   }
 
+  /** @type {Boolean} */
   get paused () {
     return this.player.paused
   }
 
+  /** @type {Player} */
   get player () {
     return this.client.lavalink.get(this.id)
   }
 
+  /** @type {Node} */
   get node () {
     return this.player.node
   }
 
+  /** @type {Object} The track currently playing */
   get nowPlaying () {
     return this.queue[0]
   }

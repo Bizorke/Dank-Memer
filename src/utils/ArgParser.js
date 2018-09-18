@@ -2,6 +2,8 @@
  * @typedef {import('eris').VoiceChannel} VoiceChannel
  * @typedef {import('eris').TextChannel} TextChannel
  * @typedef {import('eris').Role} Role
+ * @typedef {import('eris').Message} Message
+ * @typedef {import('eris').Client} Client
 */
 
 const idMatcher = /^([0-9]{15,21})$/
@@ -11,8 +13,11 @@ const roleMentionMatcher = /<@&([0-9]{15,21})>/
 
 class ArgParser {
   constructor (msg, args) {
+    /** @type {Message} The message */
     this.msg = msg
+    /** @type {Array<String>} The raw sliced arguments */
     this.args = args
+    /** @type {Client} The eris client instance */
     this.bot = msg._client
   }
 
@@ -202,7 +207,7 @@ class ArgParser {
    * @returns {String} The argument
    */
   getArgument (index = 0) {
-    return this.args.slice(index, 1).join(' ')
+    return this.args[index]
   }
 
   /**
