@@ -1,6 +1,7 @@
 /** @typedef {import('../models/GenericCommand').Memer} Memer
  * @typedef {import('eris').User} User
  * @typedef {import('eris').Message} Message
+ * @typedef {import('eris').Member} Member
  */
 
 const config = require('../config.json')
@@ -285,6 +286,11 @@ module.exports = {
     return `${'```'}${lang || ''}\n${str}\n${'```'}`
   },
 
+  /**
+   * Get the highest role position of the given member
+   * @param {Member} member
+   * @returns {Number} The position of the member's highest role
+   */
   getHighestRolePos (member) {
     return member.roles[0] ? member.guild.roles.filter(r => member.roles.includes(r.id)).sort((a, b) => b.position - a.position)[0].position : 0
   },
