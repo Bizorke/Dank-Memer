@@ -33,6 +33,10 @@
             }
         ]
     },
+    "webhookServer": {
+        "host": "",
+        "port": 0
+    },
     "options": {
         "dev": true,
         "developers": [],
@@ -43,8 +47,10 @@
             "message": "",
             "footer": ""
         },
+        "patreonCampaignID": "",
         "featureRequestChannel": "",
         "spamReportChannel": "",
+        "donorPerksChannel": "",
         "errorChannel": ""
     }
 }

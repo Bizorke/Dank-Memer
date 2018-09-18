@@ -12,5 +12,6 @@ module.exports = new GenericMusicCommand(async ({ music, msg }) => {
   return 'okay i paused the music boi'
 }, {
   triggers: ['pause'],
+  requiresPremium: true,
   description: 'pause the current music'
 })

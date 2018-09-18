@@ -5,7 +5,7 @@ module.exports = new GenericModerationCommand(
     const cancerSearcher = /^[^\w\s\d]/
     let nickname = msg.args.args.join(' ') || 'cancer name'
     if (nickname.length > 32 || nickname.length < 1) {
-      return `The nickname you provided was too long or too short (${nickname.length} characters, should be between **1** and **32**)`
+      return `The nickname you provided was too long or too short (${nickname.length} characters)`
     }
     if (cancerSearcher.exec(nickname)) {
       return 'well that\'s a bit pointless, renaming all the cancerous names to ANOTHER cancerous name?!'
@@ -52,7 +52,7 @@ module.exports = new GenericModerationCommand(
     }
     msg.channel.createMessage(`Finished renaming ${finalRenamed} ${finalRenamed === 1 ? 'person' : 'people'} with cancerous names`)
     if (failed) {
-      return `I failed to rename ${failed} ${failed === 1 ? 'person' : 'people'}, check that they don't have a higher role than me and try again`
+      return `I failed to rename ${failed} people, check that they don't have a higher role than me and try again`
     }
   },
   {

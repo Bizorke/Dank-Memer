@@ -20,6 +20,9 @@ module.exports = new GenericMusicCommand(async ({ Memer, music, args, msg }) => 
     return 'look mate this isn\'t rocket science, enter a search query or link to play'
   }
   if (linkRegEx.test(queryString)) {
+    if (!queryString.startsWith('https://www.youtube.com/') && !queryString.startsWith('https://soundcloud.com/')) {
+      return 'ok look i don\'t support anything else than youtube and soundcloud'
+    }
     response = await music.node.load(queryString)
   } else {
     response = await music.node.load(`ytsearch: ${encodeURIComponent(queryString)}`)
@@ -45,5 +48,6 @@ module.exports = new GenericMusicCommand(async ({ Memer, music, args, msg }) => 
   }
 }, {
   triggers: ['play', 'add'],
+  requiresPremium: true,
   description: 'add a song to queue'
 })

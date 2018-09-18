@@ -2,7 +2,13 @@ const GenericModerationCommand = require('../../models/GenericModerationCommand'
 
 module.exports = new GenericModerationCommand(
   async ({ Memer, msg, args, addCD }) => {
-    let nickname = msg.args.gather()
+    const nicknameMatcher = /(["'])(.*?[^\\])\1/m.exec(msg.args.args.join(' ')) // quotation support
+    let nickname = nicknameMatcher ? nicknameMatcher[2] : msg.args.args[0]
+    if (nicknameMatcher) {
+      msg.args.args = msg.args.args.join(' ').replace(nicknameMatcher[0], '').trim().split(' ')
+    } else {
+      msg.args.args.splice(0, 1)
+    }
 
     if (!nickname) {
       msg.channel.createMessage('what name do you want to give to everyone? You can type `reset` to remove everyone\'s nickname if they have one. (respond in 30s)')
@@ -84,7 +90,7 @@ module.exports = new GenericModerationCommand(
     triggers: ['massnick', 'massname'],
     cooldown: 72e5,
     usage: '{command} [nickname | reset]',
-    description: 'Warning, this will rename everyone on the server (or everyone with a specific role when provided) if the bot has the correct permissions',
+    description: 'Warning, this will rename everyone on the server if the bot has the correct permissions',
     modPerms: ['manageGuild'],
     perms: ['manageNicknames']
   }

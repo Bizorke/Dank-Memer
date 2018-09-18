@@ -64,8 +64,15 @@ module.exports = class GenericVoiceCommand {
     }
 
     await music.player.join(msg.member.voiceState.channelID)
-    let response = await music.node.load(encodeURIComponent(`${audioAssets}/${this.cmdProps.dir}/${file}.opus`), { format: 'ogg' })
+    await music.ready
+    if (music.queue[0]) {
+      music.queue = []
+    }
+    let response = await music.node.load(encodeURIComponent(`http://${Memer.config.webhookServer.host}:${Memer.config.webhookServer.port}/audio/${this.cmdProps.dir}/${file}?token=${Memer.secrets.memerServices.webhookServer}`))
     const { tracks } = response
+    if (!tracks[0]) {
+      return 'Seems like this didn\'t work, sad.'
+    }
     await music.addSong(tracks[0])
   }
 

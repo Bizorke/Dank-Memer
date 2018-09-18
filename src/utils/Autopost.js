@@ -3,7 +3,7 @@ module.exports = class Autopost {
     this.client = client
   }
 
-  async automeme () {
+  async getRedditPost () {
     let subs = [
       'https://www.reddit.com/r/dankmemes/top/.json?sort=top&t=day&limit=100',
       'https://www.reddit.com/r/dank_meme/top/.json?sort=top&t=day&limit=40',
@@ -21,9 +21,15 @@ module.exports = class Autopost {
     let limit = sub.split('limit=')[1]
     const res = await this.client.http.get(sub)
     const posts = res.body.data.children.filter(post => post.data.post_hint === 'image')
-    const post = posts[Math.floor(Math.random() * Number(limit) - 1)]
+    return posts[Math.floor(Math.random() * Number(limit) - 1)]
+  }
 
+  async automeme () {
+    const post = await this.getRedditPost()
     let check = await this.client.db.allAutomemeChannels()
+    if (!post) {
+      return this.automeme()
+    }
     for (const { channel } of check) {
       this.client.bot.createMessage(channel, { embed: {
         title: post.data.title,
@@ -32,6 +38,12 @@ module.exports = class Autopost {
         image: { url: post.data.url },
         footer: { text: `👍 ${post.data.ups} - 💬 ${post.data.num_comments} | ${post.data.subreddit}` }
       }})
+        .catch((err) => {
+          if (err.message.toString() === 'DiscordRESTError [10003]: Unknown Channel') {
+            // Remove this channel from the database if it's not valid/not found
+            this.client.db.removeAutomemeChannel(channel)
+          }
+        })
     }
   }
 
@@ -44,8 +56,9 @@ module.exports = class Autopost {
           Key: this.client.secrets.extServices.boobbot
         }
       })
-        .then(res => res.body.url ? res.body.url : res.text)
-      if (!this.client.bot.getChannel(channel).nsfw) {
+        .then(res => res.body.url)
+      const grabbedChannel = this.client.bot.getChannel(channel)
+      if (!grabbedChannel || !grabbedChannel.nsfw) {
         return
       }
       this.client.bot.createMessage(channel, { embed: {
@@ -53,6 +66,12 @@ module.exports = class Autopost {
         image: { url: data },
         footer: { text: 'Free nudes thanks to boobbot & tom <3' }
       }})
+        .catch((err) => {
+          if (err.message.toString() === 'DiscordRESTError [10003]: Unknown Channel') {
+          // Remove this channel from the database if it's not valid/not found
+            this.client.db.removeAutonsfwChannel(channel)
+          }
+        })
     }
   }
 

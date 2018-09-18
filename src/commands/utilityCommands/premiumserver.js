@@ -14,6 +14,11 @@ module.exports = new GenericCommand(
     const donor = await Memer.db.getDonor(msg.author.id)
     let guilds = donor.guilds
     let guildRedeems = donor.guildRedeems
+
+    if (donor.donorAmount < 3) {
+      return 'Only people who have donated $3 or more a month have access to add premium servers.'
+    }
+
     if (argument === 'add') {
       if (donor.guilds.includes(msg.channel.guild.id)) {
         return 'This server is already a premium server!'
@@ -32,13 +37,15 @@ module.exports = new GenericCommand(
         return 'This server hasn\'t been added as a premium server'
       }
 
+      await Memer.db.removeAutonsfwChannel(msg.channel.guild.id)
+      await Memer.db.removeAutomemeChannel(msg.channel.guild.id)
       guilds.splice(guilds.indexOf(msg.channel.guild.id), 1)
       await Memer.db.updateDonorGuild(msg.author.id, guilds, guildRedeems--)
       return `**${msg.channel.guild.name}** is no longer a premium server.`
     } else {
       return {
         title: `Premium servers redeemed by ${msg.author.username}`,
-        description: guilds.map((id, index) => `\`${index + 1}.\` **${Memer.bot.guilds.find(g => g.id === id).name}** (${id})\n`).join(', ') || 'You have redeemed no premium servers'
+        description: guilds ? guilds.map((id, index) => `\`${index + 1}.\` **${Memer.bot.guilds.find(g => g.id === id).name}** (${id})\n`).join('') : 'You have redeemed no premium servers'
       }
     }
   },
@@ -46,6 +53,7 @@ module.exports = new GenericCommand(
     triggers: ['premiumserver', 'pserver', 'premium', 'donorserver'],
     usage: '{command} [add | remove]',
     donorBlocked: true,
+    donorOnly: true,
     description: 'Add or remove the current guild as a premium server, or leave the arguments blank to list all of your premium servers'
   }
 )

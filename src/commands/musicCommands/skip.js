@@ -34,5 +34,6 @@ module.exports = new GenericMusicCommand(async ({ Memer, music, msg }) => {
   return 'alright, skipped the current song'
 }, {
   triggers: ['skip', 'next'],
+  requiresPremium: true,
   description: 'Skips the current song'
 })

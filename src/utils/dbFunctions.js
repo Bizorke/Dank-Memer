@@ -166,19 +166,20 @@ module.exports = Bot => ({
 
   addPls: async function addPls (guildID, userID) {
     let guild = await this.getPls(guildID)
-    let user = await this.getUser(userID)
     if (!guild) {
       return this.initPls(guildID)
     }
     guild.pls++
-    user.pls++
 
     Bot.r.table('guildUsage')
       .insert(guild, { conflict: 'update' })
       .run()
 
     return Bot.r.table('users')
-      .insert(user, {conflict: 'update'})
+      .get(userID)
+      .update({
+        pls: Bot.r.row('pls').add(1)
+      })
       .run()
   },
 
@@ -281,20 +282,23 @@ module.exports = Bot => ({
   },
 
   addPocket: async function addPocket (id, amount) {
-    let res = await this.getUser(id)
-    res.pocket += amount
-    res.won += amount
-
     return Bot.r.table('users')
-      .insert(res, { conflict: 'update' })
+      .get(id)
+      .update({
+        pocket: Bot.r.row('pocket').add(Number(amount)),
+        won: Bot.r.row('won').add(Number(amount))
+      })
+      .run()
   },
 
   addBank: async function addBank (id, amount) {
-    let res = await this.getUser(id)
-    res.bank += amount
-
     return Bot.r.table('users')
-      .insert(res, { conflict: 'update' })
+      .get(id)
+      .update({
+        pocket: Bot.r.row('pocket').sub(Number(amount)),
+        bank: Bot.r.row('bank').add(Number(amount))
+      })
+      .run()
   },
 
   topPocket: function topPocket () {
@@ -304,30 +308,24 @@ module.exports = Bot => ({
       .run()
   },
 
-  roundPocket: async function roundPocket (id) {
-    let res = await this.getUser(id)
-    res.pocket = Math.round(res.pocket)
-
-    Bot.r.table('users')
-      .insert(res, { conflict: 'update' })
-    return res
-  },
-
   removePocket: async function removePocket (id, amount) {
-    let res = await this.getUser(id)
-
-    res.pocket = Math.max(0, res.pocket - amount)
-    res.lost -= amount
     return Bot.r.table('users')
-      .insert(res, { conflict: 'update' })
+      .get(id)
+      .update({
+        pocket: Bot.r.row('pocket').sub(Number(amount)),
+        lost: Bot.r.row('pocket').sub(Number(amount))
+      })
+      .run()
   },
 
   removeBank: async function removePocket (id, amount) {
-    let res = await this.getUser(id)
-
-    res.bank = Math.max(0, res.bank - amount)
     return Bot.r.table('users')
-      .insert(res, { conflict: 'update' })
+      .get(id)
+      .update({
+        bank: Bot.r.row('bank').sub(Number(amount)),
+        pocket: Bot.r.row('pocket').add(Number(amount))
+      })
+      .run()
   },
 
   addStreak: async function addStreak (id) {
@@ -340,8 +338,11 @@ module.exports = Bot => ({
   },
 
   addSpam: async function addSpam (id) {
-    const spam = (await this.getSpam(id)) + 1
-    await Bot.r.table('users').insert({ id, spam }, { conflict: 'update' }).run()
+    await Bot.r.table('users')
+      .get(id)
+      .update({
+        spam: Bot.r.row('spam').add(1)
+      }).run()
   },
 
   topSpam: function topSpam () {
@@ -354,7 +355,10 @@ module.exports = Bot => ({
   addCmd: function addCmd (id) {
     const lastCmd = Date.now()
     return Bot.r.table('users')
-      .insert({ id, lastCmd }, { conflict: 'update' })
+      .get(id)
+      .update({
+        lastCmd
+      })
       .run()
   },
 
@@ -435,16 +439,11 @@ module.exports = Bot => ({
   },
 
   wipeExpiredDonors: async function wipeExpiredDonors () {
-    const donors = await Bot.r.table('donors')
+    return Bot.r.table('donors')
       .filter(Bot.r.row('declinedSince').lt(Bot.r.now().sub(60 * 24 * 60 * 60))) // 2 months after decline date
+      .delete({returnChanges: 'always'})
       .run()
-
-    await Bot.r.table('donors')
-      .filter(Bot.r.row('declinedSince').lt(Bot.r.now().sub(60 * 24 * 60 * 60))) // 2 months after decline date
-      .delete()
-      .run()
-
-    return donors
+      .then(d => d.changes.map(o => o.old_val))
   },
 
   checkDonor: function checkDonor (id) {

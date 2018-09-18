@@ -13,6 +13,9 @@ module.exports = new GenericModerationCommand(
     const hahayes = `Voicekick by ${msg.author.username}#${msg.author.discriminator}`
     msg.channel.guild.createChannel('Voicekick', 2, hahayes, channel ? channel.parentID : null)
       .then(async (newchannel) => {
+        await Memer.sleep(100)
+        await newchannel.editPosition(channel.position)
+        await newchannel.edit({bitrate: channel.bitrate, userLimit: channel.userLimit})
         let promises = []
         let failed = 0
         for (let user of users) {
@@ -33,8 +36,8 @@ module.exports = new GenericModerationCommand(
           }
         })
       })
-      .catch((err) => {
-        throw err
+      .catch(() => {
+        msg.channel.createMessage(`looks like I dont have perms to recreate this channel, I guess it's private or I'm missing the \`Manage Channels\` permission ¯\\_(ツ)_/¯`)
       })
   },
   {

@@ -6,7 +6,7 @@ module.exports = new GenericMusicCommand(async ({ Memer, music, msg }) => {
   let embed = ''
   let data = music.queue.slice(1)
 
-  if (data.length < 2) {
+  if (data.length < 1) {
     return 'There are no songs in the queue. Add more or get out'
   }
   if (isNaN(page) || page < 1) return 'that\'s not a valid page you assbutt'
@@ -29,5 +29,6 @@ module.exports = new GenericMusicCommand(async ({ Memer, music, msg }) => {
 }, {
   triggers: ['queue', 'songs'],
   usage: '{command} [page]',
+  requiresPremium: true,
   description: 'Lists all of the songs currently in the queue'
 })

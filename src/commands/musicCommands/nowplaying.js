@@ -18,5 +18,6 @@ module.exports = new GenericMusicCommand(async ({ music, msg }) => {
   }
 }, {
   triggers: ['nowplaying', 'np'],
+  requiresPremium: true,
   description: 'Shows information about the current playing track'
 })

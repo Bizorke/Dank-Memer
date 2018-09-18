@@ -6,5 +6,6 @@ module.exports = new GenericMusicCommand(async ({ music }) => {
   return 'The queue was successfully cleared'
 }, {
   triggers: ['clearqueue', 'clearq'],
+  requiresPremium: true,
   description: 'Removes all items from the queue besides the current playing song'
 })

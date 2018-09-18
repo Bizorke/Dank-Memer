@@ -14,11 +14,11 @@ module.exports = new GenericCommand(
       await removeFile(`${basePath}/${msg.author.id}/${fileName}.opus`)
       return 'K, removed that clip'
     } catch (e) {
-      return `Well damn, that clip couldn't be removed\n\`\`\`\n${e.message}\`\`\`\n\nJoin here (https://discord.gg/ebUqc7F) if the issue doesn't stop being an ass`
+      return `Well damn, that clip couldn't be removed\n\`\`\`\n${e.message}\`\`\`\n\nJoin here (https://discord.gg/Wejhbd4) if the issue doesn't stop being an ass`
     }
   },
   {
-    triggers: ['deleteclip', 'removeclip'],
+    triggers: ['deleteclip'],
     usage: '{command} <clipname>',
     description: 'Removes a custom sound clip'
   }

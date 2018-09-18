@@ -1,6 +1,6 @@
-const GenericModerationCommand = require('../../models/GenericModerationCommand')
+const { GenericCommand } = require('../../models/')
 
-module.exports = new GenericModerationCommand(
+module.exports = new GenericCommand(
   async ({ Memer, msg, args, addCD }) => {
     let channel = msg.args.resolveChannel() || msg.channel
 
@@ -26,6 +26,6 @@ module.exports = new GenericModerationCommand(
     triggers: ['snipe', 'sniper'],
     usage: '{command} [channel]',
     description: 'Shows the last deleted message from a specified channel',
-    modPerms: ['manageMessages']
+    perms: ['embedLinks']
   }
 )

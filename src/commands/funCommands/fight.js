@@ -25,13 +25,13 @@ module.exports = new GenericCommand(
       } else if (prompt.content.toLowerCase() === 'punch') {
         let critChance = Math.random() >= 0.75 // 25% chance
         let damage = Memer.randomNumber((critChance ? 2 : 1), 100)
-        
+
         opponent.health -= (damage - opponent.armor) < 0 ? 0 : (damage - opponent.armor)
         return damage
       } else if (prompt.content.toLowerCase() === 'defend') {
         let critChance = Math.random() >= 0.75 // 25% chance
         let defense = Memer.randomNumber((critChance ? 2 : 1), 25)
-        
+
         if (attacker.armor < 50) {
           attacker.armor += defense
           msg.channel.createMessage(`**${attacker.username}** increased their protec level by **${defense}**! THEY PROTEC`)

@@ -11,7 +11,7 @@ module.exports = {
       category.push({triggers: command.props.triggers, description: command.props.description})
     }
     Memer.http.post(`${Memer.config.links.website}/api/cmds`)
-      .set('Authorization', Memer.secrets.microservices.endpoints)
+      .set('Authorization', Memer.secrets.memerServices.endpoints)
       .send({ 'commands': categories })
       .end()
     return `Commands were pushed to \`/api/cmds\``

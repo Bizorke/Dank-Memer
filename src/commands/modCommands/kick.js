@@ -13,6 +13,9 @@ module.exports = new GenericModerationCommand(
     if (user.id === Memer.bot.user.id) {
       return 'not gonna kick myself, thanks'
     }
+    if (Memer.getHighestRolePos(msg.member) <= Memer.getHighestRolePos(msg.channel.guild.members.get(user.id))) {
+      return 'come on are you really gonna try and kick someone who\'s got a higher (or equal) role than you smh'
+    }
     if (msg.args.isEmpty) {
       msg.channel.createMessage('for what reason (respond within 30s or bad mod)')
       const prompt = await Memer.MessageCollector.awaitMessage(msg.channel.id, msg.author.id, 30e3)
