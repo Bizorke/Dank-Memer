@@ -50,6 +50,7 @@
         "patreonCampaignID": "",
         "featureRequestChannel": "",
         "spamReportChannel": "",
+        "donorPerksChannel": "",
         "errorChannel": ""
     }
 }

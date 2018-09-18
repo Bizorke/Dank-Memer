@@ -33,9 +33,18 @@ module.exports = new GenericCommand(
       let discord = patron.attributes.social_connections.discord
       if (discord && patron.payment_data && (discord.user_id === msg.author.id)) {
         await Memer.db.addDonor(msg.author.id, patron.payment_data.amount_cents / 100, new Date(patron.payment_data.created_at), new Date(patron.payment_data.declined_since), patron.id)
-        return 'You\'ve successfully linked your Discord account with Patreon. Enjoy your perks!\nFor more assistance, you can visit our support server (https://discord.gg/Wejhbd4)'
         const channel = await Memer.bot.getDMChannel(msg.author.id)
-        return channel.createMessage({ embed: {
+        const perkchannel = Memer.config.options.donorPerksChannel || '471802900054671370'
+
+        await Memer.bot.createMessage(perkchannel, { embed: {
+          author: {
+            name: `${msg.author.username}#${msg.author.discriminator}`,
+            icon_url: msg.author.dynamicAvatarURL()
+          },
+          description: `Successfully linked to Patreon under **${patron.attributes.full_name}** (\`$${patron.payment_data.amount_cents / 100}\`)`,
+          footer: { text: `User ID: ${msg.author.id}` }
+        }})
+        channel.createMessage({ embed: {
           color: 6732650,
           title: 'You now have donor perks',
           description: `Thanks for your donation!\nMost donor perks are automatic. If you want to redeem your coins, use \`pls redeem\`.\n`,
@@ -45,8 +54,9 @@ module.exports = new GenericCommand(
               value: 'Since you have donated above $3, you have the option to set a server as premium for extra commands, including command tags, autoposting memes, music, and much more!\nTo do this, run `pls pserver add` in the server you want to activate premium perks for!'
             }
           ] : null,
-          footer: 'ur a cool person'
+          footer: { text: 'ur a cool person' }
         }})
+        return 'You\'ve successfully linked your Discord account with Patreon. Enjoy your perks!\nFor more assistance, you can visit our support server (https://discord.gg/Wejhbd4)'
       }
     }
     return 'We weren\'t able to link your Discord account with your Patreon account.\nPlease ensure that you have donated and the payment was successful, and that Patreon has access to your Discord account. If you need help linking your Discord account to Patreon, try looking at this article\n<https://patreon.zendesk.com/hc/en-us/articles/212052266-How-do-I-receive-my-Discord-role->'
