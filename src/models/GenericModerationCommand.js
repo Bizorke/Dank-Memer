@@ -1,10 +1,12 @@
-const { GenericCommand } = require('.')
+/** @typedef {import('./GenericCommand').CommandProps} CommandProps */
+
+const GenericCommand = require('./GenericCommand')
 
 module.exports = class GenericModerationCommand {
   /**
    * Creates a new instance of GenericCommand
    * @param {import('./GenericCommand').CommandCallback} fn The function
-   * @param {Object} cmdProps - The props
+   * @param {CommandProps} cmdProps - The props
    */
   constructor (fn, cmdProps) {
     this.fn = fn

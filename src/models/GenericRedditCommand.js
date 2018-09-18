@@ -1,4 +1,6 @@
-const { GenericCommand } = require('../models/')
+/** @typedef {import('./GenericCommand').CommandProps} CommandProps */
+
+const GenericCommand = require('./GenericCommand')
 
 const filters = {
   image: post => post.data.post_hint === 'image',
@@ -6,6 +8,9 @@ const filters = {
 }
 
 module.exports = class GenericRedditCommand {
+  /**
+   * @param {CommandProps} cmdProps
+   */
   constructor (cmdProps) {
     this.cmdProps = cmdProps
   }

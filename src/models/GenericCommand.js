@@ -31,10 +31,26 @@
  * @prop {Utils.sleep} sleep
  * @prop {Utils.removeDuplicates} removeDuplicates
  * @prop {Utils.codeblock} codeblock
+ * @prop {Utils.getHighestRolePos} getHighestRolePos
  * @prop {Utils.parseTime} parseTime
  * @prop {Utils.punish} punish
  * @prop {Utils.paginate} paginate
  * @prop {Utils.format} format
+ */
+
+/** @typedef {Object} CommandProps
+ * @prop {String} [usage] How to use the command
+ * @prop {Number} [cooldown=2000] The cooldown for this command, defaults to `2000`
+ * @prop {Number} [donorCD=500] The donator cooldown for this command, defaults to `500`
+ * @prop {Boolean} [isNSFW=false] Whether the command is NSFW, defaults to `false`
+ * @prop {Boolean} [ownerOnly=false] Whether the command is restricted to the developers
+ * @prop {Array<String>} [perms=[]] An array of permissions memer needs to run this command, defaults to `['sendMessages']`, note that `sendMessages` is always added
+ * @prop {Boolean} [donorOnly=false] Whether this command is restricted to donators, defaults to `false`
+ * @prop {String} [missingArgs] A error message to send if there is missing arguments
+ * @prop {Number} [minArgs] The minimum amount of arguments this command expects
+ * @prop {Boolean} [requiresPremium=false] Whether this command is restricted to premium servers, defaults to `false`
+ * @prop {Array<String>} triggers An array of strings representing the name and aliases of this command, basically what triggers the command
+ * @prop {String} description The description of the command
  */
 
 /** @typedef {Object} FunctionParams
@@ -48,7 +64,7 @@ module.exports = class GenericCommand {
   /**
    * Creates a new instance of GenericCommand
    * @param {CommandCallback} fn The function
-   * @param {Object} cmdProps - The props
+   * @param {CommandProps} cmdProps - The props
    */
   constructor (fn, props) {
     this.fn = fn
@@ -74,7 +90,9 @@ module.exports = class GenericCommand {
       cooldown: 2000,
       donorCD: 500,
       isNSFW: false,
-      ownerOnly: false
+      ownerOnly: false,
+      donorOnly: false,
+      requiresPremium: false
     }, this.cmdProps, {
       perms: ['sendMessages'].concat(this.cmdProps.perms || [])
     })

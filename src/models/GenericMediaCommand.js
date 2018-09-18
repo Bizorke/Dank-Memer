@@ -1,6 +1,11 @@
-const { GenericCommand } = require('.')
+/** @typedef {import('./GenericCommand').CommandProps} CommandProps */
 
-module.exports = class GenericMediaCommand {
+const GenericCommand = require('./GenericCommand')
+
+class GenericMediaCommand {
+  /**
+   * @param {CommmandProps} commandProps
+   */
   constructor (cmdProps) {
     this.cmdProps = cmdProps
   }
@@ -38,3 +43,5 @@ module.exports = class GenericMediaCommand {
     ).props
   }
 }
+
+module.exports = GenericMediaCommand
