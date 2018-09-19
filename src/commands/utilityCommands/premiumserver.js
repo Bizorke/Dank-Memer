@@ -20,8 +20,8 @@ module.exports = new GenericCommand(
     }
 
     if (argument === 'add') {
-      if (donor.guilds.includes(msg.channel.guild.id)) {
-        return 'This server is already a premium server!'
+      if (await Memer.db.checkPremiumGuild(msg.channel.guild.id) || donor.guilds.includes(msg.channel.guild.id)) {
+        return 'This server is already a premium server smh'
       }
       for (let [dollar, value] in redeemValues) {
         if (value > guildRedeems && donor.donorAmount < dollar) {
@@ -52,7 +52,6 @@ module.exports = new GenericCommand(
             const guild = await Memer.ipc.fetchGuild(id)
             tosend.push(guilds.length ? `\`${index += 1}.\` **${guild.name}** (${id})\n` : 'You have redeemed no premium servers')
           }
-          Memer.log(tosend)
           return tosend.join('')
         })()
       }
