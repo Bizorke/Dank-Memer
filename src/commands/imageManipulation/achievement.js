@@ -1,4 +1,4 @@
-const { GenericCommand } = require('../../models/')
+const GenericCommand = require('../../models/GenericCommand')
 module.exports = new GenericCommand(
   async ({Memer, cleanArgs}) => {
     let num = Memer.randomNumber(1, 20)

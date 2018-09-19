@@ -1,4 +1,4 @@
-const { GenericCommand } = require('../../models/')
+const GenericCommand = require('../../models/GenericCommand')
 const cheerio = require('cheerio')
 
 const indexes = {} // TODO: Move to a better place?

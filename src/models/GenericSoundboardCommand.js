@@ -1,8 +1,13 @@
-const { GenericCommand } = require('.')
+/** @typedef {import('./GenericCommand').CommandProps} CommandProps */
+
+const GenericCommand = require('./GenericCommand')
 const { exists } = require('../utils/audioUtils.js')
 const audioAssets = `${process.cwd()}/assets/audio/custom`
 
 module.exports = class GenericSoundboardCommand {
+  /**
+   * @param {CommandProps} cmdProps
+   */
   constructor (cmdProps) {
     this.cmdProps = cmdProps
   }

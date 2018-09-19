@@ -1,4 +1,4 @@
-const { GenericModerationCommand } = require('../../models/')
+const GenericModerationCommand = require('../../models/GenericModerationCommand')
 
 module.exports = new GenericModerationCommand(
   async ({ Memer, msg, args }) => {

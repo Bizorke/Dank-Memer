@@ -1,6 +1,12 @@
-const { GenericCommand } = require('.')
+/** @typedef {import('./GenericCommand').CommandProps} CommandProps */
+
+const GenericCommand = require('./GenericCommand')
 
 class GenericImageCommand {
+  /**
+   * @param {CommmandProps} commandProps
+   * @param {Function} URLParseFN
+   */
   constructor (commandProps, URLParseFN) {
     this.cmdProps = commandProps
     this.URLParseFN = URLParseFN || this.defaultURLParseFN

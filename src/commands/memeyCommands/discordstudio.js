@@ -1,4 +1,4 @@
-const { GenericCommand } = require('../../models/')
+const GenericCommand = require('../../models/GenericCommand')
 
 const baseURL = 'https://discord.studio/comics/'
 const editions = 2
