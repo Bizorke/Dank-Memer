@@ -1,4 +1,4 @@
-const { GenericCommand } = require('../../models/')
+const GenericCommand = require('../../models/GenericCommand')
 
 module.exports = new GenericCommand(
   ({ cleanArgs }) => `http://lmgtfy.com/?q=${cleanArgs.join('+')}`,

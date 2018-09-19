@@ -1,13 +1,28 @@
+/** @typedef {import('./GenericCommand').FunctionParams} GenericFunctionParams
+ * @typedef {import('./GenericCommand').CommandProps} CommandProps
+ */
+
+/** @typedef {Object} MusicFunctionParams
+ * @prop {import('./Music')} music
+ */
+
+/** @typedef {GenericFunctionParams & MusicFunctionParams} FunctionParams */
+
 const { GenericCommand } = require('.')
 
 module.exports = class GenericMusicCommand {
+  /**
+   * Creates a new instance of GenericMusicCommand
+   * @param {MusicCommandCallback} fn The function
+   * @param {CommandProps} cmdProps - The props
+   */
   constructor (fn, cmdProps) {
     this.fn = fn
     this.cmdProps = cmdProps
   }
 
   async run ({ Memer, msg, addCD, args, cleanArgs }) {
-    if (this.cmdProps.requiresPremium && !await Memer.db.checkPremiumGuild(msg.channel.guild.id)) {
+    if (this.props.requiresPremium && !await Memer.db.checkPremiumGuild(msg.channel.guild.id)) {
       return 'This command is only available on **Premium** guilds.\nTo learn more about how to redeem a premium guild, visit our Patreon https://www.patreon.com/dankmemerbot'
     }
     if (msg.member.voiceState.channelID) {
@@ -37,3 +52,8 @@ module.exports = class GenericMusicCommand {
     ).props
   }
 }
+
+/**
+ * @callback MusicCommandCallback
+ * @param {FunctionParams} params
+ */

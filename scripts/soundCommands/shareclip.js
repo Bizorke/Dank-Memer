@@ -1,4 +1,4 @@
-const { GenericCommand } = require('../../models/')
+const GenericCommand = require('../../models/GenericCommand')
 const { exists } = require('../../utils/audioUtils.js')
 const { promises: fs } = require('fs')
 const basePath = `${process.cwd()}/assets/audio/custom`

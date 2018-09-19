@@ -1,4 +1,4 @@
-const { GenericCommand } = require('../../models/')
+const GenericCommand = require('../../models/GenericCommand')
 
 function shuffle (array) {
   // From https://stackoverflow.com/a/2450976 because I'm lazy

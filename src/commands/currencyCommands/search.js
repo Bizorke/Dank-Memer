@@ -1,4 +1,4 @@
-const { GenericCommand } = require('../../models/')
+const GenericCommand = require('../../models/GenericCommand')
 let message
 module.exports = new GenericCommand(
   async ({ Memer, msg, addCD }) => {
