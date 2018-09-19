@@ -45,7 +45,16 @@ module.exports = new GenericCommand(
     } else {
       return {
         title: `Premium servers redeemed by ${msg.author.username}`,
-        description: guilds ? guilds.map((id, index) => `\`${index + 1}.\` **${Memer.bot.guilds.find(g => g.id === id).name}** (${id})\n`).join('') : 'You have redeemed no premium servers'
+        description: await (async () => {
+          let index = 0
+          let tosend = []
+          for (let id of guilds) {
+            const guild = await Memer.ipc.fetchGuild(id)
+            tosend.push(guilds.length ? `\`${index += 1}.\` **${guild.name}** (${id})\n` : 'You have redeemed no premium servers')
+          }
+          Memer.log(tosend)
+          return tosend.join('')
+        })()
       }
     }
   },
