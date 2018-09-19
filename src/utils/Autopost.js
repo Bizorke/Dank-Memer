@@ -1,5 +1,6 @@
 module.exports = class Autopost {
   constructor (client) {
+    /** @type {import("../models/GenericCommand").Memer} The memer instance */
     this.client = client
   }
 

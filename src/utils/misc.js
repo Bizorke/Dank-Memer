@@ -360,10 +360,11 @@ module.exports = {
   },
 
   /**
+   * Creates an array of strings from a given string, each string being at most 2000 characters/the given limit
    * @function paginate
    * @param {String} text The text to create an array of "pages" from
    * @param {Number} [limit=2000] The limit of characters for a page, defaults to `2000`
-   * @returns {Array} The given text, paginated into an array according to the specified limit
+   * @returns {Array<String>} The given text, paginated into an array according to the specified limit
    */
   paginate (text, limit = 2000) {
     const lines = text.split('\n')
