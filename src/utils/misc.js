@@ -398,7 +398,13 @@ module.exports = {
     return pages
   },
 
-  paginateArray: (array, size) => {
+  /**
+   * Splits a given array into multiple arrays, each array being as big as the given size at most
+   * @param {Array} array The array to split
+   * @param {Number} size The maximum size of an array (or "page")
+   * @returns {Array<Array>} An array of arrays
+   */
+  paginateArray (array, size) {
     let result = []
     let j = 0
     for (let i = 0; i < Math.ceil(array.length / (size || 10)); i++) {
