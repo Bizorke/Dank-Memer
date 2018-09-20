@@ -1,4 +1,4 @@
-const { GenericSoundboardCommand } = require('../../models/')
+const GenericSoundboardCommand = require('../../models/GenericSoundboardCommand')
 
 module.exports = new GenericSoundboardCommand({
   triggers: ['playclip'],
