@@ -16,7 +16,7 @@ module.exports = new GenericCommand(
           .then(resolve) // this is intentional and also stupid but still intentional
       })
 
-      let pls = await Memer.redis.zrevrangeAsync(`pocket-leaderboard`, 0, 9, 'WITHSCORES')
+      let pls = await Memer.redis.zrevrange(`pocket-leaderboard`, 0, 9, 'WITHSCORES')
       pls = Memer.paginateArray(pls, 2).map(entry => {
         return {
           id: entry[0],
