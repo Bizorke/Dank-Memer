@@ -73,12 +73,16 @@ module.exports = class GenericVoiceCommand {
     if (music.queue[0]) {
       music.queue = []
     }
-    let response = await music.node.load(encodeURIComponent(`http://${Memer.config.webhookServer.host}:${Memer.config.webhookServer.port}/audio/${this.cmdProps.dir}/${file}?token=${Memer.secrets.memerServices.webhookServer}`))
+    let response = await music.node.load(encodeURIComponent(`${Memer.config.links.youtube.mememusic}`))
     const { tracks } = response
+    Memer.log(tracks)
     if (!tracks[0]) {
       return 'Seems like this didn\'t work, sad.'
     }
-    await music.addSong(tracks[0])
+    let promises = []
+    
+    promises.push(await music.addSong(Memer.randomInArray(tracks)))
+    await Promise.all(promises)
   }
 
   get props () {
