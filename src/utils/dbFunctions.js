@@ -312,7 +312,7 @@ module.exports = Bot => ({
     return Bot.r.table('users')
       .get(id)
       .update({
-        pocket: Bot.r.row('pocket').sub(Number(amount)),
+        pocket: Bot.r.expr([Bot.r.row('pocket').sub(Number(amount)), 0]).max(),
         lost: Bot.r.row('pocket').sub(Number(amount))
       })
       .run()
