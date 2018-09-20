@@ -77,10 +77,10 @@ if (require('cluster').isMaster && !config.options.dev) {
   const changesStream = await r.table('users').changes({ squash: true, includeInitial: true, includeTypes: true }).run()
   changesStream.on('data', data => {
     if (data.type === 'remove') {
-      redis.zremAsync('pocket-leaderboard', data.new_val.id)
+      redis.zrem('pocket-leaderboard', data.new_val.id)
         .catch(console.error)
     } else {
-      redis.zaddAsync('pocket-leaderboard', data.new_val.pocket, data.new_val.id)
+      redis.zadd('pocket-leaderboard', data.new_val.pocket, data.new_val.id)
         .catch(console.error)
     }
   })

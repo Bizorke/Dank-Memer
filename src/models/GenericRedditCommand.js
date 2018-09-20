@@ -13,7 +13,7 @@ module.exports = class GenericRedditCommand {
   async run ({ Memer, msg, addCD }) {
     let res
 
-    const cachedEntry = await Memer.redis.getAsync(this.cmdProps.endpoint)
+    const cachedEntry = await Memer.redis.get(this.cmdProps.endpoint)
       .then(res => JSON.parse(res))
 
     if (cachedEntry) {
@@ -22,7 +22,7 @@ module.exports = class GenericRedditCommand {
       res = await Memer.http.get(`https://www.reddit.com${this.cmdProps.endpoint}`)
         .then(res => res.body)
         .catch(() => null)
-      Memer.redis.setAsync(this.cmdProps.endpoint, JSON.stringify(res), 'EX', 15 * 60)
+      Memer.redis.set(this.cmdProps.endpoint, JSON.stringify(res), 'EX', 15 * 60)
     }
 
     if (!res) {

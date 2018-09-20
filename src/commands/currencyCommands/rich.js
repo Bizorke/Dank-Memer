@@ -32,30 +32,26 @@ module.exports = new GenericCommand(
     } else {
       let pls = []
       const members = msg.channel.guild.members
-      const pipeline = Memer.redis.multi()
+      const pipeline = Memer.redis.pipeline()
       for (const ok of members) {
         pipeline.zscore('pocket-leaderboard', ok[0])
         pls.push(ok[0])
       }
-      pipeline.exec(async (err, membersScore) => {
-        if (err) {
-          throw new Error(err)
+      const membersScore = await pipeline.exec()
+      for (let i = 0; i < membersScore.length; i++) {
+        pls[i] = {
+          id: pls[i],
+          pocket: membersScore[i]
         }
-        for (let i = 0; i < membersScore.length; i++) {
-          pls[i] = {
-            id: pls[i],
-            pocket: membersScore[i]
-          }
-        }
-        pls = pls.filter(u => u.pocket > 0)
-        pls = pls.sort((a, b) => b.pocket - a.pocket).slice(0, 5)
-        pls = await Promise.all(pls.map(async g => Object.assign(await Memer.ipc.fetchUser(g.id), { pocket: g.pocket })))
-        return msg.channel.createMessage({ embed: {
-          title: `richest users in this server`,
-          description: pls.map((u, i) => `${emojis[i] || '👏'} ${u.pocket.toLocaleString()} - ${u.username}#${u.discriminator}`).join('\n'),
-          footer: { text: `${msg.channel.guild.name} | add -all to see global` }
-        }})
-      })
+      }
+      pls = pls.filter(u => u.pocket >= 0)
+      pls = pls.sort((a, b) => b.pocket - a.pocket).slice(0, 5)
+      pls = await Promise.all(pls.map(async g => Object.assign({...msg.member.user, id: g.id}, { pocket: g.pocket })))
+      return {
+        title: `richest users in this server`,
+        description: pls.map((u, i) => `${emojis[i] || '👏'} ${u.pocket.toLocaleString()} - ${u.username}#${u.discriminator}`).join('\n'),
+        footer: { text: `${msg.channel.guild.name} | add -all to see global` }
+      }
     }
   },
   {

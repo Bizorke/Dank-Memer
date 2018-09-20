@@ -1,14 +1,7 @@
-const { promisify } = require('util')
-const redis = require('redis')
+const Redis = require('ioredis')
 
 module.exports = (hostAddr) => new Promise(resolve => {
-  const client = redis.createClient({ host: hostAddr || '127.0.0.1' })
-
-  for (const prop in client) {
-    if (typeof client[prop] === 'function') {
-      client[`${prop}Async`] = promisify(client[prop]).bind(client)
-    }
-  }
+  const client = new Redis({host: hostAddr || '127.0.0.1'})
 
   client.on('error', (err) => {
     console.error(err)

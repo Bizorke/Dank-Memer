@@ -162,7 +162,7 @@ function cacheMessage (msg) {
   if (!msg.content) { // Ignroe attachments without content
     return
   }
-  this.redis.setAsync(`msg-${msg.id}`, JSON.stringify({ userID: msg.author.id, content: msg.content, timestamp: msg.timestamp, guildID: msg.channel.guild.id, channelID: msg.channel.id }), 'EX', 20 * 60)
+  this.redis.set(`msg-${msg.id}`, JSON.stringify({ userID: msg.author.id, content: msg.content, timestamp: msg.timestamp, guildID: msg.channel.guild.id, channelID: msg.channel.id }), 'EX', 20 * 60)
 }
 
 async function checkCooldowns (msg, command, isDonor) {
