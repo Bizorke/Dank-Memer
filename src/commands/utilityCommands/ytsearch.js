@@ -1,4 +1,4 @@
-const { GenericCommand } = require('../../models/')
+const GenericCommand = require('../../models/GenericCommand')
 const search = require('tubesearch')
 
 module.exports = new GenericCommand(

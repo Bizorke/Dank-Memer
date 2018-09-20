@@ -1,4 +1,4 @@
-const { GenericCommand } = require('../../models/')
+const GenericCommand = require('../../models/GenericCommand')
 const reaction = [
   '<:feelsYUCKman:419485966340849684>',
   '<:feelsautisticman:397488382500143104>',

@@ -1,40 +1,46 @@
+/** @typedef {import('../models/GenericCommand').Memer} Memer
+ * @typedef {import('eris').User} User
+ * @typedef {import('eris').Message} Message
+ * @typedef {import('eris').Member} Member
+ */
+
 const config = require('../config.json')
 
 const errors = {
 
   // Voice related errors
-  'Disconnected': `Discord fucked something up. 😠\n\nTo fix this, you have to got to server settings and change the voice region.\nIf it still doesn't work after that, join (<https://discord.gg/ebUqc7F>) and tell support it is error \`vc1\`.`,
+  'Disconnected': `Discord fucked something up. 😠\n\nTo fix this, you have to got to server settings and change the voice region.\nIf it still doesn't work after that, join (<https://discord.gg/Wejhbd4>) and tell support it is error \`vc1\`.`,
 
-  'Voice connection timeout': `Discord fucked something up. 😠\n\nTo fix this, first try running \`pls stop\`.\nIf that doesn't work, you have to kick me and reinvite me back. I know, it is stupid. 🙄\nIf it still doesn't work after that, join (<https://discord.gg/ebUqc7F>) and tell support it is error \`vc2\`.`,
+  'Voice connection timeout': `Discord fucked something up. 😠\n\nTo fix this, first try running \`pls stop\`.\nIf that doesn't work, you have to kick me and reinvite me back. I know, it is stupid. 🙄\nIf it still doesn't work after that, join (<https://discord.gg/Wejhbd4>) and tell support it is error \`vc2\`.`,
 
-  'Already encoding': `Something fucked up. 😠\n\nWe're pretty sure this error happens when you're running voice commands too quickly. So slow down 🙄\nIf it's still happening after a while, (<https://discord.gg/ebUqc7F>) and tell support it is error \`vc3\`.`,
+  'Already encoding': `Something fucked up. 😠\n\nWe're pretty sure this error happens when you're running voice commands too quickly. So slow down 🙄\nIf it's still happening after a while, (<https://discord.gg/Wejhbd4>) and tell support it is error \`vc3\`.`,
 
   // Currency Errors
-  'new_val': `Oopsy doopsy, we made a fucky wucky! 😊\n\nThis shouldn't happen to you again, and we are working semi-hard on fixing it. \nIf it DOES happen again, join (<https://discord.gg/ebUqc7F>) and tell support it is error \`econ1\`.`,
+  'new_val': `Oopsy doopsy, we made a fucky wucky! 😊\n\nThis shouldn't happen to you again, and we are working semi-hard on fixing it. \nIf it DOES happen again, join (<https://discord.gg/Wejhbd4>) and tell support it is error \`econ1\`.`,
 
   // Image Errors
-  'Invalid character in header content': `Well heck, I didn't like some character you used for this command! 😠\n\nIf you used any "not normal" characters for this command, remove those and try again. \nIf it is still happening, join (<https://discord.gg/ebUqc7F>) and tell support it is error \`img1\`.`,
+  'Invalid character in header content': `Well heck, I didn't like some character you used for this command! 😠\n\nIf you used any "not normal" characters for this command, remove those and try again. \nIf it is still happening, join (<https://discord.gg/Wejhbd4>) and tell support it is error \`img1\`.`,
 
-  'socket hang up': `Looks like we just restarted our image server\n\nOnce it is done rebooting, this command will work again. Give it just a few seconds!\nIf it is still happening after multiple minutes, join (<https://discord.gg/ebUqc7F>) and tell support it is error \`img2\`.`,
+  'socket hang up': `Looks like we just restarted our image server\n\nOnce it is done rebooting, this command will work again. Give it just a few seconds!\nIf it is still happening after multiple minutes, join (<https://discord.gg/Wejhbd4>) and tell support it is error \`img2\`.`,
 
   // Discord Errors
-  'DiscordRESTError [50001]: Missing Access': `Hey! For some reason I don't have permission to run that command. 😠\n\nMake sure you have given me the correct channel perms to run this command. \nIf it is still happening after messing with permissions, join (<https://discord.gg/ebUqc7F>) and tell support it is error \`dis1\`.`,
+  'DiscordRESTError [50001]: Missing Access': `Hey! For some reason I don't have permission to run that command. 😠\n\nMake sure you have given me the correct channel perms to run this command. \nIf it is still happening after messing with permissions, join (<https://discord.gg/Wejhbd4>) and tell support it is error \`dis1\`.`,
 
-  'Request timed out (>15000ms) on POST': `aggggghhhhhhhh discord is having connection issues 😠\n\nAll we can do is wait until they're better. Sorryyyyyy.\nIf it is still happening after a few hours, join (<https://discord.gg/ebUqc7F>) and tell support it is error \`dis2\`.`,
+  'Request timed out (>15000ms) on POST': `aggggghhhhhhhh discord is having connection issues 😠\n\nAll we can do is wait until they're better. Sorryyyyyy.\nIf it is still happening after a few hours, join (<https://discord.gg/Wejhbd4>) and tell support it is error \`dis2\`.`,
 
-  'DiscordRESTError [50013]: Missing Permissions': `Hey! For some reason I don't have permission to run that command. 😠\n\nMake sure you have given me the correct channel perms to run this command. \nIf it is still happening after messing with permissions, join (<https://discord.gg/ebUqc7F>) and tell support it is error \`dis3\`.`,
+  'DiscordRESTError [50013]: Missing Permissions': `Hey! For some reason I don't have permission to run that command. 😠\n\nMake sure you have given me the correct channel perms to run this command. \nIf it is still happening after messing with permissions, join (<https://discord.gg/Wejhbd4>) and tell support it is error \`dis3\`.`,
 
-  'Must be 2000 or fewer in length': `You included too many characters in that.\n\nI am only able to send 2k characters in one message, so please try again with less characters.\nIf it is still happening, join (<https://discord.gg/ebUqc7F>) and tell support it is error \`dis4\`.`,
+  'Must be 2000 or fewer in length': `You included too many characters in that.\n\nI am only able to send 2k characters in one message, so please try again with less characters.\nIf it is still happening, join (<https://discord.gg/Wejhbd4>) and tell support it is error \`dis4\`.`,
 
-  'DiscordHTTPError: 500 INTERNAL SERVER ERROR on POST': `aggggghhhhhhhh discord is having connection issues 😠\n\nAll we can do is wait until they're better. Sorryyyyyy.\nIf it is still happening after a few hours, join (<https://discord.gg/ebUqc7F>) and tell support it is error \`dis5\`.`,
+  'DiscordHTTPError: 500 INTERNAL SERVER ERROR on POST': `aggggghhhhhhhh discord is having connection issues 😠\n\nAll we can do is wait until they're better. Sorryyyyyy.\nIf it is still happening after a few hours, join (<https://discord.gg/Wejhbd4>) and tell support it is error \`dis5\`.`,
 
   // Known Errors
-  'Cannot read property \'triggers\' of undefined': `This command is currently under maintance, sorry :(\n\nIt will work if you are spelling the command you are enabling/disabling correctly.\nIf it is still happening, join (<https://discord.gg/ebUqc7F>) and tell support it is error \`bug1\`.`,
+  'Cannot read property \'triggers\' of undefined': `This command is currently under maintenance, sorry :(\n\nIt will work if you are spelling the command you are enabling/disabling correctly.\nIf it is still happening, join (<https://discord.gg/Wejhbd4>) and tell support it is error \`bug1\`.`,
 
-  '504 Gateway Timeout': `Look like the service we use for this command is giving us problems :(\n\nAll we can currently do is wait, sadly\nIf it is still happening after a few hours, join (<https://discord.gg/ebUqc7F>) and tell support it is error \`bug2\`.`,
+  '504 Gateway Timeout': `Look like the service we use for this command is giving us problems :(\n\nAll we can currently do is wait, sadly\nIf it is still happening after a few hours, join (<https://discord.gg/Wejhbd4>) and tell support it is error \`bug2\`.`,
 
   // Bug Hunting errors
-  'DiscordRESTError [10003]: Unknown Channel': `Something broke!\n\nI am currently not sure why this bug is happening, but if you report this bug in the support server, you will get paid for it in meme coins.\nJoin (<https://discord.gg/ebUqc7F>) and tell support it is error \`hunt1\`.`
+  'DiscordRESTError [10003]: Unknown Channel': `Something broke!\n\nI am currently not sure why this bug is happening, but if you report this bug in the support server, you will get paid for it in meme coins.\nJoin (<https://discord.gg/Wejhbd4>) and tell support it is error \`hunt1\`.`
 }
 
 module.exports = {
@@ -42,14 +48,23 @@ module.exports = {
 
   intro: `Sup nerds. My name is **Dank Memer**.\n\nTo get started, send \`${config.options.prefix} help\`. All commands are run this way, for example, pls meme.\n`,
 
-  links: '<:technicalsupport:471490462968971264> [Support Server](https://discord.gg/ebUqc7F) - Get help for the bot and meme around\n<:twitter:471490461454827530> [Official Twitter](https://twitter.com/dankmemerbot) - Sometimes win free stuff and meme around\n<:coininhand:471490461467410463> [Patreon Page](https://www.patreon.com/dankmemerbot) - Help support the bot development, and get some sweet perks!\n<:discordlogo:471490461396369409> [Invite Link](https://goo.gl/BPWvB9) - Add the bot to another server and meme around',
+  links: '<:technicalsupport:471490462968971264> [Support Server](https://discord.gg/Wejhbd4) - Get help for the bot and meme around\n<:twitter:471490461454827530> [Official Twitter](https://twitter.com/dankmemerbot) - Sometimes win free stuff and meme around\n<:coininhand:471490461467410463> [Patreon Page](https://www.patreon.com/dankmemerbot) - Help support the bot development, and get some sweet perks!\n<:discordlogo:471490461396369409> [Invite Link](https://goo.gl/BPWvB9) - Add the bot to another server and meme around',
 
-  randomColor: () => {
+  /**
+   * @function randomColor
+   * @returns {Number} A random color code
+   */
+  randomColor () {
     return Math.floor(Math.random() * 0xFFFFFF)
   },
 
+  /**
+   * @function inviteRemoval
+   * @param {String} args The string to remove invites from
+   * @returns {String} The given string, with invites replaced by `invite`
+   */
   inviteRemoval (args) {
-    let re = /discord(?:app\.com\/invite|\.gg)\/([a-z0-9]{1,16})/g
+    let re = /discord(?:app\.com\/invite|\.gg)\/([a-z0-9]{1,16})/gi
     const match = re.exec(args)
     if (match) {
       return args.replace(match[0], '`invite`')
@@ -58,14 +73,23 @@ module.exports = {
     }
   },
 
-  calcMultiplier: (Memer, user, userDB, donor, msg) => {
+  /**
+   * @function calcMultiplier
+   * @param {Memer} Memer The string to remove invites from
+   * @param {User} user The user
+   * @param {Object} userDB The user database entry
+   * @param {Object} [donor] The donor object, if any
+   * @param {Message} msg The message
+   * @returns {Number} The total multiplier for this user
+   */
+  calcMultiplier (Memer, user, userDB, donor, msg) {
     // calculates total multiplier based on multiple variables
     let guildMember = msg.channel.guild.members.get(msg.author.id)
     let date = new Date(msg.timestamp)
     let day
     let time
     let total
-    total = userDB.upgrades.multi
+    total = userDB.upgrades ? userDB.upgrades.multi : 0
     if (Memer.config.options.developers.includes(user.id)) {
       total += 5
     }
@@ -116,7 +140,16 @@ module.exports = {
     return total
   },
 
-  showMultiplier: (Memer, user, userDB, donor, msg) => {
+  /**
+   * @function showMultiplier
+   * @param {Memer} Memer The string to remove invites from
+   * @param {User} user The user
+   * @param {Object} userDB The user database entry
+   * @param {Object} [donor] The donor object, if any
+   * @param {Message} msg The message
+   * @returns {String} A list of all the active multipliers for this user
+   */
+  showMultiplier (Memer, user, userDB, donor, msg) {
     // calculates total multiplier based on multiple variables
     let guildMember = msg.channel.guild.members.get(msg.author.id)
     let date = new Date(msg.timestamp)
@@ -126,11 +159,11 @@ module.exports = {
     let end = {
       locked: 0,
       unlocked: { total: 0, list: [] },
-      bought: userDB.upgrades.multi
+      bought: userDB.upgrades ? userDB.upgrades.multi : 0
     }
     if (Memer.config.options.developers.includes(user.id)) {
       end.unlocked.total += 1
-      end.unlocked.list.push('Developer')
+      end.unlocked.list.push('[Developer](https://github.com/Dank-Memer/Dank-Memer)')
     }
     if (guildMember.game && guildMember.game.name.toLowerCase().includes('dank memer')) {
       end.unlocked.total += 1
@@ -190,17 +223,34 @@ module.exports = {
     return end
   },
 
-  decodeHtmlEntity: (str) => { // Found here: https://gist.github.com/CatTail/4174511
+  /**
+   * @function decodeHtmlEntity
+   * @param {String} str The string to decode html entities from
+   * @returns {String} The given string, with html entities decoded
+   */
+  decodeHtmlEntity (str) { // Found here: https://gist.github.com/CatTail/4174511
     return str.replace(/&#(\d+);/g, function (match, dec) {
       return String.fromCharCode(dec)
     })
   },
 
-  randomInArray: (array) => {
+  /**
+   * @function randomInArray
+   * @param {Array} array The array to get a random element from
+   * @returns {any} A random element that was in the given array
+   */
+  randomInArray (array) {
     return array[Math.floor(Math.random() * array.length)]
   },
 
-  randomNumber: (min, max) => {
+  /**
+   * If no minimum and maximum is passed, the range defaults to 0-100
+   * @function randomNumber
+   * @param {Number} [min] The minimum
+   * @param {Number} [max] The maximum
+   * @returns {Number} A random number between the given range
+   */
+  randomNumber (min, max) {
     if (!min || !max) {
       // Default 0-100 if no args passed
       min = 0
@@ -209,17 +259,48 @@ module.exports = {
     return Math.floor(Math.random() * max) + min
   },
 
-  sleep: (ms) => new Promise(resolve => setTimeout(resolve, ms)),
+  /**
+   * @function sleep
+   * @param {Number} ms The amount of milliseconds to wait
+   * @returns {Promise<void>} An empty promise that will be resolved when the given ms are elapsed
+   */
+  sleep (ms) { return new Promise(resolve => setTimeout(resolve, ms)) },
 
-  removeDuplicates: (array) => {
+  /**
+   * @function removeDuplicates
+   * @param {Array} array The array to remove duplicates from
+   * @returns {Array} The given array, with all (exact) duplicates removed
+   */
+  removeDuplicates (array) {
     return Array.from(new Set(array).values())
   },
 
-  codeblock: (str, lang) => {
+  /**
+   * Creates a codeblock from the given string and language
+   * @function codeblock
+   * @param {String} str The text to put in the codeblock
+   * @param {String} lang The language to use for this codeblock
+   * @returns {String} A codeblock
+   */
+  codeblock (str, lang) {
     return `${'```'}${lang || ''}\n${str}\n${'```'}`
   },
 
-  parseTime: (time) => {
+  /**
+   * Get the highest role position of the given member
+   * @param {Member} member
+   * @returns {Number} The position of the member's highest role
+   */
+  getHighestRolePos (member) {
+    return member.roles[0] ? member.guild.roles.filter(r => member.roles.includes(r.id)).sort((a, b) => b.position - a.position)[0].position : 0
+  },
+
+  /**
+   * @function parseTime
+   * @param {Number} time The time in seconds to parse
+   * @returns {String} A string representing the given time
+   */
+  parseTime (time) {
     const methods = [
       { name: 'd', count: 86400 },
       { name: 'h', count: 3600 },
@@ -235,7 +316,7 @@ module.exports = {
     return timeStr.filter(g => !g.startsWith('0')).join(', ')
   },
 
-  punish: async (Memer, id, type, reason, optionalBlock = true, optionalWipe = true) => {
+  async punish (Memer, id, type, reason, optionalBlock = true, optionalWipe = true) {
     if (!reason) {
       reason = 'No reason given.'
     }
@@ -278,7 +359,14 @@ module.exports = {
     await Memer.bot.createMessage(channel, `The ${type} **${name}** (*${id}*) was blacklisted.\n**Reason**: ${reason}`)
   },
 
-  paginate: (text, limit = 2000) => {
+  /**
+   * Creates an array of strings from a given string, each string being at most 2000 characters/the given limit
+   * @function paginate
+   * @param {String} text The text to create an array of "pages" from
+   * @param {Number} [limit=2000] The limit of characters for a page, defaults to `2000`
+   * @returns {Array<String>} The given text, paginated into an array according to the specified limit
+   */
+  paginate (text, limit = 2000) {
     const lines = text.split('\n')
     const pages = []
 
@@ -320,7 +408,13 @@ module.exports = {
     return result
   },
 
-  format: seconds => {
+  /**
+   * Format the given seconds into a hours:minutes:seconds string format
+   * @function format
+   * @param {Number} seconds The seconds to format
+   * @returns {String} A hours:minutes:seconds string format
+   */
+  format (seconds) {
     function pad (seconds) {
       return (seconds < 10 ? '0' : '') + seconds
     }

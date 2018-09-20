@@ -1,4 +1,4 @@
-const { GenericCommand } = require('../../models/')
+const GenericCommand = require('../../models/GenericCommand')
 
 module.exports = new GenericCommand(
   async ({Memer, msg, addCD}) => {
@@ -26,7 +26,7 @@ module.exports = new GenericCommand(
       pls = await Promise.all(pls.map(async g => Object.assign(await bigmeme(g.id), { pocket: g.pocket })))
       return {
         title: 'Top 15 Global Richest Users',
-        description: pls.map((u, i) => `${emojis[i] || '👏'} ${u.pocket.toLocaleString()} - ${u.username ? u.username + '#' + u.discriminator : (Memer.db.removeUser(u.id) && 'LOL WHO DIS')}`).join('\n'),
+        description: pls.map((u, i) => `${emojis[i] || '👏'} ${u.pocket.toLocaleString()} - ${u.username ? u.username + '#' + u.discriminator : 'LOL WHO DIS'}`).join('\n'),
         footer: { text: `Global Leaderboard` }
       }
     } else {

@@ -1,3 +1,11 @@
+/** @typedef {import('eris').User} User
+ * @typedef {import('eris').VoiceChannel} VoiceChannel
+ * @typedef {import('eris').TextChannel} TextChannel
+ * @typedef {import('eris').Role} Role
+ * @typedef {import('eris').Message} Message
+ * @typedef {import('eris').Client} Client
+*/
+
 const idMatcher = /^([0-9]{15,21})$/
 const userMentionMatcher = /<@!?([0-9]{15,21})>/
 const channelMentionMatcher = /<#([0-9]{15,21})>/
@@ -5,8 +13,11 @@ const roleMentionMatcher = /<@&([0-9]{15,21})>/
 
 class ArgParser {
   constructor (msg, args) {
+    /** @type {Message} The message */
     this.msg = msg
+    /** @type {Array<String>} The raw sliced arguments */
     this.args = args
+    /** @type {Client} The eris client instance */
     this.bot = msg._client
   }
 
@@ -14,7 +25,7 @@ class ArgParser {
    * Resolves a user using the next argument in the list or all remaining arguments
    * @param {Boolean} consumeRest Whether to use the rest of the arguments to resolve the user or not
    * @param {Boolean} consumeOnFail Whether to consume the arguments or preserve them if the args weren't resolved
-   * @return {Null|Object} Null if the argument couldn't be resolved, otherwise the user object
+   * @return {Null|User} Null if the argument couldn't be resolved, otherwise the user object
    */
   resolveUser (consumeRest = false, consumeOnFail = true) {
     // TODO: Quotation support
@@ -49,7 +60,7 @@ class ArgParser {
   /**
    * Resolves a channel using the next argument in the list or all remaining arguments
    * @param {Boolean} consumeRest Whether to use the rest of the arguments to resolve the channel or not
-   * @return {Null|Object} Null if the argument couldn't be resolved, otherwise the channel object
+   * @return {Null|TextChannel|VoiceChannel} Null if the argument couldn't be resolved, otherwise the channel object
    */
   resolveChannel (consumeRest = false, consumeOnFail = true) {
     const args = consumeRest
@@ -86,7 +97,7 @@ class ArgParser {
   /**
    * Resolves a role using the next argument in the list or all remaining arguments
    * @param {Boolean} consumeRest Whether to use the rest of the arguments to resolve the role or not
-   * @return {Null|Object} Null if the argument couldn't be resolved, otherwise the role object
+   * @return {Null|Role} Null if the argument couldn't be resolved, otherwise the role object
    */
   resolveRole (consumeRest = false) {
     const args = consumeRest
@@ -108,7 +119,7 @@ class ArgParser {
 
   /**
    * Resolves multiple users by consuming the remaining arguments
-   * @return {Array<Object>} An array of user objects. Could be empty.
+   * @return {Array<User>} An array of user objects. Could be empty.
    */
   resolveUsers () {
     const resolved = []
@@ -174,22 +185,44 @@ class ArgParser {
     return args
   }
 
+  /**
+   * Check if the message does not contain any args
+   * @type {Boolean}
+   */
   get isEmpty () {
     return !this.args[0]
   }
 
+  /**
+   * Get the total length of the args
+   * @type {Number}
+   */
   get textLength () {
     return this.args.join(' ').length
   }
 
+  /**
+   * Get the argument at the given index
+   * @param {Number} [index=0] - The index, defaults to `0`
+   * @returns {String} The argument
+   */
   getArgument (index = 0) {
-    return this.args.slice(index, 1).join(' ')
+    return this.args[index]
   }
 
+  /**
+   * Returns the merged arguments
+   * @returns {String} The arguments
+   */
   gather () {
     return this.args.join(' ')
   }
 
+  /**
+   * Drops the argument at the given index
+   * @param {Number} index - The index of the argument to drop
+   * @returns {void}
+   */
   drop (index) {
     this.args.splice(index, 1)
   }

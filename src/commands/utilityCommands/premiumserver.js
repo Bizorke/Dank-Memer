@@ -1,5 +1,5 @@
 
-const { GenericCommand } = require('../../models/')
+const GenericCommand = require('../../models/GenericCommand')
 
 module.exports = new GenericCommand(
   async ({ Memer, msg, addCD }) => {
@@ -14,9 +14,14 @@ module.exports = new GenericCommand(
     const donor = await Memer.db.getDonor(msg.author.id)
     let guilds = donor.guilds
     let guildRedeems = donor.guildRedeems
+
+    if (donor.donorAmount < 3) {
+      return 'Only people who have donated $3 or more a month have access to add premium servers.'
+    }
+
     if (argument === 'add') {
-      if (donor.guilds.includes(msg.channel.guild.id)) {
-        return 'This server is already a premium server!'
+      if (await Memer.db.checkPremiumGuild(msg.channel.guild.id) || donor.guilds.includes(msg.channel.guild.id)) {
+        return 'This server is already a premium server smh'
       }
       for (let [dollar, value] in redeemValues) {
         if (value > guildRedeems && donor.donorAmount < dollar) {
@@ -32,13 +37,23 @@ module.exports = new GenericCommand(
         return 'This server hasn\'t been added as a premium server'
       }
 
+      await Memer.db.removeAutonsfwChannel(msg.channel.guild.id)
+      await Memer.db.removeAutomemeChannel(msg.channel.guild.id)
       guilds.splice(guilds.indexOf(msg.channel.guild.id), 1)
       await Memer.db.updateDonorGuild(msg.author.id, guilds, guildRedeems--)
       return `**${msg.channel.guild.name}** is no longer a premium server.`
     } else {
       return {
         title: `Premium servers redeemed by ${msg.author.username}`,
-        description: guilds ? guilds.map((id, index) => `\`${index + 1}.\` **${Memer.bot.guilds.find(g => g.id === id).name}** (${id})\n`).join('') : 'You have redeemed no premium servers'
+        description: await (async () => {
+          let index = 0
+          let tosend = []
+          for (let id of guilds) {
+            const guild = await Memer.ipc.fetchGuild(id)
+            tosend.push(guilds.length ? `\`${index += 1}.\` **${guild.name}** (${id})\n` : 'You have redeemed no premium servers')
+          }
+          return tosend.join('')
+        })()
       }
     }
   },

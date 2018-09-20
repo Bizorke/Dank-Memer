@@ -1,4 +1,4 @@
-const { GenericCommand } = require('../../models/')
+const GenericCommand = require('../../models/GenericCommand')
 const { exists } = require('../../utils/audioUtils.js')
 const { promises: fs } = require('fs')
 const basePath = `${process.cwd()}/assets/audio/custom`
@@ -19,7 +19,7 @@ module.exports = new GenericCommand(
       .catch(err => err.message)
 
     if (!Buffer.isBuffer(buffer)) {
-      return `well damn, something went wrong while trying to upload the file\n\`\`\`\n${buffer}\`\`\`\nJoin here (https://discord.gg/ebUqc7F) if the issue doesn't stop being an ass`
+      return `well damn, something went wrong while trying to upload the file\n\`\`\`\n${buffer}\`\`\`\nJoin here (https://discord.gg/Wejhbd4) if the issue doesn't stop being an ass`
     }
 
     msg.channel.createMessage('', {

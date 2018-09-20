@@ -1,4 +1,4 @@
-const { GenericModerationCommand } = require('../../models/')
+const GenericModerationCommand = require('../../models/GenericModerationCommand')
 
 module.exports = new GenericModerationCommand(
   async ({ Memer, msg, args, addCD }) => {
@@ -21,7 +21,7 @@ module.exports = new GenericModerationCommand(
     await Memer.sleep(1500)
     banned.ban(0, `randomly banned by ${msg.author.username}`)
       .then(() => { return msg.channel.createMessage(`lmfao ${hahayes} was banned`) })
-      .catch((err) => {
+      .catch(() => {
         msg.channel.createMessage(`looks like I dont have perms to ban ${banned.user.username}#${banned.user.discriminator}, try putting my role above everyone else to make this real fun..`)
       })
   },

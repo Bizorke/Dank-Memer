@@ -1,4 +1,4 @@
-const { GenericCommand } = require('../../models/')
+const GenericCommand = require('../../models/GenericCommand')
 let min = 500
 
 const dmStolenUser = async (Memer, user, msg, worth) => {

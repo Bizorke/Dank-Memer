@@ -1,34 +1,33 @@
-const { GenericCommand } = require('../../models/')
+const GenericCommand = require('../../models/GenericCommand')
 
 module.exports = new GenericCommand(
   async ({ Memer, msg, addCD }) => {
     let { bank, pocket, pls } = await Memer.db.getUser(msg.author.id)
+    const amount = Number(msg.args.args[1])
     if (msg.args.args[0]) {
       switch (msg.args.args[0].toLowerCase()) {
         case 'deposit':
-          if (Number(msg.args.args[1]) && Number(msg.args.args[1]) <= pocket) {
-            if (Number(msg.args.args[1]) + bank > 500 + ((pls / 100) * 150)) {
+          if (amount && amount <= pocket) {
+            if (amount + bank > 500 + ((pls / 100) * 150)) {
               return `You can only hold ${Math.round(500 + ((pls / 100) * 150))} coins in your bank right now. To hold more, use the bot more.`
             }
-            if (Number(msg.args.args[1]) < 1 || !Number.isInteger(Number(Number(msg.args.args[1])))) {
+            if (amount < 1 || !Number.isInteger(Number(amount))) {
               return 'Needs to be a whole number greater than 0'
             }
             await addCD()
-            await Memer.db.addBank(msg.author.id, Number(msg.args.args[1]))
-            await Memer.db.removePocket(msg.author.id, Number(msg.args.args[1]))
-            return `${Number(msg.args.args[1])} coin[s] deposited.`
+            await Memer.db.addBank(msg.author.id, amount)
+            return `${amount} coin${amount === 1 ? '' : 's'} deposited.`
           } else {
             return `Your second argument should be a number and no more than what you have in your pocket (${pocket})`
           }
         case 'withdraw':
-          if (Number(msg.args.args[1]) && Number(msg.args.args[1]) <= bank) {
-            if (Number(msg.args.args[1]) < 1 || !Number.isInteger(Number(Number(msg.args.args[1])))) {
+          if (amount && amount <= bank) {
+            if (amount < 1 || !Number.isInteger(Number(amount))) {
               return 'Needs to be a whole number greater than 0'
             }
             await addCD()
-            await Memer.db.addPocket(msg.author.id, Number(msg.args.args[1]))
-            await Memer.db.removeBank(msg.author.id, Number(msg.args.args[1]))
-            return `${Number(msg.args.args[1])} coin[s] withdrawn.`
+            await Memer.db.removeBank(msg.author.id, amount)
+            return `${amount} coin${amount === 1 ? '' : 's'} withdrawn.`
           } else {
             return `Your second argument should be a number and no more than what you have in your bank (${bank})`
           }

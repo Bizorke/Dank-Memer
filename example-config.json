@@ -3,7 +3,8 @@
         "clientOptions": {
             "disableEvents": {},
             "messageLimit": 0,
-            "requestTimeout": 0
+            "requestTimeout": 0,
+            "restMode": true
         }
     },
     "sharder": {
@@ -50,6 +51,7 @@
         "patreonCampaignID": "",
         "featureRequestChannel": "",
         "spamReportChannel": "",
+        "donorPerksChannel": "",
         "errorChannel": ""
     }
 }

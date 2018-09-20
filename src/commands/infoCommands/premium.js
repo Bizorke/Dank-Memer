@@ -1,9 +1,9 @@
-const { GenericCommand } = require('../../models/')
+const GenericCommand = require('../../models/GenericCommand')
 
 module.exports = new GenericCommand(
   async () => ({
     title: 'Dank Memer Premium',
-    description: 'Help fund Dank Memer to keep it alive and performing well, as well as earning some exclusive perks!\n\n[Patreon](https://www.patreon.com/dankmemerbot) - Monthly support\n\nIf you donate please remember to join [this server](https://discord.gg/ngy5hz9) and remember to link your discord account on patreon.',
+    description: 'Help fund Dank Memer to keep it alive and performing well, as well as earning some exclusive perks!\n\n[Patreon](https://www.patreon.com/dankmemerbot) - Monthly support\n\nIf you donate please remember to join [this server](https://discord.gg/Wejhbd4) and remember to link your discord account on patreon.',
     footer: { text: 'Hi, my mom says premium is a good thing to purchase' }
   }), {
     triggers: ['premium', 'patreon', 'donate'],

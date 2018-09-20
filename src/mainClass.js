@@ -2,6 +2,7 @@ const { readdirSync } = require('fs')
 const { join } = require('path')
 const { Base } = global.memeBase || require('eris-sharder')
 const { Cluster } = require('lavalink')
+const cluster = require('cluster')
 
 const MessageCollector = require('./utils/MessageCollector.js')
 const botPackage = require('../package.json')
@@ -30,14 +31,14 @@ class Memer extends Base {
       'showerthoughts': {},
       'comics': {},
       'meirl': {},
-      'hootyboi': {},
+      'hoppyboi': {},
       'surreal': {},
       'memeeconomy': {},
       'blacktwitter': {},
       'antijoke': {},
       'antiantijoke': {},
       'sequel': {},
-      'owl': {},
+      'hootyboi': {},
       'animals': {},
       'foodporn': {},
       'snek': {}
@@ -63,11 +64,13 @@ class Memer extends Base {
     }
     global.memeBase || this.ready()
     this.autopost = new (require('./utils/Autopost.js'))(this)
-    this._autopostInterval = setInterval(() => { this.autopost.post() }, 3e5) // 5 minutes
+    if (cluster.worker.id === 1) {
+      this._autopostInterval = setInterval(() => { this.autopost.post() }, 3e5) // 5 minutes
+    }
   }
 
   async ready () {
-    const { ws } = [...this.bot.shards.values()][0]
+    const { bot } = this
     this.lavalink = new Cluster({
       nodes: this.config.lavalink.nodes.map(node => ({
         hosts: { ws: `ws://${node.host}:${node.portWS}`, rest: `http://${node.host}:${node.port}` },
@@ -76,6 +79,10 @@ class Memer extends Base {
         userID: this.bot.user.id
       })),
       send (guildID, pk) {
+        const shardID = bot.guildShardMap[guildID]
+        const shard = bot.shards.get(shardID)
+        if (!shard) return
+        const { ws } = shard
         return ws.send(JSON.stringify(pk))
       }
     })
