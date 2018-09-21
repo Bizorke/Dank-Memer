@@ -16,17 +16,19 @@ module.exports = new GenericCommand(
       if (prompt.content.toLowerCase() === 'end') {
         return msg.channel.createMessage('You ended the game')
       }
+      const picked = Number(prompt.content)
+
+      if (picked === random) {
+        return msg.channel.createMessage(`Good stuff, you got the number right. I was thinking of **${random}**`)
+      }
       if (attempts <= 1) {
         return msg.channel.createMessage(`Unlucky, you ran out of attempts to guess the number. I was thinking of **${random}**`)
       }
 
-      const picked = Number(prompt.content)
       if (!picked || !Number.isInteger(picked)) {
         message = `SMH it's gotta be a **valid** number between \`1\` and \`${number}\``
       } else if (picked > number || picked < 1) {
         message = `Listen buddy, it's gotta be a number between \`1\` and \`${number}\`. No higher, no lower`
-      } else if (picked === random) {
-        return msg.channel.createMessage(`Good stuff, you got the number right. I was thinking of **${random}**`)
       } else {
         message = `not this time, too ${random - picked > 0 ? 'low' : 'high'}`
       }
