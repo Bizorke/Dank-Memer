@@ -67,7 +67,7 @@ exports.handle = async function (msg) {
   }
 
   if (gConfig.autoResponse.nou) {
-    let re = /^(no u)/i
+    let re = /^(no (?=u{1,}$))/i
     const match = re.exec(msg.content)
     if (match) {
       msg.channel.createMessage(`no u`)
