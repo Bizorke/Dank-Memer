@@ -76,11 +76,16 @@ if (require('cluster').isMaster && !config.options.dev) {
   const redis = await require('./utils/redisClient.js')(config.redis)
   const changesStream = await r.table('users').changes({ squash: true, includeInitial: true, includeTypes: true }).run()
   changesStream.on('data', data => {
+    const pipeline = redis.pipeline()
     if (data.type === 'remove') {
-      redis.zrem('pocket-leaderboard', data.new_val.id)
+      pipeline.zrem('pocket-leaderboard', data.old_val.id)
+      pipeline.zrem('pls-leaderboard', data.old_val.id)
+      pipeline.exec()
         .catch(console.error)
     } else {
-      redis.zadd('pocket-leaderboard', data.new_val.pocket, data.new_val.id)
+      pipeline.zadd('pocket-leaderboard', data.new_val.pocket, data.new_val.id)
+      pipeline.zadd('pls-leaderboard', data.new_val.pls, data.new_val.id)
+      pipeline.exec()
         .catch(console.error)
     }
   })

@@ -23,7 +23,7 @@ module.exports = new GenericCommand(
           pocket: entry[1]
         }
       })
-      pls = await Promise.all(pls.map(async g => Object.assign(await bigmeme(g.id), { pocket: g.pocket })))
+      pls = await Promise.all(pls.map(g => bigmeme(g.id).then(res => { return { ...res, pocket: g.pocket } })))
       return {
         title: 'Top 15 Global Richest Users',
         description: pls.map((u, i) => `${emojis[i] || '👏'} ${u.pocket.toLocaleString()} - ${u.username ? u.username + '#' + u.discriminator : 'LOL WHO DIS'}`).join('\n'),
@@ -41,12 +41,12 @@ module.exports = new GenericCommand(
       for (let i = 0; i < membersScore.length; i++) {
         pls[i] = {
           id: pls[i],
-          pocket: membersScore[i]
+          pocket: membersScore[i][1] || 0
         }
       }
-      pls = pls.filter(u => u.pocket >= 0)
+      pls = pls.filter(u => u.pocket > 0)
       pls = pls.sort((a, b) => b.pocket - a.pocket).slice(0, 5)
-      pls = await Promise.all(pls.map(async g => Object.assign({...msg.member.user, id: g.id}, { pocket: g.pocket })))
+      pls = await Promise.all(pls.map(g => Memer.ipc.fetchUser(g.id).then(res => { return { ...res, pocket: g.pocket } })))
       return {
         title: `richest users in this server`,
         description: pls.map((u, i) => `${emojis[i] || '👏'} ${u.pocket.toLocaleString()} - ${u.username}#${u.discriminator}`).join('\n'),
