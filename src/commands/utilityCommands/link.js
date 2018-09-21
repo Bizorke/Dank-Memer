@@ -3,6 +3,7 @@ const GenericCommand = require('../../models/GenericCommand')
 module.exports = new GenericCommand(
   async ({ Memer, msg, args, addCD }) => {
     let patrons = []
+    const user = Memer.config.options.developers.includes(msg.author.id) ? (msg.args.resolveUser() || msg.author.id) : msg.author.id
 
     const loopThroughPatrons = async (url) => {
       let res = await Memer.http.get(url || `https://www.patreon.com/api/oauth2/api/campaigns/${Memer.config.options.patreonCampaignID}/pledges?include=patron.null&page%5Bcount%5D=100`, {headers: {'Authorization': `Bearer ${Memer.secrets.extServices.patreon}`}})
@@ -31,18 +32,18 @@ module.exports = new GenericCommand(
 
     for (let patron of patrons) {
       let discord = patron.attributes.social_connections.discord
-      if (discord && patron.payment_data && (discord.user_id === msg.author.id)) {
-        await Memer.db.addDonor(msg.author.id, patron.payment_data.amount_cents / 100, new Date(patron.payment_data.created_at), new Date(patron.payment_data.declined_since), patron.id)
-        const channel = await Memer.bot.getDMChannel(msg.author.id)
+      if (discord && patron.payment_data && (discord.user_id === user.id)) {
+        await Memer.db.addDonor(user.id, patron.payment_data.amount_cents / 100, new Date(patron.payment_data.created_at), new Date(patron.payment_data.declined_since), patron.id)
+        const channel = await Memer.bot.getDMChannel(user.id)
         const perkchannel = Memer.config.options.donorPerksChannel || '471802900054671370'
 
         await Memer.bot.createMessage(perkchannel, { embed: {
           author: {
-            name: `${msg.author.username}#${msg.author.discriminator}`,
-            icon_url: msg.author.dynamicAvatarURL()
+            name: `${user.username}#${user.discriminator}`,
+            icon_url: user.dynamicAvatarURL()
           },
           description: `Successfully linked to Patreon under **${patron.attributes.full_name}** (\`$${patron.payment_data.amount_cents / 100}\`)`,
-          footer: { text: `User ID: ${msg.author.id}` }
+          footer: { text: `User ID: ${user.id}` }
         }})
         channel.createMessage({ embed: {
           color: 6732650,
