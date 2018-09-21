@@ -23,7 +23,9 @@
             }
         }
     },
-    "links": {},
+    "links": {
+        "youtube": {}
+    },
     "lavalink": {
         "nodes": [
             {
