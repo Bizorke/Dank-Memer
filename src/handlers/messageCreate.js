@@ -10,7 +10,7 @@ exports.handle = async function (msg) {
     return
   }
 
-  if (this.config.oiptions.dev && !this.config.options.developers.includes(msg.author.id)) { return }
+  if (this.config.options.dev && !this.config.options.developers.includes(msg.author.id)) { return }
 
   this.stats.messages++
   cacheMessage.bind(this)(msg)
