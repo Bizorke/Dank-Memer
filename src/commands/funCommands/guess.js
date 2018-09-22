@@ -14,6 +14,7 @@ module.exports = new GenericCommand(
     }
     const random = Memer.randomNumber(1, number)
     let attempts = 2 + Math.round(number / 10)
+    let hints = Math.floor(attempts / 2)
     msg.reply(`You've got ${attempts} attempt${attempts === 1 ? '' : 's'} to try and guess my random number between **1 and ${number}**. Type your answer in the chat as a valid number.\nYou can type \`end\` at anytime to stop, or type \`hint\` to know how high or low your last number was.`)
 
     const guess = async (lastnumber) => {
@@ -27,9 +28,12 @@ module.exports = new GenericCommand(
       }
       if (prompt.content.toLowerCase() === 'hint') {
         if (!lastnumber) {
-          return 'You\'ve gotta actually take a guess first before you get a hint idiot'
+          msg.channel.createMessage('You\'ve gotta actually take a guess first before you get a hint idiot')
+        } else if (hints < 1) {
+          msg.channel.createMessage('You don\'t have any hints left lol')
+        } else {
+          msg.channel.createMessage(`Your last number (**${lastnumber}**) was too ${random - lastnumber > 0 ? 'low' : 'high'}\nYou've got \`${attempts}\` attempt${attempts === 1 ? '' : 's'} left and \`${hints -= 1}\` hint${hints === 1 ? '' : 's'} left.`)
         }
-        msg.channel.createMessage(`Your last number (**${lastnumber}**) was too ${random - lastnumber > 0 ? 'low' : 'high'}\nYou've got ${attempts} attempt${attempts === 1 ? '' : 's'} left.`)
         return guess(lastnumber)
       }
       const picked = Number(prompt.content)
@@ -48,7 +52,7 @@ module.exports = new GenericCommand(
       } else {
         message = `not this time, `
       }
-      msg.channel.createMessage(`${message}\`${attempts -= 1}\` attempt${attempts === 1 ? '' : 's'} left.`)
+      msg.channel.createMessage(`${message}\`${attempts -= 1}\` attempt${attempts === 1 ? '' : 's'} left and \`${hints}\` hint${hints === 1 ? '' : 's'} left.`)
       await guess(picked)
     }
 
