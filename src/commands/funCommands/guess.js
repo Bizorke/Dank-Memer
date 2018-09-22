@@ -14,9 +14,9 @@ module.exports = new GenericCommand(
     }
     const random = Memer.randomNumber(1, number)
     let attempts = 2 + Math.round(number / 10)
-    msg.reply(`Time to play the game of the year! You've got ${attempts} attempt${attempts === 1 ? '' : 's'} to try and guess my random number between **1 and ${number}**.\nType your answer in the chat as a valid number. You can type \`end\` at anytime to stop.`)
+    msg.reply(`You've got ${attempts} attempt${attempts === 1 ? '' : 's'} to try and guess my random number between **1 and ${number}**. Type your answer in the chat as a valid number.\nYou can type \`end\` at anytime to stop, or type \`hint\` to know how high or low your last number was.`)
 
-    const guess = async () => {
+    const guess = async (lastnumber) => {
       let message = ''
       const prompt = await Memer.MessageCollector.awaitMessage(msg.channel.id, msg.author.id, 30e3)
       if (!prompt || !prompt.content) {
@@ -24,6 +24,13 @@ module.exports = new GenericCommand(
       }
       if (prompt.content.toLowerCase() === 'end') {
         return msg.channel.createMessage('You ended the game')
+      }
+      if (prompt.content.toLowerCase() === 'hint') {
+        if (!lastnumber) {
+          return 'You\'ve gotta actually take a guess first before you get a hint idiot'
+        }
+        msg.channel.createMessage(`Your last number (**${lastnumber}**) was too ${random - lastnumber > 0 ? 'low' : 'high'}\nYou've got ${attempts} attempt${attempts === 1 ? '' : 's'} left.`)
+        return guess(lastnumber)
       }
       const picked = Number(prompt.content)
 
@@ -35,14 +42,14 @@ module.exports = new GenericCommand(
       }
 
       if (!picked || !Number.isInteger(picked)) {
-        message = `SMH it's gotta be a **valid** number between \`1\` and \`${number}\``
+        message = `SMH it's gotta be a **valid** number between \`1\` and \`${number}\`\n`
       } else if (picked > number || picked < 1) {
-        message = `Listen buddy, it's gotta be a number between \`1\` and \`${number}\`. No higher, no lower`
+        message = `Listen buddy, it's gotta be a number between \`1\` and \`${number}\`. No higher, no lower\n`
       } else {
-        message = `not this time, too ${random - picked > 0 ? 'low' : 'high'}`
+        message = `not this time, `
       }
-      msg.channel.createMessage(`${message}\nYou've got ${attempts -= 1} attempt${attempts === 1 ? '' : 's'} left.`)
-      await guess()
+      msg.channel.createMessage(`${message}\`${attempts -= 1}\` attempt${attempts === 1 ? '' : 's'} left.`)
+      await guess(picked)
     }
 
     await guess()
