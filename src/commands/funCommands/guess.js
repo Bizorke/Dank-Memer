@@ -3,9 +3,18 @@ const GenericCommand = require('../../models/GenericCommand')
 module.exports = new GenericCommand(
   async ({ Memer, msg }) => {
     const number = Number(msg.args.gather()) || 10
+    if (!number || !Number.isInteger(number)) {
+      return 'It\'s gotta be a valid number above 10 come on'
+    }
+    if (number < 10) {
+      return 'far out that\'s not really a challenge is it??'
+    }
+    if (number > 100) {
+      return 'Let\'s try our best to keep the number under 100'
+    }
     const random = Memer.randomNumber(1, number)
-    let attempts = 5
-    msg.reply(`Time to play the game of the year! You've got 5 attempts to try and guess my random number between **1 and ${number}**.\nType your answer in the chat as a valid number. You can type \`end\` at anytime to stop.`)
+    let attempts = 2 + Math.round(number / 10)
+    msg.reply(`Time to play the game of the year! You've got ${attempts} attempt${attempts === 1 ? '' : 's'} to try and guess my random number between **1 and ${number}**.\nType your answer in the chat as a valid number. You can type \`end\` at anytime to stop.`)
 
     const guess = async () => {
       let message = ''
