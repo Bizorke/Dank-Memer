@@ -25,7 +25,7 @@ module.exports = new GenericCommand(
       })
       pls = await Promise.all(pls.map(g => bigmeme(g.id).then(res => { return { ...res, pocket: g.pocket } })))
       return {
-        title: 'Top 15 Global Richest Users',
+        title: 'Top 10 Global Richest Users',
         description: pls.map((u, i) => `${emojis[i] || '👏'} ${u.pocket.toLocaleString()} - ${u.username ? u.username + '#' + u.discriminator : 'LOL WHO DIS'}`).join('\n'),
         footer: { text: `Global Leaderboard` }
       }
