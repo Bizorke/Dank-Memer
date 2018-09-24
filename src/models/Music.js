@@ -157,7 +157,7 @@ module.exports = class Music {
 
   _saveQueue () {
     if (this.queue[0]) {
-      this.client.redis.setAsync(`queue-${this.id}`, JSON.stringify(this.queue, 'EX', 60 * 60 * 24))
+      this.client.redis.set(`queue-${this.id}`, JSON.stringify(this.queue, 'EX', 60 * 60 * 24))
         .catch(() => {})
     } else {
       this.client.redis.delAsync(`queue-${this.id}`)
@@ -171,7 +171,7 @@ module.exports = class Music {
   }
 
   async _loadQueue () {
-    const queue = await this.client.redis.getAsync(`queue-${this.id}`)
+    const queue = await this.client.redis.get(`queue-${this.id}`)
       .catch(() => null)
     if (queue) {
       this.queue = JSON.parse(queue)

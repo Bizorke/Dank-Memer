@@ -22,7 +22,7 @@ module.exports = new GenericModerationCommand(
     let oldNicknames = {}
     if (nickname.toLowerCase() === 'reset') {
       nickname = ''
-      oldNicknames = await Memer.redis.getAsync(`massnick-${msg.channel.guild.id}`).then(res => res ? JSON.parse(res) : {})
+      oldNicknames = await Memer.redis.get(`massnick-${msg.channel.guild.id}`).then(res => res ? JSON.parse(res) : {})
     }
 
     await addCD()
@@ -82,7 +82,7 @@ module.exports = new GenericModerationCommand(
 
     await Promise.all(promises)
     if (nickname) {
-      await Memer.redis.setAsync(`massnick-${msg.channel.guild.id}`, JSON.stringify(nicknames), 'EX', 60 * 60 * 6)
+      await Memer.redis.set(`massnick-${msg.channel.guild.id}`, JSON.stringify(nicknames), 'EX', 60 * 60 * 6)
     } else {
       await Memer.redis.delAsync(`massnick-${msg.channel.guild.id}`)
     }

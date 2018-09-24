@@ -36,6 +36,7 @@
  * @prop {Utils.punish} punish
  * @prop {Utils.paginate} paginate
  * @prop {Utils.format} format
+ * @prop {Utils.paginateArray} paginateArray
  */
 
 /** @typedef {Object} CommandProps

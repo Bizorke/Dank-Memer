@@ -399,6 +399,22 @@ module.exports = {
   },
 
   /**
+   * Splits a given array into multiple arrays, each array being as big as the given size at most
+   * @param {Array} array The array to split
+   * @param {Number} size The maximum size of an array (or "page")
+   * @returns {Array<Array>} An array of arrays
+   */
+  paginateArray (array, size) {
+    let result = []
+    let j = 0
+    for (let i = 0; i < Math.ceil(array.length / (size || 10)); i++) {
+      result.push(array.slice(j, j + (size || 10)))
+      j = j + (size || 10)
+    }
+    return result
+  },
+
+  /**
    * Format the given seconds into a hours:minutes:seconds string format
    * @function format
    * @param {Number} seconds The seconds to format
