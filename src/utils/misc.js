@@ -108,6 +108,9 @@ module.exports = {
     if (userDB.upvoted) {
       total += 0.5
     }
+    if (userDB.dblUpvoted) {
+      total += 0.5
+    }
     if (msg.channel.guild.members.has('419254454169108480')) {
       total += 0.5
     }
@@ -180,6 +183,10 @@ module.exports = {
     if (userDB.upvoted) {
       end.unlocked.total += 1
       end.unlocked.list.push('[Voted for the bot](https://discordbots.org/bot/memes/vote)')
+    }
+    if (userDB.dblUpvoted) {
+      end.unlocked.total += 1
+      end.unlocked.list.push('[Voted for the bot on DBL](https://discordbotlist.com/bots/270904126974590976)')
     }
     if (msg.channel.guild.members.has('419254454169108480')) {
       end.unlocked.total += 1

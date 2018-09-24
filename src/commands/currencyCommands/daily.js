@@ -23,7 +23,7 @@ module.exports = new GenericCommand(
 
     return {
       title: `Here are your daily coins, ${msg.author.username}`,
-      description: `**${coinsEarned} coins** were placed in your pocket.\n\nYou can get another 250 coins by voting! ([Click Here](https://discordbots.org/bot/memes/vote))`,
+      description: `**${coinsEarned} coins** were placed in your pocket.\n\nYou can get another 250 coins by voting! ([Click Here](https://discordbots.org/bot/memes/vote) and [here](https://discordbotlist.com/bots/270904126974590976))`,
       thumbnail: {url: 'http://www.dank-memer-is-lots-of.fun/coin.png'},
       footer: {text: `Streak: ${streak} days (+${streakBonus} coins)`}
     }

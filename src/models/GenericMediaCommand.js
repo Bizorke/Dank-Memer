@@ -11,9 +11,9 @@ class GenericMediaCommand {
   }
 
   async run ({ Memer, msg, addCD }) {
-    let voted = await Memer.db.checkVoter(msg.author.id)
-    if (this.props.voter && !voted) {
-      return `**WOAH** you need to vote at https://discordbots.org/bot/memes/vote to use this command.\n${this.props.vMessage}`
+    let user = await Memer.db.getUser(msg.author.id)
+    if (this.props.voter && !user.dblUpvoted) {
+      return `**WOAH** you need to vote at https://discordbotlist.com/bots/270904126974590976 to use this command.\n${this.props.vMessage}`
     }
 
     const data = await Memer.http.get(this.props.reqURL, this.props.tokenKey && {
