@@ -31,7 +31,19 @@ module.exports = class Autopost {
     if (!post) {
       return this.automeme()
     }
-    for (const { channel } of check) {
+    for (const { channel, id, interval } of check) {
+      const autopostInterval = await this.client.redis.get(`automeme-${id}`)
+        .then(res => res ? JSON.parse(res) : undefined)
+      if (!autopostInterval) {
+        await this.client.redis.set(`automeme-${id}`, JSON.stringify({ guildID: id, interval: interval || 5, elapsed: 0 }))
+      }
+      await this.client.redis.set(`automeme-${id}`, JSON.stringify({ guildID: id, interval: interval || 5, elapsed: Number(autopostInterval.elapsed += 5) }))
+      if (autopostInterval.elapsed < autopostInterval.interval) {
+        continue
+      } else {
+        await this.client.redis.set(`automeme-${id}`, JSON.stringify({ guildID: id, interval: interval || 5, elapsed: 0 }))
+      }
+   
       this.client.bot.createChannelWebhook(channel, {
         name: 'Automeme',
         avatar: this.client.bot.user.dynamicAvatarURL('png')
@@ -60,7 +72,19 @@ module.exports = class Autopost {
 
   async autonsfw () {
     let check = await this.client.db.allAutonsfwChannels()
-    for (const { channel, type } of check) {
+    for (const { channel, type, id, interval } of check) {
+      const autopostInterval = await this.client.redis.get(`autonsfw-${id}`)
+        .then(res => res ? JSON.parse(res) : undefined)
+      if (!autopostInterval) {
+        await this.client.redis.set(`autonsfw-${id}`, JSON.stringify({ guildID: id, interval: interval || 5, elapsed: 0 }))
+      }
+      await this.client.redis.set(`autonsfw-${id}`, JSON.stringify({ guildID: id, interval: interval || 5, elapsed: Number(autopostInterval.elapsed += 5) }))
+      if (autopostInterval.elapsed < autopostInterval.interval) {
+        continue
+      } else {
+        await this.client.redis.set(`autonsfw-${id}`, JSON.stringify({ guildID: id, interval: interval || 5, elapsed: 0 }))
+      }
+
       const data = await this.client.http.get(`https://boob.bot/api/v2/img/${type}`, {
         headers: {
           Authorization: this.client.secrets.extServices.boobbot,
@@ -70,7 +94,8 @@ module.exports = class Autopost {
         .then(res => res.body.url)
       const grabbedChannel = this.client.bot.getChannel(channel)
       if (!grabbedChannel || !grabbedChannel.nsfw) {
-        return
+        // Remove this channel from the database if it's not marked as NSFW
+        this.client.db.removeAutomemeChannel(channel)
       }
 
       this.client.bot.createChannelWebhook(channel, {
