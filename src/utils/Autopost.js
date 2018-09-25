@@ -2,6 +2,10 @@ module.exports = class Autopost {
   constructor (client) {
     /** @type {import("../models/GenericCommand").Memer} The memer instance */
     this.client = client
+    this.avatar = client.http.get(this.client.bot.user.dynamicAvatarURL())
+      .then(res => {
+        return `data:${res.headers['content-type']};base64,${res.body.toString('base64')}`
+      })
   }
 
   async getRedditPost () {
@@ -34,7 +38,7 @@ module.exports = class Autopost {
     for (const { channel } of check) {
       this.client.bot.createChannelWebhook(channel, {
         name: 'Automeme',
-        avatar: this.client.bot.user.dynamicAvatarURL('png')
+        avatar: await this.avatar
       }, 'Automeme Post').then(webhook => {
         this.client.bot.executeWebhook(webhook.id, webhook.token, {
           embeds: [ {
@@ -75,7 +79,7 @@ module.exports = class Autopost {
 
       this.client.bot.createChannelWebhook(channel, {
         name: 'Auto-NSFW',
-        avatar: this.client.bot.user.dynamicAvatarURL('png')
+        avatar: await this.avatar
       }, 'Auto-NSFW Post').then(webhook => {
         this.client.bot.executeWebhook(webhook.id, webhook.token, {
           embeds: [ {
@@ -85,6 +89,7 @@ module.exports = class Autopost {
           } ]
         })
           .then(() => {
+            this.client.log(webhook)
             this.client.bot.deleteWebhook(webhook.id, webhook.token, 'Auto-NSFW Post')
           })
           .catch((err) => {
