@@ -13,7 +13,10 @@ module.exports = new GenericCommand(
     if (!channel) {
       return 'come on you gotta give me a channel name or id to autopost memes to'
     }
-    let interval = Number(msg.args.gather()) || 5
+    let interval = Number(msg.args.gather())
+    if (!interval || !Number.isInteger(interval) || Number.isNaN(interval)) {
+      interval = 5
+    }
     Memer.log(interval)
 
     let check = await Memer.db.getAutomemeChannel(msg.channel.guild.id)

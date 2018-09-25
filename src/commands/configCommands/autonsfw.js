@@ -16,7 +16,6 @@ module.exports = new GenericCommand(
     if (!channel.nsfw) {
       return 'You can\'t post NSFW content in a non-NSFW marked channel!'
     }
-    let interval = Number(msg.args.gather()) || 5
 
     let check = await Memer.db.getAutonsfwChannel(msg.channel.guild.id)
     if (check.channel === channel.id) {
@@ -24,7 +23,7 @@ module.exports = new GenericCommand(
       return `I'll no longer autopost NSFW content in <#${channel.id}>.`
     }
 
-    let type = msg.args.gather()
+    let type = msg.args.nextArgument()
     if (!['4k', 'boobs', 'ass', 'lesbian', 'gif'].includes(type.toLowerCase())) {
       return `You need to provide a valid porn category for me to post to <#${channel.id}>.\nYou can pick from \`4k\`, \`boobs\`, \`ass\`, \`lesbian\` or \`gif\`\nFor example: \`pls autonsfw #${channel.name} 4k\``
     }
@@ -33,6 +32,10 @@ module.exports = new GenericCommand(
       'gif': 'Gifs'
     }
 
+    let interval = Number(msg.args.nextArgument())
+    if (!interval || !Number.isInteger(interval) || Number.isNaN(interval)) {
+      interval = 5
+    }
     await Memer.db.addAutonsfwChannel(msg.channel.guild.id, channel.id, interval, translation[type] || type)
     await addCD()
 
