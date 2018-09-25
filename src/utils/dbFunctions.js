@@ -258,7 +258,8 @@ module.exports = Bot => ({
         donor: false, // Donor status, false or $amount
         godMode: false, // No cooldowns, only for select few
         vip: false, // Same cooldowns as donors without paying
-        upvoted: false // DBL voter status
+        upvoted: false, // DBL voter status
+        dblUpvoted: false // discordbotlist.com voter status
       }, {
         returnChanges: true
       }).run()).changes[0].new_val
