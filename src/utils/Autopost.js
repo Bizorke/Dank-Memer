@@ -32,10 +32,12 @@ module.exports = class Autopost {
       return this.automeme()
     }
     for (const { channel, id, interval } of check) {
-      const autopostInterval = await this.client.redis.get(`automeme-${id}`)
+      let autopostInterval = await this.client.redis.get(`automeme-${id}`)
         .then(res => res ? JSON.parse(res) : undefined)
       if (!autopostInterval) {
         await this.client.redis.set(`automeme-${id}`, JSON.stringify({ guildID: id, interval: interval || 5, elapsed: 0 }))
+        autopostInterval = await this.client.redis.get(`automeme-${id}`)
+          .then(res => res ? JSON.parse(res) : undefined)
       }
       await this.client.redis.set(`automeme-${id}`, JSON.stringify({ guildID: id, interval: interval || 5, elapsed: Number(autopostInterval.elapsed += 5) }))
       if (autopostInterval.elapsed < autopostInterval.interval) {
@@ -43,7 +45,7 @@ module.exports = class Autopost {
       } else {
         await this.client.redis.set(`automeme-${id}`, JSON.stringify({ guildID: id, interval: interval || 5, elapsed: 0 }))
       }
-   
+
       this.client.bot.createChannelWebhook(channel, {
         name: 'Automeme',
         avatar: this.client.bot.user.dynamicAvatarURL('png')
@@ -73,10 +75,12 @@ module.exports = class Autopost {
   async autonsfw () {
     let check = await this.client.db.allAutonsfwChannels()
     for (const { channel, type, id, interval } of check) {
-      const autopostInterval = await this.client.redis.get(`autonsfw-${id}`)
+      let autopostInterval = await this.client.redis.get(`autonsfw-${id}`)
         .then(res => res ? JSON.parse(res) : undefined)
       if (!autopostInterval) {
         await this.client.redis.set(`autonsfw-${id}`, JSON.stringify({ guildID: id, interval: interval || 5, elapsed: 0 }))
+        autopostInterval = await this.client.redis.get(`autonsfw-${id}`)
+          .then(res => res ? JSON.parse(res) : undefined)
       }
       await this.client.redis.set(`autonsfw-${id}`, JSON.stringify({ guildID: id, interval: interval || 5, elapsed: Number(autopostInterval.elapsed += 5) }))
       if (autopostInterval.elapsed < autopostInterval.interval) {

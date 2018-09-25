@@ -17,7 +17,6 @@ module.exports = new GenericCommand(
     if (!interval || !Number.isInteger(interval) || Number.isNaN(interval)) {
       interval = 5
     }
-    Memer.log(interval)
 
     let check = await Memer.db.getAutomemeChannel(msg.channel.guild.id)
     if (check.channel === channel.id) {
