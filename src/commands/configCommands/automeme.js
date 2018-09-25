@@ -24,7 +24,7 @@ module.exports = new GenericCommand(
     if (!interval || !Number.isInteger(interval) || Number.isNaN(interval) || interval < 5) {
       interval = 5
     }
-    Memer.log(interval)
+
     if (interval % 5 !== 0) {
       return 'You need to provide an interval that is a multiple of 5 (ie. `5`, `10`, `25`)'
     }
