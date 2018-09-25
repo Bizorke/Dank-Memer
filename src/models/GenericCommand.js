@@ -80,7 +80,7 @@ module.exports = class GenericCommand {
       return this.props.missingArgs
     }
     if (this.props.requiresPremium && !await Memer.db.checkPremiumGuild(msg.channel.guild.id)) {
-      return 'This command is only available on **Premium** guilds.\nTo learn more about how to redeem a premium guild, visit our Patreon https://www.patreon.com/dankmemerbot'
+      return 'This command is only available on **Premium** servers.\nTo learn more about how to redeem a premium server, visit our Patreon https://www.patreon.com/dankmemerbot'
     }
     return this.fn({ Memer, msg, args, addCD, cleanArgs })
   }

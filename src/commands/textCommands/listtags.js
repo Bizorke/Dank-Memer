@@ -3,7 +3,7 @@ const GenericCommand = require('../../models/GenericCommand')
 module.exports = new GenericCommand(
   async ({ Memer, msg }) => {
     if (!await Memer.db.checkPremiumGuild(msg.channel.guild.id)) {
-      return 'Tags are only available on **Premium** guilds.\nTo learn more about how to redeem a premium guild, visit our Patreon https://www.patreon.com/dankmemerbot'
+      return 'Tags are only available on **Premium** servers.\nTo learn more about how to redeem a premium server, visit our Patreon https://www.patreon.com/dankmemerbot'
     }
     let allTags = await Memer.db.getAllTags(msg.channel.guild.id)
     let mappedTags = allTags.map(tag => `**\`${tag.name}\`**`)

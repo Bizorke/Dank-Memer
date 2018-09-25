@@ -25,7 +25,7 @@ module.exports = new GenericCommand(
       }
       for (let [dollar, value] in redeemValues) {
         if (value > guildRedeems && donor.donorAmount < dollar) {
-          return 'You have reached the maximum amount of premium guilds for your paid tier!\nTo get more redeemable guilds, visit our Patreon (https://www.patreon.com/dankmemerbot)'
+          return 'You have reached the maximum amount of premium servers for your paid tier!\nTo get more redeemable guilds, visit our Patreon (https://www.patreon.com/dankmemerbot)'
         }
       }
 
