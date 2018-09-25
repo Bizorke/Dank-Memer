@@ -16,6 +16,7 @@ module.exports = new GenericCommand(
     if (!channel.nsfw) {
       return 'You can\'t post NSFW content in a non-NSFW marked channel!'
     }
+    let interval = Number(msg.args.gather()) || 5
 
     let check = await Memer.db.getAutonsfwChannel(msg.channel.guild.id)
     if (check.channel === channel.id) {
@@ -32,13 +33,16 @@ module.exports = new GenericCommand(
       'gif': 'Gifs'
     }
 
-    await Memer.db.addAutonsfwChannel(msg.channel.guild.id, channel.id, translation[type] || type)
+    await Memer.db.addAutonsfwChannel(msg.channel.guild.id, channel.id, interval, translation[type] || type)
     await addCD()
 
-    return check ? `Changed autonsfw channel from <#${check.channel}> to **<#${channel.id}>**` : `<#${channel.id}> will now post NSFW content (\`${type}\`) every 5 minutes`
+    return check ? `Changed autonsfw channel from <#${check.channel}> to **<#${channel.id}>**` : `<#${channel.id}> will now post NSFW content (\`${type}\`) every **${interval} minutes**`
   },
   {
     triggers: ['autonsfw'],
+    usage: '{command} [channel] [type] [interval in minutes]',
+    cooldown: 1e4,
+    donorBlocked: true,
     description: 'Set up a channel to automatically post porn to'
   }
 )
