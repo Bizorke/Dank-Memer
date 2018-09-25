@@ -13,15 +13,20 @@ module.exports = new GenericCommand(
     if (!channel) {
       return 'come on you gotta give me a channel name or id to autopost memes to'
     }
-    let interval = Number(msg.args.gather())
-    if (!interval || !Number.isInteger(interval) || Number.isNaN(interval)) {
-      interval = 5
-    }
 
     let check = await Memer.db.getAutomemeChannel(msg.channel.guild.id)
     if (check.channel === channel.id) {
       await Memer.db.removeAutomemeChannel(msg.channel.guild.id)
       return `I'll no longer autopost memes in <#${channel.id}>.`
+    }
+
+    let interval = Number(msg.args.gather())
+    if (!interval || !Number.isInteger(interval) || Number.isNaN(interval) || interval < 5) {
+      interval = 5
+    }
+    Memer.log(interval)
+    if (interval % 5 !== 0) {
+      return 'You need to provide an interval that is a multiple of 5 (ie. `5`, `10`, `25`)'
     }
     await Memer.db.addAutomemeChannel(msg.channel.guild.id, channel.id, interval)
     await addCD()

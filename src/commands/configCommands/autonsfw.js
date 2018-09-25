@@ -33,8 +33,11 @@ module.exports = new GenericCommand(
     }
 
     let interval = Number(msg.args.nextArgument())
-    if (!interval || !Number.isInteger(interval) || Number.isNaN(interval)) {
+    if (!interval || !Number.isInteger(interval) || Number.isNaN(interval) || interval < 5) {
       interval = 5
+    }
+    if (interval % 5 === 0) {
+      return 'You need to provide an interval that is a multiple of 5 (ie. `5`, `10`, `25`)'
     }
     await Memer.db.addAutonsfwChannel(msg.channel.guild.id, channel.id, interval, translation[type] || type)
     await addCD()
