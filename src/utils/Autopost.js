@@ -32,19 +32,29 @@ module.exports = class Autopost {
       return this.automeme()
     }
     for (const { channel } of check) {
-      this.client.bot.createMessage(channel, { embed: {
-        title: post.data.title,
-        url: `https://www.reddit.com${post.data.permalink}`,
-        description: post.data.selftext,
-        image: { url: post.data.url },
-        footer: { text: `👍 ${post.data.ups} - 💬 ${post.data.num_comments} | ${post.data.subreddit}` }
-      }})
-        .catch((err) => {
-          if (err.message.toString() === 'DiscordRESTError [10003]: Unknown Channel') {
-            // Remove this channel from the database if it's not valid/not found
-            this.client.db.removeAutomemeChannel(channel)
-          }
+      this.client.bot.createChannelWebhook(channel, {
+        name: 'Automeme',
+        avatar: this.client.bot.user.dynamicAvatarURL('png')
+      }, 'Automeme Post').then(webhook => {
+        this.client.bot.executeWebhook(webhook.id, webhook.token, {
+          embeds: [ {
+            title: post.data.title,
+            url: `https://www.reddit.com${post.data.permalink}`,
+            description: post.data.selftext,
+            image: { url: post.data.url },
+            footer: { text: `👍 ${post.data.ups} - 💬 ${post.data.num_comments} | ${post.data.subreddit}` }
+          } ]
         })
+          .then(() => {
+            this.client.bot.deleteWebhook(webhook.id, webhook.token, 'Automeme Post')
+          })
+          .catch((err) => {
+            if (err.message.toString() === 'DiscordRESTError [10003]: Unknown Channel') {
+              // Remove this channel from the database if it's not valid/not found
+              this.client.db.removeAutomemeChannel(channel)
+            }
+          })
+      })
     }
   }
 
@@ -62,17 +72,28 @@ module.exports = class Autopost {
       if (!grabbedChannel || !grabbedChannel.nsfw) {
         return
       }
-      this.client.bot.createMessage(channel, { embed: {
-        title: type.charAt(0).toUpperCase() + type.slice(1),
-        image: { url: data },
-        footer: { text: 'Free nudes thanks to boobbot & tom <3' }
-      }})
-        .catch((err) => {
-          if (err.message.toString() === 'DiscordRESTError [10003]: Unknown Channel') {
-          // Remove this channel from the database if it's not valid/not found
-            this.client.db.removeAutonsfwChannel(channel)
-          }
+
+      this.client.bot.createChannelWebhook(channel, {
+        name: 'Auto-NSFW',
+        avatar: this.client.bot.user.dynamicAvatarURL('png')
+      }, 'Auto-NSFW Post').then(webhook => {
+        this.client.bot.executeWebhook(webhook.id, webhook.token, {
+          embeds: [ {
+            title: type.charAt(0).toUpperCase() + type.slice(1),
+            image: { url: data },
+            footer: { text: 'Free nudes thanks to boobbot & tom <3' }
+          } ]
         })
+          .then(() => {
+            this.client.bot.deleteWebhook(webhook.id, webhook.token, 'Auto-NSFW Post')
+          })
+          .catch((err) => {
+            if (err.message.toString() === 'DiscordRESTError [10003]: Unknown Channel') {
+              // Remove this channel from the database if it's not valid/not found
+              this.client.db.removeAutomemeChannel(channel)
+            }
+          })
+      })
     }
   }
 
