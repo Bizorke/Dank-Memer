@@ -15,7 +15,6 @@ module.exports = class Autopost {
       'https://www.reddit.com/r/memes/top/.json?sort=top&t=day&limit=100',
       'https://www.reddit.com/r/meirl/top/.json?sort=top&t=day&limit=100',
       'https://www.reddit.com/r/dankmemes/top/.json?sort=top&t=day&limit=100',
-      'https://www.reddit.com/r/MemeEconomy/top/.json?sort=top&t=day&limit=100',
       'https://www.reddit.com/r/2meirl4meirl/top/.json?sort=top&t=day&limit=100',
       'https://www.reddit.com/r/PrequelMemes/top/.json?sort=top&t=day&limit=100',
       'https://www.reddit.com/r/surrealmemes/top/.json?sort=top&t=week&limit=100',
@@ -49,9 +48,6 @@ module.exports = class Autopost {
             footer: { text: `👍 ${post.data.ups} - 💬 ${post.data.num_comments} | ${post.data.subreddit}` }
           } ]
         })
-          .then(() => {
-            this.client.bot.deleteWebhook(webhook.id, webhook.token, 'Automeme Post')
-          })
           .catch((err) => {
             if (err.message.toString() === 'DiscordRESTError [10003]: Unknown Channel') {
               // Remove this channel from the database if it's not valid/not found
@@ -88,10 +84,6 @@ module.exports = class Autopost {
             footer: { text: 'Free nudes thanks to boobbot & tom <3' }
           } ]
         })
-          .then(() => {
-            this.client.log(webhook)
-            this.client.bot.deleteWebhook(webhook.id, webhook.token, 'Auto-NSFW Post')
-          })
           .catch((err) => {
             if (err.message.toString() === 'DiscordRESTError [10003]: Unknown Channel') {
               // Remove this channel from the database if it's not valid/not found
