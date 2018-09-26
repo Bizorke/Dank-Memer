@@ -1,6 +1,6 @@
-const GenericSoundboardCommand = require('../../models/GenericSoundboardCommand')
+const GenericVoiceCommand = require('../../models/GenericVoiceCommand')
 
-module.exports = new GenericSoundboardCommand({
+module.exports = new GenericVoiceCommand({
   triggers: ['playclip'],
   description: 'Plays a custom sound clip',
   usage: '{command} <clipname>',
