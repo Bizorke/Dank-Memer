@@ -9,5 +9,6 @@ module.exports = new GenericVoiceCommand({
   dir: 'meme',
   ext: 'opus',
   message: 'Nice meme.',
-  files: 'nice'
+  files: 'nice',
+  ownerOnly: true
 })

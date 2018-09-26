@@ -30,6 +30,7 @@ module.exports = new GenericCommand(
   {
     triggers: ['shareclip'],
     usage: '{command} <clipname>',
-    description: 'Share your dank clips with others'
+    description: 'Share your dank clips with others',
+    ownerOnly: true
   }
 )
