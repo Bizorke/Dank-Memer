@@ -77,12 +77,12 @@ module.exports = Bot => ({
       .run()
   },
 
-  updateCooldowns: async function createCooldown (command, ownerID) {
+  updateCooldowns: async function createCooldown (command, ownerID, isGlobalPremiumGuild) {
     const pCommand = Bot.cmds.find(c => c.props.triggers.includes(command.toLowerCase()))
     if (!pCommand) {
       return
     }
-    const isDonor = await this.checkDonor(ownerID)
+    const isDonor = isGlobalPremiumGuild || await this.checkDonor(ownerID)
     let cooldown
     if (isDonor && !pCommand.props.donorBlocked) {
       cooldown = pCommand.props.donorCD
@@ -452,6 +452,13 @@ module.exports = Bot => ({
       .get(id)('donorAmount')
       .default(false)
       .run()
+  },
+
+  checkGlobalPremiumGuild: function checkGlobalPremiumServer (id) {
+    return Bot.r.table('donors')
+      .filter(Bot.r.row('guilds').contains(id))
+      .run()
+      .then(results => results[0] && results[0].donorAmount >= 20)
   },
 
   getStats: function getStats () {
