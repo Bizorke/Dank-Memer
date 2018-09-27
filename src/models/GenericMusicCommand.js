@@ -21,7 +21,7 @@ module.exports = class GenericMusicCommand {
     this.cmdProps = cmdProps
   }
 
-  async run ({ Memer, msg, addCD, args, cleanArgs }) {
+  async run ({ Memer, msg, addCD, args, cleanArgs, isGlobalPremiumGuild }) {
     if (this.props.requiresPremium && !await Memer.db.checkPremiumGuild(msg.channel.guild.id)) {
       return 'This command is only available on **Premium** servers.\nTo learn more about how to redeem a premium server, visit our Patreon https://www.patreon.com/dankmemerbot'
     }
@@ -39,7 +39,7 @@ module.exports = class GenericMusicCommand {
     await music.ready
     music.channel = msg.channel.id
 
-    return this.fn({ Memer, msg, args, addCD, cleanArgs, music })
+    return this.fn({ Memer, msg, args, addCD, cleanArgs, isGlobalPremiumGuild, music })
   }
 
   get props () {

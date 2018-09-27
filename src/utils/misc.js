@@ -82,7 +82,7 @@ module.exports = {
    * @param {Message} msg The message
    * @returns {Number} The total multiplier for this user
    */
-  calcMultiplier (Memer, user, userDB, donor, msg) {
+  calcMultiplier (Memer, user, userDB, donor, msg, isGlobalPremiumGuild) {
     // calculates total multiplier based on multiple variables
     let guildMember = msg.channel.guild.members.get(msg.author.id)
     let date = new Date(msg.timestamp)
@@ -114,8 +114,8 @@ module.exports = {
     if (msg.channel.guild.members.has('419254454169108480')) {
       total += 0.5
     }
-    if (donor) {
-      total += donor * 0.5
+    if (donor || isGlobalPremiumGuild) {
+      total += (donor || 20) * 0.5
     }
     if (userDB.spam < 25) {
       total += 0.5
@@ -152,7 +152,7 @@ module.exports = {
    * @param {Message} msg The message
    * @returns {String} A list of all the active multipliers for this user
    */
-  showMultiplier (Memer, user, userDB, donor, msg) {
+  showMultiplier (Memer, user, userDB, donor, msg, isGlobalPremiumGuild) {
     // calculates total multiplier based on multiple variables
     let guildMember = msg.channel.guild.members.get(msg.author.id)
     let date = new Date(msg.timestamp)
@@ -195,6 +195,9 @@ module.exports = {
     if (donor) {
       end.unlocked.total += 1
       end.unlocked.list.push('[Donor](https://www.patreon.com/dankmemerbot)')
+    } else if (isGlobalPremiumGuild) {
+      end.unlocked.total += 1
+      end.unlocked.list.push('On a premium guild redeemed by a 20$+ [donor](https://www.patreon.com/dankmemerbot)')
     }
     if (userDB.spam < 25) {
       end.unlocked.total += 1
