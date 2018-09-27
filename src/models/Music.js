@@ -192,6 +192,18 @@ module.exports = class Music {
   }
 
   _finished (event, shifted) {
+    if (this.sfxautoplay) {
+      return (async () => {
+        let response = await this.client.redis.get(`cachedplaylist-shitsound`)
+          .then(res => res ? JSON.parse(res) : undefined)
+        if (response) {
+          let { tracks } = response
+          const song = this.client.randomInArray(tracks)
+          this.addSong(song, true)
+          return this._play()
+        }
+      })()
+    }
     if (this.vote) {
       this.resetVote()
       this._send(`The vote to skip the song \`${shifted.info.title}\` has been cancelled because the song just ended`)
