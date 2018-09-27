@@ -1,14 +1,10 @@
-<<<<<<< Updated upstream
 /** @typedef {import('../models/GenericCommand').Memer} Memer
  * @typedef {import('eris').User} User
  * @typedef {import('eris').Message} Message
  * @typedef {import('eris').Member} Member
  */
 
-const config = require('../config.json')
-=======
 const config = require('../config.json');
->>>>>>> Stashed changes
 
 const errors = {
 
@@ -54,17 +50,12 @@ module.exports = {
 
   links: '<:technicalsupport:471490462968971264> [Support Server](https://discord.gg/Wejhbd4) - Get help for the bot and meme around\n<:twitter:471490461454827530> [Official Twitter](https://twitter.com/dankmemerbot) - Sometimes win free stuff and meme around\n<:coininhand:471490461467410463> [Patreon Page](https://www.patreon.com/dankmemerbot) - Help support the bot development, and get some sweet perks!\n<:discordlogo:471490461396369409> [Invite Link](https://goo.gl/BPWvB9) - Add the bot to another server and meme around',
 
-<<<<<<< Updated upstream
   /**
    * @function randomColor
    * @returns {Number} A random color code
    */
   randomColor () {
-    return Math.floor(Math.random() * 0xFFFFFF)
-=======
-  randomColor: () => {
     return Math.floor(Math.random() * 0xFFFFFF);
->>>>>>> Stashed changes
   },
 
   /**
@@ -88,16 +79,16 @@ module.exports = {
    * @returns {String} String that contains all of the embed elements
    */
   unembedify (embed) {
-    const em = embed.embed
-    let embedString = ''
-    if (em.author) embedString += `**${em.author.name}**\n`
-    if (em.title) embedString += `**${em.title}**\n`
-    if (em.description) embedString += `${em.description}\n`
+    const em = embed.embed;
+    let embedString = '';
+    if (em.author) embedString += `**${em.author.name}**\n`;
+    if (em.title) embedString += `**${em.title}**\n`;
+    if (em.description) embedString += `${em.description}\n`;
     for (const field of em.fields || []) {
-      embedString += `\n**${field.name}**\n${field.value}\n`
+      embedString += `\n**${field.name}**\n${field.value}\n`;
     }
-    if (em.footer) embedString += `\n${em.footer.text}`
-    return `${embed.content || ''}\n${(embedString || 'Empty embed')}` // Returns a string
+    if (em.footer) embedString += `\n${em.footer.text}`;
+    return `${embed.content || ''}\n${(embedString || 'Empty embed')}`; // Returns a string
   },
 
   /**
@@ -136,18 +127,13 @@ module.exports = {
       total += 0.5;
     }
     if (userDB.dblUpvoted) {
-      total += 0.5
+      total += 0.5;
     }
     if (msg.channel.guild.members.has('419254454169108480')) {
       total += 0.5;
     }
-<<<<<<< Updated upstream
     if (donor || isGlobalPremiumGuild) {
-      total += (donor || 20) * 0.5
-=======
-    if (donor) {
-      total += donor * 0.5;
->>>>>>> Stashed changes
+      total += (donor || 20) * 0.5;
     }
     if (userDB.spam < 25) {
       total += 0.5;
@@ -217,24 +203,19 @@ module.exports = {
       end.unlocked.list.push('[Voted for the bot](https://discordbots.org/bot/memes/vote)');
     }
     if (userDB.dblUpvoted) {
-      end.unlocked.total += 1
-      end.unlocked.list.push('[Voted for the bot on DBL](https://discordbotlist.com/bots/270904126974590976)')
+      end.unlocked.total += 1;
+      end.unlocked.list.push('[Voted for the bot on DBL](https://discordbotlist.com/bots/270904126974590976)');
     }
     if (msg.channel.guild.members.has('419254454169108480')) {
       end.unlocked.total += 1;
       end.unlocked.list.push('Premium server');
     }
     if (donor) {
-<<<<<<< Updated upstream
-      end.unlocked.total += 1
-      end.unlocked.list.push('[Donor](https://www.patreon.com/dankmemerbot)')
-    } else if (isGlobalPremiumGuild) {
-      end.unlocked.total += 1
-      end.unlocked.list.push('On a premium guild redeemed by a 20$+ [donor](https://www.patreon.com/dankmemerbot)')
-=======
       end.unlocked.total += 1;
       end.unlocked.list.push('[Donor](https://www.patreon.com/dankmemerbot)');
->>>>>>> Stashed changes
+    } else if (isGlobalPremiumGuild) {
+      end.unlocked.total += 1;
+      end.unlocked.list.push('On a premium guild redeemed by a 20$+ [donor](https://www.patreon.com/dankmemerbot)');
     }
     if (userDB.spam < 25) {
       end.unlocked.total += 1;
@@ -281,18 +262,13 @@ module.exports = {
     });
   },
 
-<<<<<<< Updated upstream
   /**
    * @function randomInArray
    * @param {Array} array The array to get a random element from
    * @returns {any} A random element that was in the given array
    */
   randomInArray (array) {
-    return array[Math.floor(Math.random() * array.length)]
-=======
-  randomInArray: (array) => {
     return array[Math.floor(Math.random() * array.length)];
->>>>>>> Stashed changes
   },
 
   /**
@@ -311,13 +287,12 @@ module.exports = {
     return Math.floor(Math.random() * max) + min;
   },
 
-<<<<<<< Updated upstream
   /**
    * @function sleep
    * @param {Number} ms The amount of milliseconds to wait
    * @returns {Promise<void>} An empty promise that will be resolved when the given ms are elapsed
    */
-  sleep (ms) { return new Promise(resolve => setTimeout(resolve, ms)) },
+  sleep (ms) { return new Promise(resolve => setTimeout(resolve, ms)); },
 
   /**
    * @function removeDuplicates
@@ -325,7 +300,7 @@ module.exports = {
    * @returns {Array} The given array, with all (exact) duplicates removed
    */
   removeDuplicates (array) {
-    return Array.from(new Set(array).values())
+    return Array.from(new Set(array).values());
   },
 
   /**
@@ -336,17 +311,7 @@ module.exports = {
    * @returns {String} A codeblock
    */
   codeblock (str, lang) {
-    return `${'```'}${lang || ''}\n${str}\n${'```'}`
-=======
-  sleep: (ms) => new Promise(resolve => setTimeout(resolve, ms)),
-
-  removeDuplicates: (array) => {
-    return Array.from(new Set(array).values());
-  },
-
-  codeblock: (str, lang) => {
     return `${'```'}${lang || ''}\n${str}\n${'```'}`;
->>>>>>> Stashed changes
   },
 
   /**
@@ -355,7 +320,7 @@ module.exports = {
    * @returns {Number} The position of the member's highest role
    */
   getHighestRolePos (member) {
-    return member.roles[0] ? member.guild.roles.filter(r => member.roles.includes(r.id)).sort((a, b) => b.position - a.position)[0].position : 0
+    return member.roles[0] ? member.guild.roles.filter(r => member.roles.includes(r.id)).sort((a, b) => b.position - a.position)[0].position : 0;
   },
 
   /**
@@ -422,7 +387,6 @@ module.exports = {
     await Memer.bot.createMessage(channel, `The ${type} **${name}** (*${id}*) was blacklisted.\n**Reason**: ${reason}`);
   },
 
-<<<<<<< Updated upstream
   /**
    * Creates an array of strings from a given string, each string being at most 2000 characters/the given limit
    * @function paginate
@@ -431,13 +395,8 @@ module.exports = {
    * @returns {Array<String>} The given text, paginated into an array according to the specified limit
    */
   paginate (text, limit = 2000) {
-    const lines = text.split('\n')
-    const pages = []
-=======
-  paginate: (text, limit = 2000) => {
     const lines = text.split('\n');
     const pages = [];
->>>>>>> Stashed changes
 
     let chunk = '';
 
@@ -474,13 +433,13 @@ module.exports = {
    * @returns {Array<Array>} An array of arrays
    */
   paginateArray (array, size) {
-    let result = []
-    let j = 0
+    let result = [];
+    let j = 0;
     for (let i = 0; i < Math.ceil(array.length / (size || 10)); i++) {
-      result.push(array.slice(j, j + (size || 10)))
-      j = j + (size || 10)
+      result.push(array.slice(j, j + (size || 10)));
+      j = j + (size || 10);
     }
-    return result
+    return result;
   },
 
   /**

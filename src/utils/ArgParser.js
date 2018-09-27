@@ -1,4 +1,3 @@
-<<<<<<< Updated upstream
 /** @typedef {import('eris').User} User
  * @typedef {import('eris').VoiceChannel} VoiceChannel
  * @typedef {import('eris').TextChannel} TextChannel
@@ -7,20 +6,6 @@
  * @typedef {import('eris').Client} Client
 */
 
-const idMatcher = /^([0-9]{15,21})$/
-const userMentionMatcher = /<@!?([0-9]{15,21})>/
-const channelMentionMatcher = /<#([0-9]{15,21})>/
-const roleMentionMatcher = /<@&([0-9]{15,21})>/
-
-class ArgParser {
-  constructor (msg, args) {
-    /** @type {Message} The message */
-    this.msg = msg
-    /** @type {Array<String>} The raw sliced arguments */
-    this.args = args
-    /** @type {Client} The eris client instance */
-    this.bot = msg._client
-=======
 const idMatcher = /^([0-9]{15,21})$/;
 const userMentionMatcher = /<@!?([0-9]{15,21})>/;
 const channelMentionMatcher = /<#([0-9]{15,21})>/;
@@ -28,10 +13,12 @@ const roleMentionMatcher = /<@&([0-9]{15,21})>/;
 
 class ArgParser {
   constructor (msg, args) {
+    /** @type {Message} The message */
     this.msg = msg;
+    /** @type {Array<String>} The raw sliced arguments */
     this.args = args;
+    /** @type {Client} The eris client instance */
     this.bot = msg._client;
->>>>>>> Stashed changes
   }
 
   /**
@@ -220,11 +207,7 @@ class ArgParser {
    * @returns {String} The argument
    */
   getArgument (index = 0) {
-<<<<<<< Updated upstream
-    return this.args[index]
-=======
-    return this.args.slice(index, 1).join(' ');
->>>>>>> Stashed changes
+    return this.args[index];
   }
 
   /**

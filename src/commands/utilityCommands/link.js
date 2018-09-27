@@ -46,7 +46,6 @@ module.exports = new GenericCommand(
           footer: { text: `User ID: ${user.id}` }
         }});
         channel.createMessage({ embed: {
-
           color: 6732650,
           title: 'You now have donor perks',
           description: `Thanks for your donation!\nMost donor perks are automatic. If you want to redeem your coins, use \`pls redeem\`.\n`,
@@ -56,7 +55,6 @@ module.exports = new GenericCommand(
               value: 'Since you have donated above $3, you have the option to set a server as premium for extra commands, including command tags, autoposting memes, music, and much more!\nTo do this, run `pls pserver add` in the server you want to activate premium perks for!'
             }
           ] : null,
-
           footer: { text: 'ur a cool person' }
         }});
         return 'You\'ve successfully linked your Discord account with Patreon. Enjoy your perks!\nFor more assistance, you can visit our support server (https://discord.gg/Wejhbd4)';

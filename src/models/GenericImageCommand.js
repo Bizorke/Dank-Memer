@@ -1,10 +1,6 @@
-<<<<<<< Updated upstream
 /** @typedef {import('./GenericCommand').CommandProps} CommandProps */
 
-const GenericCommand = require('./GenericCommand')
-=======
-const { GenericCommand } = require('.');
->>>>>>> Stashed changes
+const GenericCommand = require('./GenericCommand');
 
 class GenericImageCommand {
   /**

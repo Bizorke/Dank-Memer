@@ -8,34 +8,22 @@
 
 module.exports = class Music {
   constructor (client, guildID) {
-<<<<<<< Updated upstream
     /** @type {import('../models/GenericCommand').Memer} */
-    this.client = client
-    /** @type {String} The ID of the guild this player belongs to */
-    this.id = guildID
-    /** @type {Boolean} Whether repeat is enabled on this player */
-    this.loop = false
-    /** @type {Boolean} */
-    this.preparing = false
-    /** @type {Array<Object>} The queue */
-    this.queue = []
-    this.player.on('event', this._handleEvent.bind(this))
-    /** @type {String} */
-    this._channelID = null
-    /** @type {Promise|Boolean} Whether the player is ready */
-    this.ready = this._loadQueue()
-    this.vote = null
-=======
     this.client = client;
+    /** @type {String} The ID of the guild this player belongs to */
     this.id = guildID;
+    /** @type {Boolean} Whether repeat is enabled on this player */
     this.loop = false;
+    /** @type {Boolean} */
     this.preparing = false;
+    /** @type {Array<Object>} The queue */
     this.queue = [];
     this.player.on('event', this._handleEvent.bind(this));
+    /** @type {String} */
     this._channelID = null;
+    /** @type {Promise|Boolean} Whether the player is ready */
     this.ready = this._loadQueue();
     this.vote = null;
->>>>>>> Stashed changes
   }
 
   /**
@@ -169,13 +157,8 @@ module.exports = class Music {
 
   _saveQueue () {
     if (this.queue[0]) {
-<<<<<<< Updated upstream
       this.client.redis.set(`queue-${this.id}`, JSON.stringify(this.queue, 'EX', 60 * 60 * 24))
-        .catch(() => {})
-=======
-      this.client.redis.setAsync(`queue-${this.id}`, JSON.stringify(this.queue, 'EX', 60 * 60 * 24))
         .catch(() => {});
->>>>>>> Stashed changes
     } else {
       this.client.redis.delAsync(`queue-${this.id}`)
         .catch(() => {});
@@ -188,13 +171,8 @@ module.exports = class Music {
   }
 
   async _loadQueue () {
-<<<<<<< Updated upstream
     const queue = await this.client.redis.get(`queue-${this.id}`)
-      .catch(() => null)
-=======
-    const queue = await this.client.redis.getAsync(`queue-${this.id}`)
       .catch(() => null);
->>>>>>> Stashed changes
     if (queue) {
       this.queue = JSON.parse(queue);
     }

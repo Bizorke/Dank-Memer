@@ -8,11 +8,6 @@ module.exports = new GenericVoiceCommand({
   reaction: '👍',
   dir: 'cowboy',
   ext: 'opus',
-<<<<<<< Updated upstream:src/commands/soundCommands/cowboy.js
   files: 'cowboy',
   ownerOnly: true
-})
-=======
-  files: 'cowboy'
 });
->>>>>>> Stashed changes:scripts/soundCommands/cowboy.js

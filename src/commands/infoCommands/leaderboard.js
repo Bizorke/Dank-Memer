@@ -1,10 +1,5 @@
-<<<<<<< Updated upstream
-const GenericCommand = require('../../models/GenericCommand')
-const emojis = [':first_place:', ':second_place:', ':third_place:']
-=======
-const { GenericCommand } = require('../../models/');
+const GenericCommand = require('../../models/GenericCommand');
 const emojis = [':first_place:', ':second_place:', ':third_place:'];
->>>>>>> Stashed changes
 
 module.exports = new GenericCommand(
   async ({Memer, msg}) => {

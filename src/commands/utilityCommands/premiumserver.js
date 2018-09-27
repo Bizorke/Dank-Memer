@@ -1,9 +1,5 @@
 
-<<<<<<< Updated upstream
-const GenericCommand = require('../../models/GenericCommand')
-=======
-const { GenericCommand } = require('../../models/');
->>>>>>> Stashed changes
+const GenericCommand = require('../../models/GenericCommand');
 
 module.exports = new GenericCommand(
   async ({ Memer, msg, addCD }) => {
@@ -24,21 +20,12 @@ module.exports = new GenericCommand(
     }
 
     if (argument === 'add') {
-<<<<<<< Updated upstream
       if (await Memer.db.checkPremiumGuild(msg.channel.guild.id) || donor.guilds.includes(msg.channel.guild.id)) {
-        return 'This server is already a premium server smh'
+        return 'This server is already a premium server smh';
       }
       for (let [dollar, value] in redeemValues) {
         if (value > guildRedeems && donor.donorAmount < dollar) {
-          return 'You have reached the maximum amount of premium servers for your paid tier!\nTo get more redeemable guilds, visit our Patreon (https://www.patreon.com/dankmemerbot)'
-=======
-      if (donor.guilds.includes(msg.channel.guild.id)) {
-        return 'This server is already a premium server!';
-      }
-      for (let [dollar, value] in redeemValues) {
-        if (value > guildRedeems && donor.donorAmount < dollar) {
-          return 'You have reached the maximum amount of premium guilds for your paid tier!\nTo get more redeemable guilds, visit our Patreon (https://www.patreon.com/dankmemerbot)';
->>>>>>> Stashed changes
+          return 'You have reached the maximum amount of premium servers for your paid tier!\nTo get more redeemable guilds, visit our Patreon (https://www.patreon.com/dankmemerbot)';
         }
       }
 
@@ -58,21 +45,16 @@ module.exports = new GenericCommand(
     } else {
       return {
         title: `Premium servers redeemed by ${msg.author.username}`,
-<<<<<<< Updated upstream
         description: await (async () => {
-          let index = 0
-          let tosend = []
+          let index = 0;
+          let tosend = [];
           for (let id of guilds) {
-            const guild = await Memer.ipc.fetchGuild(id)
-            tosend.push(guilds.length ? `\`${index += 1}.\` **${guild.name}** (${id})\n` : 'You have redeemed no premium servers')
+            const guild = await Memer.ipc.fetchGuild(id);
+            tosend.push(guilds.length ? `\`${index += 1}.\` **${guild.name}** (${id})\n` : 'You have redeemed no premium servers');
           }
-          return tosend.join('')
+          return tosend.join('');
         })()
-      }
-=======
-        description: guilds ? guilds.map((id, index) => `\`${index + 1}.\` **${Memer.bot.guilds.find(g => g.id === id).name}** (${id})\n`).join('') : 'You have redeemed no premium servers'
       };
->>>>>>> Stashed changes
     }
   },
   {

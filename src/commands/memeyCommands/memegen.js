@@ -1,10 +1,5 @@
-<<<<<<< Updated upstream
-const GenericCommand = require('../../models/GenericCommand')
-const memes = require('../../assets/arrays/memes.json')
-=======
-const { GenericCommand } = require('../../models/');
+const GenericCommand = require('../../models/GenericCommand');
 const memes = require('../../assets/arrays/memes.json');
->>>>>>> Stashed changes
 
 module.exports = new GenericCommand(
   async ({ Memer, msg, args, addCD }) => {

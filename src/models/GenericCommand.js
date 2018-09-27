@@ -80,14 +80,10 @@ module.exports = class GenericCommand {
     if (this.props.minArgs && args.length < this.props.minArgs) {
       return this.props.missingArgs;
     }
-<<<<<<< Updated upstream
     if (this.props.requiresPremium && !await Memer.db.checkPremiumGuild(msg.channel.guild.id)) {
-      return 'This command is only available on **Premium** servers.\nTo learn more about how to redeem a premium server, visit our Patreon https://www.patreon.com/dankmemerbot'
+      return 'This command is only available on **Premium** servers.\nTo learn more about how to redeem a premium server, visit our Patreon https://www.patreon.com/dankmemerbot';
     }
-    return this.fn({ Memer, msg, args, addCD, cleanArgs, isGlobalPremiumGuild })
-=======
-    return this.fn({ Memer, msg, args, addCD, cleanArgs });
->>>>>>> Stashed changes
+    return this.fn({ Memer, msg, args, addCD, cleanArgs, isGlobalPremiumGuild });
   }
 
   get props () {
@@ -103,13 +99,9 @@ module.exports = class GenericCommand {
       perms: ['sendMessages'].concat(this.cmdProps.perms || [])
     });
   }
-<<<<<<< Updated upstream
-}
+};
 
 /**
  * @callback CommandCallback
  * @param {FunctionParams} params
  */
-=======
-};
->>>>>>> Stashed changes

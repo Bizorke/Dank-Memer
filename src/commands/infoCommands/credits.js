@@ -1,8 +1,4 @@
-<<<<<<< Updated upstream
-const GenericCommand = require('../../models/GenericCommand')
-=======
-const { GenericCommand } = require('../../models/');
->>>>>>> Stashed changes
+const GenericCommand = require('../../models/GenericCommand');
 
 function shuffle (array) {
   // From https://stackoverflow.com/a/2450976 because I'm lazy

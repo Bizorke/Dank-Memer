@@ -1,10 +1,5 @@
-<<<<<<< Updated upstream
-const GenericCommand = require('../../models/GenericCommand')
-let min = 500
-=======
-const { GenericCommand } = require('../../models/');
+const GenericCommand = require('../../models/GenericCommand');
 let min = 500;
->>>>>>> Stashed changes
 
 const dmStolenUser = async (Memer, user, msg, worth) => {
   if (!user.bot) {

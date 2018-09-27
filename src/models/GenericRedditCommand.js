@@ -1,10 +1,6 @@
-<<<<<<< Updated upstream
 /** @typedef {import('./GenericCommand').CommandProps} CommandProps */
 
-const GenericCommand = require('./GenericCommand')
-=======
-const { GenericCommand } = require('../models/');
->>>>>>> Stashed changes
+const GenericCommand = require('./GenericCommand');
 
 const filters = {
   image: post => post.data.post_hint === 'image',
@@ -22,26 +18,16 @@ module.exports = class GenericRedditCommand {
   async run ({ Memer, msg, addCD }) {
     let res;
 
-<<<<<<< Updated upstream
     const cachedEntry = await Memer.redis.get(this.cmdProps.endpoint)
-      .then(res => JSON.parse(res))
-=======
-    const cachedEntry = await Memer.redis.getAsync(this.cmdProps.endpoint)
       .then(res => JSON.parse(res));
->>>>>>> Stashed changes
 
     if (cachedEntry) {
       res = cachedEntry;
     } else {
       res = await Memer.http.get(`https://www.reddit.com${this.cmdProps.endpoint}`)
         .then(res => res.body)
-<<<<<<< Updated upstream
-        .catch(() => null)
-      Memer.redis.set(this.cmdProps.endpoint, JSON.stringify(res), 'EX', 15 * 60)
-=======
         .catch(() => null);
-      Memer.redis.setAsync(this.cmdProps.endpoint, JSON.stringify(res), 'EX', 15 * 60);
->>>>>>> Stashed changes
+      Memer.redis.set(this.cmdProps.endpoint, JSON.stringify(res), 'EX', 15 * 60);
     }
 
     if (!res) {

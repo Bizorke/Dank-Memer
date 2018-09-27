@@ -1,14 +1,7 @@
-<<<<<<< Updated upstream:src/commands/soundCommands/shareclip.js
-const GenericCommand = require('../../models/GenericCommand')
-const { exists } = require('../../utils/audioUtils.js')
-const { promises: fs } = require('fs')
-const basePath = `${process.cwd()}/assets/audio/custom`
-=======
-const { GenericCommand } = require('../../models/');
+const GenericCommand = require('../../models/GenericCommand');
 const { exists } = require('../../utils/audioUtils.js');
 const { promises: fs } = require('fs');
 const basePath = `${process.cwd()}/assets/audio/custom`;
->>>>>>> Stashed changes:scripts/soundCommands/shareclip.js
 
 module.exports = new GenericCommand(
   async ({ Memer, msg }) => {

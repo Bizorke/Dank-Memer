@@ -1,10 +1,5 @@
-<<<<<<< Updated upstream
-const GenericCommand = require('../../models/GenericCommand')
-const leet = require('../../utils/leetGenerator')
-=======
-const { GenericCommand } = require('../../models/');
+const GenericCommand = require('../../models/GenericCommand');
 const leet = require('../../utils/leetGenerator');
->>>>>>> Stashed changes
 
 module.exports = new GenericCommand(
   async ({ cleanArgs }) => leet(cleanArgs.join(' '), true).replace(/\\/g, '\\\\'),

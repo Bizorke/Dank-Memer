@@ -1,18 +1,10 @@
 
-<<<<<<< Updated upstream
-const GenericCommand = require('../../models/GenericCommand')
-=======
-const { GenericCommand } = require('../../models/');
->>>>>>> Stashed changes
+const GenericCommand = require('../../models/GenericCommand');
 
 module.exports = new GenericCommand(
   async ({ Memer, msg, addCD }) => {
     if (!await Memer.db.checkPremiumGuild(msg.channel.guild.id)) {
-<<<<<<< Updated upstream
-      return 'This feature is only available on **Premium** servers.\nTo learn more about how to redeem a premium server, visit our Patreon https://www.patreon.com/dankmemerbot'
-=======
-      return 'This feature is only available on **Premium** guilds.\nTo learn more about how to redeem a premium guild, visit our Patreon https://www.patreon.com/dankmemerbot';
->>>>>>> Stashed changes
+      return 'This feature is only available on **Premium** servers.\nTo learn more about how to redeem a premium server, visit our Patreon https://www.patreon.com/dankmemerbot';
     }
     if (!msg.member.permission.has('manageGuild') && !Memer.config.options.developers.includes(msg.author.id)) {
       return 'You are not authorized to use this command. You must have `Manage Server` permissions.';
@@ -31,11 +23,7 @@ module.exports = new GenericCommand(
       return `I'll no longer autopost NSFW content in <#${channel.id}>.`;
     }
 
-<<<<<<< Updated upstream
-    let type = msg.args.nextArgument()
-=======
-    let type = msg.args.gather();
->>>>>>> Stashed changes
+    let type = msg.args.nextArgument();
     if (!['4k', 'boobs', 'ass', 'lesbian', 'gif'].includes(type.toLowerCase())) {
       return `You need to provide a valid porn category for me to post to <#${channel.id}>.\nYou can pick from \`4k\`, \`boobs\`, \`ass\`, \`lesbian\` or \`gif\`\nFor example: \`pls autonsfw #${channel.name} 4k\``;
     }
@@ -44,24 +32,17 @@ module.exports = new GenericCommand(
       'gif': 'Gifs'
     };
 
-<<<<<<< Updated upstream
-    let interval = Number(msg.args.nextArgument())
+    let interval = Number(msg.args.nextArgument());
     if (!interval || !Number.isInteger(interval) || Number.isNaN(interval) || interval < 5) {
-      interval = 5
+      interval = 5;
     }
     if (interval % 5 !== 0) {
-      return 'You need to provide an interval that is a multiple of 5 (ie. `5`, `10`, `25`)'
+      return 'You need to provide an interval that is a multiple of 5 (ie. `5`, `10`, `25`)';
     }
-    await Memer.db.addAutonsfwChannel(msg.channel.guild.id, channel.id, interval, translation[type] || type)
-    await addCD()
-
-    return check ? `Changed autonsfw channel from <#${check.channel}> to **<#${channel.id}>**` : `<#${channel.id}> will now post NSFW content (\`${type}\`) every **${interval} minutes**`
-=======
-    await Memer.db.addAutonsfwChannel(msg.channel.guild.id, channel.id, translation[type] || type);
+    await Memer.db.addAutonsfwChannel(msg.channel.guild.id, channel.id, interval, translation[type] || type);
     await addCD();
 
-    return check ? `Changed autonsfw channel from <#${check.channel}> to **<#${channel.id}>**` : `<#${channel.id}> will now post NSFW content (\`${type}\`) every 5 minutes`;
->>>>>>> Stashed changes
+    return check ? `Changed autonsfw channel from <#${check.channel}> to **<#${channel.id}>**` : `<#${channel.id}> will now post NSFW content (\`${type}\`) every **${interval} minutes**`;
   },
   {
     triggers: ['autonsfw'],

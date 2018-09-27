@@ -1,10 +1,5 @@
-<<<<<<< Updated upstream
-const GenericCommand = require('../../models/GenericCommand')
-const search = require('tubesearch')
-=======
-const { GenericCommand } = require('../../models/');
+const GenericCommand = require('../../models/GenericCommand');
 const search = require('tubesearch');
->>>>>>> Stashed changes
 
 module.exports = new GenericCommand(
   async ({ Memer, msg, args }) => {

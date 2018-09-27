@@ -1,10 +1,5 @@
-<<<<<<< Updated upstream
-const GenericCommand = require('../../models/GenericCommand')
-const cheerio = require('cheerio')
-=======
-const { GenericCommand } = require('../../models/');
+const GenericCommand = require('../../models/GenericCommand');
 const cheerio = require('cheerio');
->>>>>>> Stashed changes
 
 const indexes = {}; // TODO: Move to a better place?
 

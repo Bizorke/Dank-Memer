@@ -1,8 +1,4 @@
-<<<<<<< Updated upstream
-const GenericModerationCommand = require('../../models/GenericModerationCommand')
-=======
-const { GenericModerationCommand } = require('../../models/');
->>>>>>> Stashed changes
+const GenericModerationCommand = require('../../models/GenericModerationCommand');
 
 module.exports = new GenericModerationCommand(
   async ({ Memer, msg, args, addCD }) => {
@@ -24,17 +20,10 @@ module.exports = new GenericModerationCommand(
     const hahayes = `${banned.user.username}#${banned.user.discriminator}`;
     await Memer.sleep(1500);
     banned.ban(0, `randomly banned by ${msg.author.username}`)
-<<<<<<< Updated upstream
-      .then(() => { return msg.channel.createMessage(`lmfao ${hahayes} was banned`) })
-      .catch(() => {
-        msg.channel.createMessage(`looks like I dont have perms to ban ${banned.user.username}#${banned.user.discriminator}, try putting my role above everyone else to make this real fun..`)
-      })
-=======
       .then(() => { return msg.channel.createMessage(`lmfao ${hahayes} was banned`); })
-      .catch((err) => {
+      .catch(() => {
         msg.channel.createMessage(`looks like I dont have perms to ban ${banned.user.username}#${banned.user.discriminator}, try putting my role above everyone else to make this real fun..`);
       });
->>>>>>> Stashed changes
   },
   {
     triggers: ['randomban', 'banroulette'],

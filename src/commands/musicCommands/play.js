@@ -1,23 +1,13 @@
-<<<<<<< Updated upstream
-const GenericMusicCommand = require('../../models/GenericMusicCommand')
-const { LoadType: { TRACK_LOADED, PLAYLIST_LOADED, SEARCH_RESULT, NO_MATCHES, LOAD_FAILED } } = require('lavalink')
-const linkRegEx = /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([-.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/g
-=======
-const { GenericMusicCommand } = require('../../models');
+const GenericMusicCommand = require('../../models/GenericMusicCommand');
 const { LoadType: { TRACK_LOADED, PLAYLIST_LOADED, SEARCH_RESULT, NO_MATCHES, LOAD_FAILED } } = require('lavalink');
 const linkRegEx = /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([-.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/g;
->>>>>>> Stashed changes
 
 module.exports = new GenericMusicCommand(async ({ Memer, music, args, msg }) => {
   if (!msg.member.voiceState.channelID) {
     return msg.reply('join a voice channel fam');
   }
-<<<<<<< Updated upstream
 
-  const newSession = !music.voiceChannel || false
-=======
   const newSession = !music.voiceChannel || false;
->>>>>>> Stashed changes
   if (!music.voiceChannel) {
     await music.player.join(msg.member.voiceState.channelID);
   }

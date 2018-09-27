@@ -77,23 +77,13 @@ module.exports = Bot => ({
       .run();
   },
 
-<<<<<<< Updated upstream
   updateCooldowns: async function createCooldown (command, ownerID, isGlobalPremiumGuild) {
-    const pCommand = Bot.cmds.find(c => c.props.triggers.includes(command.toLowerCase()))
-=======
-  updateCooldowns: async function createCooldown (command, ownerID) {
     const pCommand = Bot.cmds.find(c => c.props.triggers.includes(command.toLowerCase()));
->>>>>>> Stashed changes
     if (!pCommand) {
       return;
     }
-<<<<<<< Updated upstream
-    const isDonor = isGlobalPremiumGuild || await this.checkDonor(ownerID)
-    let cooldown
-=======
-    const isDonor = await this.checkDonor(ownerID);
+    const isDonor = isGlobalPremiumGuild || await this.checkDonor(ownerID);
     let cooldown;
->>>>>>> Stashed changes
     if (isDonor && !pCommand.props.donorBlocked) {
       cooldown = pCommand.props.donorCD;
     } else {
@@ -468,7 +458,7 @@ module.exports = Bot => ({
     return Bot.r.table('donors')
       .filter(Bot.r.row('guilds').contains(id))
       .run()
-      .then(results => results[0] && results[0].donorAmount >= 20)
+      .then(results => results[0] && results[0].donorAmount >= 20);
   },
 
   getStats: function getStats () {
@@ -523,11 +513,7 @@ module.exports = Bot => ({
 
   addAutomemeChannel: async function addAutomemeChannel (id, channelID, interval) { // id = guild ID
     return Bot.r.table('automeme')
-<<<<<<< Updated upstream
-      .insert({id: id, channel: channelID, interval})
-=======
-      .insert({id: id, channel: channelID});
->>>>>>> Stashed changes
+      .insert({id: id, channel: channelID, interval});
   },
 
   getAutonsfwChannel: async function getAutonsfwChannel (id) {
@@ -551,12 +537,7 @@ module.exports = Bot => ({
 
   addAutonsfwChannel: async function addAutonsfwChannel (id, channelID, interval, type) { // id = guild ID
     return Bot.r.table('autonsfw')
-<<<<<<< Updated upstream
       .insert({id, channel: channelID, interval, type}, { conflict: 'update' })
-      .run()
-=======
-      .insert({id, channel: channelID, type}, { conflict: 'update' })
       .run();
->>>>>>> Stashed changes
   }
 });

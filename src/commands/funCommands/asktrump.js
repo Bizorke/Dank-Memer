@@ -1,10 +1,5 @@
-<<<<<<< Updated upstream
-const GenericCommand = require('../../models/GenericCommand')
-const { trumpPhotos, trumpResponses } = require('../../assets/arrays/trump.json')
-=======
-const { GenericCommand } = require('../../models/');
+const GenericCommand = require('../../models/GenericCommand');
 const { trumpPhotos, trumpResponses } = require('../../assets/arrays/trump.json');
->>>>>>> Stashed changes
 
 const questionRegex = /\?/g;
 

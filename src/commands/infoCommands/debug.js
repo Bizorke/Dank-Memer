@@ -1,5 +1,7 @@
 const os = require('os');
 const GenericCommand = require('../../models/GenericCommand');
+// const { promisify } = require('util')
+// const exec = promisify(require('child_process').exec)
 const getCPUUsage = async () => {
   const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 

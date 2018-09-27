@@ -1,10 +1,6 @@
-<<<<<<< Updated upstream
 /** @typedef {import('./GenericCommand').CommandProps} CommandProps */
 
-const GenericCommand = require('./GenericCommand')
-=======
-const { GenericCommand } = require('.');
->>>>>>> Stashed changes
+const GenericCommand = require('./GenericCommand');
 
 module.exports = class GenericModerationCommand {
   /**
@@ -36,13 +32,8 @@ module.exports = class GenericModerationCommand {
       }
     }
 
-<<<<<<< Updated upstream
-    await addCD()
-    return this.fn({ Memer, msg, args, addCD, cleanArgs, isGlobalPremiumGuild })
-=======
     await addCD();
-    return this.fn({ Memer, msg, args, addCD, cleanArgs });
->>>>>>> Stashed changes
+    return this.fn({ Memer, msg, args, addCD, cleanArgs, isGlobalPremiumGuild });
   }
 
   missingPermission (type, permission) {

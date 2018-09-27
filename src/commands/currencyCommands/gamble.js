@@ -1,24 +1,12 @@
-<<<<<<< Updated upstream
-const GenericCommand = require('../../models/GenericCommand')
+const GenericCommand = require('../../models/GenericCommand');
 
 module.exports = new GenericCommand(
   async ({ Memer, msg, addCD, isGlobalPremiumGuild }) => {
-    let user = msg.author
-    let userDB = await Memer.db.getUser(user.id)
-    let donor = await Memer.db.checkDonor(user.id)
-    let multi = await Memer.calcMultiplier(Memer, user, userDB, donor, msg, isGlobalPremiumGuild)
-    let coins = userDB.pocket
-=======
-const { GenericCommand } = require('../../models/');
-
-module.exports = new GenericCommand(
-  async ({ Memer, msg, addCD }) => {
     let user = msg.author;
     let userDB = await Memer.db.getUser(user.id);
     let donor = await Memer.db.checkDonor(user.id);
-    let multi = await Memer.calcMultiplier(Memer, user, userDB, donor, msg);
+    let multi = await Memer.calcMultiplier(Memer, user, userDB, donor, msg, isGlobalPremiumGuild);
     let coins = userDB.pocket;
->>>>>>> Stashed changes
 
     let bet = msg.args.args[0];
     if (!bet) {

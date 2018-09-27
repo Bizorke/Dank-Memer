@@ -1,8 +1,4 @@
-<<<<<<< Updated upstream
-const GenericModerationCommand = require('../../models/GenericModerationCommand')
-=======
-const { GenericModerationCommand } = require('../../models/');
->>>>>>> Stashed changes
+const GenericModerationCommand = require('../../models/GenericModerationCommand');
 
 module.exports = new GenericModerationCommand(
   async ({ Memer, msg, addCD }) => {

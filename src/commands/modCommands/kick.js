@@ -1,8 +1,4 @@
-<<<<<<< Updated upstream
-const GenericModerationCommand = require('../../models/GenericModerationCommand')
-=======
-const { GenericModerationCommand } = require('../../models/');
->>>>>>> Stashed changes
+const GenericModerationCommand = require('../../models/GenericModerationCommand');
 
 module.exports = new GenericModerationCommand(
   async ({ Memer, msg, args, addCD }) => {
@@ -18,7 +14,7 @@ module.exports = new GenericModerationCommand(
       return 'not gonna kick myself, thanks';
     }
     if (Memer.getHighestRolePos(msg.member) <= Memer.getHighestRolePos(msg.channel.guild.members.get(user.id))) {
-      return 'come on are you really gonna try and kick someone who\'s got a higher (or equal) role than you smh'
+      return 'come on are you really gonna try and kick someone who\'s got a higher (or equal) role than you smh';
     }
     if (msg.args.isEmpty) {
       msg.channel.createMessage('for what reason (respond within 30s or bad mod)');
@@ -43,15 +39,9 @@ module.exports = new GenericModerationCommand(
         }
         return msg.channel.createMessage(`\`${hahayes}\` was kicked, rekt af`);
       })
-<<<<<<< Updated upstream
       .catch(() => {
-        msg.channel.createMessage(`looks like I dont have perms to kick \`${kicked.username}#${kicked.discriminator}\`, I guess I have a lower role than them ¯\\_(ツ)_/¯`)
-      })
-=======
-      .catch((err) => {
         msg.channel.createMessage(`looks like I dont have perms to kick \`${kicked.username}#${kicked.discriminator}\`, I guess I have a lower role than them ¯\\_(ツ)_/¯`);
       });
->>>>>>> Stashed changes
   },
   {
     triggers: ['kick', 'boot'],

@@ -10,15 +10,10 @@ exports.handle = async function (msg) {
     return;
   }
 
-<<<<<<< Updated upstream
-  if (this.config.options.dev && !this.config.options.developers.includes(msg.author.id)) { return }
+  if (this.config.options.dev && !this.config.options.developers.includes(msg.author.id)) { return; }
 
-  this.stats.messages++
-  cacheMessage.bind(this)(msg)
-=======
   this.stats.messages++;
   cacheMessage.bind(this)(msg);
->>>>>>> Stashed changes
   const gConfig = await this.db.getGuild(msg.channel.guild.id) || {
     prefix: this.config.options.prefix,
     disabledCommands: [],
@@ -72,13 +67,8 @@ exports.handle = async function (msg) {
   }
 
   if (gConfig.autoResponse.nou) {
-<<<<<<< Updated upstream
-    let re = /^(no (?=u{1,}$))/i
-    const match = re.exec(msg.content)
-=======
-    let re = /^(no u)/i;
+    let re = /^(no (?=u{1,}$))/i;
     const match = re.exec(msg.content);
->>>>>>> Stashed changes
     if (match) {
       msg.channel.createMessage(`no u`);
     }
@@ -100,12 +90,8 @@ exports.handle = async function (msg) {
     }
   }
 
-<<<<<<< Updated upstream
-  let isDonor = await this.db.checkDonor(msg.author.id)
-  const isGlobalPremiumGuild = await this.db.checkGlobalPremiumGuild(msg.channel.guild.id)
-=======
   let isDonor = await this.db.checkDonor(msg.author.id);
->>>>>>> Stashed changes
+  const isGlobalPremiumGuild = await this.db.checkGlobalPremiumGuild(msg.channel.guild.id);
 
   const selfMember = msg.channel.guild.members.get(this.bot.user.id);
   const mention = `<@${selfMember.nick ? '!' : ''}${selfMember.id}>`;
@@ -137,15 +123,9 @@ exports.handle = async function (msg) {
     gConfig.disabledCommands.includes(command.props.triggers[0]) ||
     ((gConfig.disabledCategories || []).includes(command.category.split(' ')[1].toLowerCase()) && !['disable', 'enable'].includes(command.props.triggers[0]) && !gConfig.enabledCommands.includes(command.props.triggers[0]))
   ) {
-<<<<<<< Updated upstream
-    return
-  } else if (command.props.donorOnly && !isDonor && (!isGlobalPremiumGuild || command.props.triggers.includes('redeem')) && !this.config.options.developers.includes(msg.author.id)) {
-    return msg.channel.createMessage('This command is for donors only. You can find more information by using `pls donate` if you are interested.')
-=======
     return;
-  } else if (command.props.donorOnly && !isDonor && !this.config.options.developers.includes(msg.author.id)) {
+  } else if (command.props.donorOnly && !isDonor && (!isGlobalPremiumGuild || command.props.triggers.includes('redeem')) && !this.config.options.developers.includes(msg.author.id)) {
     return msg.channel.createMessage('This command is for donors only. You can find more information by using `pls donate` if you are interested.');
->>>>>>> Stashed changes
   }
 
   if (msg.member.roles.some(id => msg.channel.guild.roles.get(id).name === 'no memes for you')) { return; }
@@ -163,11 +143,7 @@ exports.handle = async function (msg) {
   const isInCooldown = await checkCooldowns.bind(this)(msg, command, isDonor);
   if (isInCooldown) { return; }
 
-<<<<<<< Updated upstream
-  const updateCooldowns = () => this.db.updateCooldowns(command.props.triggers[0], msg.author.id, isGlobalPremiumGuild)
-=======
-  const updateCooldowns = () => this.db.updateCooldowns(command.props.triggers[0], msg.author.id);
->>>>>>> Stashed changes
+  const updateCooldowns = () => this.db.updateCooldowns(command.props.triggers[0], msg.author.id, isGlobalPremiumGuild);
 
   try {
     const permissions = msg.channel.permissionsOf(this.bot.user.id);
@@ -187,13 +163,8 @@ exports.handle = async function (msg) {
         }
       );
     } else {
-<<<<<<< Updated upstream
-      msg.reply = (str) => { msg.channel.createMessage(`${msg.author.mention}, ${str}`) }
-      await runCommand.bind(this)(command, msg, args, cleanArgs, updateCooldowns, isGlobalPremiumGuild, permissions)
-=======
       msg.reply = (str) => { msg.channel.createMessage(`${msg.author.mention}, ${str}`); };
-      await runCommand.bind(this)(command, msg, args, cleanArgs, updateCooldowns);
->>>>>>> Stashed changes
+      await runCommand.bind(this)(command, msg, args, cleanArgs, updateCooldowns, isGlobalPremiumGuild, permissions);
     }
   } catch (e) {
     reportError.bind(this)(e, msg, command, cleanArgs);
@@ -201,17 +172,10 @@ exports.handle = async function (msg) {
 };
 
 function cacheMessage (msg) {
-<<<<<<< Updated upstream
   if (!msg.content) { // Ignore attachments without content
-    return
-  }
-  this.redis.set(`msg-${msg.id}`, JSON.stringify({ userID: msg.author.id, content: msg.content, timestamp: msg.timestamp, guildID: msg.channel.guild.id, channelID: msg.channel.id }), 'EX', 20 * 60)
-=======
-  if (!msg.content) { // Ignroe attachments without content
     return;
   }
-  this.redis.setAsync(`msg-${msg.id}`, JSON.stringify({ userID: msg.author.id, content: msg.content, timestamp: msg.timestamp, guildID: msg.channel.guild.id, channelID: msg.channel.id }), 'EX', 20 * 60);
->>>>>>> Stashed changes
+  this.redis.set(`msg-${msg.id}`, JSON.stringify({ userID: msg.author.id, content: msg.content, timestamp: msg.timestamp, guildID: msg.channel.guild.id, channelID: msg.channel.id }), 'EX', 20 * 60);
 }
 
 async function updateStats (msg, command, lastCmd) {
@@ -276,26 +240,16 @@ function checkPerms (command, permissions, msg) {
   }
 }
 
-<<<<<<< Updated upstream
 async function runCommand (command, msg, args, cleanArgs, updateCooldowns, isGlobalPremiumGuild, permissions) {
-  this.stats.commands++
-=======
-async function runCommand (command, msg, args, cleanArgs, updateCooldowns) {
   this.stats.commands++;
->>>>>>> Stashed changes
   let res = await command.run({
     msg,
     args,
     cleanArgs,
     Memer: this,
-<<<<<<< Updated upstream
     addCD: updateCooldowns,
     isGlobalPremiumGuild
-  })
-=======
-    addCD: updateCooldowns
   });
->>>>>>> Stashed changes
   if (!res) {
     return;
   }
@@ -303,34 +257,23 @@ async function runCommand (command, msg, args, cleanArgs, updateCooldowns) {
     if (res.reply) {
       return msg.channel.createMessage(`${msg.author.mention}, ${res.content}`);
     }
-<<<<<<< Updated upstream
-    res = Object.assign({ color: this.randomColor() }, res)
+    res = Object.assign({ color: this.randomColor() }, res);
 
     if (!permissions.has('embedLinks')) {
       res = this.unembedify({
         content: res.content,
         file: res.file,
         embed: res
-      })
+      });
     } else {
       res = {
         content: res.content,
         file: res.file,
         embed: res
-      }
+      };
       if (Object.keys(res.embed).join(',') === 'color,content,file') {
-        delete res.embed // plz fix later
+        delete res.embed; // plz fix later
       }
-=======
-    res = Object.assign({ color: this.randomColor() }, res);
-    res = {
-      content: res.content,
-      file: res.file,
-      embed: res
-    };
-    if (Object.keys(res.embed).join(',') === 'color,content,file') {
-      delete res.embed; // plz fix later
->>>>>>> Stashed changes
     }
   }
 

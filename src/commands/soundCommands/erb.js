@@ -8,11 +8,6 @@ module.exports = new GenericVoiceCommand({
   dir: 'erb',
   ext: 'opus',
   np: true,
-<<<<<<< Updated upstream:src/commands/soundCommands/erb.js
   skipIfPlaying: true,
   ownerOnly: true
-})
-=======
-  skipIfPlaying: true
 });
->>>>>>> Stashed changes:scripts/soundCommands/erb.js

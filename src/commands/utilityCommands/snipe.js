@@ -1,20 +1,11 @@
-<<<<<<< Updated upstream
-const GenericCommand = require('../../models/GenericCommand')
-=======
-const { GenericCommand } = require('../../models/');
->>>>>>> Stashed changes
+const GenericCommand = require('../../models/GenericCommand');
 
 module.exports = new GenericCommand(
   async ({ Memer, msg, args, addCD }) => {
     let channel = msg.args.resolveChannel() || msg.channel;
 
-<<<<<<< Updated upstream
     const cachedEntry = await Memer.redis.get(`deletedmsg-${msg.channel.guild.id}-${channel.id}`)
-      .then(res => res ? JSON.parse(res) : undefined)
-=======
-    const cachedEntry = await Memer.redis.getAsync(`deletedmsg-${msg.channel.guild.id}-${channel.id}`)
       .then(res => res ? JSON.parse(res) : undefined);
->>>>>>> Stashed changes
     if (!cachedEntry) {
       return 'There\'s nothing to snipe!';
     }

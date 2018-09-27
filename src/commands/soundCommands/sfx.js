@@ -10,11 +10,6 @@ module.exports = new GenericVoiceCommand({
   cooldown: 3000,
   donorCD: 1000,
   ext: 'opus',
-<<<<<<< Updated upstream:src/commands/soundCommands/sfx.js
   soundboard: true,
   ownerOnly: true
-})
-=======
-  soundboard: true
 });
->>>>>>> Stashed changes:scripts/soundCommands/sfx.js

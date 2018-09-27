@@ -1,18 +1,10 @@
 
-<<<<<<< Updated upstream
-const GenericCommand = require('../../models/GenericCommand')
-=======
-const { GenericCommand } = require('../../models/');
->>>>>>> Stashed changes
+const GenericCommand = require('../../models/GenericCommand');
 
 module.exports = new GenericCommand(
   async ({ Memer, msg, addCD }) => {
     if (!await Memer.db.checkPremiumGuild(msg.channel.guild.id)) {
-<<<<<<< Updated upstream
-      return 'This feature is only available on **Premium** servers.\nTo learn more about how to redeem a premium server, visit our Patreon https://www.patreon.com/dankmemerbot'
-=======
-      return 'This feature is only available on **Premium** guilds.\nTo learn more about how to redeem a premium guild, visit our Patreon https://www.patreon.com/dankmemerbot';
->>>>>>> Stashed changes
+      return 'This feature is only available on **Premium** servers.\nTo learn more about how to redeem a premium server, visit our Patreon https://www.patreon.com/dankmemerbot';
     }
     if (!msg.member.permission.has('manageGuild') && !Memer.config.options.developers.includes(msg.author.id)) {
       return 'You are not authorized to use this command. You must have `Manage Server` permissions.';
@@ -27,26 +19,19 @@ module.exports = new GenericCommand(
       await Memer.db.removeAutomemeChannel(msg.channel.guild.id);
       return `I'll no longer autopost memes in <#${channel.id}>.`;
     }
-<<<<<<< Updated upstream
 
-    let interval = Number(msg.args.gather())
+    let interval = Number(msg.args.gather());
     if (!interval || !Number.isInteger(interval) || Number.isNaN(interval) || interval < 5) {
-      interval = 5
+      interval = 5;
     }
 
     if (interval % 5 !== 0) {
-      return 'You need to provide an interval that is a multiple of 5 (ie. `5`, `10`, `25`)'
+      return 'You need to provide an interval that is a multiple of 5 (ie. `5`, `10`, `25`)';
     }
-    await Memer.db.addAutomemeChannel(msg.channel.guild.id, channel.id, interval)
-    await addCD()
-
-    return check ? `Changed automeme channel from <#${check.channel}> to **<#${channel.id}>**` : `<#${channel.id}> will now post memes every **${interval} minutes**`
-=======
-    await Memer.db.addAutomemeChannel(msg.channel.guild.id, channel.id);
+    await Memer.db.addAutomemeChannel(msg.channel.guild.id, channel.id, interval);
     await addCD();
 
-    return check ? `Changed automeme channel from <#${check.channel}> to **<#${channel.id}>**` : `<#${channel.id}> will now post memes every 5 minutes`;
->>>>>>> Stashed changes
+    return check ? `Changed automeme channel from <#${check.channel}> to **<#${channel.id}>**` : `<#${channel.id}> will now post memes every **${interval} minutes**`;
   },
   {
     triggers: ['automeme'],

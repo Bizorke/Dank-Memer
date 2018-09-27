@@ -1,8 +1,4 @@
-<<<<<<< Updated upstream
-const GenericCommand = require('../../models/GenericCommand')
-=======
-const { GenericCommand } = require('../../models/');
->>>>>>> Stashed changes
+const GenericCommand = require('../../models/GenericCommand');
 const reaction = [
   '<:feelsYUCKman:419485966340849684>',
   '<:feelsautisticman:397488382500143104>',

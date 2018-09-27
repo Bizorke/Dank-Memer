@@ -1,8 +1,4 @@
-<<<<<<< Updated upstream
-const GenericCommand = require('../../models/GenericCommand')
-=======
-const { GenericCommand } = require('../../models/');
->>>>>>> Stashed changes
+const GenericCommand = require('../../models/GenericCommand');
 
 module.exports = new GenericCommand(
   async ({Memer, args, msg}) => {
@@ -15,58 +11,39 @@ module.exports = new GenericCommand(
       const bigmeme = (id) => new Promise(resolve => {
         setTimeout(() => resolve({ id }), 1000);
         Memer.ipc.fetchUser(id)
-<<<<<<< Updated upstream
-          .then(resolve) // this is intentional and also stupid but still intentional
-      })
-      let pls = await Memer.redis.zrevrange(`pls-leaderboard`, 0, 9, 'WITHSCORES')
+          .then(resolve); // this is intentional and also stupid but still intentional
+      });
+      let pls = await Memer.redis.zrevrange(`pls-leaderboard`, 0, 9, 'WITHSCORES');
       pls = Memer.paginateArray(pls, 2).map(entry => {
         return {
           id: entry[0],
           pls: entry[1]
-        }
-      })
-      pls = await Promise.all(pls.map(g => bigmeme(g.id).then(res => { return { ...res, pls: g.pls } })))
-=======
-          .then(resolve); // this is intentional and also stupid but still intentional
+        };
       });
-      let pls = await Memer.db.topUsers();
-      pls = await Promise.all(pls.map(async g => Object.assign(await bigmeme(g.id), { pls: g.pls })));
->>>>>>> Stashed changes
+      pls = await Promise.all(pls.map(g => bigmeme(g.id).then(res => { return { ...res, pls: g.pls }; })));
       return {
         title: 'Top 10 Users',
         description: pls.map((g, i) => `${emojis[i] || '👏'} ${g.pls.toLocaleString()} - ${g.username ? g.username + '#' + g.discriminator : 'LOL WHO DIS'}`).join('\n'),
         footer: { text: `Global Leaderboard` }
       };
     } else {
-<<<<<<< Updated upstream
-      let pls = []
-      const members = msg.channel.guild.members
-      const pipeline = Memer.redis.pipeline()
+      let pls = [];
+      const members = msg.channel.guild.members;
+      const pipeline = Memer.redis.pipeline();
       for (const ok of members) {
-        pipeline.zscore('pls-leaderboard', ok[0])
-        pls.push(ok[0])
+        pipeline.zscore('pls-leaderboard', ok[0]);
+        pls.push(ok[0]);
       }
-      const membersScore = await pipeline.exec()
+      const membersScore = await pipeline.exec();
       for (let i = 0; i < membersScore.length; i++) {
         pls[i] = {
           id: pls[i],
           pls: membersScore[i][1] || 0
-        }
-      }
-      pls = pls.filter(u => u.pls > 0)
-      pls = pls.sort((a, b) => b.pls - a.pls).slice(0, 5)
-      pls = await Promise.all(pls.map(g => Memer.ipc.fetchUser(g.id).then(res => { return { ...res, pls: g.pls } })))
-=======
-      let pls = [];
-      let members = msg.channel.guild.members;
-      for (const ok of members) {
-        let ding = await Memer.db.getUser(ok[0]);
-        pls.push(ding);
+        };
       }
       pls = pls.filter(u => u.pls > 0);
       pls = pls.sort((a, b) => b.pls - a.pls).slice(0, 5);
-      pls = await Promise.all(pls.map(async g => Object.assign(await Memer.ipc.fetchUser(g.id), { pls: g.pls })));
->>>>>>> Stashed changes
+      pls = await Promise.all(pls.map(g => Memer.ipc.fetchUser(g.id).then(res => { return { ...res, pls: g.pls }; })));
       return {
         title: `who uses the bot the most`,
         description: pls.map((u, i) => `${emojis[i] || '👏'} ${u.pls} - ${u.username}#${u.discriminator}`).join('\n'),

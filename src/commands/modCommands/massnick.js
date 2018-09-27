@@ -1,8 +1,4 @@
-<<<<<<< Updated upstream
-const GenericModerationCommand = require('../../models/GenericModerationCommand')
-=======
-const { GenericModerationCommand } = require('../../models/');
->>>>>>> Stashed changes
+const GenericModerationCommand = require('../../models/GenericModerationCommand');
 
 module.exports = new GenericModerationCommand(
   async ({ Memer, msg, args, addCD }) => {
@@ -25,29 +21,18 @@ module.exports = new GenericModerationCommand(
     }
     let oldNicknames = {};
     if (nickname.toLowerCase() === 'reset') {
-<<<<<<< Updated upstream
-      nickname = ''
-      oldNicknames = await Memer.redis.get(`massnick-${msg.channel.guild.id}`).then(res => res ? JSON.parse(res) : {})
-=======
       nickname = '';
-      oldNicknames = await Memer.redis.getAsync(`massnick-${msg.channel.guild.id}`).then(res => res ? JSON.parse(res) : {});
->>>>>>> Stashed changes
+      oldNicknames = await Memer.redis.get(`massnick-${msg.channel.guild.id}`).then(res => res ? JSON.parse(res) : {});
     }
 
     await addCD();
     let members = msg.channel.guild.members.filter(m => ((m.nick || m.user.username) !== nickname) &&
-<<<<<<< Updated upstream
       (Memer.getHighestRolePos(msg.channel.guild.members.get(Memer.bot.user.id)) > Memer.getHighestRolePos(m) || m.id === Memer.bot.user.id) &&
-      (m.nick ? m.nick !== oldNicknames[m.id] : true))
-    if (!members.length) {
-      return 'There\'s nobody to rename, either I don\'t have permissions to nickname people, or there\'s literally nobody else to rename :shrug:'
-    }
-    let next = Number(800 * members.length)
-=======
-      getHighestRolePos(msg.channel.guild.members.get(Memer.bot.user.id), msg.channel.guild) > getHighestRolePos(m, msg.channel.guild) &&
       (m.nick ? m.nick !== oldNicknames[m.id] : true));
+    if (!members.length) {
+      return 'There\'s nobody to rename, either I don\'t have permissions to nickname people, or there\'s literally nobody else to rename :shrug:';
+    }
     let next = Number(800 * members.length);
->>>>>>> Stashed changes
     if (next < 1) {
       next = 1;
     }
@@ -74,15 +59,15 @@ module.exports = new GenericModerationCommand(
         nicknames[member.id] = member.nick;
       }
     }
-    const botMember = msg.channel.guild.members.get(Memer.bot.user.id)
+    const botMember = msg.channel.guild.members.get(Memer.bot.user.id);
     for (const member of members) {
       if (nickname && member.nick) {
         nicknames[member.id] = member.nick;
       }
       if (member.id === Memer.bot.user.id) {
         Memer.bot.editNickname(msg.channel.guild.id, nickname || (oldNicknames[member.id] || nickname)).catch(() => {
-          failed++
-        })
+          failed++;
+        });
       }
       if (Memer.getHighestRolePos(botMember, msg.channel.guild) > Memer.getHighestRolePos(member, msg.channel.guild)) {
         promises.push(
@@ -97,11 +82,7 @@ module.exports = new GenericModerationCommand(
 
     await Promise.all(promises);
     if (nickname) {
-<<<<<<< Updated upstream
-      await Memer.redis.set(`massnick-${msg.channel.guild.id}`, JSON.stringify(nicknames), 'EX', 60 * 60 * 6)
-=======
-      await Memer.redis.setAsync(`massnick-${msg.channel.guild.id}`, JSON.stringify(nicknames), 'EX', 60 * 60 * 6);
->>>>>>> Stashed changes
+      await Memer.redis.set(`massnick-${msg.channel.guild.id}`, JSON.stringify(nicknames), 'EX', 60 * 60 * 6);
     } else {
       await Memer.redis.delAsync(`massnick-${msg.channel.guild.id}`);
     }
@@ -122,12 +103,4 @@ module.exports = new GenericModerationCommand(
     modPerms: ['manageGuild'],
     perms: ['manageNicknames']
   }
-<<<<<<< Updated upstream
-)
-=======
 );
-
-function getHighestRolePos (member, guild) {
-  return member.roles[0] ? guild.roles.filter(r => member.roles.includes(r.id)).sort((a, b) => b.position - a.position)[0].position : 0;
-}
->>>>>>> Stashed changes

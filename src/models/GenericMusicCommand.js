@@ -1,4 +1,3 @@
-<<<<<<< Updated upstream
 /** @typedef {import('./GenericCommand').FunctionParams} GenericFunctionParams
  * @typedef {import('./GenericCommand').CommandProps} CommandProps
  */
@@ -9,10 +8,7 @@
 
 /** @typedef {GenericFunctionParams & MusicFunctionParams} FunctionParams */
 
-const { GenericCommand } = require('.')
-=======
 const { GenericCommand } = require('.');
->>>>>>> Stashed changes
 
 module.exports = class GenericMusicCommand {
   /**
@@ -25,15 +21,9 @@ module.exports = class GenericMusicCommand {
     this.cmdProps = cmdProps;
   }
 
-<<<<<<< Updated upstream
   async run ({ Memer, msg, addCD, args, cleanArgs, isGlobalPremiumGuild }) {
     if (this.props.requiresPremium && !await Memer.db.checkPremiumGuild(msg.channel.guild.id)) {
-      return 'This command is only available on **Premium** servers.\nTo learn more about how to redeem a premium server, visit our Patreon https://www.patreon.com/dankmemerbot'
-=======
-  async run ({ Memer, msg, addCD, args, cleanArgs }) {
-    if (this.cmdProps.requiresPremium && !await Memer.db.checkPremiumGuild(msg.channel.guild.id)) {
-      return 'This command is only available on **Premium** guilds.\nTo learn more about how to redeem a premium guild, visit our Patreon https://www.patreon.com/dankmemerbot';
->>>>>>> Stashed changes
+      return 'This command is only available on **Premium** servers.\nTo learn more about how to redeem a premium server, visit our Patreon https://www.patreon.com/dankmemerbot';
     }
     if (msg.member.voiceState.channelID) {
       const perms = Memer.bot.getChannel(msg.member.voiceState.channelID).permissionsOf(Memer.bot.user.id);
@@ -49,11 +39,7 @@ module.exports = class GenericMusicCommand {
     await music.ready;
     music.channel = msg.channel.id;
 
-<<<<<<< Updated upstream
-    return this.fn({ Memer, msg, args, addCD, cleanArgs, isGlobalPremiumGuild, music })
-=======
-    return this.fn({ Memer, msg, args, addCD, cleanArgs, music });
->>>>>>> Stashed changes
+    return this.fn({ Memer, msg, args, addCD, cleanArgs, isGlobalPremiumGuild, music });
   }
 
   get props () {
@@ -65,13 +51,9 @@ module.exports = class GenericMusicCommand {
       }, this.cmdProps)
     ).props;
   }
-<<<<<<< Updated upstream
-}
+};
 
 /**
  * @callback MusicCommandCallback
  * @param {FunctionParams} params
  */
-=======
-};
->>>>>>> Stashed changes

@@ -1,14 +1,8 @@
-<<<<<<< Updated upstream
 /** @typedef {import('./GenericCommand').CommandProps} CommandProps */
 
-const GenericCommand = require('./GenericCommand')
-const { exists } = require('../utils/audioUtils.js')
-const audioAssets = `${process.cwd()}/assets/audio/custom`
-=======
-const { GenericCommand } = require('.');
+const GenericCommand = require('./GenericCommand');
 const { exists } = require('../utils/audioUtils.js');
 const audioAssets = `${process.cwd()}/assets/audio/custom`;
->>>>>>> Stashed changes
 
 module.exports = class GenericSoundboardCommand {
   /**
@@ -61,13 +55,8 @@ module.exports = class GenericSoundboardCommand {
     if (music.queue[0]) {
       music.queue = [];
     }
-<<<<<<< Updated upstream
-    let response = await music.node.load(encodeURIComponent(`http://${Memer.config.webhookServer.host}:${Memer.config.webhookServer.port}/audio/custom/${msg.author.id}/${sfx}?token=${Memer.secrets.memerServices.webhookServer}`))
-    const { tracks } = response
-=======
-    let response = await music.node.load(encodeURIComponent(`${audioAssets}/${msg.author.id}/${sfx}.opus`), { format: 'ogg' });
+    let response = await music.node.load(encodeURIComponent(`http://${Memer.config.webhookServer.host}:${Memer.config.webhookServer.port}/audio/custom/${msg.author.id}/${sfx}?token=${Memer.secrets.memerServices.webhookServer}`));
     const { tracks } = response;
->>>>>>> Stashed changes
     if (!tracks[0]) {
       return 'Seems like this didn\'t work, sad.';
     }

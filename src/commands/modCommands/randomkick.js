@@ -1,8 +1,4 @@
-<<<<<<< Updated upstream
-const GenericModerationCommand = require('../../models/GenericModerationCommand')
-=======
-const { GenericModerationCommand } = require('../../models/');
->>>>>>> Stashed changes
+const GenericModerationCommand = require('../../models/GenericModerationCommand');
 
 module.exports = new GenericModerationCommand(
   async ({ Memer, msg, args, addCD }) => {
@@ -28,17 +24,10 @@ module.exports = new GenericModerationCommand(
     const hahayes = `${kicked.user.username}#${kicked.user.discriminator}`;
     await Memer.sleep(1500);
     kicked.kick(`randomly kicked by ${msg.author.username}`)
-<<<<<<< Updated upstream
-      .then(() => { return msg.channel.createMessage(`lmfao ${hahayes} was kicked`) })
-      .catch(() => {
-        msg.channel.createMessage(`looks like I dont have perms to kick ${kicked.user.username}#${kicked.user.discriminator}, try putting my role above everyone else to make this real fun..`)
-      })
-=======
       .then(() => { return msg.channel.createMessage(`lmfao ${hahayes} was kicked`); })
-      .catch((err) => {
+      .catch(() => {
         msg.channel.createMessage(`looks like I dont have perms to kick ${kicked.user.username}#${kicked.user.discriminator}, try putting my role above everyone else to make this real fun..`);
       });
->>>>>>> Stashed changes
   },
   {
     triggers: ['randomkick', 'kickroulette'],

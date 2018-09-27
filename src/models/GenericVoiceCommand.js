@@ -1,69 +1,37 @@
-<<<<<<< Updated upstream
 /** @typedef {import('./GenericCommand').CommandProps} CommandProps */
 
-const GenericCommand = require('./GenericCommand')
-=======
-const { GenericCommand } = require('.');
-const fs = require('fs');
-const audioAssets = `${process.cwd()}/assets/audio`;
->>>>>>> Stashed changes
+const GenericCommand = require('./GenericCommand');
 module.exports = class GenericVoiceCommand {
   /**
    * @param {CommandProps} cmdProps
    */
   constructor (cmdProps) {
-<<<<<<< Updated upstream
-    this.cmdProps = cmdProps
-  }
-
-  async run ({ Memer, msg, args, addCD }) {
-    const music = Memer.musicManager.get(msg.channel.guild.id)
-
-    let response = await music.node.load(encodeURIComponent(`${Memer.config.links.youtube[this.cmdProps.dir]}`))
-    let { tracks } = response
-
-    if (args.length) {
-      tracks = tracks.filter(track => track.info ? track.info.title.toLowerCase().includes(args.join(' ').toLowerCase()) : track)
-      if (!tracks.length) {
-        return 'your search returned no results damn'
-      }
-    }
-    if (!tracks[0]) {
-      return 'Seems like this didn\'t work, sad.'
-    }
-    const song = Memer.randomInArray(tracks)
-=======
     this.cmdProps = cmdProps;
-    try {
-      this.files = fs.readdirSync(`${audioAssets}/${this.cmdProps.dir}`);
-    } catch (e) {
-      this.files = null;
-    }
   }
 
   async run ({ Memer, msg, args, addCD }) {
     const music = Memer.musicManager.get(msg.channel.guild.id);
-    if (this.files == null) {
-      console.log('Run `git submodule update --init` to pull down the audio files.');
-      return 'Seems like you forgot to pull the audio files ;p';
-    }
 
-    let file = typeof this.cmdProps.files === 'string'
-      ? this.cmdProps.files
-      : Memer.randomInArray(this.files).replace(/(\.opus)|(\.ogg)/, '');
->>>>>>> Stashed changes
+    let response = await music.node.load(encodeURIComponent(`${Memer.config.links.youtube[this.cmdProps.dir]}`));
+    let { tracks } = response;
+
+    if (args.length) {
+      tracks = tracks.filter(track => track.info ? track.info.title.toLowerCase().includes(args.join(' ').toLowerCase()) : track);
+      if (!tracks.length) {
+        return 'your search returned no results damn';
+      }
+    }
+    if (!tracks[0]) {
+      return 'Seems like this didn\'t work, sad.';
+    }
+    const song = Memer.randomInArray(tracks);
 
     if (this.cmdProps.soundboard) {
       if (args.length === 0) {
         return 'You need to specify which sfx to play.\nChoose one from here: <https://goo.gl/X6EyRq>';
       }
-<<<<<<< Updated upstream
-      let file = args.join(' ').toLowerCase()
-      if (!this.files.includes(`${file}.opus`)) return 'That isnt an option...\nChoose one from here: <https://goo.gl/X6EyRq>'
-=======
-      file = args.join(' ').toLowerCase();
+      let file = args.join(' ').toLowerCase();
       if (!this.files.includes(`${file}.opus`)) return 'That isnt an option...\nChoose one from here: <https://goo.gl/X6EyRq>';
->>>>>>> Stashed changes
     }
 
     if (!msg.member.voiceState.channelID) {
@@ -91,12 +59,7 @@ module.exports = class GenericVoiceCommand {
     await addCD();
 
     if (this.cmdProps.np) {
-<<<<<<< Updated upstream
-      msg.channel.createMessage({ embed: { title: 'Now Playing...', description: song.info.title } })
-=======
-      let np = file.replace(/_+/g, ' ');
-      msg.channel.createMessage({ embed: { title: 'Now Playing...', description: np } });
->>>>>>> Stashed changes
+      msg.channel.createMessage({ embed: { title: 'Now Playing...', description: song.info.title } });
     } else if (this.cmdProps.message) {
       msg.channel.createMessage(this.cmdProps.message);
     } else {
@@ -108,19 +71,10 @@ module.exports = class GenericVoiceCommand {
     if (music.queue[0]) {
       music.queue = [];
     }
-<<<<<<< Updated upstream
 
-    let promises = []
-    promises.push(await music.addSong(song))
-    await Promise.all(promises)
-=======
-    let response = await music.node.load(encodeURIComponent(`http://${Memer.config.webhookServer.host}:${Memer.config.webhookServer.port}/audio/${this.cmdProps.dir}/${file}?token=${Memer.secrets.memerServices.webhookServer}`));
-    const { tracks } = response;
-    if (!tracks[0]) {
-      return 'Seems like this didn\'t work, sad.';
-    }
-    await music.addSong(tracks[0]);
->>>>>>> Stashed changes
+    let promises = [];
+    promises.push(await music.addSong(song));
+    await Promise.all(promises);
   }
 
   get props () {

@@ -1,10 +1,5 @@
-<<<<<<< Updated upstream
-const GenericCommand = require('../../models/GenericCommand')
-let message
-=======
-const { GenericCommand } = require('../../models/');
+const GenericCommand = require('../../models/GenericCommand');
 let message;
->>>>>>> Stashed changes
 module.exports = new GenericCommand(
   async ({ Memer, msg, addCD }) => {
     const chances = Memer.randomNumber(0, 5);

@@ -1,8 +1,4 @@
-<<<<<<< Updated upstream
-const GenericCommand = require('../../models/GenericCommand')
-=======
-const { GenericCommand } = require('../../models/');
->>>>>>> Stashed changes
+const GenericCommand = require('../../models/GenericCommand');
 const specialCodes = {
   '0': ':zero:',
   '1': ':one:',
