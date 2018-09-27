@@ -24,6 +24,7 @@ module.exports = class Music {
     /** @type {Promise|Boolean} Whether the player is ready */
     this.ready = this._loadQueue()
     this.vote = null
+    this.sfxautoplay = false
   }
 
   /**

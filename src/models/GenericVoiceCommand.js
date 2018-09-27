@@ -13,7 +13,21 @@ module.exports = class GenericVoiceCommand {
     const music = Memer.musicManager.get(msg.channel.guild.id)
 
     let response = await music.node.load(encodeURIComponent(`${Memer.config.links.youtube[this.cmdProps.dir]}`))
-    const { tracks } = response
+    let { tracks } = response
+
+    if (args.length) {
+      // Repeat function
+      let donor = await Memer.db.checkDonor(msg.author.id)
+      if ((args.includes('-autoplay') || args.includes('-repeat')) && donor) {
+        music.sfxautoplay = true
+      } else {
+        // Search
+        tracks = tracks.filter(track => track.info ? track.info.title.toLowerCase().includes(args.join(' ').toLowerCase()) : track)
+        if (!tracks.length) {
+          return 'your search returned no results damn'
+        }
+      }
+    }
     if (!tracks[0]) {
       return 'Seems like this didn\'t work, sad.'
     }
