@@ -74,6 +74,24 @@ module.exports = {
   },
 
   /**
+   * @function unembedify
+   * @param {Object} embed The embed object to turn into a regular string
+   * @returns {String} String that contains all of the embed elements
+   */
+  unembedify (embed) {
+    const em = embed.embed
+    let embedString = ''
+    if (em.author) embedString += `**${em.author.name}**\n`
+    if (em.title) embedString += `**${em.title}**\n`
+    if (em.description) embedString += `${em.description}\n`
+    for (const field of em.fields || []) {
+      embedString += `\n**${field.name}**\n${field.value}\n`
+    }
+    if (em.footer) embedString += `\n${em.footer.text}`
+    return `${embed.content || ''}\n${(embedString || 'Empty embed')}` // Returns a string
+  },
+
+  /**
    * @function calcMultiplier
    * @param {Memer} Memer The string to remove invites from
    * @param {User} user The user

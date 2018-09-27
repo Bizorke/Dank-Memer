@@ -163,7 +163,7 @@ exports.handle = async function (msg) {
       )
     } else {
       msg.reply = (str) => { msg.channel.createMessage(`${msg.author.mention}, ${str}`) }
-      await runCommand.bind(this)(command, msg, args, cleanArgs, updateCooldowns)
+      await runCommand.bind(this)(command, msg, args, cleanArgs, updateCooldowns, permissions)
     }
   } catch (e) {
     reportError.bind(this)(e, msg, command, cleanArgs)
@@ -239,7 +239,7 @@ function checkPerms (command, permissions, msg) {
   }
 }
 
-async function runCommand (command, msg, args, cleanArgs, updateCooldowns) {
+async function runCommand (command, msg, args, cleanArgs, updateCooldowns, permissions) {
   this.stats.commands++
   let res = await command.run({
     msg,
@@ -256,13 +256,22 @@ async function runCommand (command, msg, args, cleanArgs, updateCooldowns) {
       return msg.channel.createMessage(`${msg.author.mention}, ${res.content}`)
     }
     res = Object.assign({ color: this.randomColor() }, res)
-    res = {
-      content: res.content,
-      file: res.file,
-      embed: res
-    }
-    if (Object.keys(res.embed).join(',') === 'color,content,file') {
-      delete res.embed // plz fix later
+
+    if (!permissions.has('embedLinks')) {
+      res = this.unembedify({
+        content: res.content,
+        file: res.file,
+        embed: res
+      })
+    } else {
+      res = {
+        content: res.content,
+        file: res.file,
+        embed: res
+      }
+      if (Object.keys(res.embed).join(',') === 'color,content,file') {
+        delete res.embed // plz fix later
+      }
     }
   }
 
