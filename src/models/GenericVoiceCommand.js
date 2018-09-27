@@ -37,7 +37,7 @@ module.exports = class GenericVoiceCommand {
       let donor = await Memer.db.checkDonor(msg.author.id)
       if ((args.includes('-autoplay') || args.includes('-repeat')) && donor) {
         music.sfxautoplay = { enabled: !music.sfxautoplay.enabled, host: msg.member, type: this.cmdProps.dir, name: this.props.triggers[0] }
-        msg.channel.createMessage('nice, meme music will keep playing until you leave the channel or stop the music\nYou can also use `pls mememusic -autoplay` again to turn this off')
+        msg.channel.createMessage(`nice, ${this.props.triggers[0]} songs will keep playing until you leave the channel or stop the music\nYou can also use \`pls ${this.props.triggers[0]} -autoplay\` again to turn this off`)
       } else {
         // Search
         tracks = tracks.filter(track => track.info ? track.info.title.toLowerCase().includes(args.join(' ').toLowerCase()) : track)
