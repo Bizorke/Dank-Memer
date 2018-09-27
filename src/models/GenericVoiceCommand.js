@@ -24,7 +24,7 @@ module.exports = class GenericVoiceCommand {
       // Repeat function
       let donor = await Memer.db.checkDonor(msg.author.id)
       if ((args.includes('-autoplay') || args.includes('-repeat')) && donor) {
-        music.sfxautoplay = true
+        music.sfxautoplay = { enabled: true, host: msg.member }
       } else {
         // Search
         tracks = tracks.filter(track => track.info ? track.info.title.toLowerCase().includes(args.join(' ').toLowerCase()) : track)
