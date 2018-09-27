@@ -20,18 +20,24 @@ module.exports = class GenericVoiceCommand {
 
     let { tracks } = response
 
+    if (!tracks[0]) {
+      return 'Seems like this didn\'t work, sad.'
+    }
+
+    if (args.includes('-list')) {
+      return `You can find a list of all the songs used in \`${this.props.triggers[0]}\` here:\n${Memer.config.links.youtube[this.cmdProps.dir]}`
+    }
+
     if (music.sfxautoplay.enabled && msg.member !== music.sfxautoplay.host) {
-      return `You can't play anything right now because **${music.sfxautoplay.host.user.username}** has started a \`${this.props.triggers[0]}\` autoplay session. Tracks from \`${this.props.triggers[0]}\` will continuously play until the host leaves, or someone stops the music using \`pls stop\``
+      return `You can't play anything right now because **${music.sfxautoplay.host.user.username}** has started a \`${music.sfxautoplay.name}\` autoplay session. Tracks from \`${music.sfxautoplay.name}\` will continuously play until the host leaves, or someone stops the music using \`pls stop\``
     }
 
     if (args.length) {
       // Repeat function
       let donor = await Memer.db.checkDonor(msg.author.id)
       if ((args.includes('-autoplay') || args.includes('-repeat')) && donor) {
-        music.sfxautoplay = { enabled: !music.sfxautoplay.enabled, host: msg.member }
+        music.sfxautoplay = { enabled: !music.sfxautoplay.enabled, host: msg.member, type: this.cmdProps.dir, name: this.props.triggers[0] }
         msg.channel.createMessage('nice, meme music will keep playing until you leave the channel or stop the music\nYou can also use `pls mememusic -autoplay` again to turn this off')
-      } else if (args.includes('-list')) {
-        return `You can find a list of all the songs used in \`${this.props.triggers[0]}\` here:\n${Memer.config.links.youtube[this.cmdProps.dir]}`
       } else {
         // Search
         tracks = tracks.filter(track => track.info ? track.info.title.toLowerCase().includes(args.join(' ').toLowerCase()) : track)
@@ -41,9 +47,6 @@ module.exports = class GenericVoiceCommand {
       }
     }
 
-    if (!tracks[0]) {
-      return 'Seems like this didn\'t work, sad.'
-    }
     const song = Memer.randomInArray(tracks)
 
     if (this.cmdProps.soundboard) {

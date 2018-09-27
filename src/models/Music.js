@@ -24,7 +24,7 @@ module.exports = class Music {
     /** @type {Promise|Boolean} Whether the player is ready */
     this.ready = this._loadQueue()
     this.vote = null
-    this.sfxautoplay = { enabled: false, host: null }
+    this.sfxautoplay = { enabled: false, host: null, type: null, name: null }
   }
 
   /**
@@ -194,7 +194,7 @@ module.exports = class Music {
   _finished (event, shifted) {
     if (this.sfxautoplay.enabled) {
       return (async () => {
-        let response = await this.client.redis.get(`cachedplaylist-shitsound`)
+        let response = await this.client.redis.get(`cachedplaylist-${this.sfxautoplay.type}`)
           .then(res => res ? JSON.parse(res) : undefined)
         if (response) {
           let { tracks } = response
