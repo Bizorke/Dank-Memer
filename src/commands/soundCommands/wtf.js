@@ -8,5 +8,6 @@ module.exports = new GenericVoiceCommand({
   reaction: '❓',
   dir: 'wtf',
   ext: 'opus',
-  files: 'wtf'
+  files: 'wtf',
+  ownerOnly: true
 })
