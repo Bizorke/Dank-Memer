@@ -11,8 +11,13 @@ module.exports = class GenericVoiceCommand {
 
   async run ({ Memer, msg, args, addCD }) {
     const music = Memer.musicManager.get(msg.channel.guild.id)
+    let response = await Memer.redis.get(`cachedplaylist-${this.cmdProps.dir}`)
+      .then(res => res ? JSON.parse(res) : undefined)
+    if (!response) {
+      response = await music.node.load(encodeURIComponent(`${Memer.config.links.youtube[this.cmdProps.dir]}`))
+      Memer.redis.set(`cachedplaylist-${this.cmdProps.dir}`, JSON.stringify(response))
+    }
 
-    let response = await music.node.load(encodeURIComponent(`${Memer.config.links.youtube[this.cmdProps.dir]}`))
     let { tracks } = response
 
     if (args.length) {
