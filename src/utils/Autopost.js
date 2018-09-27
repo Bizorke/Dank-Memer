@@ -2,6 +2,10 @@ module.exports = class Autopost {
   constructor (client) {
     /** @type {import("../models/GenericCommand").Memer} The memer instance */
     this.client = client
+    this.avatar = client.http.get(this.client.bot.user.dynamicAvatarURL())
+      .then(res => {
+        return `data:${res.headers['content-type']};base64,${res.body.toString('base64')}`
+      })
   }
 
   async getRedditPost () {
@@ -11,7 +15,6 @@ module.exports = class Autopost {
       'https://www.reddit.com/r/memes/top/.json?sort=top&t=day&limit=100',
       'https://www.reddit.com/r/meirl/top/.json?sort=top&t=day&limit=100',
       'https://www.reddit.com/r/dankmemes/top/.json?sort=top&t=day&limit=100',
-      'https://www.reddit.com/r/MemeEconomy/top/.json?sort=top&t=day&limit=100',
       'https://www.reddit.com/r/2meirl4meirl/top/.json?sort=top&t=day&limit=100',
       'https://www.reddit.com/r/PrequelMemes/top/.json?sort=top&t=day&limit=100',
       'https://www.reddit.com/r/surrealmemes/top/.json?sort=top&t=week&limit=100',
@@ -31,26 +34,61 @@ module.exports = class Autopost {
     if (!post) {
       return this.automeme()
     }
-    for (const { channel } of check) {
-      this.client.bot.createMessage(channel, { embed: {
-        title: post.data.title,
-        url: `https://www.reddit.com${post.data.permalink}`,
-        description: post.data.selftext,
-        image: { url: post.data.url },
-        footer: { text: `👍 ${post.data.ups} - 💬 ${post.data.num_comments} | ${post.data.subreddit}` }
-      }})
-        .catch((err) => {
-          if (err.message.toString() === 'DiscordRESTError [10003]: Unknown Channel') {
-            // Remove this channel from the database if it's not valid/not found
-            this.client.db.removeAutomemeChannel(channel)
-          }
+    for (const { channel, id, interval } of check) {
+      let autopostInterval = await this.client.redis.get(`automeme-${id}`)
+        .then(res => res ? JSON.parse(res) : undefined)
+      if (!autopostInterval) {
+        await this.client.redis.set(`automeme-${id}`, JSON.stringify({ guildID: id, interval: interval || 5, elapsed: 0 }))
+        autopostInterval = await this.client.redis.get(`automeme-${id}`)
+          .then(res => res ? JSON.parse(res) : undefined)
+      }
+      await this.client.redis.set(`automeme-${id}`, JSON.stringify({ guildID: id, interval: interval || 5, elapsed: Number(autopostInterval.elapsed += 5) }))
+      if (autopostInterval.elapsed < autopostInterval.interval) {
+        continue
+      } else {
+        await this.client.redis.set(`automeme-${id}`, JSON.stringify({ guildID: id, interval: interval || 5, elapsed: 0 }))
+      }
+
+      this.client.bot.createChannelWebhook(channel, {
+        name: 'Automeme',
+        avatar: await this.avatar
+      }, 'Automeme Post').then(webhook => {
+        this.client.bot.executeWebhook(webhook.id, webhook.token, {
+          embeds: [ {
+            title: post.data.title,
+            url: `https://www.reddit.com${post.data.permalink}`,
+            description: post.data.selftext,
+            image: { url: post.data.url },
+            footer: { text: `👍 ${post.data.ups} - 💬 ${post.data.num_comments} | ${post.data.subreddit}` }
+          } ]
         })
+          .catch((err) => {
+            if (err.message.toString() === 'DiscordRESTError [10003]: Unknown Channel') {
+              // Remove this channel from the database if it's not valid/not found
+              this.client.db.removeAutomemeChannel(channel)
+            }
+          })
+      })
     }
   }
 
   async autonsfw () {
     let check = await this.client.db.allAutonsfwChannels()
-    for (const { channel, type } of check) {
+    for (const { channel, type, id, interval } of check) {
+      let autopostInterval = await this.client.redis.get(`autonsfw-${id}`)
+        .then(res => res ? JSON.parse(res) : undefined)
+      if (!autopostInterval) {
+        await this.client.redis.set(`autonsfw-${id}`, JSON.stringify({ guildID: id, interval: interval || 5, elapsed: 0 }))
+        autopostInterval = await this.client.redis.get(`autonsfw-${id}`)
+          .then(res => res ? JSON.parse(res) : undefined)
+      }
+      await this.client.redis.set(`autonsfw-${id}`, JSON.stringify({ guildID: id, interval: interval || 5, elapsed: Number(autopostInterval.elapsed += 5) }))
+      if (autopostInterval.elapsed < autopostInterval.interval) {
+        continue
+      } else {
+        await this.client.redis.set(`autonsfw-${id}`, JSON.stringify({ guildID: id, interval: interval || 5, elapsed: 0 }))
+      }
+
       const data = await this.client.http.get(`https://boob.bot/api/v2/img/${type}`, {
         headers: {
           Authorization: this.client.secrets.extServices.boobbot,
@@ -60,19 +98,28 @@ module.exports = class Autopost {
         .then(res => res.body.url)
       const grabbedChannel = this.client.bot.getChannel(channel)
       if (!grabbedChannel || !grabbedChannel.nsfw) {
-        return
+        // Remove this channel from the database if it's not marked as NSFW
+        this.client.db.removeAutomemeChannel(channel)
       }
-      this.client.bot.createMessage(channel, { embed: {
-        title: type.charAt(0).toUpperCase() + type.slice(1),
-        image: { url: data },
-        footer: { text: 'Free nudes thanks to boobbot & tom <3' }
-      }})
-        .catch((err) => {
-          if (err.message.toString() === 'DiscordRESTError [10003]: Unknown Channel') {
-          // Remove this channel from the database if it's not valid/not found
-            this.client.db.removeAutonsfwChannel(channel)
-          }
+
+      this.client.bot.createChannelWebhook(channel, {
+        name: 'Auto-NSFW',
+        avatar: await this.avatar
+      }, 'Auto-NSFW Post').then(webhook => {
+        this.client.bot.executeWebhook(webhook.id, webhook.token, {
+          embeds: [ {
+            title: type.charAt(0).toUpperCase() + type.slice(1),
+            image: { url: data },
+            footer: { text: 'Free nudes thanks to boobbot & tom <3' }
+          } ]
         })
+          .catch((err) => {
+            if (err.message.toString() === 'DiscordRESTError [10003]: Unknown Channel') {
+              // Remove this channel from the database if it's not valid/not found
+              this.client.db.removeAutomemeChannel(channel)
+            }
+          })
+      })
     }
   }
 

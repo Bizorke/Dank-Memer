@@ -19,14 +19,23 @@ module.exports = new GenericCommand(
       await Memer.db.removeAutomemeChannel(msg.channel.guild.id)
       return `I'll no longer autopost memes in <#${channel.id}>.`
     }
-    await Memer.db.addAutomemeChannel(msg.channel.guild.id, channel.id)
+
+    let interval = Number(msg.args.gather())
+    if (!interval || !Number.isInteger(interval) || Number.isNaN(interval) || interval < 5) {
+      interval = 5
+    }
+
+    if (interval % 5 !== 0) {
+      return 'You need to provide an interval that is a multiple of 5 (ie. `5`, `10`, `25`)'
+    }
+    await Memer.db.addAutomemeChannel(msg.channel.guild.id, channel.id, interval)
     await addCD()
 
-    return check ? `Changed automeme channel from <#${check.channel}> to **<#${channel.id}>**` : `<#${channel.id}> will now post memes every 5 minutes`
+    return check ? `Changed automeme channel from <#${check.channel}> to **<#${channel.id}>**` : `<#${channel.id}> will now post memes every **${interval} minutes**`
   },
   {
     triggers: ['automeme'],
-    usage: '{command} [channel]',
+    usage: '{command} [channel] [interval in minutes]',
     cooldown: 1e4,
     donorBlocked: true,
     description: 'Set up a channel to automatically post memes to every 5 minutes'

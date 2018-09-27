@@ -23,7 +23,7 @@ module.exports = new GenericCommand(
       return `I'll no longer autopost NSFW content in <#${channel.id}>.`
     }
 
-    let type = msg.args.gather()
+    let type = msg.args.nextArgument()
     if (!['4k', 'boobs', 'ass', 'lesbian', 'gif'].includes(type.toLowerCase())) {
       return `You need to provide a valid porn category for me to post to <#${channel.id}>.\nYou can pick from \`4k\`, \`boobs\`, \`ass\`, \`lesbian\` or \`gif\`\nFor example: \`pls autonsfw #${channel.name} 4k\``
     }
@@ -32,13 +32,23 @@ module.exports = new GenericCommand(
       'gif': 'Gifs'
     }
 
-    await Memer.db.addAutonsfwChannel(msg.channel.guild.id, channel.id, translation[type] || type)
+    let interval = Number(msg.args.nextArgument())
+    if (!interval || !Number.isInteger(interval) || Number.isNaN(interval) || interval < 5) {
+      interval = 5
+    }
+    if (interval % 5 !== 0) {
+      return 'You need to provide an interval that is a multiple of 5 (ie. `5`, `10`, `25`)'
+    }
+    await Memer.db.addAutonsfwChannel(msg.channel.guild.id, channel.id, interval, translation[type] || type)
     await addCD()
 
-    return check ? `Changed autonsfw channel from <#${check.channel}> to **<#${channel.id}>**` : `<#${channel.id}> will now post NSFW content (\`${type}\`) every 5 minutes`
+    return check ? `Changed autonsfw channel from <#${check.channel}> to **<#${channel.id}>**` : `<#${channel.id}> will now post NSFW content (\`${type}\`) every **${interval} minutes**`
   },
   {
     triggers: ['autonsfw'],
+    usage: '{command} [channel] [type] [interval in minutes]',
+    cooldown: 1e4,
+    donorBlocked: true,
     description: 'Set up a channel to automatically post porn to'
   }
 )

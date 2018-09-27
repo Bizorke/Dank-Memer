@@ -504,9 +504,9 @@ module.exports = Bot => ({
       .run()
   },
 
-  addAutomemeChannel: async function addAutomemeChannel (id, channelID) { // id = guild ID
+  addAutomemeChannel: async function addAutomemeChannel (id, channelID, interval) { // id = guild ID
     return Bot.r.table('automeme')
-      .insert({id: id, channel: channelID})
+      .insert({id: id, channel: channelID, interval})
   },
 
   getAutonsfwChannel: async function getAutonsfwChannel (id) {
@@ -528,9 +528,9 @@ module.exports = Bot => ({
       .run()
   },
 
-  addAutonsfwChannel: async function addAutonsfwChannel (id, channelID, type) { // id = guild ID
+  addAutonsfwChannel: async function addAutonsfwChannel (id, channelID, interval, type) { // id = guild ID
     return Bot.r.table('autonsfw')
-      .insert({id, channel: channelID, type}, { conflict: 'update' })
+      .insert({id, channel: channelID, interval, type}, { conflict: 'update' })
       .run()
   }
 })
