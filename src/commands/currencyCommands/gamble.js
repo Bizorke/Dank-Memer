@@ -1,11 +1,11 @@
 const GenericCommand = require('../../models/GenericCommand')
 
 module.exports = new GenericCommand(
-  async ({ Memer, msg, addCD }) => {
+  async ({ Memer, msg, addCD, isGlobalPremiumGuild }) => {
     let user = msg.author
     let userDB = await Memer.db.getUser(user.id)
     let donor = await Memer.db.checkDonor(user.id)
-    let multi = await Memer.calcMultiplier(Memer, user, userDB, donor, msg)
+    let multi = await Memer.calcMultiplier(Memer, user, userDB, donor, msg, isGlobalPremiumGuild)
     let coins = userDB.pocket
 
     let bet = msg.args.args[0]

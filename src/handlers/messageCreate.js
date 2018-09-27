@@ -91,6 +91,7 @@ exports.handle = async function (msg) {
   }
 
   let isDonor = await this.db.checkDonor(msg.author.id)
+  const isGlobalPremiumGuild = await this.db.checkGlobalPremiumGuild(msg.channel.guild.id)
 
   const selfMember = msg.channel.guild.members.get(this.bot.user.id)
   const mention = `<@${selfMember.nick ? '!' : ''}${selfMember.id}>`
@@ -123,7 +124,7 @@ exports.handle = async function (msg) {
     ((gConfig.disabledCategories || []).includes(command.category.split(' ')[1].toLowerCase()) && !['disable', 'enable'].includes(command.props.triggers[0]) && !gConfig.enabledCommands.includes(command.props.triggers[0]))
   ) {
     return
-  } else if (command.props.donorOnly && !isDonor && !this.config.options.developers.includes(msg.author.id)) {
+  } else if (command.props.donorOnly && !isDonor && (!isGlobalPremiumGuild || command.props.triggers.includes('redeem')) && !this.config.options.developers.includes(msg.author.id)) {
     return msg.channel.createMessage('This command is for donors only. You can find more information by using `pls donate` if you are interested.')
   }
 
@@ -142,7 +143,7 @@ exports.handle = async function (msg) {
   const isInCooldown = await checkCooldowns.bind(this)(msg, command, isDonor)
   if (isInCooldown) { return }
 
-  const updateCooldowns = () => this.db.updateCooldowns(command.props.triggers[0], msg.author.id)
+  const updateCooldowns = () => this.db.updateCooldowns(command.props.triggers[0], msg.author.id, isGlobalPremiumGuild)
 
   try {
     const permissions = msg.channel.permissionsOf(this.bot.user.id)
@@ -163,7 +164,7 @@ exports.handle = async function (msg) {
       )
     } else {
       msg.reply = (str) => { msg.channel.createMessage(`${msg.author.mention}, ${str}`) }
-      await runCommand.bind(this)(command, msg, args, cleanArgs, updateCooldowns, permissions)
+      await runCommand.bind(this)(command, msg, args, cleanArgs, updateCooldowns, isGlobalPremiumGuild, permissions)
     }
   } catch (e) {
     reportError.bind(this)(e, msg, command, cleanArgs)
@@ -171,7 +172,7 @@ exports.handle = async function (msg) {
 }
 
 function cacheMessage (msg) {
-  if (!msg.content) { // Ignroe attachments without content
+  if (!msg.content) { // Ignore attachments without content
     return
   }
   this.redis.set(`msg-${msg.id}`, JSON.stringify({ userID: msg.author.id, content: msg.content, timestamp: msg.timestamp, guildID: msg.channel.guild.id, channelID: msg.channel.id }), 'EX', 20 * 60)
@@ -239,14 +240,15 @@ function checkPerms (command, permissions, msg) {
   }
 }
 
-async function runCommand (command, msg, args, cleanArgs, updateCooldowns, permissions) {
+async function runCommand (command, msg, args, cleanArgs, updateCooldowns, isGlobalPremiumGuild, permissions) {
   this.stats.commands++
   let res = await command.run({
     msg,
     args,
     cleanArgs,
     Memer: this,
-    addCD: updateCooldowns
+    addCD: updateCooldowns,
+    isGlobalPremiumGuild
   })
   if (!res) {
     return

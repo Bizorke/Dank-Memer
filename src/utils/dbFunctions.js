@@ -77,12 +77,12 @@ module.exports = Bot => ({
       .run()
   },
 
-  updateCooldowns: async function createCooldown (command, ownerID) {
+  updateCooldowns: async function createCooldown (command, ownerID, isGlobalPremiumGuild) {
     const pCommand = Bot.cmds.find(c => c.props.triggers.includes(command.toLowerCase()))
     if (!pCommand) {
       return
     }
-    const isDonor = await this.checkDonor(ownerID)
+    const isDonor = isGlobalPremiumGuild || await this.checkDonor(ownerID)
     let cooldown
     if (isDonor && !pCommand.props.donorBlocked) {
       cooldown = pCommand.props.donorCD
@@ -258,7 +258,8 @@ module.exports = Bot => ({
         donor: false, // Donor status, false or $amount
         godMode: false, // No cooldowns, only for select few
         vip: false, // Same cooldowns as donors without paying
-        upvoted: false // DBL voter status
+        upvoted: false, // DBL voter status
+        dblUpvoted: false // discordbotlist.com voter status
       }, {
         returnChanges: true
       }).run()).changes[0].new_val
@@ -453,6 +454,13 @@ module.exports = Bot => ({
       .run()
   },
 
+  checkGlobalPremiumGuild: function checkGlobalPremiumServer (id) {
+    return Bot.r.table('donors')
+      .filter(Bot.r.row('guilds').contains(id))
+      .run()
+      .then(results => results[0] && results[0].donorAmount >= 20)
+  },
+
   getStats: function getStats () {
     return Bot.r.table('stats')
       .get(1)('stats')
@@ -503,9 +511,9 @@ module.exports = Bot => ({
       .run()
   },
 
-  addAutomemeChannel: async function addAutomemeChannel (id, channelID) { // id = guild ID
+  addAutomemeChannel: async function addAutomemeChannel (id, channelID, interval) { // id = guild ID
     return Bot.r.table('automeme')
-      .insert({id: id, channel: channelID})
+      .insert({id: id, channel: channelID, interval})
   },
 
   getAutonsfwChannel: async function getAutonsfwChannel (id) {
@@ -527,9 +535,9 @@ module.exports = Bot => ({
       .run()
   },
 
-  addAutonsfwChannel: async function addAutonsfwChannel (id, channelID, type) { // id = guild ID
+  addAutonsfwChannel: async function addAutonsfwChannel (id, channelID, interval, type) { // id = guild ID
     return Bot.r.table('autonsfw')
-      .insert({id, channel: channelID, type}, { conflict: 'update' })
+      .insert({id, channel: channelID, interval, type}, { conflict: 'update' })
       .run()
   }
 })

@@ -55,7 +55,7 @@ module.exports = class GenericSoundboardCommand {
     if (music.queue[0]) {
       music.queue = []
     }
-    let response = await music.node.load(encodeURIComponent(`${audioAssets}/${msg.author.id}/${sfx}.opus`), { format: 'ogg' })
+    let response = await music.node.load(encodeURIComponent(`http://${Memer.config.webhookServer.host}:${Memer.config.webhookServer.port}/audio/custom/${msg.author.id}/${sfx}?token=${Memer.secrets.memerServices.webhookServer}`))
     const { tracks } = response
     if (!tracks[0]) {
       return 'Seems like this didn\'t work, sad.'

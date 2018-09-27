@@ -1,12 +1,13 @@
 const { GenericVoiceCommand } = require('../../models/')
 
 module.exports = new GenericVoiceCommand({
-  triggers: ['hey', 'HEYYEYAAEYAAAEYAEYAA'],
-  description: 'HEYYEYAAEYAAAEYAEYAA I SAID HEY',
+  triggers: ['cowboy', 'screaming'],
+  description: 'tbh this is kinda catchy',
 
   existingConn: 'I can only talk so much my dude, wait until I\'m done with whatever sound is playing before trying',
   reaction: '👍',
-  dir: 'hey',
+  dir: 'cowboy',
   ext: 'opus',
-  files: 'hey'
+  files: 'cowboy',
+  ownerOnly: true
 })
