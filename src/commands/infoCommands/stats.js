@@ -1,8 +1,12 @@
+<<<<<<< Updated upstream
 const GenericCommand = require('../../models/GenericCommand')
+=======
+const { GenericCommand } = require('../../models/');
+>>>>>>> Stashed changes
 
 module.exports = new GenericCommand(
   async ({ Memer, msg, args }) => {
-    const stats = await Memer.db.getStats()
+    const stats = await Memer.db.getStats();
     return {
       footer: { text: `Version ${Memer.package.version}` },
       fields: [
@@ -37,10 +41,10 @@ module.exports = new GenericCommand(
           inline: true
         }
       ]
-    }
+    };
   }, {
     triggers: ['stats'],
     description: 'Returns basic information and statistics about Dank Memer.',
     perms: ['embedLinks']
   }
-)
+);

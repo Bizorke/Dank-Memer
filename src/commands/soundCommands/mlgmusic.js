@@ -1,4 +1,4 @@
-const { GenericVoiceCommand } = require('../../models/')
+const { GenericVoiceCommand } = require('../../models/');
 
 module.exports = new GenericVoiceCommand({
   triggers: ['mlg', 'mlgmusic'],
@@ -8,4 +8,4 @@ module.exports = new GenericVoiceCommand({
   ext: 'opus',
   files: 25,
   skipIfPlaying: true
-})
+});

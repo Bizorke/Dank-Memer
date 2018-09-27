@@ -1,4 +1,8 @@
+<<<<<<< Updated upstream
 const GenericCommand = require('../../models/GenericCommand')
+=======
+const { GenericCommand } = require('../../models/');
+>>>>>>> Stashed changes
 
 module.exports = new GenericCommand(
   () => '( ͡° ͜ʖ ͡°)',
@@ -7,4 +11,4 @@ module.exports = new GenericCommand(
     description: 'you know what lenny is, everyone does.',
     perms: []
   }
-)
+);

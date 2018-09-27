@@ -1,4 +1,4 @@
-const { GenericVoiceCommand } = require('../../models/')
+const { GenericVoiceCommand } = require('../../models/');
 
 module.exports = new GenericVoiceCommand({
   triggers: ['erb', 'epicrapbattles', 'rap'],
@@ -8,6 +8,11 @@ module.exports = new GenericVoiceCommand({
   dir: 'erb',
   ext: 'opus',
   np: true,
+<<<<<<< Updated upstream:src/commands/soundCommands/erb.js
   skipIfPlaying: true,
   ownerOnly: true
 })
+=======
+  skipIfPlaying: true
+});
+>>>>>>> Stashed changes:scripts/soundCommands/erb.js

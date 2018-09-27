@@ -8,6 +8,7 @@
 
 module.exports = class Music {
   constructor (client, guildID) {
+<<<<<<< Updated upstream
     /** @type {import('../models/GenericCommand').Memer} */
     this.client = client
     /** @type {String} The ID of the guild this player belongs to */
@@ -24,6 +25,17 @@ module.exports = class Music {
     /** @type {Promise|Boolean} Whether the player is ready */
     this.ready = this._loadQueue()
     this.vote = null
+=======
+    this.client = client;
+    this.id = guildID;
+    this.loop = false;
+    this.preparing = false;
+    this.queue = [];
+    this.player.on('event', this._handleEvent.bind(this));
+    this._channelID = null;
+    this.ready = this._loadQueue();
+    this.vote = null;
+>>>>>>> Stashed changes
   }
 
   /**
@@ -34,11 +46,11 @@ module.exports = class Music {
    */
   addSong (song, unshift) {
     if (unshift) {
-      this.queue.unshift(song)
+      this.queue.unshift(song);
     } else {
-      this.queue.push(song)
+      this.queue.push(song);
     }
-    return this._play()
+    return this._play();
   }
 
   /**
@@ -50,8 +62,8 @@ module.exports = class Music {
     this.vote = {
       voted: [voter],
       timeout: setTimeout(this._handleVoteTimeout.bind(this), 6e4)
-    }
-    return this.vote
+    };
+    return this.vote;
   }
 
   /**
@@ -59,8 +71,8 @@ module.exports = class Music {
    * @returns {void}
    */
   resetVote () {
-    clearTimeout(this.vote.timeout)
-    this.vote = null
+    clearTimeout(this.vote.timeout);
+    this.vote = null;
   }
 
   /**
@@ -69,13 +81,13 @@ module.exports = class Music {
    */
   reset () {
     if (this.queue.length) {
-      this.clear()
+      this.clear();
     }
     if (this.loop) {
-      this.loop = false
+      this.loop = false;
     }
     if (this.playing) {
-      return this.stop()
+      return this.stop();
     }
   }
 
@@ -85,7 +97,7 @@ module.exports = class Music {
    * @returns {Promise<void>}
    */
   pause (boolean = true) {
-    return this.player.pause(boolean)
+    return this.player.pause(boolean);
   }
 
   /**
@@ -93,7 +105,7 @@ module.exports = class Music {
    * @returns {Array<Object>} The shuffled queue
    */
   shuffle () {
-    return this._shuffle(this.queue)
+    return this._shuffle(this.queue);
   }
 
   /**
@@ -101,7 +113,7 @@ module.exports = class Music {
    * @returns {Array<Object>} An array containing the removed track
    */
   remove (index) {
-    return this.queue.splice(index, 1)
+    return this.queue.splice(index, 1);
   }
 
   /**
@@ -109,7 +121,7 @@ module.exports = class Music {
    * @returns {void}
    */
   clear () {
-    this.queue.length = 1
+    this.queue.length = 1;
   }
 
   /**
@@ -117,7 +129,7 @@ module.exports = class Music {
    * @returns {Promise<void>}
    */
   stop () {
-    return this.player.stop()
+    return this.player.stop();
   }
 
   /**
@@ -125,10 +137,10 @@ module.exports = class Music {
    * @returns {Promise<void>}
    */
   endSession () {
-    this._saveQueue()
-    this.client.musicManager._map.delete(this.id)
-    this.player.leave()
-    return this.player.destroy()
+    this._saveQueue();
+    this.client.musicManager._map.delete(this.id);
+    this.player.leave();
+    return this.player.destroy();
   }
 
   /**
@@ -137,7 +149,7 @@ module.exports = class Music {
    * @returns {Promise<void>}
    */
   volume (volume) {
-    return this.player.setVolume(volume)
+    return this.player.setVolume(volume);
   }
 
   /**
@@ -147,149 +159,159 @@ module.exports = class Music {
    */
   async _play (options) {
     if (this.busy || !this.queue.length) {
-      return
+      return;
     }
-    this.preparing = true
-    const { track } = this.nowPlaying
-    await this.player.play(track, options)
-    this.preparing = false
+    this.preparing = true;
+    const { track } = this.nowPlaying;
+    await this.player.play(track, options);
+    this.preparing = false;
   }
 
   _saveQueue () {
     if (this.queue[0]) {
+<<<<<<< Updated upstream
       this.client.redis.set(`queue-${this.id}`, JSON.stringify(this.queue, 'EX', 60 * 60 * 24))
         .catch(() => {})
+=======
+      this.client.redis.setAsync(`queue-${this.id}`, JSON.stringify(this.queue, 'EX', 60 * 60 * 24))
+        .catch(() => {});
+>>>>>>> Stashed changes
     } else {
       this.client.redis.delAsync(`queue-${this.id}`)
-        .catch(() => {})
+        .catch(() => {});
     }
   }
 
   _handleVoteTimeout () {
-    this.vote = null
-    return this._send(`The vote to skip the current song ended because not enough users voted in time`)
+    this.vote = null;
+    return this._send(`The vote to skip the current song ended because not enough users voted in time`);
   }
 
   async _loadQueue () {
+<<<<<<< Updated upstream
     const queue = await this.client.redis.get(`queue-${this.id}`)
       .catch(() => null)
+=======
+    const queue = await this.client.redis.getAsync(`queue-${this.id}`)
+      .catch(() => null);
+>>>>>>> Stashed changes
     if (queue) {
-      this.queue = JSON.parse(queue)
+      this.queue = JSON.parse(queue);
     }
-    return true
+    return true;
   }
 
   _handleEvent (event) {
-    const shifted = this.queue.shift()
+    const shifted = this.queue.shift();
     if (event.type === 'TrackEndEvent') {
-      return this._finished(event, shifted)
+      return this._finished(event, shifted);
     } else if (event.type === 'TrackExceptionEvent') {
-      return this._failed(event)
+      return this._failed(event);
     } else {
-      return this._stuck()
+      return this._stuck();
     }
   }
 
   _finished (event, shifted) {
     if (this.vote) {
-      this.resetVote()
-      this._send(`The vote to skip the song \`${shifted.info.title}\` has been cancelled because the song just ended`)
+      this.resetVote();
+      this._send(`The vote to skip the song \`${shifted.info.title}\` has been cancelled because the song just ended`);
     }
     if (this.loop && shifted) {
-      this.queue.push(shifted)
+      this.queue.push(shifted);
     }
     if (this.queue.length === 0) {
-      return this.player.leave()
+      return this.player.leave();
     }
-    return this._play()
+    return this._play();
   }
 
   _failed (event) {
-    return this._send(`:rage: Something went wrong whilst playing the hecking song: \`${event.error}\`\nAutomatically skipped to the next song in the queue.`)
+    return this._send(`:rage: Something went wrong whilst playing the hecking song: \`${event.error}\`\nAutomatically skipped to the next song in the queue.`);
   }
 
   _stuck () {
-    this._send('heck, something went wrong when playing the current track, sorry bout that\nAutomatically skipped to the next song in the queue.')
-    return this._play()
+    this._send('heck, something went wrong when playing the current track, sorry bout that\nAutomatically skipped to the next song in the queue.');
+    return this._play();
   }
 
   _shuffle (queue) {
-    let firstSong = queue.shift()
-    let currentIndex = queue.length
-    let randomIndex
-    let temporaryValue
+    let firstSong = queue.shift();
+    let currentIndex = queue.length;
+    let randomIndex;
+    let temporaryValue;
 
     while (currentIndex !== 0) {
-      randomIndex = Math.floor(Math.random() * currentIndex)
-      currentIndex -= 1
+      randomIndex = Math.floor(Math.random() * currentIndex);
+      currentIndex -= 1;
 
-      temporaryValue = queue[currentIndex]
-      queue[currentIndex] = queue[randomIndex]
-      queue[randomIndex] = temporaryValue
+      temporaryValue = queue[currentIndex];
+      queue[currentIndex] = queue[randomIndex];
+      queue[randomIndex] = temporaryValue;
     }
 
-    queue.unshift(firstSong)
+    queue.unshift(firstSong);
 
-    return queue
+    return queue;
   }
 
   _send (content) {
-    const { channel } = this
-    return channel.createMessage(content).catch(() => null)
+    const { channel } = this;
+    return channel.createMessage(content).catch(() => null);
   }
 
   /** @type {Guild} The guild this player belongs to */
   get guild () {
-    return this.client.bot.guilds.get(this.id)
+    return this.client.bot.guilds.get(this.id);
   }
 
   /** @type {TextChannel} The channel on which the last command was ran */
   get channel () {
-    return this.client.bot.guilds.get(this.id).channels.get(this._channelID)
+    return this.client.bot.guilds.get(this.id).channels.get(this._channelID);
   }
 
   /** @type {VoiceChannel} The voice channel memer is playing in */
   get voiceChannel () {
-    const guild = this.client.bot.guilds.get(this.id)
-    return guild.channels.get(guild.members.get(this.client.bot.user.id).voiceState.channelID)
+    const guild = this.client.bot.guilds.get(this.id);
+    return guild.channels.get(guild.members.get(this.client.bot.user.id).voiceState.channelID);
   }
 
   set channel (id) {
-    this._channelID = id
+    this._channelID = id;
   }
 
   /** @type {Boolean} Whether the player is busy */
   get busy () {
-    return this.playing || this.paused || this.preparing
+    return this.playing || this.paused || this.preparing;
   }
 
   /** @type {PlayerStatus} */
   get status () {
-    return this.player.status
+    return this.player.status;
   }
 
   /** @type {Boolean} */
   get playing () {
-    return this.player.playing
+    return this.player.playing;
   }
 
   /** @type {Boolean} */
   get paused () {
-    return this.player.paused
+    return this.player.paused;
   }
 
   /** @type {Player} */
   get player () {
-    return this.client.lavalink.get(this.id)
+    return this.client.lavalink.get(this.id);
   }
 
   /** @type {Node} */
   get node () {
-    return this.player.node
+    return this.player.node;
   }
 
   /** @type {Object} The track currently playing */
   get nowPlaying () {
-    return this.queue[0]
+    return this.queue[0];
   }
-}
+};

@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 /** @typedef {import('../models/GenericCommand').Memer} Memer
  * @typedef {import('eris').User} User
  * @typedef {import('eris').Message} Message
@@ -5,6 +6,9 @@
  */
 
 const config = require('../config.json')
+=======
+const config = require('../config.json');
+>>>>>>> Stashed changes
 
 const errors = {
 
@@ -41,7 +45,7 @@ const errors = {
 
   // Bug Hunting errors
   'DiscordRESTError [10003]: Unknown Channel': `Something broke!\n\nI am currently not sure why this bug is happening, but if you report this bug in the support server, you will get paid for it in meme coins.\nJoin (<https://discord.gg/Wejhbd4>) and tell support it is error \`hunt1\`.`
-}
+};
 
 module.exports = {
   errorMessages: async (e) => errors[Object.keys(errors).find((error) => e.message.includes(error))] || false,
@@ -50,12 +54,17 @@ module.exports = {
 
   links: '<:technicalsupport:471490462968971264> [Support Server](https://discord.gg/Wejhbd4) - Get help for the bot and meme around\n<:twitter:471490461454827530> [Official Twitter](https://twitter.com/dankmemerbot) - Sometimes win free stuff and meme around\n<:coininhand:471490461467410463> [Patreon Page](https://www.patreon.com/dankmemerbot) - Help support the bot development, and get some sweet perks!\n<:discordlogo:471490461396369409> [Invite Link](https://goo.gl/BPWvB9) - Add the bot to another server and meme around',
 
+<<<<<<< Updated upstream
   /**
    * @function randomColor
    * @returns {Number} A random color code
    */
   randomColor () {
     return Math.floor(Math.random() * 0xFFFFFF)
+=======
+  randomColor: () => {
+    return Math.floor(Math.random() * 0xFFFFFF);
+>>>>>>> Stashed changes
   },
 
   /**
@@ -64,12 +73,12 @@ module.exports = {
    * @returns {String} The given string, with invites replaced by `invite`
    */
   inviteRemoval (args) {
-    let re = /discord(?:app\.com\/invite|\.gg)\/([a-z0-9]{1,16})/gi
-    const match = re.exec(args)
+    let re = /discord(?:app\.com\/invite|\.gg)\/([a-z0-9]{1,16})/gi;
+    const match = re.exec(args);
     if (match) {
-      return args.replace(match[0], '`invite`')
+      return args.replace(match[0], '`invite`');
     } else {
-      return args
+      return args;
     }
   },
 
@@ -102,63 +111,68 @@ module.exports = {
    */
   calcMultiplier (Memer, user, userDB, donor, msg, isGlobalPremiumGuild) {
     // calculates total multiplier based on multiple variables
-    let guildMember = msg.channel.guild.members.get(msg.author.id)
-    let date = new Date(msg.timestamp)
-    let day
-    let time
-    let total
-    total = userDB.upgrades ? userDB.upgrades.multi : 0
+    let guildMember = msg.channel.guild.members.get(msg.author.id);
+    let date = new Date(msg.timestamp);
+    let day;
+    let time;
+    let total;
+    total = userDB.upgrades ? userDB.upgrades.multi : 0;
     if (Memer.config.options.developers.includes(user.id)) {
-      total += 5
+      total += 5;
     }
     if (guildMember.game && guildMember.game.name.toLowerCase().includes('dank memer')) {
-      total += 0.5
+      total += 0.5;
     }
     if (msg.channel.guild.emojis.length >= 69) {
       if (msg.channel.guild.emojis.length === 69) {
-        total += 0.5
+        total += 0.5;
       }
-      total += 0.5
+      total += 0.5;
     }
     if (msg.channel.name.toLowerCase().includes('dank-memer')) {
-      total += 0.5
+      total += 0.5;
     }
     if (userDB.upvoted) {
-      total += 0.5
+      total += 0.5;
     }
     if (userDB.dblUpvoted) {
       total += 0.5
     }
     if (msg.channel.guild.members.has('419254454169108480')) {
-      total += 0.5
+      total += 0.5;
     }
+<<<<<<< Updated upstream
     if (donor || isGlobalPremiumGuild) {
       total += (donor || 20) * 0.5
+=======
+    if (donor) {
+      total += donor * 0.5;
+>>>>>>> Stashed changes
     }
     if (userDB.spam < 25) {
-      total += 0.5
+      total += 0.5;
     }
     if (userDB.streak.streak >= 15) {
-      total += 0.5
+      total += 0.5;
     }
     if (user.username.toLowerCase().includes('dank')) {
-      total += 0.5
+      total += 0.5;
     }
     if (msg.channel.guild.id === '397472167631257600') {
-      total += 0.5
+      total += 0.5;
     }
     if (date.getMinutes() === 20 && date.getHours() === 4) {
-      total += 4.2
-      time = true
+      total += 4.2;
+      time = true;
     }
     if (date.getDay() === 20 && date.getMonth() === 4) {
-      total += 4.2
-      day = true
+      total += 4.2;
+      day = true;
     }
     if (time && day) {
-      total += 420
+      total += 420;
     }
-    return total
+    return total;
   },
 
   /**
@@ -172,83 +186,88 @@ module.exports = {
    */
   showMultiplier (Memer, user, userDB, donor, msg, isGlobalPremiumGuild) {
     // calculates total multiplier based on multiple variables
-    let guildMember = msg.channel.guild.members.get(msg.author.id)
-    let date = new Date(msg.timestamp)
-    let time
-    let day
-    let count = 14
+    let guildMember = msg.channel.guild.members.get(msg.author.id);
+    let date = new Date(msg.timestamp);
+    let time;
+    let day;
+    let count = 14;
     let end = {
       locked: 0,
       unlocked: { total: 0, list: [] },
       bought: userDB.upgrades ? userDB.upgrades.multi : 0
-    }
+    };
     if (Memer.config.options.developers.includes(user.id)) {
-      end.unlocked.total += 1
-      end.unlocked.list.push('[Developer](https://github.com/Dank-Memer/Dank-Memer)')
+      end.unlocked.total += 1;
+      end.unlocked.list.push('[Developer](https://github.com/Dank-Memer/Dank-Memer)');
     }
     if (guildMember.game && guildMember.game.name.toLowerCase().includes('dank memer')) {
-      end.unlocked.total += 1
-      end.unlocked.list.push('[Playing dank memer](http://your-stupidity.needs-to-s.top/c3342d.gif)')
+      end.unlocked.total += 1;
+      end.unlocked.list.push('[Playing dank memer](http://your-stupidity.needs-to-s.top/c3342d.gif)');
     }
     if (msg.channel.guild.emojis.length === 69) {
-      end.unlocked.total += 1
-      end.unlocked.list.push('69 emotes in the server')
+      end.unlocked.total += 1;
+      end.unlocked.list.push('69 emotes in the server');
     }
     if (msg.channel.name.toLowerCase() === ('dank-memer')) {
-      end.unlocked.total += 1
-      end.unlocked.list.push('[Channel is dank-memer](http://your-stupidity.needs-to-s.top/9bf273.png)')
+      end.unlocked.total += 1;
+      end.unlocked.list.push('[Channel is dank-memer](http://your-stupidity.needs-to-s.top/9bf273.png)');
     }
     if (userDB.upvoted) {
-      end.unlocked.total += 1
-      end.unlocked.list.push('[Voted for the bot](https://discordbots.org/bot/memes/vote)')
+      end.unlocked.total += 1;
+      end.unlocked.list.push('[Voted for the bot](https://discordbots.org/bot/memes/vote)');
     }
     if (userDB.dblUpvoted) {
       end.unlocked.total += 1
       end.unlocked.list.push('[Voted for the bot on DBL](https://discordbotlist.com/bots/270904126974590976)')
     }
     if (msg.channel.guild.members.has('419254454169108480')) {
-      end.unlocked.total += 1
-      end.unlocked.list.push('Premium server')
+      end.unlocked.total += 1;
+      end.unlocked.list.push('Premium server');
     }
     if (donor) {
+<<<<<<< Updated upstream
       end.unlocked.total += 1
       end.unlocked.list.push('[Donor](https://www.patreon.com/dankmemerbot)')
     } else if (isGlobalPremiumGuild) {
       end.unlocked.total += 1
       end.unlocked.list.push('On a premium guild redeemed by a 20$+ [donor](https://www.patreon.com/dankmemerbot)')
+=======
+      end.unlocked.total += 1;
+      end.unlocked.list.push('[Donor](https://www.patreon.com/dankmemerbot)');
+>>>>>>> Stashed changes
     }
     if (userDB.spam < 25) {
-      end.unlocked.total += 1
-      end.unlocked.list.push('Doesn\'t spam the bot')
+      end.unlocked.total += 1;
+      end.unlocked.list.push('Doesn\'t spam the bot');
     }
     if (userDB.streak.streak >= 15) {
-      end.unlocked.total += 1
-      end.unlocked.list.push('15+ daily streak')
+      end.unlocked.total += 1;
+      end.unlocked.list.push('15+ daily streak');
     }
     if (user.username.toLowerCase().includes('dank')) {
-      end.unlocked.total += 1
-      end.unlocked.list.push('Username is dank')
+      end.unlocked.total += 1;
+      end.unlocked.list.push('Username is dank');
     }
     if (msg.channel.guild.id === '397472167631257600') {
-      end.unlocked.total += 1
-      end.unlocked.list.push('In support server')
+      end.unlocked.total += 1;
+      end.unlocked.list.push('In support server');
     }
     if (date.getMinutes() === 20 && date.getHours() === 4) {
-      end.unlocked.total += 1
-      end.unlocked.list.push('4:20')
-      time = true
+      end.unlocked.total += 1;
+      end.unlocked.list.push('4:20');
+      time = true;
     }
     if (date.getDay() === 20 && date.getMonth() === 4) {
-      end.unlocked.total += 1
-      end.unlocked.list.push('4/20')
-      day = true
+      end.unlocked.total += 1;
+      end.unlocked.list.push('4/20');
+      day = true;
     }
     if (time && day) {
-      end.unlocked.total += 1
-      end.unlocked.list.push('4/20 + 4:20')
+      end.unlocked.total += 1;
+      end.unlocked.list.push('4/20 + 4:20');
     }
-    end.locked = count - end.unlocked.total
-    return end
+    end.locked = count - end.unlocked.total;
+    return end;
   },
 
   /**
@@ -258,10 +277,11 @@ module.exports = {
    */
   decodeHtmlEntity (str) { // Found here: https://gist.github.com/CatTail/4174511
     return str.replace(/&#(\d+);/g, function (match, dec) {
-      return String.fromCharCode(dec)
-    })
+      return String.fromCharCode(dec);
+    });
   },
 
+<<<<<<< Updated upstream
   /**
    * @function randomInArray
    * @param {Array} array The array to get a random element from
@@ -269,6 +289,10 @@ module.exports = {
    */
   randomInArray (array) {
     return array[Math.floor(Math.random() * array.length)]
+=======
+  randomInArray: (array) => {
+    return array[Math.floor(Math.random() * array.length)];
+>>>>>>> Stashed changes
   },
 
   /**
@@ -281,12 +305,13 @@ module.exports = {
   randomNumber (min, max) {
     if (!min || !max) {
       // Default 0-100 if no args passed
-      min = 0
-      max = 100
+      min = 0;
+      max = 100;
     }
-    return Math.floor(Math.random() * max) + min
+    return Math.floor(Math.random() * max) + min;
   },
 
+<<<<<<< Updated upstream
   /**
    * @function sleep
    * @param {Number} ms The amount of milliseconds to wait
@@ -312,6 +337,16 @@ module.exports = {
    */
   codeblock (str, lang) {
     return `${'```'}${lang || ''}\n${str}\n${'```'}`
+=======
+  sleep: (ms) => new Promise(resolve => setTimeout(resolve, ms)),
+
+  removeDuplicates: (array) => {
+    return Array.from(new Set(array).values());
+  },
+
+  codeblock: (str, lang) => {
+    return `${'```'}${lang || ''}\n${str}\n${'```'}`;
+>>>>>>> Stashed changes
   },
 
   /**
@@ -334,59 +369,60 @@ module.exports = {
       { name: 'h', count: 3600 },
       { name: 'm', count: 60 },
       { name: 's', count: 1 }
-    ]
+    ];
 
-    const timeStr = [ Math.floor(time / methods[0].count).toString() + methods[0].name ]
+    const timeStr = [ Math.floor(time / methods[0].count).toString() + methods[0].name ];
     for (let i = 0; i < 3; i++) {
-      timeStr.push(Math.floor(time % methods[i].count / methods[i + 1].count).toString() + methods[i + 1].name)
+      timeStr.push(Math.floor(time % methods[i].count / methods[i + 1].count).toString() + methods[i + 1].name);
     }
 
-    return timeStr.filter(g => !g.startsWith('0')).join(', ')
+    return timeStr.filter(g => !g.startsWith('0')).join(', ');
   },
 
   async punish (Memer, id, type, reason, optionalBlock = true, optionalWipe = true) {
     if (!reason) {
-      reason = 'No reason given.'
+      reason = 'No reason given.';
     }
     if (!type) {
-      type = 'user'
+      type = 'user';
     }
-    let name
-    let object
+    let name;
+    let object;
     if (type === 'user') {
-      object = await Memer.ipc.fetchUser(id)
+      object = await Memer.ipc.fetchUser(id);
       if (!object) {
-        name = 'not sure of the username...'
+        name = 'not sure of the username...';
       } else {
-        name = `${object.username}#${object.discriminator}`
+        name = `${object.username}#${object.discriminator}`;
       }
     } else {
-      object = await Memer.ipc.fetchGuild(id)
+      object = await Memer.ipc.fetchGuild(id);
       if (!object) {
-        name = 'not sure of the server name'
+        name = 'not sure of the server name';
       } else {
-        name = object.name
+        name = object.name;
       }
     }
     if (optionalBlock) {
-      Memer.db.createBlock(id)
+      Memer.db.createBlock(id);
     }
     if (optionalWipe) {
       switch (type) {
         case 'user':
-          await Memer.db.removeUser(id)
-          break
+          await Memer.db.removeUser(id);
+          break;
         case 'guild':
         case 'server':
-          await Memer.db.deletePls(id)
-          await Memer.db.deleteGuild(id)
-          break
+          await Memer.db.deletePls(id);
+          await Memer.db.deleteGuild(id);
+          break;
       }
     }
-    const channel = Memer.config.options.spamReportChannel || '397477232240754698'
-    await Memer.bot.createMessage(channel, `The ${type} **${name}** (*${id}*) was blacklisted.\n**Reason**: ${reason}`)
+    const channel = Memer.config.options.spamReportChannel || '397477232240754698';
+    await Memer.bot.createMessage(channel, `The ${type} **${name}** (*${id}*) was blacklisted.\n**Reason**: ${reason}`);
   },
 
+<<<<<<< Updated upstream
   /**
    * Creates an array of strings from a given string, each string being at most 2000 characters/the given limit
    * @function paginate
@@ -397,33 +433,38 @@ module.exports = {
   paginate (text, limit = 2000) {
     const lines = text.split('\n')
     const pages = []
+=======
+  paginate: (text, limit = 2000) => {
+    const lines = text.split('\n');
+    const pages = [];
+>>>>>>> Stashed changes
 
-    let chunk = ''
+    let chunk = '';
 
     for (const line of lines) {
       if (chunk.length + line.length > limit && chunk.length > 0) {
-        pages.push(chunk)
-        chunk = ''
+        pages.push(chunk);
+        chunk = '';
       }
 
       if (line.length > limit) {
-        const lineChunks = line.length / limit
+        const lineChunks = line.length / limit;
 
         for (let i = 0; i < lineChunks; i++) {
-          const start = i * limit
-          const end = start + limit
-          pages.push(line.slice(start, end))
+          const start = i * limit;
+          const end = start + limit;
+          pages.push(line.slice(start, end));
         }
       } else {
-        chunk += `${line}\n`
+        chunk += `${line}\n`;
       }
     }
 
     if (chunk.length > 0) {
-      pages.push(chunk)
+      pages.push(chunk);
     }
 
-    return pages
+    return pages;
   },
 
   /**
@@ -450,13 +491,13 @@ module.exports = {
    */
   format (seconds) {
     function pad (seconds) {
-      return (seconds < 10 ? '0' : '') + seconds
+      return (seconds < 10 ? '0' : '') + seconds;
     }
 
-    let hours = Math.floor(seconds / (60 * 60))
-    let minutes = Math.floor(seconds % (60 * 60) / 60)
-    let seconds2 = Math.floor(seconds % 60)
+    let hours = Math.floor(seconds / (60 * 60));
+    let minutes = Math.floor(seconds % (60 * 60) / 60);
+    let seconds2 = Math.floor(seconds % 60);
 
-    return `${pad(hours)}:${pad(minutes)}:${pad(seconds2)}`
+    return `${pad(hours)}:${pad(minutes)}:${pad(seconds2)}`;
   }
-}
+};

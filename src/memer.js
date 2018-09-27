@@ -13,11 +13,11 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-const config = require('./config.json')
-const secrets = require('./secrets.json')
-const { Master: Sharder } = require('eris-sharder')
-const { post } = require('./utils/http')
-const r = require('rethinkdbdash')()
+const config = require('./config.json');
+const secrets = require('./secrets.json');
+const { Master: Sharder } = require('eris-sharder');
+const { post } = require('./utils/http');
+const r = require('rethinkdbdash')();
 
 // Initiate Eris-Sharder
 
@@ -29,17 +29,17 @@ const master = new Sharder(secrets.bot.token, config.sharder.path, {
   shards: config.sharder.shardCount || 1,
   statsInterval: config.statsInterval || 1e4,
   clusters: config.sharder.clusters || undefined
-})
+});
 
 // Record bot stats every x seconds/minutes to the database
 
 master.on('stats', res => {
   r.table('stats')
     .insert({ id: 1, stats: res }, { conflict: 'update' })
-    .run()
+    .run();
 
   // TODO: Post stats to endpoint on the webserver
-})
+});
 
 // Delete stats data on SIGINT to help prevent problems with some commands
 
@@ -47,10 +47,10 @@ process.on('SIGINT', async () => { // TODO: See if this still needs to happen af
   await r.table('stats')
     .get(1)
     .delete()
-    .run()
+    .run();
 
-  process.exit()
-})
+  process.exit();
+});
 
 // Post guild count to each bot list api
 
@@ -58,7 +58,7 @@ if (require('cluster').isMaster && !config.options.dev) {
   setInterval(async () => {
     const { stats: { guilds } } = await r.table('stats')
       .get(1)
-      .run()
+      .run();
 
     for (const botlist of secrets.botlists) {
       post(botlist.url)
@@ -67,9 +67,9 @@ if (require('cluster').isMaster && !config.options.dev) {
           [`server${botlist.url.includes('carbonitex') ? '' : '_'}count`]: guilds, // TODO: Does carbon still not allow underscore?
           key: botlist.token
         })
-        .end()
+        .end();
     }
-  }, 60 * 60 * 1000)
+  }, 60 * 60 * 1000);
 }
 
 (async () => {

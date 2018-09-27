@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 const GenericCommand = require('../../models/GenericCommand')
 
 module.exports = new GenericCommand(
@@ -8,6 +9,18 @@ module.exports = new GenericCommand(
     let total = await Memer.calcMultiplier(Memer, user, userDB, donor, msg, isGlobalPremiumGuild)
     let show = await Memer.showMultiplier(Memer, user, userDB, donor, msg, isGlobalPremiumGuild)
     await addCD()
+=======
+const { GenericCommand } = require('../../models/');
+
+module.exports = new GenericCommand(
+  async ({ Memer, msg, addCD }) => {
+    let user = msg.author;
+    let userDB = await Memer.db.getUser(user.id);
+    let donor = await Memer.db.checkDonor(user.id);
+    let total = await Memer.calcMultiplier(Memer, user, userDB, donor, msg);
+    let show = await Memer.showMultiplier(Memer, user, userDB, donor, msg);
+    await addCD();
+>>>>>>> Stashed changes
     return {
       title: `Here is some info about your Multipliers, ${user.username}`,
       description: `**Current Total Multiplier**: ${total}%\n**Secret Multipliers**: *See below*`,
@@ -15,11 +28,11 @@ module.exports = new GenericCommand(
         { name: `${show.unlocked.total} Unlocked`, value: show.unlocked.list.join('\n') || 'No multipliers', inline: true },
         { name: `${show.locked} Locked`, value: show.locked < 8 ? 'UNKNOWN\n'.repeat(show.locked) : `UNKNOWN x${show.locked}`, inline: true }
       ]
-    }
+    };
   },
   {
     triggers: ['multiplier', 'multi'],
     description: 'Check your multiplier amount',
     perms: ['embedLinks']
   }
-)
+);

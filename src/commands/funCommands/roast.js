@@ -1,5 +1,10 @@
+<<<<<<< Updated upstream
 const { roast } = require('../../assets/arrays/roasts.json')
 const GenericCommand = require('../../models/GenericCommand')
+=======
+const { roast } = require('../../assets/arrays/roasts.json');
+const { GenericCommand } = require('../../models/');
+>>>>>>> Stashed changes
 
 module.exports = new GenericCommand(
   async ({ Memer, msg }) => Memer.randomInArray(roast)
@@ -10,4 +15,4 @@ module.exports = new GenericCommand(
     usage: '{command} @user',
     description: 'Sick of someone? Easy! Just roast them!'
   }
-)
+);

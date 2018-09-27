@@ -1,4 +1,8 @@
+<<<<<<< Updated upstream
 const GenericCommand = require('../../models/GenericCommand')
+=======
+const { GenericCommand } = require('../../models/');
+>>>>>>> Stashed changes
 
 module.exports = new GenericCommand(
   async ({ Memer, cleanArgs }) => Memer.codeblock(cleanArgs.join(' '), 'css'), {
@@ -8,4 +12,4 @@ module.exports = new GenericCommand(
 
     missingArgs: 'Give me something to greentext and try again'
   }
-)
+);
