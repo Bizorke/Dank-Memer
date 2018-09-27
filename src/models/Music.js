@@ -78,9 +78,6 @@ module.exports = class Music {
     if (this.playing) {
       return this.stop()
     }
-    if (this.sfxautoplay.enabled) {
-      this.sfxautoplay = { enabled: false, host: null }
-    }
   }
 
   /**
