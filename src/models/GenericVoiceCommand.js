@@ -10,44 +10,44 @@ module.exports = class GenericVoiceCommand {
   }
 
   async run ({ Memer, msg, args, addCD }) {
-    const music = Memer.musicManager.get(msg.channel.guild.id)
+    const music = Memer.musicManager.get(msg.channel.guild.id);
     let response = await Memer.redis.get(`cachedplaylist-${this.cmdProps.dir}`)
-      .then(res => res ? JSON.parse(res) : undefined)
+      .then(res => res ? JSON.parse(res) : undefined);
     if (!response) {
-      response = await music.node.load(encodeURIComponent(`${Memer.config.links.youtube[this.cmdProps.dir]}`))
-      Memer.redis.set(`cachedplaylist-${this.cmdProps.dir}`, JSON.stringify(response))
+      response = await music.node.load(encodeURIComponent(`${Memer.config.links.youtube[this.cmdProps.dir]}`));
+      Memer.redis.set(`cachedplaylist-${this.cmdProps.dir}`, JSON.stringify(response));
     }
 
-    let { tracks } = response
+    let { tracks } = response;
 
     if (!tracks[0]) {
       return 'Seems like this didn\'t work, sad.';
     }
 
     if (args.includes('-list')) {
-      return `You can find a list of all the songs used in \`${this.props.triggers[0]}\` here:\n${Memer.config.links.youtube[this.cmdProps.dir]}`
+      return `You can find a list of all the songs used in \`${this.props.triggers[0]}\` here:\n${Memer.config.links.youtube[this.cmdProps.dir]}`;
     }
 
     if (music.sfxautoplay.enabled && msg.member !== music.sfxautoplay.host) {
-      return `You can't play anything right now because **${music.sfxautoplay.host.user.username}** has started a \`${music.sfxautoplay.name}\` autoplay session. Tracks from \`${music.sfxautoplay.name}\` will continuously play until the host leaves, or someone stops the music using \`pls stop\``
+      return `You can't play anything right now because **${music.sfxautoplay.host.user.username}** has started a \`${music.sfxautoplay.name}\` autoplay session. Tracks from \`${music.sfxautoplay.name}\` will continuously play until the host leaves, or someone stops the music using \`pls stop\``;
     }
 
     if (args.length) {
       // Repeat function
-      let donor = await Memer.db.checkDonor(msg.author.id)
+      let donor = await Memer.db.checkDonor(msg.author.id);
       if ((args.includes('-autoplay') || args.includes('-repeat')) && donor) {
-        music.sfxautoplay = { enabled: !music.sfxautoplay.enabled, host: msg.member, type: this.cmdProps.dir, name: this.props.triggers[0] }
-        msg.channel.createMessage(`nice, ${this.props.triggers[0]} songs will keep playing until you leave the channel or stop the music\nYou can also use \`pls ${this.props.triggers[0]} -autoplay\` again to turn this off`)
+        music.sfxautoplay = { enabled: !music.sfxautoplay.enabled, host: msg.member, type: this.cmdProps.dir, name: this.props.triggers[0] };
+        msg.channel.createMessage(`nice, ${this.props.triggers[0]} songs will keep playing until you leave the channel or stop the music\nYou can also use \`pls ${this.props.triggers[0]} -autoplay\` again to turn this off`);
       } else {
         // Search
-        tracks = tracks.filter(track => track.info ? track.info.title.toLowerCase().includes(args.join(' ').toLowerCase()) : track)
+        tracks = tracks.filter(track => track.info ? track.info.title.toLowerCase().includes(args.join(' ').toLowerCase()) : track);
         if (!tracks.length) {
-          return 'your search returned no results damn'
+          return 'your search returned no results damn';
         }
       }
     }
 
-    const song = Memer.randomInArray(tracks)
+    const song = Memer.randomInArray(tracks);
 
     if (this.cmdProps.soundboard) {
       if (args.length === 0) {
@@ -89,9 +89,9 @@ module.exports = class GenericVoiceCommand {
       msg.addReaction(this.cmdProps.reaction);
     }
 
-    await music.player.join(msg.member.voiceState.channelID)
-    music.channel = msg.channel.id
-    await music.ready
+    await music.player.join(msg.member.voiceState.channelID);
+    music.channel = msg.channel.id;
+    await music.ready;
     if (music.queue[0]) {
       music.queue = [];
     }
