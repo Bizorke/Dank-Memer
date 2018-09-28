@@ -66,7 +66,7 @@ module.exports = new GenericCommand(
     triggers: ['link'],
     usage: '{command}',
     cooldown: 15e3,
-    donorBlocked: true,
+    donorCD: 15e3,
     description: 'Link your Discord account with Patreon'
   }
 );
