@@ -1,4 +1,4 @@
-const { GenericRedditCommand } = require('../../models')
+const { GenericRedditCommand } = require('../../models');
 
 module.exports = new GenericRedditCommand({
   triggers: ['foodporn'],
@@ -6,4 +6,4 @@ module.exports = new GenericRedditCommand({
   footer: 'I get so hungry looking at this...',
   endpoint: '/r/FoodPorn/top/.json?sort=top&t=day&limit=75',
   type: 'image'
-})
+});

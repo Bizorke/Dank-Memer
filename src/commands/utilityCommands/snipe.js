@@ -1,17 +1,17 @@
-const GenericCommand = require('../../models/GenericCommand')
+const GenericCommand = require('../../models/GenericCommand');
 
 module.exports = new GenericCommand(
   async ({ Memer, msg, args, addCD }) => {
-    let channel = msg.args.resolveChannel() || msg.channel
+    let channel = msg.args.resolveChannel() || msg.channel;
 
     const cachedEntry = await Memer.redis.get(`deletedmsg-${msg.channel.guild.id}-${channel.id}`)
-      .then(res => res ? JSON.parse(res) : undefined)
+      .then(res => res ? JSON.parse(res) : undefined);
     if (!cachedEntry) {
-      return 'There\'s nothing to snipe!'
+      return 'There\'s nothing to snipe!';
     }
-    await addCD()
-    let { content } = cachedEntry
-    let user = Memer.bot.users.get(cachedEntry.userID)
+    await addCD();
+    let { content } = cachedEntry;
+    let user = Memer.bot.users.get(cachedEntry.userID);
     return {
       author:
         {
@@ -20,7 +20,7 @@ module.exports = new GenericCommand(
         },
       description: content.length > 2048 ? `${content.slice(0, 2045)}...` : content,
       timestamp: new Date(cachedEntry.timestamp)
-    }
+    };
   },
   {
     triggers: ['snipe', 'sniper'],
@@ -28,4 +28,4 @@ module.exports = new GenericCommand(
     description: 'Shows the last deleted message from a specified channel',
     perms: ['embedLinks']
   }
-)
+);

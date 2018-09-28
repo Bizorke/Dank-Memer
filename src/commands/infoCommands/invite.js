@@ -1,4 +1,4 @@
-const GenericCommand = require('../../models/GenericCommand')
+const GenericCommand = require('../../models/GenericCommand');
 
 module.exports = new GenericCommand(
   async () => ({
@@ -16,4 +16,4 @@ module.exports = new GenericCommand(
     description: 'Get an invite for the bot or to the support server. Also some extra links to use.',
     perms: ['embedLinks']
   }
-)
+);

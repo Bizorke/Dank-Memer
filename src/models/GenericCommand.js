@@ -69,21 +69,21 @@ module.exports = class GenericCommand {
    * @param {CommandProps} cmdProps - The props
    */
   constructor (fn, props) {
-    this.fn = fn
-    this.cmdProps = props
+    this.fn = fn;
+    this.cmdProps = props;
   }
 
   async run ({ Memer, msg, args, addCD, cleanArgs, isGlobalPremiumGuild }) {
     if (this.props.missingArgs && !args[0]) {
-      return this.props.missingArgs
+      return this.props.missingArgs;
     }
     if (this.props.minArgs && args.length < this.props.minArgs) {
-      return this.props.missingArgs
+      return this.props.missingArgs;
     }
     if (this.props.requiresPremium && !await Memer.db.checkPremiumGuild(msg.channel.guild.id)) {
-      return 'This command is only available on **Premium** servers.\nTo learn more about how to redeem a premium server, visit our Patreon https://www.patreon.com/dankmemerbot'
+      return 'This command is only available on **Premium** servers.\nTo learn more about how to redeem a premium server, visit our Patreon https://www.patreon.com/dankmemerbot';
     }
-    return this.fn({ Memer, msg, args, addCD, cleanArgs, isGlobalPremiumGuild })
+    return this.fn({ Memer, msg, args, addCD, cleanArgs, isGlobalPremiumGuild });
   }
 
   get props () {
@@ -97,9 +97,9 @@ module.exports = class GenericCommand {
       requiresPremium: false
     }, this.cmdProps, {
       perms: ['sendMessages'].concat(this.cmdProps.perms || [])
-    })
+    });
   }
-}
+};
 
 /**
  * @callback CommandCallback

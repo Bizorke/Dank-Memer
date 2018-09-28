@@ -1,4 +1,4 @@
-const { GenericMediaCommand } = require('../../models/')
+const { GenericMediaCommand } = require('../../models/');
 
 module.exports = new GenericMediaCommand({
   triggers: ['discordmeme', 'dmeme', 'discord'],
@@ -9,4 +9,4 @@ module.exports = new GenericMediaCommand({
   JSONKey: 'url',
   reqURL: 'https://api.weeb.sh/images/random?type=discord_memes',
   tokenKey: 'weebsh'
-})
+});

@@ -1,22 +1,22 @@
-const GenericCommand = require('../../models/GenericCommand')
+const GenericCommand = require('../../models/GenericCommand');
 
 function shuffle (array) {
   // From https://stackoverflow.com/a/2450976 because I'm lazy
 
-  let currentIndex = array.length
-  let temporaryValue
-  let randomIndex
+  let currentIndex = array.length;
+  let temporaryValue;
+  let randomIndex;
 
   while (currentIndex !== 0) {
-    randomIndex = Math.floor(Math.random() * currentIndex)
-    currentIndex -= 1
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex -= 1;
 
-    temporaryValue = array[currentIndex]
-    array[currentIndex] = array[randomIndex]
-    array[randomIndex] = temporaryValue
+    temporaryValue = array[currentIndex];
+    array[currentIndex] = array[randomIndex];
+    array[randomIndex] = temporaryValue;
   }
 
-  return array
+  return array;
 }
 
 const programmers = [
@@ -28,7 +28,7 @@ const programmers = [
   ['Yukine#8080 ', 'Dev-Yukine', 'i need a good german meme'],
   ['ParadoxOrigins#5451', 'ParadoxOrigins', 'baguette'],
   ['Blake#0007', 'zBlakee', 'yahoo']
-]
+];
 
 module.exports = new GenericCommand(
   () => ({
@@ -39,4 +39,4 @@ module.exports = new GenericCommand(
     description: 'Thanks to all of you!',
     perms: ['embedLinks']
   }
-)
+);

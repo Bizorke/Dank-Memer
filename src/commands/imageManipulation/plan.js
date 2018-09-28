@@ -1,4 +1,4 @@
-const { GenericImageCommand } = require('../../models/')
+const { GenericImageCommand } = require('../../models/');
 
 module.exports = new GenericImageCommand({
   triggers: ['plan', 'gru'],
@@ -8,4 +8,4 @@ module.exports = new GenericImageCommand({
   requiredArgs: 'You need to include three things separated by commas. Such as `pls plan ur, mom, gay`, try again',
   textLimit: 100,
   textOnly: true
-})
+});

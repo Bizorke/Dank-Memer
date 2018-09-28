@@ -1,4 +1,4 @@
-const { GenericMediaCommand } = require('../../models/')
+const { GenericMediaCommand } = require('../../models/');
 
 module.exports = new GenericMediaCommand({
   triggers: ['toys', 'sextoys'],
@@ -11,4 +11,4 @@ module.exports = new GenericMediaCommand({
   donorOnly: true,
   reqURL: 'https://boob.bot/api/v2/img/toys',
   tokenKey: 'boobbot'
-})
+});

@@ -1,4 +1,4 @@
-const { GenericRedditCommand } = require('../../models')
+const { GenericRedditCommand } = require('../../models');
 
 module.exports = new GenericRedditCommand({
   triggers: ['hootyboi', 'hoot', 'superbowl', 'football', 'owl'],
@@ -7,4 +7,4 @@ module.exports = new GenericRedditCommand({
   perms: ['embedLinks'],
   endpoint: '/r/superbowl/hot/.json?sort=top&t=week&limit=100',
   type: 'image'
-})
+});
