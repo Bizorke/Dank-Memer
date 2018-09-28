@@ -1,46 +1,46 @@
-const GenericModerationCommand = require('../../models/GenericModerationCommand')
+const GenericModerationCommand = require('../../models/GenericModerationCommand');
 
 module.exports = new GenericModerationCommand(
   async ({ Memer, msg, addCD }) => {
-    await addCD()
+    await addCD();
 
-    const purgeAmount = Math.min(Math.max(msg.args.nextArgument() || 10, 1), 100)
-    let filter = null
+    const purgeAmount = Math.min(Math.max(msg.args.nextArgument() || 10, 1), 100);
+    let filter = null;
 
     switch (msg.args.nextArgument()) {
       case 'bot':
       case 'bots': // clean messages from any bots
-        filter = (m) => m.author.bot
-        break
+        filter = (m) => m.author.bot;
+        break;
 
       case 'user':
       case 'users': // clean messages from all users (or those specified) - excludes bots
-        const senders = msg.args.resolveUsers()
+        const senders = msg.args.resolveUsers();
         if (senders.length > 0) {
-          filter = (m) => senders.some(user => user.id === m.author.id)
+          filter = (m) => senders.some(user => user.id === m.author.id);
         } else {
-          filter = (m) => !m.author.bot
+          filter = (m) => !m.author.bot;
         }
-        break
+        break;
 
       case 'memer':
-        filter = (m) => m.author.id === Memer.bot.user.id
-        break
+        filter = (m) => m.author.id === Memer.bot.user.id;
+        break;
     }
 
     const deleted = await msg.channel.purge(purgeAmount, filter)
-      .catch(err => err.message)
+      .catch(err => err.message);
 
     if (typeof (deleted) === 'string') {
-      return `Something went wrong while deleting the messages\n\`\`\`\n${deleted}\`\`\``
+      return `Something went wrong while deleting the messages\n\`\`\`\n${deleted}\`\`\``;
     } else {
-      let modlog = await Memer.db.fetchModlog(msg.channel.guild.id)
+      let modlog = await Memer.db.fetchModlog(msg.channel.guild.id);
       if (modlog) {
-        Memer.bot.createMessage(modlog, `**${msg.author.username}#${msg.author.discriminator}** Deleted ${deleted} messages in ${msg.channel.name}.`)
+        Memer.bot.createMessage(modlog, `**${msg.author.username}#${msg.author.discriminator}** Deleted ${deleted} messages in ${msg.channel.name}.`);
       }
-      const success = await msg.channel.createMessage(`Deleted ${deleted} messages. Are ya happy now?`)
-      await Memer.sleep(1500)
-      return success.delete()
+      const success = await msg.channel.createMessage(`Deleted ${deleted} messages. Are ya happy now?`);
+      await Memer.sleep(1500);
+      return success.delete();
     }
   },
   {
@@ -50,4 +50,4 @@ module.exports = new GenericModerationCommand(
     perms: ['manageMessages', 'readMessageHistory'],
     modPerms: ['manageMessages']
   }
-)
+);

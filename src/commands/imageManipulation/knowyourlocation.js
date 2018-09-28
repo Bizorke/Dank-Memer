@@ -1,4 +1,4 @@
-const { GenericImageCommand } = require('../../models/')
+const { GenericImageCommand } = require('../../models/');
 
 module.exports = new GenericImageCommand({
   triggers: ['knowyourlocation', 'kyl'],
@@ -7,4 +7,4 @@ module.exports = new GenericImageCommand({
   requiredArgs: 'You need to text for the search bar and the thing requesting location, try again',
   textLimit: [44, 119],
   textOnly: true
-})
+});

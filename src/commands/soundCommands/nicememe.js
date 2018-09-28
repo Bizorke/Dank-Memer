@@ -1,4 +1,4 @@
-const { GenericVoiceCommand } = require('../../models/')
+const { GenericVoiceCommand } = require('../../models/');
 
 module.exports = new GenericVoiceCommand({
   triggers: ['nicememe'],
@@ -11,4 +11,4 @@ module.exports = new GenericVoiceCommand({
   message: 'Nice meme.',
   files: 'nice',
   ownerOnly: true
-})
+});

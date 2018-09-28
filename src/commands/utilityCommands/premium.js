@@ -1,4 +1,4 @@
-const GenericCommand = require('../../models/GenericCommand')
+const GenericCommand = require('../../models/GenericCommand');
 
 module.exports = new GenericCommand(
   async () => ({
@@ -10,4 +10,4 @@ module.exports = new GenericCommand(
     description: 'See how you can donate to the bot to support the development and get some sweet perks!',
     perms: ['embedLinks']
   }
-)
+);
