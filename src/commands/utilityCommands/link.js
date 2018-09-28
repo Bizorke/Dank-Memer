@@ -23,10 +23,11 @@ module.exports = new GenericCommand(
         return patrons;
       }
     };
+    msg.channel.createMessage('<a:detective:458370651313405952> Looking for your donor perks, this might take a moment...');
     await loopThroughPatrons();
 
     if (!patrons) {
-      return 'There was an error whilst trying to obtain patron data. Please try again later.';
+      return 'There wass an error whilst trying to obtain patron data. Please try again later.';
     }
     await addCD();
 
