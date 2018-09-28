@@ -1,4 +1,4 @@
-const { GenericMediaCommand } = require('../../models/')
+const { GenericMediaCommand } = require('../../models/');
 
 module.exports = new GenericMediaCommand({
   triggers: ['neko', 'lewd'],
@@ -10,4 +10,4 @@ module.exports = new GenericMediaCommand({
   JSONKey: 'url',
   donorOnly: true,
   reqURL: 'https://nekos.life/api/v2/img/lewd'
-})
+});

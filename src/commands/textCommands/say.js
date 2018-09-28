@@ -1,9 +1,9 @@
-const { GenericCommand } = require('../../models')
+const { GenericCommand } = require('../../models');
 
 module.exports = new GenericCommand(
   async ({ Memer, msg, args }) => {
-    let m = Memer.inviteRemoval(args.join(' '))
-    return m
+    let m = Memer.inviteRemoval(args.join(' '));
+    return m;
   },
   {
     triggers: ['say', 'repeat'],
@@ -12,4 +12,4 @@ module.exports = new GenericCommand(
 
     missingArgs: 'What do you want me to say?'
   }
-)
+);

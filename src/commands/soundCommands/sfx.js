@@ -1,4 +1,4 @@
-const { GenericVoiceCommand } = require('../../models/')
+const { GenericVoiceCommand } = require('../../models/');
 
 module.exports = new GenericVoiceCommand({
   triggers: ['sfx'],
@@ -12,4 +12,4 @@ module.exports = new GenericVoiceCommand({
   ext: 'opus',
   soundboard: true,
   ownerOnly: true
-})
+});

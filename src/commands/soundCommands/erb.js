@@ -1,4 +1,4 @@
-const { GenericVoiceCommand } = require('../../models/')
+const { GenericVoiceCommand } = require('../../models/');
 
 module.exports = new GenericVoiceCommand({
   triggers: ['erb', 'epicrapbattles', 'rap'],
@@ -10,4 +10,4 @@ module.exports = new GenericVoiceCommand({
   np: true,
   skipIfPlaying: true,
   ownerOnly: true
-})
+});

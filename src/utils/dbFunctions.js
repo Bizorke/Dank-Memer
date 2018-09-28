@@ -1,32 +1,32 @@
 module.exports = Bot => ({
   updateModlog: async function updateModlog (guildID, channelID) {
-    const res = await this.getGuild(guildID)
+    const res = await this.getGuild(guildID);
 
     if (channelID === 0) {
-      res.modlog = 0
+      res.modlog = 0;
     }
-    res.modlog = channelID
+    res.modlog = channelID;
 
     return Bot.r.table('guilds')
-      .insert(res, { conflict: 'update' })
+      .insert(res, { conflict: 'update' });
   },
 
   fetchModlog: async function fetchModlog (guildID) {
-    const res = await this.getGuild(guildID)
+    const res = await this.getGuild(guildID);
 
-    let modlog
+    let modlog;
     if (!res.modlog) {
-      res.modlog = 0
+      res.modlog = 0;
       await Bot.r.table('guilds')
-        .insert(res, { conflict: 'update' })
+        .insert(res, { conflict: 'update' });
     }
     if (res.modlog === 0) {
-      modlog = false
+      modlog = false;
     } else {
-      modlog = res.modlog
+      modlog = res.modlog;
     }
 
-    return modlog
+    return modlog;
   },
 
   getGuild: function getGuild (guildID) {
@@ -40,25 +40,25 @@ module.exports = Bot => ({
         disabledCommands: [],
         enabledCommands: []
       })
-      .run()
+      .run();
   },
 
   updateGuild: function updateGuild (guildEntry) {
     return Bot.r.table('guilds')
       .insert(guildEntry, { conflict: 'update' })
-      .run()
+      .run();
   },
 
   deleteGuild: function deleteGuild (guildID) {
     return Bot.r.table('guilds')
       .get(guildID)
       .delete()
-      .run()
+      .run();
   },
 
   getDevSubscribers: async function getSubscriber () {
     return Bot.r.table('updates')
-      .run()
+      .run();
   },
 
   updateDevSubscriber: function updateDevSubscriber (guildID, channelID) {
@@ -67,120 +67,120 @@ module.exports = Bot => ({
         id: guildID,
         channelID
       }, { conflict: 'update' })
-      .run()
+      .run();
   },
 
   deleteDevSubscriber: function deleteSubscriber (guildID) {
     return Bot.r.table('updates')
       .get(guildID)
       .delete()
-      .run()
+      .run();
   },
 
   updateCooldowns: async function createCooldown (command, ownerID, isGlobalPremiumGuild) {
-    const pCommand = Bot.cmds.find(c => c.props.triggers.includes(command.toLowerCase()))
+    const pCommand = Bot.cmds.find(c => c.props.triggers.includes(command.toLowerCase()));
     if (!pCommand) {
-      return
+      return;
     }
-    const isDonor = isGlobalPremiumGuild || await this.checkDonor(ownerID)
-    let cooldown
+    const isDonor = isGlobalPremiumGuild || await this.checkDonor(ownerID);
+    let cooldown;
     if (isDonor && !pCommand.props.donorBlocked) {
-      cooldown = pCommand.props.donorCD
+      cooldown = pCommand.props.donorCD;
     } else {
-      cooldown = pCommand.props.cooldown
+      cooldown = pCommand.props.cooldown;
     }
-    const profile = await this.getCooldowns(ownerID)
+    const profile = await this.getCooldowns(ownerID);
     if (!profile) {
-      return this.createCooldowns(command, ownerID)
+      return this.createCooldowns(command, ownerID);
     }
     if (profile.cooldowns.some(cmd => cmd[command])) {
       profile.cooldowns.forEach(cmd => {
         if (cmd[command]) {
-          cmd[command] = Date.now() + cooldown
+          cmd[command] = Date.now() + cooldown;
         }
-      })
+      });
     } else {
-      profile.cooldowns.push({ [command]: Date.now() + cooldown })
+      profile.cooldowns.push({ [command]: Date.now() + cooldown });
     }
     return Bot.r.table('cooldowns')
-      .insert({ id: ownerID, cooldowns: profile.cooldowns }, { conflict: 'update' })
+      .insert({ id: ownerID, cooldowns: profile.cooldowns }, { conflict: 'update' });
   },
 
   createCooldowns: async function createCooldowns (command, ownerID) {
-    const pCommand = Bot.cmds.find(c => c.props.triggers.includes(command.toLowerCase()))
+    const pCommand = Bot.cmds.find(c => c.props.triggers.includes(command.toLowerCase()));
     if (!pCommand) {
-      return
+      return;
     }
-    const isDonor = await this.checkDonor(ownerID)
+    const isDonor = await this.checkDonor(ownerID);
     if (isDonor && !pCommand.props.donorBlocked) {
-      const cooldown = pCommand.props.donorCD
+      const cooldown = pCommand.props.donorCD;
       return Bot.r.table('cooldowns')
-        .insert({ id: ownerID, cooldowns: [ { [command]: Date.now() + cooldown } ] })
+        .insert({ id: ownerID, cooldowns: [ { [command]: Date.now() + cooldown } ] });
     }
-    const cooldown = pCommand.props.cooldown
+    const cooldown = pCommand.props.cooldown;
     return Bot.r.table('cooldowns')
-      .insert({ id: ownerID, cooldowns: [ { [command]: Date.now() + cooldown } ] })
+      .insert({ id: ownerID, cooldowns: [ { [command]: Date.now() + cooldown } ] });
   },
 
   getCooldowns: function getCooldowns (ownerID) {
     return Bot.r.table('cooldowns')
       .get(ownerID)
-      .run()
+      .run();
   },
 
   deleteCooldowns: function deleteCooldowns (ownerID) {
     return Bot.r.table('cooldowns')
       .get(ownerID)
       .delete()
-      .run()
+      .run();
   },
 
   getSpecificCooldown: async function getSpecificCooldown (command, ownerID) {
-    const profile = await Bot.r.table('cooldowns').get(ownerID).run()
+    const profile = await Bot.r.table('cooldowns').get(ownerID).run();
     if (!profile) {
-      return 1
+      return 1;
     }
-    const cooldowns = profile.cooldowns.find(item => item[command])
+    const cooldowns = profile.cooldowns.find(item => item[command]);
     if (!cooldowns) {
-      return 1
+      return 1;
     }
-    return profile.cooldowns.find(item => item[command])[command]
+    return profile.cooldowns.find(item => item[command])[command];
   },
 
   createBlock: function createBlock (id) {
     return Bot.r.table('blocked')
       .insert({ id })
-      .run()
+      .run();
   },
 
   removeBlock: function removeBlock (id) {
     return Bot.r.table('blocked')
       .get(id)
       .delete()
-      .run()
+      .run();
   },
 
   checkBlocked: function checkBlocked (guildID, authorID = 1) {
-    return Bot.r.table('blocked').filter(u => u('id').eq(guildID) || u('id').eq(authorID)).count().gt(0).run()
+    return Bot.r.table('blocked').filter(u => u('id').eq(guildID) || u('id').eq(authorID)).count().gt(0).run();
   },
 
   addPls: async function addPls (guildID, userID) {
-    let guild = await this.getPls(guildID)
+    let guild = await this.getPls(guildID);
     if (!guild) {
-      return this.initPls(guildID)
+      return this.initPls(guildID);
     }
-    guild.pls++
+    guild.pls++;
 
     Bot.r.table('guildUsage')
       .insert(guild, { conflict: 'update' })
-      .run()
+      .run();
 
     return Bot.r.table('users')
       .get(userID)
       .update({
         pls: Bot.r.row('pls').add(1)
       })
-      .run()
+      .run();
   },
 
   initPls: function initPls (guildID) {
@@ -189,43 +189,43 @@ module.exports = Bot => ({
         id: guildID,
         pls: 1
       })
-      .run()
+      .run();
   },
 
   deletePls: function deletePls (guildID) {
     return Bot.r.table('guildUsage')
       .get(guildID)
       .delete()
-      .run()
+      .run();
   },
 
   getPls: async function getPls (guildID) {
     let res = await Bot.r.table('guildUsage')
       .get(guildID)
-      .run()
+      .run();
     if (!res) {
-      this.initPls(guildID)
-      return 0
+      this.initPls(guildID);
+      return 0;
     }
-    return res
+    return res;
   },
 
   topPls: function topPls () {
     return Bot.r.table('guildUsage')
       .orderBy({index: Bot.r.desc('pls')})
       .limit(10)
-      .run()
+      .run();
   },
 
   topUsers: function topUsers () {
     return Bot.r.table('users')
       .orderBy({index: Bot.r.desc('pls')})
       .limit(15) // TODO: Make 10 along with other (top) functions
-      .run()
+      .run();
   },
 
   getUser: async function getUser (userID) {
-    let user = await Bot.r.table('users').get(userID)
+    let user = await Bot.r.table('users').get(userID);
 
     if (!user) {
       user = (await Bot.r.table('users').insert({
@@ -262,24 +262,24 @@ module.exports = Bot => ({
         dblUpvoted: false // discordbotlist.com voter status
       }, {
         returnChanges: true
-      }).run()).changes[0].new_val
+      }).run()).changes[0].new_val;
     }
 
-    return user
+    return user;
   },
 
   removeUser: function removeUser (userID) {
     return Bot.r.table('users')
       .get(userID)
       .delete()
-      .run()
+      .run();
   },
 
   checkVoter: function checkVoter (id) {
     return Bot.r.table('users')
       .get(id)('upvoted')
       .default(false)
-      .run()
+      .run();
   },
 
   addPocket: async function addPocket (id, amount) {
@@ -289,7 +289,7 @@ module.exports = Bot => ({
         pocket: Bot.r.row('pocket').add(Number(amount)),
         won: Bot.r.row('won').add(Number(amount))
       })
-      .run()
+      .run();
   },
 
   addBank: async function addBank (id, amount) {
@@ -299,14 +299,14 @@ module.exports = Bot => ({
         pocket: Bot.r.row('pocket').sub(Number(amount)),
         bank: Bot.r.row('bank').add(Number(amount))
       })
-      .run()
+      .run();
   },
 
   topPocket: function topPocket () {
     return Bot.r.table('users')
       .orderBy({index: Bot.r.desc('pocket')})
       .limit(10)
-      .run()
+      .run();
   },
 
   removePocket: async function removePocket (id, amount) {
@@ -316,7 +316,7 @@ module.exports = Bot => ({
         pocket: Bot.r.expr([Bot.r.row('pocket').sub(Number(amount)), 0]).max(),
         lost: Bot.r.row('pocket').sub(Number(amount))
       })
-      .run()
+      .run();
   },
 
   removeBank: async function removePocket (id, amount) {
@@ -326,16 +326,16 @@ module.exports = Bot => ({
         bank: Bot.r.row('bank').sub(Number(amount)),
         pocket: Bot.r.row('pocket').add(Number(amount))
       })
-      .run()
+      .run();
   },
 
   addStreak: async function addStreak (id) {
-    const streak = await this.getStreak(id)
+    const streak = await this.getStreak(id);
 
-    streak.time = Date.now()
-    streak.streak = ~~streak.streak + 1
+    streak.time = Date.now();
+    streak.streak = ~~streak.streak + 1;
 
-    await Bot.r.table('users').insert({ id, streak }, { conflict: 'update' }).run()
+    await Bot.r.table('users').insert({ id, streak }, { conflict: 'update' }).run();
   },
 
   addSpam: async function addSpam (id) {
@@ -343,49 +343,49 @@ module.exports = Bot => ({
       .get(id)
       .update({
         spam: Bot.r.row('spam').add(1)
-      }).run()
+      }).run();
   },
 
   topSpam: function topSpam () {
     return Bot.r.table('users')
       .orderBy({index: Bot.r.desc('spam')})
       .limit(10)
-      .run()
+      .run();
   },
 
   addCmd: function addCmd (id) {
-    const lastCmd = Date.now()
+    const lastCmd = Date.now();
     return Bot.r.table('users')
       .get(id)
       .update({
         lastCmd
       })
-      .run()
+      .run();
   },
 
   getSpam: function getSpam (id) {
     return Bot.r.table('users')
       .get(id)('spam')
       .default(0)
-      .run()
+      .run();
   },
 
   getStreak: function getStreak (id) {
     return Bot.r.table('users')
       .get(id)('streak')
       .default({})
-      .run()
+      .run();
   },
 
   resetStreak: async function resetStreak (id) {
     const streak = {
       time: Date.now(),
       streak: 1
-    }
+    };
 
     await Bot.r.table('users')
       .insert({ id, streak }, { conflict: 'update' })
-      .run()
+      .run();
   },
 
   addDonor: function addDonor (id, donorAmount, donationDate, declineDate, patreonID) {
@@ -400,20 +400,20 @@ module.exports = Bot => ({
         totalPaid: donorAmount,
         patreonID
       }, { conflict: 'update' })
-      .run()
+      .run();
   },
 
   getDonor: function getDonor (id) {
     return Bot.r.table('donors')
       .get(id)
       .default(false)
-      .run()
+      .run();
   },
 
   checkPremiumGuild: async function checkPremiumGuild (id) {
     return !!await Bot.r.table('donors')
       .filter(Bot.r.row('guilds').contains(id))
-      .count()
+      .count();
   },
 
   updateDonorGuild: function updateDonorGuild (id, guilds, guildRedeems) {
@@ -423,20 +423,20 @@ module.exports = Bot => ({
         guilds,
         guildRedeems
       }, { conflict: 'update' })
-      .run()
+      .run();
   },
 
   removeDonor: function removeDonor (id) {
     return Bot.r.table('donors')
       .get(id)
       .delete()
-      .run()
+      .run();
   },
 
   findExpiredDonors: async function findExpiredDonors () {
     return Bot.r.table('donors')
       .filter(Bot.r.row('declinedSince').lt(Bot.r.now().sub(30 * 24 * 60 * 60)))
-      .run() // only 1 month after decline date
+      .run(); // only 1 month after decline date
   },
 
   wipeExpiredDonors: async function wipeExpiredDonors () {
@@ -444,100 +444,100 @@ module.exports = Bot => ({
       .filter(Bot.r.row('declinedSince').lt(Bot.r.now().sub(60 * 24 * 60 * 60))) // 2 months after decline date
       .delete({returnChanges: 'always'})
       .run()
-      .then(d => d.changes.map(o => o.old_val))
+      .then(d => d.changes.map(o => o.old_val));
   },
 
   checkDonor: function checkDonor (id) {
     return Bot.r.table('donors')
       .get(id)('donorAmount')
       .default(false)
-      .run()
+      .run();
   },
 
   checkGlobalPremiumGuild: function checkGlobalPremiumServer (id) {
     return Bot.r.table('donors')
       .filter(Bot.r.row('guilds').contains(id))
       .run()
-      .then(results => results[0] && results[0].donorAmount >= 20)
+      .then(results => results[0] && results[0].donorAmount >= 20);
   },
 
   getStats: function getStats () {
     return Bot.r.table('stats')
       .get(1)('stats')
-      .run()
+      .run();
   },
 
   addTag: async function addTag (id, name, text) {
     return Bot.r.table('tags')
-      .insert({guild_id: id, name: name, text: text})
+      .insert({guild_id: id, name: name, text: text});
   },
 
   getAllTags: async function getAllTags (id) {
     let tags = await Bot.r.table('tags')
-      .getAll(id, {index: 'guild_id'})
-    return tags
+      .getAll(id, {index: 'guild_id'});
+    return tags;
   },
 
   getTag: async function getTag (id, name) {
     let tags = await Bot.r.table('tags')
       .filter({name: name, guild_id: id})
-      .run()
-    return tags[0] || false
+      .run();
+    return tags[0] || false;
   },
 
   removeTag: async function getTag (id, name) {
     return Bot.r.table('tags')
       .filter({name: name, guild_id: id})
       .delete()
-      .run()
+      .run();
   },
 
   getAutomemeChannel: async function getAutomemeChannel (id) {
     let channel = await Bot.r.table('automeme')
       .get(id)
-      .run()
-    return channel || false
+      .run();
+    return channel || false;
   },
 
   removeAutomemeChannel: async function removeAutomemeChannel (id) {
     return Bot.r.table('automeme')
       .get(id)
       .delete()
-      .run()
+      .run();
   },
 
   allAutomemeChannels: async function allAutomemeChannels () {
     return Bot.r.table('automeme')
-      .run()
+      .run();
   },
 
   addAutomemeChannel: async function addAutomemeChannel (id, channelID, interval) { // id = guild ID
     return Bot.r.table('automeme')
-      .insert({id: id, channel: channelID, interval})
+      .insert({id: id, channel: channelID, interval});
   },
 
   getAutonsfwChannel: async function getAutonsfwChannel (id) {
     let channel = await Bot.r.table('autonsfw')
       .get(id)
-      .run()
-    return channel || false
+      .run();
+    return channel || false;
   },
 
   removeAutonsfwChannel: async function removeAutonsfwChannel (id) {
     return Bot.r.table('autonsfw')
       .get(id)
       .delete()
-      .run()
+      .run();
   },
 
   allAutonsfwChannels: async function allAutonsfwChannels () {
     return Bot.r.table('autonsfw')
-      .run()
+      .run();
   },
 
   addAutonsfwChannel: async function addAutonsfwChannel (id, channelID, interval, type) { // id = guild ID
     return Bot.r.table('autonsfw')
       .insert({id, channel: channelID, interval, type}, { conflict: 'update' })
-      .run()
+      .run();
   }
-})
+});
