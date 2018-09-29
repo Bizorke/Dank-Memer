@@ -140,7 +140,7 @@ exports.handle = async function (msg) {
 
   updateStats.bind(this)(msg, command, lastCmd);
 
-  const isInCooldown = await checkCooldowns.bind(this)(msg, command, isDonor);
+  const isInCooldown = await checkCooldowns.bind(this)(msg, command, isDonor, isGlobalPremiumGuild);
   if (isInCooldown) { return; }
 
   const updateCooldowns = () => this.db.updateCooldowns(command.props.triggers[0], msg.author.id, isGlobalPremiumGuild);
@@ -188,8 +188,8 @@ async function updateStats (msg, command, lastCmd) {
   this.db.addPls(msg.channel.guild.id, msg.author.id);
 }
 
-async function checkCooldowns (msg, command, isDonor) {
-  const cooldown = await this.db.getSpecificCooldown(command.props.triggers[0], msg.author.id);
+async function checkCooldowns (msg, command, isDonor, isGlobalPremiumGuild) {
+  const cooldown = await this.db.getSpecificCooldown(command.props, msg.author.id, isDonor, isGlobalPremiumGuild);
   if (cooldown > Date.now() && process.env.NODE_ENV !== 'dev') {
     const waitTime = (cooldown - Date.now()) / 1000;
     let cooldownWarning = command.props.cooldownMessage || `**Time left until you can run the command again:** `;
@@ -198,18 +198,18 @@ async function checkCooldowns (msg, command, isDonor) {
       embed: {
         color: this.randomColor(),
         title: 'Slow it down, cmon',
-        description: cooldownWarning + (waitTime > 60 ? `**${this.parseTime(waitTime)}**` : `**${waitTime.toFixed()} seconds**`) + `\n\n__Default Cooldown__: ${this.parseTime(command.props.cooldown / 1000)}\n__[Donor](https://www.patreon.com/dankmemerbot) Cooldown__: ${command.props.donorBlocked ? this.parseTime(command.props.cooldown / 1000) : this.parseTime(command.props.donorCD / 1000)}\n\nWhile you wait, go check our our [Twitter](https://twitter.com/dankmemerbot), [Subreddit](https://www.reddit.com/r/dankmemer/), and [Discord Server](https://www.discord.gg/Wejhbd4)`
+        description: cooldownWarning + (waitTime > 60 ? `**${this.parseTime(waitTime)}**` : `**${waitTime.toFixed()} seconds**`) + `\n\n__Default Cooldown__: ${this.parseTime(command.props.cooldown / 1000)}\n__[Donor](https://www.patreon.com/dankmemerbot) Cooldown__: ${!command.props.donorCD ? this.parseTime(command.props.cooldown / 1000) : this.parseTime(command.props.donorCD / 1000)}\n\nWhile you wait, go check our our [Twitter](https://twitter.com/dankmemerbot), [Subreddit](https://www.reddit.com/r/dankmemer/), and [Discord Server](https://www.discord.gg/Wejhbd4)`
       }
     };
     const donorMessage = {
       embed: {
         color: this.randomColor(),
         title: 'Woah now, slow it down',
-        description: cooldownWarning + (waitTime > 60 ? `**${this.parseTime(waitTime)}**` : `**${waitTime.toFixed()} seconds**`) + `\n__[Donor](https://www.patreon.com/dankmemerbot) Cooldown__: ${command.props.donorBlocked ? this.parseTime(command.props.cooldown / 1000) : this.parseTime(command.props.donorCD / 1000)}`,
+        description: cooldownWarning + (waitTime > 60 ? `**${this.parseTime(waitTime)}**` : `**${waitTime.toFixed()} seconds**`) + `\n__[Donor](https://www.patreon.com/dankmemerbot) Cooldown__: ${!command.props.donorCD ? this.parseTime(command.props.cooldown / 1000) : this.parseTime(command.props.donorCD / 1000)}`,
         footer: { text: 'Thanks for your support!' }
       }
     };
-    msg.channel.createMessage(isDonor ? donorMessage : cooldownMessage);
+    msg.channel.createMessage(isDonor || isGlobalPremiumGuild ? donorMessage : cooldownMessage);
     return true;
   }
   return false;
@@ -282,6 +282,7 @@ async function runCommand (command, msg, args, cleanArgs, updateCooldowns, isGlo
 
 async function reportError (e, msg, command, cleanArgs) {
   let date = new Date();
+  this.stats.errReported++;
   let message = await this.errorMessages(e);
   let randNum = Math.floor(Math.random() * Math.floor(99999));
   const channel = this.config.options.errorChannel || '470338254848262154';

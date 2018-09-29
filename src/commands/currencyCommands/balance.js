@@ -17,8 +17,7 @@ module.exports = new GenericCommand(
       return {
         title: `Here is your balance, ${msg.author.username}`,
         description: `**Your Pocket**: ${pocket.toLocaleString()} coins\n**Bank Account**: ${bank.toLocaleString()} coins`,
-        thumbnail: {url: 'http://www.dank-memer-is-lots-of.fun/coin.png'},
-        footer: { text: 'to see what upgrades you have, use the upgrades command' }
+        thumbnail: {url: 'http://www.dank-memer-is-lots-of.fun/coin.png'}
       };
     }
   },

@@ -45,8 +45,14 @@ class Memer extends Base {
     };
     this.stats = {
       messages: 0,
-      commands: 0
+      commands: 0,
+      guildsJoined: 0,
+      guildsLeft: 0,
+      errReported: 0,
+      err: 0
     };
+    this.cooldowns = new Map();
+    this._cooldownsSweep = setInterval(this._sweepCooldowns.bind(this), 1000 * 60 * 30);
     Object.assign(this, require('./utils/misc.js'));
   }
 
@@ -153,6 +159,25 @@ class Memer extends Base {
 
   get package () {
     return botPackage;
+  }
+
+  _sweepCooldowns () {
+    for (const [key, value] of this.cooldowns) {
+      let activeCooldowns = [];
+      for (const cooldown of value.cooldowns) {
+        if (cooldown[Object.keys(cooldown)[0]] > Date.now()) {
+          activeCooldowns.push(cooldown);
+        }
+      }
+      if (!activeCooldowns[0]) {
+        this.cooldowns.delete(key);
+      } else if (activeCooldowns.length !== value.cooldowns.length) {
+        this.cooldowns.set(key, {
+          cooldowns: activeCooldowns,
+          id: key
+        });
+      }
+    }
   }
 }
 

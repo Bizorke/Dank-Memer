@@ -4,6 +4,6 @@ const commands = require('fs').readdirSync(__dirname)
 
 module.exports = {
   commands,
-  name: '🎵 Music',
-  description: 'Listen to some tunes with ya friends'
+  name: '🎲 Games',
+  description: 'Play some mini-games on your server and with your friends!'
 };

@@ -38,12 +38,20 @@ module.exports = new GenericCommand(
     // const sfxCount = await exec('$(find /home/memer/Dank-Memer/src/assets/audio/custom/ -type f | wc -l)').catch(() => 0)
     // const sfxSize = await exec('$(du -sh /home/memer/Dank-Memer/src/assets/audio/custom/ | cut -f1)').catch(() => 0)
     const stats = await Memer.db.getStats();
+    let users = await Memer.r.table('users').count();
+    let guilds = await Memer.r.table('guilds').count();
+    let cd = await Memer.r.table('cooldowns').count();
+    let tags = await Memer.r.table('tags').count();
+    let updates = await Memer.r.table('updates').count();
+    let donors = await Memer.r.table('donors').count();
     const CPUUsage = await getCPUUsage();
-    let cached = await Memer.redis.keysAsync('msg-*');
+    let cached = await Memer.redis.keys('msg-*');
     cached = cached.length;
 
     const formatted =
     `[GUILDS] ${stats.guilds}\n` +
+    `  [Joined] ${Memer.stats.guildsJoined}\n` +
+    `  [Left] ${Memer.stats.guildsLeft}\n` +
     `  [Large] ${stats.largeGuilds}\n` +
     `  [Exclusive] ${stats.exclusiveGuilds}\n` +
     `[USERS] ${stats.users}\n` +
@@ -51,15 +59,22 @@ module.exports = new GenericCommand(
     `[MESSAGES] ${Memer.stats.messages}\n` +
     `  [Cached] ${cached}\n` +
     `[COMMANDS RAN] ${Memer.stats.commands}\n` +
-    `  [Average] ${Memer.stats.commands / stats.guilds}\n` +
+    `  [Average] ${(Memer.stats.commands / stats.guilds).toFixed(4)}\n` +
     `[MEMORY] ${(stats.totalRam / 1000).toFixed(1)}/${(os.totalmem() / 1073741824).toFixed(1)}gb (${((stats.totalRam / 1000) / (os.totalmem() / 1073741824)).toFixed(1)}%)\n` +
     `  [System] ${((os.totalmem() - os.freemem()) / 1073741824).toFixed(1)}/${(os.totalmem() / 1073741824).toFixed(1)}gb (${(((os.totalmem() - os.freemem()) / os.totalmem()) * 100).toFixed(1)}%)\n` +
     `  [Cluster] ${(stats.totalRam / 1000).toFixed(1) / Memer.config.sharder.clusters}gb\n` +
     `[UPTIME] ${Memer.parseTime(process.uptime())}\n` +
     `  [System] ${Memer.parseTime(os.uptime())}\n` +
-    `[CPU] ${CPUUsage.toFixed(1)}%\n`;
-
-    console.log('before return');
+    `[CPU] ${CPUUsage.toFixed(1)}%\n` +
+    `[ERRORS] ${Memer.stats.errReported}\n` +
+    `  [Eris] ${Memer.stats.err}\n` +
+    `[RETHINK] ${CPUUsage.toFixed(1)}\n` +
+    `  [Guilds] ${guilds}\n` +
+    `  [Users] ${users}\n` +
+    `  [Donors] ${donors}\n` +
+    `  [Cooldowns] ${cd}\n` +
+    `  [Tags] ${tags}\n` +
+    `  [Update Channels] ${updates}\n`;
     return '```ini\n' + formatted + '\n```';
   }, {
     triggers: ['debug'],

@@ -60,7 +60,7 @@ module.exports = new GenericCommand(
   {
     triggers: ['premiumserver', 'pserver', 'premium', 'donorserver'],
     usage: '{command} [add | remove]',
-    donorBlocked: true,
+    donorCD: 2000,
     donorOnly: true,
     description: 'Add or remove the current guild as a premium server, or leave the arguments blank to list all of your premium servers'
   }

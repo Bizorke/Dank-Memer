@@ -48,7 +48,7 @@ module.exports = new GenericCommand(
     triggers: ['autonsfw'],
     usage: '{command} [channel] [type] [interval in minutes]',
     cooldown: 1e4,
-    donorBlocked: true,
+    donorCD: 1e4,
     description: 'Set up a channel to automatically post porn to'
   }
 );
