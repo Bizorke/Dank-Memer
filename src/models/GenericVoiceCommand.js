@@ -43,7 +43,7 @@ module.exports = class GenericVoiceCommand {
         await Memer.sleep(100);
         await music.player.join(msg.member.voiceState.channelID);
         await music._play();
-        return `nice, ${this.props.triggers[0]} songs will keep playing until you leave the channel or stop the music\nYou can also use \`pls ${this.props.triggers[0]} -autoplay\` again to turn this off`;
+        return `nice, ${this.props.triggers[0]} songs will keep playing until you leave the channel or stop the music\nYou can also just use \`pls ${this.props.triggers[0]}\` again to turn this off`;
       } else {
         // Search
         tracks = tracks.filter(track => track.info ? track.info.title.toLowerCase().includes(args.join(' ').toLowerCase()) : track);
