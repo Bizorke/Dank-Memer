@@ -1,3 +1,4 @@
+/** @param {import("../models/GenericCommand").Memer} Bot */
 module.exports = Bot => ({
   updateModlog: async function updateModlog (guildID, channelID) {
     const res = await this.getGuild(guildID);
@@ -77,21 +78,21 @@ module.exports = Bot => ({
       .run();
   },
 
-  updateCooldowns: async function createCooldown (command, ownerID, isGlobalPremiumGuild) {
+  updateCooldowns: async function createCooldown (command, userID, isGlobalPremiumGuild) {
     const pCommand = Bot.cmds.find(c => c.props.triggers.includes(command.toLowerCase()));
     if (!pCommand) {
       return;
     }
-    const isDonor = isGlobalPremiumGuild || await this.checkDonor(ownerID);
+    const isDonor = isGlobalPremiumGuild || await this.checkDonor(userID);
     let cooldown;
-    if (isDonor && !pCommand.props.donorBlocked) {
+    if (isDonor) {
       cooldown = pCommand.props.donorCD;
     } else {
       cooldown = pCommand.props.cooldown;
     }
-    const profile = await this.getCooldowns(ownerID);
+    const profile = await this.getCooldowns(userID, cooldown > 20000 ? 'db' : false);
     if (!profile) {
-      return this.createCooldowns(command, ownerID);
+      return this.createCooldowns(command, userID, isGlobalPremiumGuild);
     }
     if (profile.cooldowns.some(cmd => cmd[command])) {
       profile.cooldowns.forEach(cmd => {
@@ -102,49 +103,72 @@ module.exports = Bot => ({
     } else {
       profile.cooldowns.push({ [command]: Date.now() + cooldown });
     }
+    if (cooldown < 20000) {
+      return Bot.cooldowns.set(userID, { id: userID, cooldowns: profile.cooldowns });
+    }
     return Bot.r.table('cooldowns')
-      .insert({ id: ownerID, cooldowns: profile.cooldowns }, { conflict: 'update' });
+      .insert({ id: userID, cooldowns: profile.cooldowns }, { conflict: 'update' });
   },
 
-  createCooldowns: async function createCooldowns (command, ownerID) {
+  createCooldowns: async function createCooldowns (command, userID, isGlobalPremiumGuild) {
     const pCommand = Bot.cmds.find(c => c.props.triggers.includes(command.toLowerCase()));
     if (!pCommand) {
       return;
     }
-    const isDonor = await this.checkDonor(ownerID);
-    if (isDonor && !pCommand.props.donorBlocked) {
-      const cooldown = pCommand.props.donorCD;
+    const isDonor = isGlobalPremiumGuild || await this.checkDonor(userID);
+    const cooldown = isDonor ? pCommand.props.donorCD : pCommand.props.cooldown;
+    if (cooldown < 20000) {
+      return Bot.cooldowns.set(userID, { id: userID, cooldowns: [ { [command]: Date.now() + cooldown } ] });
+    } else {
       return Bot.r.table('cooldowns')
-        .insert({ id: ownerID, cooldowns: [ { [command]: Date.now() + cooldown } ] });
+        .insert({ id: userID, cooldowns: [ { [command]: Date.now() + cooldown } ] });
     }
-    const cooldown = pCommand.props.cooldown;
-    return Bot.r.table('cooldowns')
-      .insert({ id: ownerID, cooldowns: [ { [command]: Date.now() + cooldown } ] });
   },
 
-  getCooldowns: function getCooldowns (ownerID) {
+  getCooldowns: function getCooldowns (userID, type) {
+    let all = type === 'all';
+    if (all || type !== 'db') {
+      const cooldown = Bot.cooldowns.get(userID) || {
+        cooldowns: [],
+        id: userID
+      };
+      if (!all) {
+        return cooldown;
+      } else {
+        all = cooldown;
+      }
+    }
     return Bot.r.table('cooldowns')
-      .get(ownerID)
-      .run();
+      .get(userID)
+      .run()
+      .then(cd => {
+        if (all) {
+          all.cooldowns = all.cooldowns.concat(cd ? cd.cooldowns : []);
+          return all;
+        }
+        return cd;
+      });
   },
 
-  deleteCooldowns: function deleteCooldowns (ownerID) {
+  deleteCooldowns: function deleteCooldowns (userID) {
+    Bot.cooldowns.delete(userID);
     return Bot.r.table('cooldowns')
-      .get(ownerID)
+      .get(userID)
       .delete()
       .run();
   },
 
-  getSpecificCooldown: async function getSpecificCooldown (command, ownerID) {
-    const profile = await Bot.r.table('cooldowns').get(ownerID).run();
+  getSpecificCooldown: async function getSpecificCooldown (command, userID, isDonor, isGlobalPremiumGuild) {
+    const cooldown = isDonor || isGlobalPremiumGuild ? (command.donorCD || command.cooldown) : command.cooldown;
+    const profile = cooldown < 20000 ? Bot.cooldowns.get(userID) : await Bot.r.table('cooldowns').get(userID).run();
     if (!profile) {
       return 1;
     }
-    const cooldowns = profile.cooldowns.find(item => item[command]);
+    const cooldowns = profile.cooldowns.find(item => item[command.triggers[0]]);
     if (!cooldowns) {
       return 1;
     }
-    return profile.cooldowns.find(item => item[command])[command];
+    return profile.cooldowns.find(item => item[command.triggers[0]])[command.triggers[0]];
   },
 
   createBlock: function createBlock (id) {
