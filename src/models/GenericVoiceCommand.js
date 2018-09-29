@@ -32,12 +32,18 @@ module.exports = class GenericVoiceCommand {
       return `You can't play anything right now because **${music.sfxautoplay.host.user.username}** has started a \`${music.sfxautoplay.name}\` autoplay session. Tracks from \`${music.sfxautoplay.name}\` will continuously play until the host leaves, or someone stops the music using \`pls stop\``;
     }
 
+    await addCD();
+
     if (args.length) {
       // Repeat function
       let donor = await Memer.db.checkDonor(msg.author.id);
       if ((args.includes('-autoplay') || args.includes('-repeat')) && donor) {
-        music.sfxautoplay = { enabled: !music.sfxautoplay.enabled, host: msg.member, type: this.cmdProps.dir, name: this.props.triggers[0] };
-        msg.channel.createMessage(`nice, ${this.props.triggers[0]} songs will keep playing until you leave the channel or stop the music\nYou can also use \`pls ${this.props.triggers[0]} -autoplay\` again to turn this off`);
+        music.sfxautoplay = { enabled: true, host: msg.member, type: this.cmdProps.dir, name: this.props.triggers[0] };
+        await music.stop();
+        await Memer.sleep(100);
+        await music.player.join(msg.member.voiceState.channelID);
+        await music._play();
+        return `nice, ${this.props.triggers[0]} songs will keep playing until you leave the channel or stop the music\nYou can also use \`pls ${this.props.triggers[0]} -autoplay\` again to turn this off`;
       } else {
         // Search
         tracks = tracks.filter(track => track.info ? track.info.title.toLowerCase().includes(args.join(' ').toLowerCase()) : track);
@@ -67,20 +73,7 @@ module.exports = class GenericVoiceCommand {
       return msg.reply('Make sure I have `connect`, `speak`, and `use voice activity` permissions in the channel settings so I can do this command!\n\nHow to do that: https://i.imgur.com/ugplJJO.gif');
     }
 
-    if (music.player) {
-      if (!music.playing) {
-        await music.reset();
-      }
-      if (this.cmdProps.skipIfPlaying && music.playing) {
-        await music.reset();
-      }
-      if (music.playing && !this.cmdProps.skipIfPlaying) {
-        return this.cmdProps.existingConn;
-      }
-    }
-
-    await addCD();
-
+    music.sfxautoplay = { enabled: false, host: null, type: null, name: null };
     if (this.cmdProps.np) {
       msg.channel.createMessage({ embed: { title: 'Now Playing...', description: song.info.title } });
     } else if (this.cmdProps.message) {
@@ -89,16 +82,12 @@ module.exports = class GenericVoiceCommand {
       msg.addReaction(this.cmdProps.reaction);
     }
 
-    await music.player.join(msg.member.voiceState.channelID);
     music.channel = msg.channel.id;
-    await music.ready;
-    if (music.queue[0]) {
-      music.queue = [];
-    }
-
-    let promises = [];
-    promises.push(await music.addSong(song));
-    await Promise.all(promises);
+    await music.addSong(song, false, music.queue.length < 1 ? 0 : 1);
+    await music.stop();
+    await Memer.sleep(100);
+    await music.player.join(msg.member.voiceState.channelID);
+    await music._play();
   }
 
   get props () {
