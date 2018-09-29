@@ -45,7 +45,11 @@ class Memer extends Base {
     };
     this.stats = {
       messages: 0,
-      commands: 0
+      commands: 0,
+      guildsJoined: 0,
+      guildsLeft: 0,
+      errReported: 0,
+      err: 0
     };
     this.cooldowns = new Map();
     this._cooldownsSweep = setInterval(this._sweepCooldowns.bind(this), 1000 * 60 * 30);

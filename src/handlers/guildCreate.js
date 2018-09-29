@@ -1,4 +1,5 @@
 exports.handle = function (guild) {
+  this.stats.guildsJoined++;
   const embed = {
     color: 12054271,
     description: this.intro,

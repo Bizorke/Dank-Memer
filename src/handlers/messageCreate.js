@@ -282,6 +282,7 @@ async function runCommand (command, msg, args, cleanArgs, updateCooldowns, isGlo
 
 async function reportError (e, msg, command, cleanArgs) {
   let date = new Date();
+  this.stats.errReported++;
   let message = await this.errorMessages(e);
   let randNum = Math.floor(Math.random() * Math.floor(99999));
   const channel = this.config.options.errorChannel || '470338254848262154';
