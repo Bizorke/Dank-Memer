@@ -2,7 +2,11 @@ module.exports = class Autopost {
   constructor (client) {
     /** @type {import("../models/GenericCommand").Memer} The memer instance */
     this.client = client;
-    this.avatar = client.http.get(this.client.bot.user.dynamicAvatarURL())
+  }
+
+  /** @type {Promise<String>} Memer's avatar */
+  get avatar () {
+    return this.client.http.get(this.client.bot.user.dynamicAvatarURL())
       .then(res => {
         return `data:${res.headers['content-type']};base64,${res.body.toString('base64')}`;
       });
@@ -34,93 +38,107 @@ module.exports = class Autopost {
     if (!post) {
       return this.automeme();
     }
-    for (const { channel, id, interval } of check) {
-      let autopostInterval = await this.client.redis.get(`automeme-${id}`)
-        .then(res => res ? JSON.parse(res) : undefined);
-      if (!autopostInterval) {
-        await this.client.redis.set(`automeme-${id}`, JSON.stringify({ guildID: id, interval: interval || 5, elapsed: 0 }));
-        autopostInterval = await this.client.redis.get(`automeme-${id}`)
+    for (const { id, interval, webhookID, webhookToken } of check) {
+      if (webhookID) {
+        let autopostInterval = await this.client.redis.get(`automeme-${id}`)
           .then(res => res ? JSON.parse(res) : undefined);
-      }
-      await this.client.redis.set(`automeme-${id}`, JSON.stringify({ guildID: id, interval: interval || 5, elapsed: Number(autopostInterval.elapsed += 5) }));
-      if (autopostInterval.elapsed < autopostInterval.interval) {
-        continue;
-      } else {
-        await this.client.redis.set(`automeme-${id}`, JSON.stringify({ guildID: id, interval: interval || 5, elapsed: 0 }));
-      }
+        if (!autopostInterval) {
+          await this.client.redis.set(`automeme-${id}`, JSON.stringify({ guildID: id, interval: interval || 5, elapsed: 0 }));
+          autopostInterval = await this.client.redis.get(`automeme-${id}`)
+            .then(res => res ? JSON.parse(res) : undefined);
+        }
+        await this.client.redis.set(`automeme-${id}`, JSON.stringify({ guildID: id, interval: interval || 5, elapsed: Number(autopostInterval.elapsed += 5) }));
+        if (autopostInterval.elapsed < autopostInterval.interval) {
+          continue;
+        } else {
+          await this.client.redis.set(`automeme-${id}`, JSON.stringify({ guildID: id, interval: interval || 5, elapsed: 0 }));
+        }
 
-      this.client.bot.createChannelWebhook(channel, {
-        name: 'Automeme',
-        avatar: await this.avatar
-      }, 'Automeme Post').then(webhook => {
-        this.client.bot.executeWebhook(webhook.id, webhook.token, {
+        this.client.bot.executeWebhook(webhookID, webhookToken, {
           embeds: [ {
             title: post.data.title,
             url: `https://www.reddit.com${post.data.permalink}`,
             description: post.data.selftext,
             image: { url: post.data.url },
             footer: { text: `👍 ${post.data.ups} - 💬 ${post.data.num_comments} | ${post.data.subreddit}` }
-          } ]
+          } ],
+          wait: true
         })
           .catch((err) => {
-            if (err.message.toString() === 'DiscordRESTError [10003]: Unknown Channel') {
-              // Remove this channel from the database if it's not valid/not found
-              this.client.db.removeAutomemeChannel(channel);
+            if ([10003, 10015, 50001, 50013].includes(err.code)) {
+            // Remove this channel from the database if the channel doesn't exist, the webhook doesn't exist, or the bot miss the permissions to access it
+              this.client.db.removeAutomemeChannel(id);
             }
           });
-      });
+      }
     }
   }
 
   async autonsfw () {
     let check = await this.client.db.allAutonsfwChannels();
-    for (const { channel, type, id, interval } of check) {
-      let autopostInterval = await this.client.redis.get(`autonsfw-${id}`)
-        .then(res => res ? JSON.parse(res) : undefined);
-      if (!autopostInterval) {
-        await this.client.redis.set(`autonsfw-${id}`, JSON.stringify({ guildID: id, interval: interval || 5, elapsed: 0 }));
-        autopostInterval = await this.client.redis.get(`autonsfw-${id}`)
+    for (const { type, id, interval, webhookID, webhookToken } of check) {
+      if (webhookID) {
+        let autopostInterval = await this.client.redis.get(`autonsfw-${id}`)
           .then(res => res ? JSON.parse(res) : undefined);
-      }
-      await this.client.redis.set(`autonsfw-${id}`, JSON.stringify({ guildID: id, interval: interval || 5, elapsed: Number(autopostInterval.elapsed += 5) }));
-      if (autopostInterval.elapsed < autopostInterval.interval) {
-        continue;
-      } else {
-        await this.client.redis.set(`autonsfw-${id}`, JSON.stringify({ guildID: id, interval: interval || 5, elapsed: 0 }));
-      }
-
-      const data = await this.client.http.get(`https://boob.bot/api/v2/img/${type}`, {
-        headers: {
-          Authorization: this.client.secrets.extServices.boobbot,
-          Key: this.client.secrets.extServices.boobbot
+        if (!autopostInterval) {
+          await this.client.redis.set(`autonsfw-${id}`, JSON.stringify({ guildID: id, interval: interval || 5, elapsed: 0 }));
+          autopostInterval = await this.client.redis.get(`autonsfw-${id}`)
+            .then(res => res ? JSON.parse(res) : undefined);
         }
-      })
-        .then(res => res.body.url);
-      const grabbedChannel = this.client.bot.getChannel(channel);
-      if (!grabbedChannel || !grabbedChannel.nsfw) {
-        // Remove this channel from the database if it's not marked as NSFW
-        this.client.db.removeAutomemeChannel(channel);
-      }
+        await this.client.redis.set(`autonsfw-${id}`, JSON.stringify({ guildID: id, interval: interval || 5, elapsed: Number(autopostInterval.elapsed += 5) }));
+        if (autopostInterval.elapsed < autopostInterval.interval) {
+          continue;
+        } else {
+          await this.client.redis.set(`autonsfw-${id}`, JSON.stringify({ guildID: id, interval: interval || 5, elapsed: 0 }));
+        }
 
-      this.client.bot.createChannelWebhook(channel, {
-        name: 'Auto-NSFW',
-        avatar: await this.avatar
-      }, 'Auto-NSFW Post').then(webhook => {
-        this.client.bot.executeWebhook(webhook.id, webhook.token, {
+        const data = await this.client.http.get(`https://boob.bot/api/v2/img/${type}`, {
+          headers: {
+            Authorization: this.client.secrets.extServices.boobbot,
+            Key: this.client.secrets.extServices.boobbot
+          }
+        })
+          .then(res => res.body.url);
+
+        this.client.bot.executeWebhook(webhookID, webhookToken, {
           embeds: [ {
             title: type.charAt(0).toUpperCase() + type.slice(1),
             image: { url: data },
             footer: { text: 'Free nudes thanks to boobbot & tom <3' }
-          } ]
+          } ],
+          wait: true
         })
           .catch((err) => {
-            if (err.message.toString() === 'DiscordRESTError [10003]: Unknown Channel') {
-              // Remove this channel from the database if it's not valid/not found
-              this.client.db.removeAutomemeChannel(channel);
+            if ([10003, 10015, 50001, 50013].includes(err.code)) {
+            // Remove this channel from the database if the channel doesn't exist, the webhook doesn't exist, or the bot miss the permissions to access it
+              this.client.db.removeAutonsfwChannel(id);
+            }
+          })
+          .then(async (message) => {
+            // Check if the channel in which the message was sent is NSFW, and if not, removes the channel from the db and try to delete the message
+            let grabbedChannel = await this._fetchChannel(message.channel_id);
+            if (!grabbedChannel) {
+              grabbedChannel = await this.client.bot.getRESTChannel(message.channel_id)
+                .catch(err => err.code);
+              if ([50001, 50013].includes(grabbedChannel)) {
+                this.client.db.removeAutonsfwChannel(id);
+              }
+            }
+            if (typeof grabbedChannel !== 'number' && !grabbedChannel.nsfw) {
+              this.client.db.removeAutonsfwChannel(id);
+              this.client.bot.deleteMessage(message.channel_id, message.id).catch(() => {});
             }
           });
-      });
+      }
     }
+  }
+
+  async _fetchChannel (id) { // Because eris-sharder sucks hard
+    return new Promise(resolve => {
+      setTimeout(() => resolve({ id }), 2000);
+      this.client.ipc.fetchChannel(id)
+        .then(resolve);
+    });
   }
 
   async post () {
