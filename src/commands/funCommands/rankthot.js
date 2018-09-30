@@ -5,12 +5,12 @@ module.exports = new GenericCommand(
     let target = Memer.getRateTarget(msg, args);
     const rating = Memer.randomNumber(1, 100);
     return {
-      title: 'gay r8 machine',
-      description: `${target} ${rating}% gay :gay_pride_flag:`
+      title: 'Thotties be thotting',
+      description: `${target} **${rating}%** <:THOT:492632571994308608>`
     };
   },
   {
-    triggers: ['howgay', 'gayrate'],
-    description: 'See how gay you are'
+    triggers: ['rankthot', 'thotrate'],
+    description: 'See how thot you are'
   }
 );

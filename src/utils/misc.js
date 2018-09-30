@@ -284,7 +284,7 @@ module.exports = {
       min = 0;
       max = 100;
     }
-    return Math.floor(Math.random() * max) + min;
+    return Math.floor(Math.random() * (max - min + 1) + min);
   },
 
   /**
@@ -458,5 +458,16 @@ module.exports = {
     let seconds2 = Math.floor(seconds % 60);
 
     return `${pad(hours)}:${pad(minutes)}:${pad(seconds2)}`;
+  },
+
+  getRateTarget (msg, args) {
+    let target = !args[0] || args[0].toLowerCase() === 'me'
+      ? 'You are'
+      : (
+        msg.mentions[0]
+          ? `${msg.mentions[0].nick || msg.mentions[0].username} is`
+          : `${args.join(' ')} is`
+      );
+    return target;
   }
 };
