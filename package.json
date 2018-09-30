@@ -4,7 +4,7 @@
   "description": "A discord entertainment based bot, with an emphasis on memes.",
   "main": "memer.js",
   "scripts": {
-    "linter": "semistandard"
+    "linter": "semistandard --fix"
   },
   "repository": {
     "type": "git",
