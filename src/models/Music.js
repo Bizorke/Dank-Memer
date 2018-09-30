@@ -24,6 +24,7 @@ module.exports = class Music {
     /** @type {Promise|Boolean} Whether the player is ready */
     this.ready = this._loadQueue();
     this.vote = null;
+    this.sfxautoplay = { enabled: false, host: null, type: null, name: null };
   }
 
   /**
@@ -32,9 +33,11 @@ module.exports = class Music {
    * @param {Boolean} [unshift=false] Whether to push the song at the front of the queue, defaults to `false`
    * @returns {Promise<void>}
    */
-  addSong (song, unshift) {
+  addSong (song, unshift, index) {
     if (unshift) {
       this.queue.unshift(song);
+    } else if (index > -1) {
+      this.queue.splice(index, 0, song);
     } else {
       this.queue.push(song);
     }
@@ -191,6 +194,18 @@ module.exports = class Music {
   }
 
   _finished (event, shifted) {
+    if (this.sfxautoplay.enabled) {
+      return (async () => {
+        let response = await this.client.redis.get(`cachedplaylist-${this.sfxautoplay.type}`)
+          .then(res => res ? JSON.parse(res) : undefined);
+        if (response) {
+          let { tracks } = response;
+          const song = this.client.randomInArray(tracks);
+          await this.addSong(song, true);
+          return this._play();
+        }
+      })();
+    }
     if (this.vote) {
       this.resetVote();
       this._send(`The vote to skip the song \`${shifted.info.title}\` has been cancelled because the song just ended`);
