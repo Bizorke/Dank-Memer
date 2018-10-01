@@ -1,11 +1,11 @@
 module.exports = {
   help: 'Wipe expired donors',
   fn: async ({ Memer, msg }) => {
-    let donors = await Memer.db.wipeExpiredDonors()
+    let donors = await Memer.db.wipeExpiredDonors();
 
-    let promises = []
+    let promises = [];
     for (let user of donors) {
-      const channel = await Memer.bot.getDMChannel(user.id)
+      const channel = await Memer.bot.getDMChannel(user.id);
       promises.push(
         await channel.createMessage({ embed: {
           color: 12000284,
@@ -15,11 +15,11 @@ module.exports = {
           'We appreciate your donations and time, thank you very much!\n' +
           '-- The Dank Memer Team'
         }})
-      )
+      );
     }
 
     await Promise.all(promises).then(async () => {
-      msg.channel.createMessage(`I've successfully messaged ${promises.length} users about expired payments`)
-    })
+      msg.channel.createMessage(`I've successfully messaged ${promises.length} users about expired payments`);
+    });
   }
-}
+};

@@ -1,4 +1,4 @@
-const { GenericMediaCommand } = require('../../models/')
+const { GenericMediaCommand } = require('../../models/');
 
 module.exports = new GenericMediaCommand({
   triggers: ['ducc', 'quacker', 'quack', 'duck', 'kwek', 'eend'],
@@ -8,4 +8,4 @@ module.exports = new GenericMediaCommand({
   message: 'Image from random-d.uk',
   JSONKey: 'url',
   reqURL: 'https://api.random-d.uk/random'
-})
+});

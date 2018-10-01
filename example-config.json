@@ -3,7 +3,8 @@
         "clientOptions": {
             "disableEvents": {},
             "messageLimit": 0,
-            "requestTimeout": 0
+            "requestTimeout": 0,
+            "restMode": true
         }
     },
     "sharder": {
@@ -22,7 +23,9 @@
             }
         }
     },
-    "links": {},
+    "links": {
+        "youtube": {}
+    },
     "lavalink": {
         "nodes": [
             {
@@ -50,6 +53,7 @@
         "patreonCampaignID": "",
         "featureRequestChannel": "",
         "spamReportChannel": "",
+        "donorPerksChannel": "",
         "errorChannel": ""
     }
 }
