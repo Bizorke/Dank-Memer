@@ -78,8 +78,6 @@ module.exports = class GenericVoiceCommand {
       msg.channel.createMessage({ embed: { title: 'Now Playing...', description: song.info.title } });
     } else if (this.cmdProps.message) {
       msg.channel.createMessage(this.cmdProps.message);
-    } else {
-      msg.addReaction(this.cmdProps.reaction);
     }
 
     music.channel = msg.channel.id;
@@ -95,8 +93,7 @@ module.exports = class GenericVoiceCommand {
       null,
       Object.assign({
         cooldown: 3000,
-        donorCD: 1000,
-        perms: ['addReactions']
+        donorCD: 1000
       }, this.cmdProps)
     ).props;
   }
