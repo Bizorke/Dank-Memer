@@ -163,7 +163,7 @@ module.exports = class Music {
       this.client.redis.set(`queue-${this.id}`, JSON.stringify(this.queue, 'EX', 60 * 60 * 24))
         .catch(() => {});
     } else {
-      this.client.redis.delAsync(`queue-${this.id}`)
+      this.client.redis.del(`queue-${this.id}`)
         .catch(() => {});
     }
   }
