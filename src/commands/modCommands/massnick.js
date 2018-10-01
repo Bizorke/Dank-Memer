@@ -84,7 +84,7 @@ module.exports = new GenericModerationCommand(
     if (nickname) {
       await Memer.redis.set(`massnick-${msg.channel.guild.id}`, JSON.stringify(nicknames), 'EX', 60 * 60 * 6);
     } else {
-      await Memer.redis.delAsync(`massnick-${msg.channel.guild.id}`);
+      await Memer.redis.del(`massnick-${msg.channel.guild.id}`);
     }
     let modlog = await Memer.db.fetchModlog(msg.channel.guild.id);
     if (modlog) {
