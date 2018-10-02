@@ -19,9 +19,10 @@ exports.handle = async function (msg) {
     passed = true;
   } else {
     if (slicedMessage.length > 1) {
-      const command = slicedMessage[1].toLowerCase();
-      if (this.cmds.find(c => c.props.triggers.includes(command.toLowerCase())) || this.tags[command.toLowerCase()]) {
-        passed = true;
+      for (const command of slicedMessage) {
+        if (this.cmds.find(c => c.props.triggers.includes(command.toLowerCase())) || this.tags[command.toLowerCase()]) {
+          passed = true;
+        }
       }
     }
   }
