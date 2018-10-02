@@ -8,7 +8,7 @@ module.exports = new GenericCommand(
 
     return {
       title: `Here are your weekly coins, ${msg.author.username}`,
-      description: `**${coinsEarned} coins** were placed in your pocket.\n\nYou can get another 250 coins by voting! ([Click Here](https://discordbots.org/bot/memes/vote) and [here](https://discordbotlist.com/bots/270904126974590976))`
+      description: `**${coinsEarned} coins** were placed in your pocket.\n\nYou can get another 250 coins by voting! ([Click Here](https://discordbotlist.com/bots/270904126974590976))`
     };
   },
   {
