@@ -103,7 +103,7 @@ module.exports = Bot => ({
     } else {
       profile.cooldowns.push({ [command]: Date.now() + cooldown });
     }
-    if (cooldown < 20000) {
+    if (cooldown <= 20000) {
       return Bot.cooldowns.set(userID, { id: userID, cooldowns: profile.cooldowns });
     }
     return Bot.r.table('cooldowns')
