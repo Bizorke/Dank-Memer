@@ -81,10 +81,15 @@ module.exports = class GenericVoiceCommand {
     }
 
     music.channel = msg.channel.id;
-    await music.addSong(song, false, music.queue.length < 1 ? 0 : 1);
-    await music.stop();
-    await Memer.sleep(100);
+    if (!music.queue.length) {
+      await music.addSong(song, true);
+    } else {
+      await music.addSong(song, false, 1);
+      await music.stop();
+    }
+    await Memer.sleep(150);
     await music.player.join(msg.member.voiceState.channelID);
+    await Memer.sleep(150);
     await music._play();
   }
 
