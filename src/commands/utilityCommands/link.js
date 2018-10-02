@@ -3,7 +3,7 @@ const GenericCommand = require('../../models/GenericCommand');
 module.exports = new GenericCommand(
   async ({ Memer, msg, args, addCD }) => {
     let patrons = [];
-    const user = Memer.config.options.developers.includes(msg.author.id) ? (msg.args.resolveUser() || msg.author.id) : msg.author.id;
+    const user = Memer.config.options.developers.includes(msg.author.id) ? (msg.args.resolveUser() || msg.author) : msg.author;
 
     const loopThroughPatrons = async (url) => {
       let res = await Memer.http.get(url || `https://www.patreon.com/api/oauth2/api/campaigns/${Memer.config.options.patreonCampaignID}/pledges?include=patron.null&page%5Bcount%5D=100`, {headers: {'Authorization': `Bearer ${Memer.secrets.extServices.patreon}`}});

@@ -74,7 +74,7 @@ if (require('cluster').isMaster && !config.options.dev) {
 
 (async () => {
   const redis = await require('./utils/redisClient.js')(config.redis);
-  const changesStream = await r.table('users').changes({ squash: true, includeInitial: true, includeTypes: true }).run();
+  const changesStream = await r.table('users').changes({ squash: true, includeInitial: false, includeTypes: true }).run();
   changesStream.on('data', data => {
     const pipeline = redis.pipeline();
     if (data.type === 'remove') {
