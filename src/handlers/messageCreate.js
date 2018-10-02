@@ -4,13 +4,30 @@ const ArgParser = require('../utils/ArgParser.js');
 exports.handle = async function (msg) {
   if (
     !msg.channel.guild ||
-    msg.author.bot ||
-    await this.db.checkBlocked(msg.author.id, msg.channel.guild.id)
+    msg.author.bot
   ) {
     return;
   }
 
   if (this.config.options.dev && !this.config.options.developers.includes(msg.author.id)) { return; }
+
+  let ar = ['im', 'i\'m', 'i am', 'no u', 'sec', 'one sec', 'ree'];
+
+  let slicedMessage = msg.content.split(/\s+/g);
+  let passed;
+  if (ar.find(a => msg.content.toLowerCase().startsWith(a))) {
+    passed = true;
+  } else {
+    if (slicedMessage.length > 1) {
+      const command = slicedMessage[1].toLowerCase();
+      if (this.cmds.find(c => c.props.triggers.includes(command.toLowerCase())) || this.tags[command.toLowerCase()]) {
+        passed = true;
+      }
+    }
+  }
+  if (!passed || await this.db.checkBlocked(msg.author.id, msg.channel.guild.id)) {
+    return;
+  }
 
   this.stats.messages++;
   cacheMessage.bind(this)(msg);
