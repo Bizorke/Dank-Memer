@@ -1,5 +1,7 @@
 exports.handle = function (guild) {
   this.stats.guildsJoined++;
+  this.ddog.increment('event.guildCreate');
+  this.ddog.increment('total.guildsGained');
   const embed = {
     color: 12054271,
     description: this.intro,

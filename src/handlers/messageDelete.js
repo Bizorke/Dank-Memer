@@ -4,5 +4,6 @@ exports.handle = async function (msg) {
   if (!cachedEntry) {
     return;
   }
+  this.ddog.increment('deletedMessages');
   this.redis.set(`deletedmsg-${cachedEntry.guildID}-${cachedEntry.channelID}`, JSON.stringify({ userID: cachedEntry.userID, content: cachedEntry.content, timestamp: cachedEntry.timestamp }), 'EX', 60 * 60);
 };
