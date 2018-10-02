@@ -1,6 +1,31 @@
 const gifs = require('../assets/arrays/permGifs.json');
 const ArgParser = require('../utils/ArgParser.js');
 
+const AUTORESPONSE_MATRIX = {
+  dad: {
+    regex: /^(im|i['’]m|i am)\s+(.+)/i,
+    parse: (match) => `Hi ${match[2]}, I'm dad`
+  },
+  sec: {
+    regex: /^(one sec$|one second|sec$)/i,
+    parse: () => this.sleep(1000).then(() => 'It\'s been one second')
+  },
+  ree: {
+    regex: /^(ree)/i,
+    parse: (match) => `R${'E'.repeat(match.input.split(/ +g/)[0].length)}`
+  },
+  nou: {
+    regex: /^(no (?=u{1,}$))/i,
+    parse: () => 'no u'
+  }
+};
+const SWEARWORDS = [
+  'fuck', 'penis', 'cunt', 'faggot', 'wank', 'nigger', 'nigga', 'slut', 'bastard', 'bitch', 'asshole', 'dick', 'blowjob', 'cock', 'pussy', 'retard', 'ligma', 'sugondese', 'sugandese', 'fricc', 'hecc', 'sugma', 'updog', 'bofa', 'fugma', 'snifma', 'bepis', 'da wae', 'despacito'
+];
+const PREMATURE_REQUIREMENTS = [
+  'im', 'i\'m', 'i am', 'no u', 'sec', 'one sec', 'ree'
+].concat(SWEARWORDS);
+
 exports.handle = async function (msg) {
   this.ddog.increment('global.seen');
   if (
@@ -12,20 +37,17 @@ exports.handle = async function (msg) {
 
   if (this.config.options.dev && !this.config.options.developers.includes(msg.author.id)) { return; }
 
-  let ar = ['im', 'i\'m', 'i am', 'no u', 'sec', 'one sec', 'ree'];
+  this.stats.messages++;
+  cacheMessage.call(this, msg);
 
   let slicedMessage = msg.content.split(/\s+/g);
   let passed;
-  this.stats.messages++;
-  cacheMessage.bind(this)(msg);
-  if (ar.find(a => msg.content.toLowerCase().startsWith(a))) {
+  if (PREMATURE_REQUIREMENTS.find(a => msg.content.toLowerCase().startsWith(a))) {
     passed = true;
-  } else {
-    if (slicedMessage.length > 1) {
-      for (const command of slicedMessage) {
-        if (this.cmds.find(c => c.props.triggers.includes(command.toLowerCase())) || this.tags[command.toLowerCase()]) {
-          passed = true;
-        }
+  } else if (slicedMessage.length > 1) {
+    for (const possibleCommand of slicedMessage) {
+      if (this.cmds.find(c => c.props.triggers.includes(possibleCommand.toLowerCase())) || this.tags[possibleCommand.toLowerCase()]) {
+        passed = true;
       }
     }
   }
@@ -58,54 +80,28 @@ exports.handle = async function (msg) {
     };
   }
 
-  if (gConfig.autoResponse.dad) {
-    let re = /^(im|i['’]m|i am)\s+(.+)/i;
-    const match = re.exec(msg.content);
-    if (match && match[2].length < 1980) {
-      msg.channel.createMessage(`Hi ${match[2]}, I'm dad`);
-    }
-  }
-
-  if (gConfig.autoResponse.sec) {
-    let re = /^(one sec$|one second|sec$)/i;
-    const match = re.exec(msg.content);
+  // Auto responses
+  for (const autoResponse of Object.keys(gConfig.autoResponse).filter(Boolean)) {
+    const entry = AUTORESPONSE_MATRIX[autoResponse];
+    const match = entry.regex.exec(msg.content);
     if (match) {
-      await this.sleep(1000);
-      msg.channel.createMessage(`It's been one second`);
-    }
-  }
-
-  if (gConfig.autoResponse.ree) {
-    let re = /^(ree)/i;
-    const match = re.exec(msg.content);
-    let content = msg.content.split(/ +/g);
-    let e = content[0].length;
-    if (match && e < 1997) {
-      msg.channel.createMessage(`R${'E'.repeat(e)}`);
-    }
-  }
-
-  if (gConfig.autoResponse.nou) {
-    let re = /^(no (?=u{1,}$))/i;
-    const match = re.exec(msg.content);
-    if (match) {
-      msg.channel.createMessage(`no u`);
+      const result = await entry.parse(match);
+      if (result.length <= 2000) {
+        msg.channel.createMessage(result);
+      }
     }
   }
 
   // Swear detection
   if (gConfig.swearFilter) {
-    let swears = ['fuck', 'penis', 'cunt', 'faggot', 'wank', 'nigger', 'nigga', 'slut', 'bastard', 'bitch', 'asshole', 'dick', 'blowjob', 'cock',
-      'pussy', 'retard', 'ligma', 'sugondese', 'sugandese', 'fricc', 'hecc', 'sugma', 'updog', 'bofa', 'fugma', 'snifma', 'bepis', 'da wae', 'despacito'];
-    let re = new RegExp(`.*(${swears.join('|')}).*`, 'i');
-    const match = re.exec(msg.content);
-    if (match) {
-      let failed = '';
-      await msg.delete()
-        .catch(() => {
-          failed = 'I couldn\'t remove the offending message because I don\'t have `Manage Messages` :(';
-        });
-      msg.channel.createMessage(`No swearing in this christian server :rage:\n${failed}`);
+    if (SWEARWORDS.some(word => msg.content.toLowerCase().includes(word))) {
+      msg.channel.createMessage(`No swearing in this christian server :rage:\n${
+        await msg.delete()
+          .then(
+            () => '',
+            () => 'I couldn\'t remove the offending message because I don\'t have `Manage Messages` :('
+          )
+      }`);
     }
   }
 
@@ -157,13 +153,13 @@ exports.handle = async function (msg) {
     return;
   }
 
-  updateStats.bind(this)(msg, command, lastCmd);
+  updateStats.call(this, msg, command, lastCmd);
 
   this.ddog.increment('total.commands');
   this.ddog.increment(`category.${command.category}`, 1, ['tag:one']);
   this.ddog.increment(`cmd.${command.cmdProps.triggers[0]}`, 1, ['tag:two']);
 
-  const isInCooldown = await checkCooldowns.bind(this)(msg, command, isDonor, isGlobalPremiumGuild);
+  const isInCooldown = await checkCooldowns.call(this, msg, command, isDonor, isGlobalPremiumGuild);
   if (isInCooldown) { return; }
 
   const updateCooldowns = () => this.db.updateCooldowns(command.props.triggers[0], msg.author.id, isGlobalPremiumGuild);
@@ -171,7 +167,7 @@ exports.handle = async function (msg) {
   try {
     const permissions = msg.channel.permissionsOf(this.bot.user.id);
     if (command.props.perms.some(perm => !permissions.has(perm))) {
-      checkPerms.bind(this)(command, permissions, msg);
+      checkPerms.call(this, command, permissions, msg);
     } else if (command.props.isNSFW && !msg.channel.nsfw) {
       msg.channel.createMessage(
         {
@@ -187,10 +183,10 @@ exports.handle = async function (msg) {
       );
     } else {
       msg.reply = (str) => { msg.channel.createMessage(`${msg.author.mention}, ${str}`); };
-      await runCommand.bind(this)(command, msg, args, cleanArgs, updateCooldowns, isGlobalPremiumGuild, permissions);
+      await runCommand.call(this, command, msg, args, cleanArgs, updateCooldowns, isGlobalPremiumGuild, permissions);
     }
   } catch (e) {
-    reportError.bind(this)(e, msg, command, cleanArgs);
+    reportError.call(this, e, msg, command, cleanArgs);
   }
 };
 
@@ -312,7 +308,7 @@ async function reportError (e, msg, command, cleanArgs) {
   let date = new Date();
   this.stats.errReported++;
   let message = await this.errorMessages(e);
-  let randNum = Math.floor(Math.random() * Math.floor(99999));
+  let randNum = Math.floor(Math.random() * 99999);
   const channel = this.config.options.errorChannel || '470338254848262154';
   if (!message) {
     msg.channel.createMessage(`Something went wrong lol\nError: \`${command.props.triggers[0]}.${this.clusterID}.${msg.channel.guild.shard.id}.${date.getHours()}:${date.getMinutes()}.err${randNum}\``);
