@@ -144,7 +144,7 @@ module.exports = {
     if (user.username.toLowerCase().includes('dank')) {
       total += 0.5;
     }
-    if (msg.channel.guild.id === '397472167631257600') {
+    if (msg.channel.guild.id === '470337009886429194') {
       total += 0.5;
     }
     if (date.getMinutes() === 20 && date.getHours() === 4) {
@@ -229,7 +229,7 @@ module.exports = {
       end.unlocked.total += 1;
       end.unlocked.list.push('Username is dank');
     }
-    if (msg.channel.guild.id === '397472167631257600') {
+    if (msg.channel.guild.id === '470337009886429194') {
       end.unlocked.total += 1;
       end.unlocked.list.push('In support server');
     }
