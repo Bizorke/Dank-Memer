@@ -16,6 +16,8 @@ exports.handle = async function (msg) {
 
   let slicedMessage = msg.content.split(/\s+/g);
   let passed;
+  this.stats.messages++;
+  cacheMessage.bind(this)(msg);
   if (ar.find(a => msg.content.toLowerCase().startsWith(a))) {
     passed = true;
   } else {
@@ -31,8 +33,6 @@ exports.handle = async function (msg) {
     return;
   }
 
-  this.stats.messages++;
-  cacheMessage.bind(this)(msg);
   const gConfig = await this.db.getGuild(msg.channel.guild.id) || {
     prefix: this.config.options.prefix,
     disabledCommands: [],
