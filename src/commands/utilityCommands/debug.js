@@ -68,7 +68,7 @@ module.exports = new GenericCommand(
     `[CPU] ${CPUUsage.toFixed(1)}%\n` +
     `[ERRORS] ${Memer.stats.errReported}\n` +
     `  [Eris] ${Memer.stats.err}\n` +
-    `[RETHINK] ${CPUUsage.toFixed(1)}\n` +
+    `[RETHINK]` +
     `  [Guilds] ${guilds}\n` +
     `  [Users] ${users}\n` +
     `  [Donors] ${donors}\n` +
