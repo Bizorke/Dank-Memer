@@ -42,7 +42,7 @@ exports.handle = async function (msg) {
 
   let slicedMessage = msg.content.split(/\s+/g);
   let passed;
-  if (PREMATURE_REQUIREMENTS.find(a => msg.content.toLowerCase().startsWith(a))) {
+  if (PREMATURE_REQUIREMENTS.find(a => msg.content.toLowerCase().includes(a))) {
     passed = true;
   } else if (slicedMessage.length > 1) {
     for (const possibleCommand of slicedMessage) {
