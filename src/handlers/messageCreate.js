@@ -92,14 +92,16 @@ exports.handle = async function (msg) {
   }
 
   // Auto responses
-  for (const autoResponse of Object.keys(gConfig.autoResponse).filter(Boolean)) {
-    const entry = AUTORESPONSE_MATRIX[autoResponse];
-    const match = entry.regex.exec(msg.content);
-    if (match) {
-      const result = await entry.parse(match);
-      if (result.length <= 2000) {
-        this.ddog.increment('autoresponses');
-        msg.channel.createMessage(result);
+  for (const autoResponse in gConfig.autoResponse) {
+    if (gConfig.autoResponse[autoResponse]) {
+      const entry = AUTORESPONSE_MATRIX[autoResponse];
+      const match = entry.regex.exec(msg.content);
+      if (match) {
+        const result = await entry.parse(match);
+        if (result.length <= 2000) {
+          this.ddog.increment('autoresponses');
+          msg.channel.createMessage(result);
+        }
       }
     }
   }
