@@ -28,12 +28,23 @@ const PREMATURE_REQUIREMENTS = [
 
 exports.handle = async function (msg) {
   this.ddog.increment('global.seen');
+  this.ddog.increment(`user.bot.${msg.author.bot}`);
   if (
     !msg.channel.guild ||
     msg.author.bot
   ) {
     return;
   }
+  this.ddog.increment(`guild.verification${msg.channel.guild.verificationLevel}`);
+  this.ddog.increment(`guild.notifications${msg.channel.guild.defaultNotifications}`);
+  this.ddog.increment(`guild.region.${msg.channel.guild.region}`);
+  this.ddog.increment(`guild.mfa${msg.channel.guild.mfaLevel}`);
+  this.ddog.increment(`guild.verification${msg.channel.guild.verificationLevel}`);
+  this.ddog.increment(`guild.large.${msg.channel.guild.large}`);
+  this.ddog.increment(`guild.explicit${msg.channel.guild.explicitContentFilter}`);
+  this.ddog.increment(`channel.nsfw.${msg.channel.nsfw}`);
+  this.ddog.increment(`msg.everyone.${msg.mentionEveryone}`);
+  this.ddog.increment(`msg.tts.${msg.tts}`);
 
   if (this.config.options.dev && !this.config.options.developers.includes(msg.author.id)) { return; }
 
@@ -87,6 +98,7 @@ exports.handle = async function (msg) {
     if (match) {
       const result = await entry.parse(match);
       if (result.length <= 2000) {
+        this.ddog.increment('autoresponses');
         msg.channel.createMessage(result);
       }
     }
@@ -95,6 +107,7 @@ exports.handle = async function (msg) {
   // Swear detection
   if (gConfig.swearFilter) {
     if (SWEARWORDS.some(word => msg.content.toLowerCase().includes(word))) {
+      this.ddog.increment('swearDetected');
       msg.channel.createMessage(`No swearing in this christian server :rage:\n${
         await msg.delete()
           .then(
@@ -104,9 +117,6 @@ exports.handle = async function (msg) {
       }`);
     }
   }
-
-  let isDonor = await this.db.checkDonor(msg.author.id);
-  const isGlobalPremiumGuild = await this.db.checkGlobalPremiumGuild(msg.channel.guild.id);
 
   const selfMember = msg.channel.guild.members.get(this.bot.user.id);
   const mention = `<@${selfMember.nick ? '!' : ''}${selfMember.id}>`;
@@ -126,6 +136,10 @@ exports.handle = async function (msg) {
 
   command = command && (this.cmds.find(c => c.props.triggers.includes(command.toLowerCase())) || this.tags[command.toLowerCase()]);
 
+  let isDonor = await this.db.checkDonor(msg.author.id);
+  if (isDonor) { this.ddog.increment(`user.donor`); }
+  const isGlobalPremiumGuild = await this.db.checkGlobalPremiumGuild(msg.channel.guild.id);
+
   if (
     !command &&
     msg.mentions.find(u => u.id === this.bot.user.id) &&
@@ -143,7 +157,10 @@ exports.handle = async function (msg) {
     return msg.channel.createMessage('This command is for donors only. You can find more information by using `pls donate` if you are interested.');
   }
 
-  if (msg.member.roles.some(id => msg.channel.guild.roles.get(id).name === 'no memes for you')) { return; }
+  if (msg.member.roles.some(id => msg.channel.guild.roles.get(id).name === 'no memes for you')) {
+    this.ddog.increment(`noMemes`);
+    return;
+  }
 
   let { spam, lastCmd } = await this.db.getUser(msg.author.id);
 
