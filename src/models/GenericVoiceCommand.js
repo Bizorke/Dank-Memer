@@ -1,4 +1,6 @@
-/** @typedef {import('./GenericCommand').CommandProps} CommandProps */
+/** @typedef {import('./GenericCommand').CommandProps} CommandProps
+ * @typedef {import('./GenericCommand').FunctionParams} FunctionParams
+ */
 
 const GenericCommand = require('./GenericCommand');
 module.exports = class GenericVoiceCommand {
@@ -9,7 +11,8 @@ module.exports = class GenericVoiceCommand {
     this.cmdProps = cmdProps;
   }
 
-  async run ({ Memer, msg, args, addCD }) {
+  /** @param {FunctionParams} */
+  async run ({ Memer, msg, args, addCD, donor }) {
     const music = Memer.musicManager.get(msg.channel.guild.id);
     let response = await Memer.redis.get(`cachedplaylist-${this.cmdProps.dir}`)
       .then(res => res ? JSON.parse(res) : undefined);
@@ -34,16 +37,25 @@ module.exports = class GenericVoiceCommand {
 
     await addCD();
 
+    const song = Memer.randomInArray(tracks);
+
     if (args.length) {
       // Repeat function
-      let donor = await Memer.db.checkDonor(msg.author.id);
       if ((args.includes('-autoplay') || args.includes('-repeat')) && donor) {
         music.sfxautoplay = { enabled: true, host: msg.member, type: this.cmdProps.dir, name: this.props.triggers[0] };
-        await music.stop();
-        await Memer.sleep(100);
+        if (!music.queue.length) {
+          await music.addSong(song, true);
+        } else {
+          await music.addSong(song, false, 1);
+          await music.stop();
+        }
+        await Memer.sleep(150);
         await music.player.join(msg.member.voiceState.channelID);
+        await Memer.sleep(150);
         await music._play();
         return `nice, ${this.props.triggers[0]} songs will keep playing until you leave the channel or stop the music\nYou can also just use \`pls ${this.props.triggers[0]}\` again to turn this off`;
+      } else if ((args.includes('-autoplay') || args.includes('-repeat')) && donor) {
+        return 'Only donors have access to this feature.';
       } else {
         // Search
         tracks = tracks.filter(track => track.info ? track.info.title.toLowerCase().includes(args.join(' ').toLowerCase()) : track);
@@ -52,8 +64,6 @@ module.exports = class GenericVoiceCommand {
         }
       }
     }
-
-    const song = Memer.randomInArray(tracks);
 
     if (this.cmdProps.soundboard) {
       if (args.length === 0) {
