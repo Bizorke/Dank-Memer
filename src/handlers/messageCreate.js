@@ -1,5 +1,6 @@
 const gifs = require('../assets/arrays/permGifs.json');
 const ArgParser = require('../utils/ArgParser.js');
+const sleep = require('../utils/misc').sleep;
 
 const AUTORESPONSE_MATRIX = {
   dad: {
@@ -8,7 +9,7 @@ const AUTORESPONSE_MATRIX = {
   },
   sec: {
     regex: /^(one sec$|one second|sec$)/i,
-    parse: () => this.sleep(1000).then(() => 'It\'s been one second')
+    parse: () => sleep(1000).then(() => 'It\'s been one second')
   },
   ree: {
     regex: /^(ree)/i,
