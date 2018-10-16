@@ -32,7 +32,7 @@
     "eslint-plugin-react": "^7.11.1",
     "eslint-plugin-standard": "^4.0.0",
     "ioredis": "^4.0.0",
-    "lavalink": "^2.1.1",
+    "lavalink": "^2.2.3",
     "node-dogstatsd": "0.0.7",
     "programmatic-repl": "^1.1.4",
     "rethinkdbdash": "^2.3.31",
