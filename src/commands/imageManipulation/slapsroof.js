@@ -1,4 +1,4 @@
-const { GenericImageCommand } = require('../../models/');
+const GenericImageCommand = require('../../models/GenericImageCommand.js');
 
 module.exports = new GenericImageCommand({
   triggers: ['slapsroof', 'carsalesman'],
